@@ -16,7 +16,7 @@ export default withNextra({
     unoptimized: true
   },
   
-  // 如果部署在子路徑，取消註解下面這行並替換 'your-repo-name'
-  // basePath: '/your-repo-name',
-  // assetPrefix: '/your-repo-name',
+  // GitHub Pages 子路徑配置
+  basePath: '/doc-test',
+  assetPrefix: '/doc-test',
 })
