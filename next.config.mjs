@@ -17,6 +17,6 @@ export default withNextra({
   },
   
   // GitHub Pages 子路徑配置
-  basePath: '/doc-test',
-  assetPrefix: '/doc-test',
+  basePath: '/api-doc',
+  assetPrefix: '/api-doc',
 })
