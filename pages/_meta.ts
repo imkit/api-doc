@@ -1,8 +1,8 @@
 export default {
   index: {
-    title: "首頁"
+    title: "基本介紹"
   },
   docs: {
-    title: "API 文檔"
+    title: "用戶"
   }
 }
