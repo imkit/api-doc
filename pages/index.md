@@ -4,13 +4,23 @@
 
 透過 IMKIT Chat Platform API 實現您的即時通訊服務。
 
-## 金鑰
+## 驗證
 
+- [身份驗證](/docs/getting-started) - 用戶 Token 的建立或綁定
 - [金鑰管理](/docs/getting-started) - Client Key 與 API Key 使用
 
 ## 用戶
 
-- [用戶管理](/docs/admin) - 新增、修改、刪除用戶
+### 用戶管理
+
+- [建立用戶](/docs/user/user management/建立用戶.md)
+- [更新用戶](/docs/user/user management/更新用戶.md)
+- 刪除用戶
+
+### 用戶列表
+
+
+
 - [用戶列表](/docs/message) - 獲得用戶資訊
 - [用戶 Token 管理](/docs/file) - 管理用戶 Token
 
