@@ -8,5 +8,12 @@ const config: DocsThemeConfig = {
   },
   docsRepositoryBase: 'https://github.com/imkit/api-doc',
 }
-
+config.useNextSeoProps = () => {
+  return {
+    titleTemplate: '%s – IMKIT Platform API',
+  }
+ footer: {
+    component: <span>© 2025 FUNTEK Inc. All rights reserved.</span>
+  }
+}
 export default config
