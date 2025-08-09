@@ -5,7 +5,7 @@ export default {
   user: {
     title: "用戶"
   },
-  room: {
-    title: "聊天室"
-  }
+  //room: {
+  //  title: "聊天室"
+  // }
 }
