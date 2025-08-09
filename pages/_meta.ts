@@ -1,5 +1,5 @@
 export default {
-  introduction: 
+  index: 
   {
     title: "基本介紹"
   },
