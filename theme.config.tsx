@@ -8,7 +8,7 @@ const config: DocsThemeConfig = {
   },
   docsRepositoryBase: 'https://github.com/your-org/imkit-doc-website',
   footer: {
-    component: <span>© 2025 FUNTEK Inc.. All rights reserved.</span>
+    component: <span>© 2025 FUNTEK Inc. All rights reserved.</span>
   }
 }
 
