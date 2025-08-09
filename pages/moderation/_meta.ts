@@ -1,11 +1,17 @@
 export default {
-  "user-management": {
-    title: "用戶管理"
+  "block-user": {
+    title: "封鎖用戶"
   },
-  "user-list": {
-    title: "用戶列表"
+  "mute-member": {
+    title: "靜音成員"
   },
-  "user-token": {
-    title: "用戶Token"
+  "ban-member": {
+    title: "禁止成員"
+  },
+  "freeze-chatroom": {
+    title: "凍結聊天室"
+  },
+  "sensitive-word": {
+    title: "敏感用詞"
   }
 }
