@@ -1,11 +1,11 @@
 export default {
-  "user-management": {
-    title: "用戶管理"
+  "room-management": {
+    title: "聊天室管理"
   },
-  "user-list": {
-    title: "用戶列表"
+  "room-members": {
+    title: "聊天室成員"
   },
-  "user-token": {
-    title: "用戶Token"
+  "room-preference": {
+    title: "聊天室偏好設定"
   }
 }
