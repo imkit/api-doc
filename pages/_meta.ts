@@ -2,7 +2,7 @@ export default {
   index: {
     title: "基本介紹"
   },
-  docs: {
+  user: {
     title: "用戶"
   }
 }
