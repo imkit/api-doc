@@ -2,10 +2,7 @@ export default {
   index: {
     title: "基本介紹"
   },
-  user: {
+  docs: {
     title: "用戶"
   }
-  //room: {
-  // title: "聊天室"
-  //}
 }
