@@ -12,9 +12,9 @@ const config: DocsThemeConfig = {
   head: ({ title }) => (
     <>
       <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-      <meta property="og:title" content={title ? `${title} - IMKIT Platform API` : 'IMKIT Platform API'} />
-      <meta property="og:description" content="IMKIT Platform API 文檔" />
-      <title>{title ? `${title} - IMKIT Platform API` : 'IMKIT Platform API'}</title>
+      <meta property="og:title" content={title ? `${title} - IMKIT` : 'IMKIT Platform API'} />
+      <meta property="og:description" content="IMKIT Platform API Document" />
+      <title>{title ? `${title} - IMKIT` : 'IMKIT Platform API'}</title>
     </>
   ),
 
