@@ -1,165 +1,177 @@
-# 建立用戶端
+# 用戶端金鑰
 
-此端點允許您在系統中建立新的用戶端。此 API 僅供伺服器端使用，需要適當的身份驗證。
+## 概述
 
-## HTTP 請求
+Client Key 是 IMKIT Platform API 中用於前端應用程式連接 Chat Server 的認證金鑰。它主要用於 SDK 初始化和建立 WebSocket 連線，與後端 API 使用的 API Key 不同。
+
+------
+
+## Client Key 特性
+
+### 基本資訊
+
+| 屬性         | 說明                       |
+| ------------ | -------------------------- |
+| **用途**     | 前端 SDK 連接 Chat Server  |
+| **格式**     | JWT Token 格式             |
+| **有效期**   | 長期有效（除非主動撤銷）   |
+| **作用域**   | 特定應用程式範圍           |
+| **安全等級** | 公開（可暴露在前端代碼中） |
+
+### 與 API Key 的差異
+
+| 項目         | Client Key      | API Key       |
+| ------------ | --------------- | ------------- |
+| **使用場景** | 前端 SDK 初始化 | 後端 API 呼叫 |
+| **安全性**   | 公開可見        | 私密保存      |
+| **權限範圍** | 連線和基本操作  | 完整管理權限  |
+| **暴露風險** | 低風險          | 高風險        |
+
+------
+
+## 取得 Client Key
+
+### 透過 IMKIT Dashboard
+
+1. 登入 [IMKIT Dashboard](https://dashboard.imkit.io/)
+2. 選擇您的應用程式
+3. 進入「設定」頁面
+4. 複製 Client Key
+
+### 範例 Client Key
 
 ```
-POST /admin/clients
+eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJhcGlLZXkiOiIySllwWWhEYVFsSVFsRFN2VkxDTExvMk1QekZmVm05allweHcydnVCcm1rPSIsImNyZWF0ZUF0IjoxNTkxOTcyNTc2NDE0LCJjbGllbnRJZCI6IjJiM2JkNWNjLTRhODYtNGE0MC1hMTU0LTE2NDA0MDE0ZGE4OCJ9.bdIWOcPfDrNuLRszgtrQDaQiow_X-WolzjDhtiLEED8
 ```
 
-## 身份驗證
+------
 
-在請求標頭中包含您的平台 API 金鑰：
+## 使用方式
 
-| 標頭         | 說明              | 必填 |
-| ------------ | ----------------- | ---- |
-| `IM-API-KEY` | 您的平台 API 金鑰 | ✅    |
-
-## 請求內容
-
-請求內容應包含 JSON 格式的用戶端資訊。
-
-### 必填參數
-
-| 參數  | 類型   | 說明             |
-| ----- | ------ | ---------------- |
-| `_id` | string | 用戶端唯一識別碼 |
-
-### 選填參數
-
-| 參數        | 類型   | 說明               |
-| ----------- | ------ | ------------------ |
-| `nickname`  | string | 用戶端顯示名稱     |
-| `avatarUrl` | string | 用戶端頭像圖片 URL |
-
-## 身份驗證選項
-
-建立用戶端時，您可以選擇兩種身份驗證方式：
-
-### 選項一：聊天伺服器發行 Token
-
-使用此選項讓聊天伺服器自動為用戶端產生新的存取權杖。
-
-| 參數               | 類型    | 說明                           |
-| ------------------ | ------- | ------------------------------ |
-| `issueAccessToken` | boolean | 設為 `true` 以產生新的存取權杖 |
-
-**請求範例：**
+### Web SDK 初始化
 
 ```javascript
-const response = await axios.post(
-  "https://imkit-dev.funtek.io/admin/clients",
-  {
-    nickname: "張小明",
-    avatarUrl: "https://example.com/avatar.jpg",
-    _id: "user123",
-    issueAccessToken: true,
-  },
-  {
-    headers: {
-      "IM-API-KEY": process.env.IM_API_KEY,
-      "Content-Type": "application/json; charset=utf-8",
-    },
-  }
-);
-```
-
-### 選項二：自訂 Token 綁定
-
-使用此選項將特定的 token 綁定到用戶端，並設定自訂的過期時間。
-
-| 參數               | 類型    | 說明                       |
-| ------------------ | ------- | -------------------------- |
-| `issueAccessToken` | boolean | 設為 `false` 或省略此參數  |
-| `token`            | string  | 要綁定到用戶端的自訂 token |
-| `expirationDate`   | string  | Token 過期時間（ISO 格式） |
-
-**請求範例：**
-
-```http
-POST /admin/clients HTTP/1.1
-IM-API-KEY: {您的_API_金鑰}
-Content-Type: application/json; charset=utf-8
-Host: imkit-dev.funtek.io
-
-{
-  "nickname": "張小明",
-  "avatarUrl": "https://example.com/avatar.jpg",
-  "_id": "user123",
-  "token": "f7b6d364-1e96-4b1a-aa75-cce93268b101",
-  "expirationDate": "2020-06-18T06:15:36.763Z"
+const config = {
+  domain: "https://your-app.imkit.io",
+  clientKey: "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9...",
+  token: "user-access-token"
 }
+
+window.IMKitUI.init(config);
 ```
 
-## 回應
+### iOS SDK 初始化
 
-### 成功回應
+```swift
+let config = IMKitConfig(
+    domain: "https://your-app.imkit.io",
+    clientKey: "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9...",
+    token: "user-access-token"
+)
 
-當請求成功時，API 會回傳建立的用戶端資訊：
-
-```json
-{
-  "RC": 0,
-  "RM": "OK",
-  "result": {
-    "_id": "user123",
-    "__v": 0,
-    "appID": "SampleApp",
-    "nickname": "張小明",
-    "description": "使用者描述",
-    "avatarUrl": "https://example.com/avatar.jpg",
-    "address": {
-      "port": 56004,
-      "family": "IPv6",
-      "address": "::1"
-    },
-    "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_4) AppleWebKit/537.36",
-    "lastJoinOrCreateRoomTime": "2020-06-08T02:00:16.685Z",
-    "updatedAt": "2020-06-11T06:15:36.761Z",
-    "isRobot": false,
-    "mute": [],
-    "id": "user123",
-    "lastLoginTimeMS": 1588744338369,
-    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
-    "expirationDate": "2020-06-18T06:15:36.763Z"
-  }
-}
+IMKit.shared.initialize(config: config)
 ```
 
-### 回應欄位
+### Android SDK 初始化
 
-| 欄位     | 類型   | 說明                   |
-| -------- | ------ | ---------------------- |
-| `RC`     | number | 回應代碼（0 表示成功） |
-| `RM`     | string | 回應訊息               |
-| `result` | object | 建立的用戶端資訊       |
+```kotlin
+val config = IMKitConfig(
+    domain = "https://your-app.imkit.io",
+    clientKey = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9...",
+    token = "user-access-token"
+)
 
-#### 用戶端物件欄位
+IMKit.initialize(config)
+```
 
-| 欄位              | 類型   | 說明                                               |
-| ----------------- | ------ | -------------------------------------------------- |
-| `_id`             | string | 用戶端唯一識別碼                                   |
-| `nickname`        | string | 用戶端顯示名稱                                     |
-| `avatarUrl`       | string | 用戶端頭像圖片 URL                                 |
-| `token`           | string | 存取權杖（僅在 `issueAccessToken` 為 true 時出現） |
-| `expirationDate`  | string | Token 過期時間（僅在發行 token 時出現）            |
-| `lastLoginTimeMS` | number | 最後登入時間戳（毫秒）                             |
-| `updatedAt`       | string | 最後更新時間戳（ISO 格式）                         |
+------
+
+## Client Key 權限
+
+### 允許的操作
+
+- ✅ 建立 WebSocket 連線
+- ✅ 接收即時訊息
+- ✅ 發送聊天訊息
+- ✅ 加入/離開聊天室
+- ✅ 上傳多媒體檔案
+- ✅ 更新用戶狀態
+
+### 不允許的操作
+
+- ❌ 建立/刪除用戶
+- ❌ 管理聊天室權限
+- ❌ 存取管理 API
+- ❌ 修改應用程式設定
+- ❌ 撤銷其他用戶 token
+
+------
+
+## 安全性考量
+
+### 為什麼 Client Key 可以公開？
+
+1. **有限權限**：Client Key 僅能進行前端連線操作
+2. **用戶範圍**：需要配合有效的 user token 才能操作
+3. **無管理權限**：無法存取敏感的管理功能
+4. **應用程式隔離**：只能連接到特定的應用程式
+
+### 最佳實務
+
+- **版本控制**：可以將 Client Key 加入版本控制
+- **環境區分**：不同環境使用不同的 Client Key
+- **定期輪換**：雖然風險較低，仍建議定期更換
+- **監控使用**：監控 Client Key 的使用情況
+
+------
+
+## 常見問題
+
+### Q: Client Key 洩露會有什麼風險？
+
+**A:** 風險相對較低，攻擊者仍需要有效的 user token 才能進行實際操作。但建議發現洩露時立即更換新的 Client Key。
+
+### Q: 可以在移動應用程式中使用 Client Key 嗎？
+
+**A:** 可以，Client Key 設計為可以安全地嵌入在移動應用程式中，包括原生 iOS/Android 應用。
+
+### Q: Client Key 會過期嗎？
+
+**A:** Client Key 預設不會過期，但您可以在 Dashboard 中手動撤銷並生成新的 Client Key。
+
+### Q: 一個應用程式可以有多個 Client Key 嗎？
+
+**A:** 目前每個應用程式只能有一個 Client Key，如需更換請先撤銷舊的再生成新的。
+
+------
 
 ## 錯誤處理
 
-當請求失敗時，您會收到包含錯誤詳細資訊的錯誤回應。常見的錯誤情況包括：
+### 常見錯誤
 
-- 無效的 API 金鑰
-- 缺少必填參數
-- 無效的 token 格式
-- 伺服器內部錯誤
+**Invalid Client Key**
 
-## 使用注意事項
+```json
+{
+  "error": "INVALID_CLIENT_KEY",
+  "message": "The provided client key is invalid or expired"
+}
+```
 
-- 此端點用於建立新用戶端
-- 每個用戶端都需要唯一的 `_id` 識別碼
-- 回應中的 `token` 欄位僅在 `issueAccessToken` 設為 `true` 時包含
-- 所有時間戳均為 UTC 格式
-- 頭像圖片的檔案大小應控制在合理範圍內
+**Client Key Mismatch**
+
+```json
+{
+  "error": "CLIENT_KEY_MISMATCH", 
+  "message": "Client key does not match the specified domain"
+}
+```
+
+**Missing Client Key**
+
+```json
+{
+  "error": "MISSING_CLIENT_KEY",
+  "message": "Client key is required for SDK initialization"
+}
+```
