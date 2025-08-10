@@ -1,39 +1,47 @@
-# 基本介紹
+# 快速開始
 
-IMKIT Platform API 是 IMKIT Chat Server 的核心 API 服務，由 [FUNTEK 樂堤科技](httsp://funtek.co/)開發，專為導入 IMKIT SDK 的開發者所設計，讓您能夠快速建立各種場景的即時通訊服務。無論是 1-on-1 私人對談或多人群組聊天，IMKIT Platform API 都能滿足您的場景需求。
+你需要先在 [IMKIT Dashboard](https://dashboard.imkit.io/) 建立一組帳號，並且建立一個 Chat Server (Application) 以獲得 Client Key 與 API Key 來使用 IMKIT Platform API。
 
-你也可以訪問我們的 [官方網站](https://imkit.io/) 以了解更多關於 IMKIT 的產品資訊。
+## 步驟一：建立帳戶
 
-## IMKIT Platform API 的優勢
+1. 前往 IMKIT Dashboard 的[註冊畫面](https://dashboard.imkit.io/sign_up)，依照指示完成帳號註冊。除了 Email 外，也可用 Apple ID 進行註冊。
 
-### 快速整合
+![Screenshot 2025-08-10 at 10.19.12 AM](/Users/mujou/Desktop/Screenshot 2025-08-10 at 10.19.12 AM.png)
 
-對比傳統的聊天功能開發方式，IMKIT Platform API 可以讓你在幾小時內完成完整的即時通訊後端服務，而不需要花費長時間時間建置聊天伺服器，把時間精力專注於核心產品的開發。
+2. 完成帳號註冊後，請至註冊的信箱收取驗證信，同樣依照指示完成驗證。
 
-- 註冊即用的聊天 API 服務
-- 從用戶、聊天室到即時通訊完整的 API 支援
-- 彈性的場景支援能力
-- 自動處理訊息路由與儲存
+![Screenshot 2025-08-10 at 4.25.19 PM](/Users/mujou/Desktop/Screenshot 2025-08-10 at 4.25.19 PM.png)
 
-### 完整的 API 功能
+![Screenshot 2025-08-10 at 4.27.40 PM](/Users/mujou/Desktop/Screenshot 2025-08-10 at 4.27.40 PM.png)
 
-IMKIT Platform API 提供了建構大多數聊天應用所需的 API 功能。
+## 步驟二：建立 Chat Server
 
-- **用戶管理 API** - 建立、更新用戶資料
-- **聊天室管理 API** - 建立群組、一對一聊天室
-- **訊息傳送 API** - 支援文字、圖片、檔案等多媒體訊息
-- **管理機制 API** - 敏感字詞、聊天室成員管理、用戶封鎖
+1. 點擊下方 `Add Application` 
 
-### 企業級可靠性
+![Screenshot 2025-08-10 at 4.25.19 PM](/Users/mujou/Desktop/Screenshot 2025-08-10 at 4.25.19 PM.png)
 
-基於 FUNTEK 樂堤科技多年的大型專案服務經驗與雲端基礎設施，提供高可用性的 API 服務，支援大規模並發請求處理。
+2. 輸入 Application 的名稱（可以是您的網站或 App 的名稱）
 
-### 安全性保障
+![Screenshot 2025-08-10 at 4.30.55 PM](/Users/mujou/Desktop/Screenshot 2025-08-10 at 4.30.55 PM.png)
 
-- API Key 和 JWT Token 雙重認證
-- 端對端訊息加密
-- 完整的 API 呼叫日誌追蹤
+3. 選擇對應的 SDK 環境
 
-------
+![Screenshot 2025-08-10 at 4.33.15 PM](/Users/mujou/Desktop/Screenshot 2025-08-10 at 4.33.15 PM.png)
 
-開始使用 IMKIT Platform API，讓你的應用程式擁有專業的即時通訊後端服務！
+4. 點擊 `Complete` 完成 Chat Server 建立
+
+![Screenshot 2025-08-10 at 4.33.41 PM](/Users/mujou/Desktop/Screenshot 2025-08-10 at 4.33.41 PM.png)
+
+## 步驟三：獲得 Chat Server 相關 Key 值與參數
+
+1. **Client Key**：由 SDK 端呼叫後端 API 時使用的 Key，於 API 文件中會標示為 `IM-CLIENT-KEY` 
+
+![Screenshot 2025-08-10 at 4.40.23 PM](/Users/mujou/Desktop/Screenshot 2025-08-10 at 4.40.23 PM.png)
+
+2. **Backend API Key**：由 Admin 呼叫後端 API 時使用的 Key，權限最高，於 API 文件中會標示為 `IM-API-KEY` 
+
+![Screenshot 2025-08-10 at 4.40.33 PM](/Users/mujou/Desktop/Screenshot 2025-08-10 at 4.40.33 PM.png)
+
+3. **Chat Server URL**：此 Application 的 Chat Server 實際網址，網址會是 `https://[YourApplicationName].imkit.io` 
+
+![Screenshot 2025-08-10 at 4.40.23 PM copy](/Users/mujou/Desktop/Screenshot 2025-08-10 at 4.40.23 PM copy.png)
