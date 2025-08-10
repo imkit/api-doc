@@ -7,6 +7,10 @@ export default {
   {
     title: "核發Token"
   },
+  "update-token":
+  {
+    title: "更新Token"
+  },
   "revoke-token":
   {
     title: "撤銷Token"
