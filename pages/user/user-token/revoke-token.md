@@ -1,165 +1,152 @@
-# 建立用戶端
+# 撤銷 Token
 
-此端點允許您在系統中建立新的用戶端。此 API 僅供伺服器端使用，需要適當的身份驗證。
+## 概述
 
-## HTTP 請求
+撤銷指定用戶的 access token，使其無法繼續使用聊天服務。您可以選擇撤銷特定的 token，或移除該用戶的所有 token。
 
-```
-POST /admin/clients
-```
+------
 
-## 身份驗證
+## API 端點
 
-在請求標頭中包含您的平台 API 金鑰：
+### 撤銷用戶 Token
 
-| 標頭         | 說明              | 必填 |
-| ------------ | ----------------- | ---- |
-| `IM-API-KEY` | 您的平台 API 金鑰 | ✅    |
-
-## 請求內容
-
-請求內容應包含 JSON 格式的用戶端資訊。
-
-### 必填參數
-
-| 參數  | 類型   | 說明             |
-| ----- | ------ | ---------------- |
-| `_id` | string | 用戶端唯一識別碼 |
-
-### 選填參數
-
-| 參數        | 類型   | 說明               |
-| ----------- | ------ | ------------------ |
-| `nickname`  | string | 用戶端顯示名稱     |
-| `avatarUrl` | string | 用戶端頭像圖片 URL |
-
-## 身份驗證選項
-
-建立用戶端時，您可以選擇兩種身份驗證方式：
-
-### 選項一：聊天伺服器發行 Token
-
-使用此選項讓聊天伺服器自動為用戶端產生新的存取權杖。
-
-| 參數               | 類型    | 說明                           |
-| ------------------ | ------- | ------------------------------ |
-| `issueAccessToken` | boolean | 設為 `true` 以產生新的存取權杖 |
-
-**請求範例：**
-
-```javascript
-const response = await axios.post(
-  "https://imkit-dev.funtek.io/admin/clients",
-  {
-    nickname: "張小明",
-    avatarUrl: "https://example.com/avatar.jpg",
-    _id: "user123",
-    issueAccessToken: true,
-  },
-  {
-    headers: {
-      "IM-API-KEY": process.env.IM_API_KEY,
-      "Content-Type": "application/json; charset=utf-8",
-    },
-  }
-);
-```
-
-### 選項二：自訂 Token 綁定
-
-使用此選項將特定的 token 綁定到用戶端，並設定自訂的過期時間。
-
-| 參數               | 類型    | 說明                       |
-| ------------------ | ------- | -------------------------- |
-| `issueAccessToken` | boolean | 設為 `false` 或省略此參數  |
-| `token`            | string  | 要綁定到用戶端的自訂 token |
-| `expirationDate`   | string  | Token 過期時間（ISO 格式） |
-
-**請求範例：**
+撤銷指定用戶的 access token。
 
 ```http
-POST /admin/clients HTTP/1.1
-IM-API-KEY: {您的_API_金鑰}
-Content-Type: application/json; charset=utf-8
-Host: imkit-dev.funtek.io
-
-{
-  "nickname": "張小明",
-  "avatarUrl": "https://example.com/avatar.jpg",
-  "_id": "user123",
-  "token": "f7b6d364-1e96-4b1a-aa75-cce93268b101",
-  "expirationDate": "2020-06-18T06:15:36.763Z"
-}
+DELETE /admin/clients/{client_id}/token
 ```
 
-## 回應
+#### Headers
 
-### 成功回應
+| 參數           | 類型   | 必填 | 說明               |
+| -------------- | ------ | ---- | ------------------ |
+| `IM-API-KEY`   | string | ✅    | 您的 API 金鑰      |
+| `Content-Type` | string | ✅    | `application/json` |
 
-當請求成功時，API 會回傳建立的用戶端資訊：
+#### Path Parameters
+
+| 參數        | 類型   | 必填 | 說明           |
+| ----------- | ------ | ---- | -------------- |
+| `client_id` | string | ✅    | 用戶唯一識別碼 |
+
+#### Request Body
+
+| 參數    | 類型   | 必填 | 說明                                               |
+| ------- | ------ | ---- | -------------------------------------------------- |
+| `token` | string | ❌    | 要撤銷的特定 token，若不提供則移除該用戶所有 token |
+
+#### 範例請求
+
+**撤銷特定 Token**
 
 ```json
 {
-  "RC": 0,
-  "RM": "OK",
-  "result": {
-    "_id": "user123",
-    "__v": 0,
-    "appID": "SampleApp",
-    "nickname": "張小明",
-    "description": "使用者描述",
-    "avatarUrl": "https://example.com/avatar.jpg",
-    "address": {
-      "port": 56004,
-      "family": "IPv6",
-      "address": "::1"
-    },
-    "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_4) AppleWebKit/537.36",
-    "lastJoinOrCreateRoomTime": "2020-06-08T02:00:16.685Z",
-    "updatedAt": "2020-06-11T06:15:36.761Z",
-    "isRobot": false,
-    "mute": [],
-    "id": "user123",
-    "lastLoginTimeMS": 1588744338369,
-    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
-    "expirationDate": "2020-06-18T06:15:36.763Z"
-  }
+  "token": "old-token-xyz"
 }
 ```
 
-### 回應欄位
+**撤銷所有 Token**
 
-| 欄位     | 類型   | 說明                   |
-| -------- | ------ | ---------------------- |
-| `RC`     | number | 回應代碼（0 表示成功） |
-| `RM`     | string | 回應訊息               |
-| `result` | object | 建立的用戶端資訊       |
+```json
+{}
+```
 
-#### 用戶端物件欄位
+#### Response
 
-| 欄位              | 類型   | 說明                                               |
-| ----------------- | ------ | -------------------------------------------------- |
-| `_id`             | string | 用戶端唯一識別碼                                   |
-| `nickname`        | string | 用戶端顯示名稱                                     |
-| `avatarUrl`       | string | 用戶端頭像圖片 URL                                 |
-| `token`           | string | 存取權杖（僅在 `issueAccessToken` 為 true 時出現） |
-| `expirationDate`  | string | Token 過期時間（僅在發行 token 時出現）            |
-| `lastLoginTimeMS` | number | 最後登入時間戳（毫秒）                             |
-| `updatedAt`       | string | 最後更新時間戳（ISO 格式）                         |
+**成功回應（200 OK）**
 
-## 錯誤處理
+| 參數            | 類型    | 說明                |
+| --------------- | ------- | ------------------- |
+| `success`       | boolean | 操作是否成功        |
+| `message`       | string  | 操作結果訊息        |
+| `revokedTokens` | number  | 被撤銷的 token 數量 |
 
-當請求失敗時，您會收到包含錯誤詳細資訊的錯誤回應。常見的錯誤情況包括：
+#### 範例回應
 
-- 無效的 API 金鑰
-- 缺少必填參數
-- 無效的 token 格式
-- 伺服器內部錯誤
+**撤銷特定 Token**
 
-## 使用注意事項
+```json
+{
+  "success": true,
+  "message": "Token revoked successfully",
+  "revokedTokens": 1
+}
+```
 
-- 此端點用於建立新用戶端
-- 每個用戶端都需要唯一的 `_id` 識別碼
-- 回應中的 `token` 欄位僅在 `issueAccessToken` 設為 `true` 時包含
-- 所有時間戳均為 UTC 格式
-- 頭像圖片的檔案大小應控制在合理範圍內
+**撤銷所有 Token**
+
+```json
+{
+  "success": true,
+  "message": "All tokens revoked successfully",
+  "revokedTokens": 3
+}
+```
+
+#### 錯誤回應
+
+**400 Bad Request** - 請求參數錯誤
+
+```json
+{
+  "error": "INVALID_REQUEST",
+  "message": "Invalid client_id format"
+}
+```
+
+**401 Unauthorized** - API 金鑰無效
+
+```json
+{
+  "error": "UNAUTHORIZED",
+  "message": "Invalid API key"
+}
+```
+
+**404 Not Found** - 用戶不存在
+
+```json
+{
+  "error": "CLIENT_NOT_FOUND",
+  "message": "Client with id 'user001' not found"
+}
+```
+
+**404 Not Found** - Token 不存在（當指定特定 token 時）
+
+```json
+{
+  "error": "TOKEN_NOT_FOUND",
+  "message": "Specified token not found for this client"
+}
+```
+
+------
+
+## 使用場景
+
+### 安全性考量
+
+- **帳號被盜用**：立即撤銷所有 token 以確保安全
+- **設備遺失**：撤銷特定設備的 token
+- **員工離職**：撤銷企業用戶的所有 token
+
+### 系統管理
+
+- **強制登出**：撤銷 token 強制用戶重新登入
+- **Token 輪換**：定期撤銷舊 token 提升安全性
+- **權限變更**：撤銷 token 以重新分配權限
+
+## 注意事項
+
+- **即時生效**：Token 撤銷後立即生效，用戶將無法繼續使用聊天功能
+- **不可復原**：撤銷的 token 無法恢復，需要重新 issue 或指派新 token
+- **批次操作**：不提供 `token` 參數可一次撤銷用戶的所有 token
+- **審計日誌**：建議記錄 token 撤銷操作以供後續審計
+
+## 最佳實務
+
+1. **漸進式撤銷**：優先撤銷特定 token，避免影響用戶其他設備
+2. **通知機制**：撤銷 token 前通知用戶，提供良好的用戶體驗
+3. **監控機制**：監控撤銷操作，防止誤操作或惡意攻擊
+4. **備份策略**：在撤銷前備份重要的用戶會話資料
