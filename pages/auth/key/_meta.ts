@@ -4,7 +4,7 @@ export default {
   },
   "client-key":
   {
-    title: "客戶端金鑰"
+    title: "用戶端金鑰"
   }
 }
 
