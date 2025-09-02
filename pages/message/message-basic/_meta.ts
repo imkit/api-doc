@@ -1,7 +1,4 @@
 export default {
-  "get-a-message": {
-    title: "獲取訊息"
-  },
   "delete-a-message":
   {
     title: "刪除訊息"
