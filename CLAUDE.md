@@ -1,9 +1,26 @@
-# IMKIT Doc Website - 待補充內容清單
+# IMKIT Doc Website - 專案文檔
 
 ## 專案架構說明
 - `@imkit-doc-website/` - 主要改動專案（只能改動此專案）
 - `@chat-server-document.wiki/` - 參考專案（內含 .md 文檔，需要複製內容）
 - `@pinchat-landing-page-i18n/` - 無關專案（不處理）
+
+## 多國語言開發
+**📋 詳細指南**: 請參考 [I18N_DEVELOPMENT_GUIDE.md](./I18N_DEVELOPMENT_GUIDE.md)
+
+### 目前支援語言
+- 🇹🇼 **繁體中文** (`zh-TW`) - 預設語言
+- 🇨🇳 **簡體中文** (`zh-CN`) - 已完成
+- 🇺🇸 **英文** (`en`) - 待開發
+
+### 快速新增語言步驟
+1. **配置文件**: 更新 `next.config.mjs` 和 `theme.config.tsx`
+2. **建立目錄**: 在 `pages/` 下建立新語言資料夾（如 `pages/en/`）
+3. **複製結構**: 從 `pages/zh-TW/` 複製資料夾結構和 `_meta.ts` 文件
+4. **翻譯內容**: 逐一翻譯 `.md` 文件內容
+5. **測試部署**: 本地測試後提交到 GitHub
+
+*詳細操作步驟請參考完整的開發指南文檔。*
 
 ## 待補充的空白 .md 文件清單
 
