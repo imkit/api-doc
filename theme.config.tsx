@@ -8,6 +8,12 @@ const config: DocsThemeConfig = {
   },
   docsRepositoryBase: 'https://github.com/imkit/api-doc',
 
+  // 國際化配置
+  i18n: [
+    { locale: 'zh-TW', name: '繁體中文' },
+    { locale: 'zh-CN', name: '简体中文' }
+  ],
+
   // SEO 配置
   head: ({ title }: { title?: string }) => (
     <>
