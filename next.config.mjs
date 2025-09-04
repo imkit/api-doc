@@ -11,7 +11,7 @@ export default withNextra({
   
   // Nextra 3.x 原生 i18n 配置
   i18n: {
-    locales: ['zh-TW', 'zh-CN'],
+    locales: ['zh-TW', 'zh-CN', 'en'],
     defaultLocale: 'zh-TW'
   },
   
