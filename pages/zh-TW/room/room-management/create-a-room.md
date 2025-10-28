@@ -1,65 +1,78 @@
-# 創建聊天室
+# 建立聊天室
 
-# Create and join room with members
+此端點允許您建立新的聊天室,並讓當前用戶(呼叫者)自動加入該聊天室,同時可邀請指定的成員。此 API 僅供伺服器端使用,需要適當的身份驗證。
 
-Create room, and the current user (caller) auto joins the room with specified invitees.
+注意:如果呼叫者是管理員(使用 platform-api-key),管理員用戶也會自動加入該聊天室。
 
-Note that: if the caller is admin (platform-api-key), the admin user would also join the room.
-
-### path
-
-/rooms/createAndJoin
-
-### Method
-
-POST
-
-### Headers:
-
-| Field            | Description  |
-| ---------------- | ------------ |
-| IM-CLIENT-KEY    | Client Key   |
-| IM-Authorization | Client Token |
-
-### Post Body
-
-| Field              | Type            | Description                                                  |
-| ------------------ | --------------- | ------------------------------------------------------------ |
-| \_id               | String          | (Optional) Custom Room ID                                    |
-| name               | String          | (Optional) Room name                                         |
-| cover              | String          | (Optional) Room cover image URL                              |
-| roomType           | String          | (Optional) "direct" or "group"                               |
-| description        | String          | (Optional) Text or serialized json data                      |
-| roomTags           | Array[String]   | (Optional) shared room tags for search                       |
-| webhook            | String          | (Optional) Webhook Key or URL                                |
-| botMode            | Boolean         | (Optional) Is room robot enabled                             |
-| invitee            | String or Array | (optional) String of Client ID or Array of Client IDS. Add member(s) to the created room |
-| systemMessage      | Bool            | (Optional) Should automatically create system message or not (add member message) |
-| invitationRequired | Boolean         | (Optional) Whether required invitation for invitee to decide to join or decline Only for **group** chat. <br/> For **direct** chat, invitationRequired would be `false` by system, invitee would be immediately added to direct chat without invitation. |
-| extParams          | String          | (Optional) extended custom parameters, could be formatted as param1=value1&param2=value2 or a JSON string or custom encoded text |
+## HTTP 請求
 
 ```
-## Create And Join Room
+POST /rooms/createAndJoin
+```
+
+## 身份驗證
+
+在請求標頭中包含您的用戶端金鑰和授權權杖:
+
+| 標頭               | 說明         | 必填 |
+| ------------------ | ------------ | ---- |
+| `IM-CLIENT-KEY`    | 用戶端金鑰   | ✅    |
+| `IM-Authorization` | 用戶端權杖   | ✅    |
+
+## 請求內容
+
+請求內容應包含 JSON 格式的聊天室資訊。
+
+### 必填參數
+
+無必填參數,但建議至少提供 `roomType` 以明確指定聊天室類型。
+
+### 選填參數
+
+| 參數                 | 類型              | 說明                                                                                                                             |
+| -------------------- | ----------------- | -------------------------------------------------------------------------------------------------------------------------------- |
+| `_id`                | string            | 自訂聊天室 ID                                                                                                                    |
+| `name`               | string            | 聊天室名稱                                                                                                                       |
+| `cover`              | string            | 聊天室封面圖片 URL                                                                                                               |
+| `roomType`           | string            | 聊天室類型:"direct"(一對一)或 "group"(群組)                                                                                      |
+| `description`        | string            | 聊天室描述,可為純文字或序列化的 JSON 資料                                                                                       |
+| `roomTags`           | array[string]     | 聊天室標籤陣列,用於搜尋                                                                                                          |
+| `webhook`            | string            | Webhook 金鑰或 URL                                                                                                               |
+| `botMode`            | boolean           | 是否啟用聊天室機器人                                                                                                             |
+| `invitee`            | string 或 array   | 要加入聊天室的成員,可為單一用戶端 ID(字串)或用戶端 ID 陣列                                                                      |
+| `systemMessage`      | boolean           | 是否自動建立系統訊息(例如加入成員訊息)                                                                                           |
+| `invitationRequired` | boolean           | 受邀者是否需要接受或拒絕邀請才能加入聊天室。僅適用於**群組**聊天。對於**一對一**聊天,系統會自動將此參數設為 `false`,受邀者會立即加入 |
+| `extParams`          | string            | 擴充自訂參數,格式可為 param1=value1&param2=value2、JSON 字串或自訂編碼文字                                                      |
+
+## 使用範例
+
+### 範例一:建立群組聊天室(需要邀請確認)
+
+使用此方式建立群組聊天室,受邀者需要接受邀請才能加入。
+
+**cURL 範例:**
+
+```bash
 curl -X "POST" "http://localhost:3100/rooms/createAndJoin" \
-     -H 'IM-CLIENT-KEY: {IM-CLIENT-KEY}' \
-     -H 'IM-Authorization: {TOKEN}' \
+     -H 'IM-CLIENT-KEY: {您的_CLIENT_KEY}' \
+     -H 'IM-Authorization: {您的_TOKEN}' \
      -H 'Content-Type: application/json; charset=utf-8' \
      -d $'{
   "_id": "demo-room",
-  "invitationRequired": false,
-  "room-type": "group",
+  "invitationRequired": true,
+  "roomType": "group",
   "systemMessage": true,
   "invitee": [
     "ccc",
     "bbb"
-  ],
+  ]
 }'
 ```
 
-Create a group chat room
+**JavaScript 範例:**
 
 ```javascript
-axios.post(
+const response = await axios.post(
   "http://localhost:3100/rooms/createAndJoin",
   {
     _id: "demo-room",
@@ -78,10 +91,40 @@ axios.post(
 );
 ```
 
-Create a 1-on-1 direct room
+### 範例二:建立群組聊天室(立即加入)
+
+使用此方式建立群組聊天室,受邀者會立即加入而不需要確認。
+
+**JavaScript 範例:**
 
 ```javascript
-axios.post(
+const response = await axios.post(
+  "http://localhost:3100/rooms/createAndJoin",
+  {
+    _id: "demo-room",
+    invitationRequired: false,
+    systemMessage: true,
+    invitee: ["ccc", "bbb"],
+    roomType: "group",
+  },
+  {
+    headers: {
+      "IM-CLIENT-KEY": `${IM_CLIENT_KEY}`,
+      "IM-Authorization": `${TOKEN}`,
+      "Content-Type": "application/json; charset=utf-8",
+    },
+  }
+);
+```
+
+### 範例三:建立一對一聊天室
+
+使用此方式建立一對一聊天室,受邀者會立即加入(系統會自動將 `invitationRequired` 設為 `false`)。
+
+**JavaScript 範例:**
+
+```javascript
+const response = await axios.post(
   "http://localhost:3100/rooms/createAndJoin",
   {
     systemMessage: true,
@@ -98,9 +141,11 @@ axios.post(
 );
 ```
 
-### Response Result
+## 回應
 
-Created Room data
+### 成功回應
+
+當請求成功時,API 會回傳建立的聊天室資訊:
 
 ```json
 {
@@ -146,43 +191,9 @@ Created Room data
     "status": 1,
     "memberProperties": [
       {
-        "badge": 181,
-        "lastRead": "5b87e48e3f5be1360a37e7b4",
-        "client": "STARBUCKS"
-      },
-      {
-        "badge": 213,
-        "lastRead": "5af6927707dbb43a32dfd29a",
-        "client": "test-user"
-      },
-      {
-        "badge": 223,
-        "client": "12345"
-      },
-      {
-        "badge": 208,
-        "lastRead": "5b4f4af9638db622c7b60aa3",
-        "client": "samsung-358436073080420"
-      },
-      {
-        "badge": 24,
-        "lastRead": "5e344ffc3a14440b637097f8",
-        "client": "sss"
-      },
-      {
-        "badge": 175,
-        "lastRead": "5b8e9f31002bae3cd3ce022e",
-        "client": "google-generic-x86"
-      },
-      {
-        "badge": 175,
-        "lastRead": "5b8e9f31002bae3cd3ce022e",
-        "client": "bonbonbon"
-      },
-      {
-        "badge": 172,
-        "lastRead": "5b8fe660118d4d1f04c3b684",
-        "client": "samsung-herolte"
+        "badge": 0,
+        "lastRead": "5e5b89a77508ac31c0d91835",
+        "client": "aaa"
       },
       {
         "badge": 223,
@@ -191,99 +202,18 @@ Created Room data
       {
         "badge": 220,
         "client": "ccc"
-      },
-      {
-        "lastRead": "5e5b89a77508ac31c0d91835",
-        "badge": 0,
-        "client": "aaa"
-      },
-      {
-        "badge": 0,
-        "lastRead": "5d58059914d165090e769360",
-        "client": "1485248560558"
-      },
-      {
-        "badge": 223,
-        "client": "bossiniTW"
-      },
-      {
-        "badge": 0,
-        "lastRead": "5dcadf48951bee23caaf0dd6",
-        "client": "pinchat_agent_269"
-      },
-      {
-        "badge": 0,
-        "lastRead": "5dcac4d2613d3508cda438c8",
-        "client": "BOT"
-      },
-      {
-        "badge": 223,
-        "client": "robot001"
       }
     ],
     "members": [
       {
-        "_id": "STARBUCKS",
-        "nickname": "Madeline",
-        "avatarUrl": "https://globalassets.starbucks.com/assets/c1f4cd02de24483eb86c696401ad4213.jpg",
-        "description": "Store Description lal alll",
-        "isRobot": false,
-        "id": "STARBUCKS",
-        "lastLoginTimeMS": 1583057339129
-      },
-      {
-        "_id": "test-user",
-        "avatarUrl": "https://globalassets.starbucks.com/assets/c1f4cd02de24483eb86c696401ad4213.jpg",
-        "nickname": "Maisie",
-        "isRobot": false,
-        "id": "test-user",
-        "lastLoginTimeMS": 1583057339130
-      },
-      {
-        "_id": "12345",
-        "isRobot": false,
-        "id": "12345",
-        "lastLoginTimeMS": 1583057339129
-      },
-      {
-        "_id": "samsung-358436073080420",
-        "description": "description la la #1531924629059",
-        "nickname": "samsung-herolte",
-        "avatarUrl": "",
-        "userAgent": "Dalvik/2.1.0 (Linux; U; Android 8.0.0; SM-G930F Build/R16NW)",
-        "isRobot": false,
-        "id": "samsung-358436073080420",
-        "lastLoginTimeMS": 1531924629461
-      },
-      {
-        "_id": "google-generic-x86",
-        "nickname": "google-generic_x86",
-        "description": "description la la #1536074034718",
-        "avatarUrl": "",
+        "_id": "aaa",
+        "description": "description la la #1541926309694",
+        "avatarUrl": "http://loremflickr.com/240/240/style?1569804629",
+        "nickname": "AAA",
         "userAgent": "Dalvik/2.1.0 (Linux; U; Android 8.1.0; Android SDK built for x86 Build/OSM1.180201.007)",
         "isRobot": false,
-        "id": "google-generic-x86",
-        "lastLoginTimeMS": 1536074046906
-      },
-      {
-        "_id": "bonbonbon",
-        "nickname": "bonbonbon",
-        "description": "description la la #1536073706411",
-        "avatarUrl": "",
-        "userAgent": "Dalvik/2.1.0 (Linux; U; Android 8.1.0; Android SDK built for x86 Build/OSM1.180201.007)",
-        "isRobot": false,
-        "id": "bonbonbon",
-        "lastLoginTimeMS": 1536073718631
-      },
-      {
-        "_id": "samsung-herolte",
-        "nickname": "samsung-herolte",
-        "description": "description la la #1536157340251",
-        "avatarUrl": "",
-        "userAgent": "Dalvik/2.1.0 (Linux; U; Android 8.0.0; SM-G930F Build/R16NW)",
-        "isRobot": false,
-        "id": "samsung-herolte",
-        "lastLoginTimeMS": 1536157340491
+        "id": "aaa",
+        "lastLoginTimeMS": 1541926310026
       },
       {
         "_id": "bbb",
@@ -296,31 +226,12 @@ Created Room data
         "lastLoginTimeMS": 1541824600261
       },
       {
-        "_id": "sss",
-        "nickname": "SSS",
-        "description": "some description",
-        "avatarUrl": "https://lumiere-a.akamaihd.net/v1/images/f_frozen2_header_mobile_18432_d258f93f.jpeg",
-        "userAgent": "imkit-ios-sdk-v3-demo/1 CFNetwork/1121.2.1 Darwin/19.3.0",
+        "_id": "ccc",
+        "avatarUrl": "https://globalassets.starbucks.com/assets/c1f4cd02de24483eb86c696401ad4213.jpg",
+        "nickname": "CCC",
         "isRobot": false,
-        "id": "sss",
-        "lastLoginTimeMS": 1580526441451
-      },
-      {
-        "_id": "robot001",
-        "nickname": "Quinn Robot",
-        "isRobot": true,
-        "id": "robot001",
-        "lastLoginTimeMS": 1583057339130
-      },
-      {
-        "_id": "aaa",
-        "description": "description la la #1541926309694",
-        "avatarUrl": "http://loremflickr.com/240/240/style?1569804629",
-        "nickname": "AAA",
-        "userAgent": "Dalvik/2.1.0 (Linux; U; Android 8.1.0; Android SDK built for x86 Build/OSM1.180201.007)",
-        "isRobot": false,
-        "id": "aaa",
-        "lastLoginTimeMS": 1541926310026
+        "id": "ccc",
+        "lastLoginTimeMS": 0
       }
     ],
     "id": "demo-room",
@@ -328,3 +239,73 @@ Created Room data
   }
 }
 ```
+
+### 回應欄位
+
+| 欄位     | 類型   | 說明                   |
+| -------- | ------ | ---------------------- |
+| `RC`     | number | 回應代碼(0 表示成功)   |
+| `RM`     | string | 回應訊息               |
+| `result` | object | 建立的聊天室資訊       |
+
+#### 聊天室物件欄位
+
+| 欄位                | 類型            | 說明                           |
+| ------------------- | --------------- | ------------------------------ |
+| `_id`               | string          | 聊天室唯一識別碼               |
+| `name`              | string          | 聊天室名稱                     |
+| `cover`             | string          | 聊天室封面圖片 URL             |
+| `description`       | string          | 聊天室描述                     |
+| `roomType`          | string          | 聊天室類型("direct" 或 "group") |
+| `webhook`           | string          | Webhook 金鑰或 URL             |
+| `botState`          | string          | 機器人狀態                     |
+| `botMode`           | boolean         | 是否啟用機器人模式             |
+| `encrypted`         | boolean         | 是否加密                       |
+| `serviceStatus`     | number          | 服務狀態                       |
+| `roomTags`          | array[string]   | 聊天室標籤陣列                 |
+| `status`            | number          | 聊天室狀態                     |
+| `lastMessage`       | object          | 最後一則訊息物件               |
+| `memberProperties`  | array[object]   | 成員屬性陣列                   |
+| `members`           | array[object]   | 成員物件陣列                   |
+| `createdTimeMS`     | number          | 建立時間戳(毫秒)               |
+
+#### 成員物件欄位
+
+| 欄位              | 類型    | 說明                 |
+| ----------------- | ------- | -------------------- |
+| `_id`             | string  | 成員唯一識別碼       |
+| `nickname`        | string  | 成員顯示名稱         |
+| `avatarUrl`       | string  | 成員頭像圖片 URL     |
+| `description`     | string  | 成員描述             |
+| `userAgent`       | string  | 用戶代理字串         |
+| `isRobot`         | boolean | 是否為機器人         |
+| `lastLoginTimeMS` | number  | 最後登入時間戳(毫秒) |
+
+#### 成員屬性物件欄位
+
+| 欄位       | 類型   | 說明                   |
+| ---------- | ------ | ---------------------- |
+| `client`   | string | 成員用戶端 ID          |
+| `badge`    | number | 未讀訊息數量           |
+| `lastRead` | string | 最後已讀訊息 ID        |
+
+## 錯誤處理
+
+當請求失敗時,您會收到包含錯誤詳細資訊的錯誤回應。常見的錯誤情況包括:
+
+- 無效的用戶端金鑰或授權權杖
+- 無效的聊天室類型
+- 指定的受邀者不存在
+- 伺服器內部錯誤
+
+## 使用注意事項
+
+- 此端點用於建立新聊天室並讓當前用戶和指定的受邀者加入
+- 聊天室 ID(`_id`)若未指定,系統會自動產生唯一識別碼
+- 對於**群組聊天室**(`roomType: "group"`),可設定 `invitationRequired` 為 `true` 要求受邀者接受邀請
+- 對於**一對一聊天室**(`roomType: "direct"`),系統會自動將 `invitationRequired` 設為 `false`,受邀者會立即加入
+- 呼叫者(當前用戶)會自動成為聊天室成員
+- 如果使用管理員金鑰(platform-api-key)呼叫此 API,管理員用戶也會自動加入聊天室
+- 所有時間戳均為 UTC 格式,以毫秒為單位
+- 封面圖片的檔案大小應控制在合理範圍內
+- `roomTags` 可用於後續的聊天室搜尋功能
