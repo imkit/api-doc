@@ -27,7 +27,7 @@ const config: DocsThemeConfig = {
   ),
 
   footer: {
-    component: <span>© 2025 FUNTEK Inc. All rights reserved.</span>
+    component: <div style={{ display: 'flex', justifyContent: 'flex-end', padding: '1rem 2rem' }}>© 2026 FUNTEK Software Inc. All rights reserved.</div>
   }
 }
 
