@@ -21,7 +21,7 @@ PUT /rooms/{id}
 | Parameter       | Type   | Required | Description    |
 | --------------- | ------ | -------- | -------------- |
 | `IM-CLIENT-KEY` | string | ✅        | Client Key     |
-| `Authorization` | string | ✅        | Client Token   |
+| `IM-Authorization` | string | ✅        | Client Token   |
 
 #### Path Parameters
 

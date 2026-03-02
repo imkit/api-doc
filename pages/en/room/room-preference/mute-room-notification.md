@@ -1,41 +1,60 @@
 # Mute Room Notification
 
-# Mute a room
+This endpoint allows the current user to mute notifications for a specified room. Once muted, new messages in that room will no longer trigger push notifications. This is a personal preference setting that only affects the current user and does not impact other members.
 
-### path
-
-/me/mute/:room
-
-### Method
-
-Post
-
-### Headers:
-
-| Field         | Description  |
-| ------------- | ------------ |
-| IM-CLIENT-KEY | Client Key   |
-| Authorization | Client Token |
-
-### Path Parameters
-
-| Field | Description |
-| ----- | ----------- |
-| room  | Room ID     |
+## HTTP Request
 
 ```
-POST /me/mute/58871b877390be11d5f1ab30 HTTP/1.1
-IM-CLIENT-KEY: 9FSk26d4AIbZh0k44F5+DzbetgAJA9WjC7WP36Khm6c=
-Authorization: fVy7YhqBZqEzNO9LhMmcyA==
-Host: localhost:3100
-Connection: close
-User-Agent: Paw/3.0.15 (Macintosh; OS X/10.11.6) GCDHTTPRequest
-Content-Length: 0
+POST /me/mute/:room
 ```
 
-### Response Result
+## Authentication
 
-Updated client data
+Include your client key and authorization token in the request headers:
+
+| Header             | Description  | Required |
+| ------------------ | ------------ | -------- |
+| `IM-CLIENT-KEY`    | Client Key   | ✅        |
+| `IM-Authorization` | Client Token | ✅        |
+
+## Path Parameters
+
+| Parameter | Type   | Description    | Required |
+| --------- | ------ | -------------- | -------- |
+| `:room`   | string | Unique room ID | ✅        |
+
+No request body is required for this API.
+
+## Examples
+
+**cURL:**
+
+```bash
+curl -X "POST" "http://localhost:3100/me/mute/demo-room" \
+     -H 'IM-CLIENT-KEY: {YOUR_CLIENT_KEY}' \
+     -H 'IM-Authorization: {YOUR_TOKEN}'
+```
+
+**JavaScript:**
+
+```javascript
+const response = await axios.post(
+  `http://localhost:3100/me/mute/${roomID}`,
+  null,
+  {
+    headers: {
+      "IM-CLIENT-KEY": `${IM_CLIENT_KEY}`,
+      "IM-Authorization": `${TOKEN}`,
+    },
+  }
+);
+```
+
+## Response
+
+### Success Response
+
+When the request succeeds, the API returns the updated current user data. The `mute` array will contain the newly muted room ID:
 
 ```json
 {
@@ -46,16 +65,41 @@ Updated client data
     "email": "test@test.com",
     "nickname": "Test AB",
     "appID": "SampleApp",
-    "__v": 0,
     "avatarUrl": "http://example.com/avatarUrl",
     "address": {
       "port": 56216,
       "family": "IPv6",
       "address": "::1"
     },
-    "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/56.0.2924.87 Safari/537.36",
+    "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_6) AppleWebKit/537.36",
     "mute": ["58871b877390be11d5f1ab30"],
     "lastLoginTimeMS": 1487068306745
   }
 }
 ```
+
+### Response Fields
+
+| Field             | Type          | Description                                         |
+| ----------------- | ------------- | --------------------------------------------------- |
+| `RC`              | number        | Response code (0 means success)                     |
+| `RM`              | string        | Response message                                    |
+| `result`          | object        | Updated current user data                           |
+| `result._id`      | string        | User unique ID                                      |
+| `result.nickname` | string        | User display name                                   |
+| `result.email`    | string        | User email                                          |
+| `result.mute`     | array[string] | Array of muted room IDs (room added after muting)   |
+
+## Error Handling
+
+When the request fails, you will receive an error response with details. Common error cases include:
+
+- Invalid client key or authorization token
+- The specified room does not exist
+- Internal server error
+
+## Notes
+
+- **Personal preference**: The mute setting only affects the current user. Other members' notifications are not impacted.
+- **Mute state**: After a successful request, the room ID is added to the `mute` array in the response, which represents all rooms currently muted by the user.
+- To unmute a room, use the [Unmute Room Notification](./unmute-room-notification) API.

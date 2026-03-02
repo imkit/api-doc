@@ -21,7 +21,7 @@ POST /rooms/{roomId}/message
 | 参数               | 类型   | 必填 | 说明           |
 | ------------------ | ------ | ---- | -------------- |
 | `IM-CLIENT-KEY`    | string | ✅    | Client Key     |
-| `Authorization`    | string | ✅    | Client Token   |
+| `IM-Authorization`    | string | ✅    | Client Token   |
 
 #### Path Parameters
 

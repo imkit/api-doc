@@ -21,7 +21,7 @@ GET /me
 | 參數            | 類型   | 必填 | 說明           |
 | --------------- | ------ | ---- | -------------- |
 | `IM-CLIENT-KEY` | string | ✅    | Client Key     |
-| `Authorization` | string | ✅    | Client Token   |
+| `IM-Authorization` | string | ✅    | Client Token   |
 
 #### 範例請求
 

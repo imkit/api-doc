@@ -1,63 +1,101 @@
-# Remove Member
+# Remove a Member
 
-# Kickout clients from a room
+This endpoint allows you to remove one or more members from a specified room. If the current user's own ID is included in the `members` array, it means the current user is leaving the room voluntarily. This API is for server-side use only and requires proper authentication.
 
-### path
-
-/rooms/:id/delete/members
-
-### Method
-
-POST
-
-### Headers:
-
-| Field         | Description  |
-| ------------- | ------------ |
-| IM-CLIENT-KEY | Client Key   |
-| Authorization | Client Token |
-
-### Path Parameters
-
-| Name | Description |
-| ---- | ----------- |
-| :id  | Room ID     |
-
-### Request Parameter
-
-| Name          | Type    | Description                                                  |
-| ------------- | ------- | ------------------------------------------------------------ |
-| systemMessage | Boolean | Whether to create a system message of _leaveRoom_ or _deleteMember_. Default false |
-| members       | Array   | Array of member IDs. If you put current client id in the list, it means that the current client leaves the room |
+## HTTP Request
 
 ```
-POST /rooms/demo-room/delete/members/ HTTP/1.1
-IM-CLIENT-KEY: {IM-CLIENT-KEY}
-Authorization: {TOKEN}
-Content-Type: application/json; charset=utf-8
-Host: localhost:3100
-Connection: close
-User-Agent: Paw/3.1.10 (Macintosh; OS X/10.15.6) GCDHTTPRequest
-Content-Length: 57
-
-{"systemMessage":true,"members":["ccc","bbb"]}
-
-
+POST /rooms/:id/delete/members
 ```
 
-### Response Result
+## Authentication
 
-Updated Room data.
+Include your client key and authorization token in the request headers:
+
+| Header             | Description  | Required |
+| ------------------ | ------------ | -------- |
+| `IM-CLIENT-KEY`    | Client Key   | ✅        |
+| `IM-Authorization` | Client Token | ✅        |
+
+## Path Parameters
+
+| Parameter | Type   | Description    | Required |
+| --------- | ------ | -------------- | -------- |
+| `:id`     | string | Unique room ID | ✅        |
+
+## Request Body
+
+| Parameter       | Type          | Required | Description                                                                                                     |
+| --------------- | ------------- | -------- | --------------------------------------------------------------------------------------------------------------- |
+| `members`       | array[string] | ✅        | Array of member IDs to remove. If the current user's own ID is included, they will leave the room voluntarily. |
+| `systemMessage` | boolean       | ❌        | Whether to generate a `leaveRoom` or `deleteMember` system message. Default: `false`                           |
+
+## Examples
+
+### Example 1: Remove Specific Members
+
+**cURL:**
+
+```bash
+curl -X "POST" "http://localhost:3100/rooms/demo-room/delete/members" \
+     -H 'IM-CLIENT-KEY: {YOUR_CLIENT_KEY}' \
+     -H 'IM-Authorization: {YOUR_TOKEN}' \
+     -H 'Content-Type: application/json; charset=utf-8' \
+     -d '{"members": ["ccc", "bbb"], "systemMessage": true}'
+```
+
+**JavaScript:**
+
+```javascript
+const response = await axios.post(
+  `http://localhost:3100/rooms/${roomID}/delete/members`,
+  {
+    members: ["ccc", "bbb"],
+    systemMessage: true,
+  },
+  {
+    headers: {
+      "IM-CLIENT-KEY": `${IM_CLIENT_KEY}`,
+      "IM-Authorization": `${TOKEN}`,
+      "Content-Type": "application/json; charset=utf-8",
+    },
+  }
+);
+```
+
+### Example 2: Current User Leaves the Room
+
+**JavaScript:**
+
+```javascript
+const response = await axios.post(
+  `http://localhost:3100/rooms/${roomID}/delete/members`,
+  {
+    members: [`${MY_CLIENT_ID}`],
+    systemMessage: true,
+  },
+  {
+    headers: {
+      "IM-CLIENT-KEY": `${IM_CLIENT_KEY}`,
+      "IM-Authorization": `${TOKEN}`,
+      "Content-Type": "application/json; charset=utf-8",
+    },
+  }
+);
+```
+
+## Response
+
+### Success Response
+
+When the request succeeds, the API returns the updated room data:
 
 ```json
 {
   "RC": 0,
   "RM": "OK",
   "result": {
-    "_id": "58871b877390be11d5f1ab30",
-    "data": {
-      "customProperty": "hello"
-    },
+    "_id": "demo-room",
     "lastMessage": {
       "_id": "58a2dc9c965d09221ea7bedb",
       "message": "sadf dsfdf",
@@ -73,30 +111,45 @@ Updated Room data.
       "messageTimeMS": 1487068316006,
       "id": "58a2dc9c965d09221ea7bedb"
     },
-    "lastRead": [
-      {
-        "message": "58885c9e4d0c89571b777a81",
-        "client": "1485248560558"
-      }
-    ],
     "members": [
       {
         "_id": "1485248560558",
         "nickname": "Test AB",
         "avatarUrl": "http://example.com/avatarUrl",
-        "lastLoginTime": "2017-02-14T10:31:46.745Z",
         "lastLoginTimeMS": 1487068306745,
         "id": "1485248560558"
       },
       {
         "_id": "1485248566481",
         "nickname": "Test2",
-        "lastLoginTime": "2017-02-10T10:03:13.257Z",
         "lastLoginTimeMS": 1486720993257,
         "id": "1485248566481"
       }
     ],
-    "id": "58871b877390be11d5f1ab30"
+    "id": "demo-room"
   }
 }
 ```
+
+### Response Fields
+
+| Field    | Type   | Description                         |
+| -------- | ------ | ----------------------------------- |
+| `RC`     | number | Response code (0 means success)     |
+| `RM`     | string | Response message                    |
+| `result` | object | Updated room data with full details |
+
+## Error Handling
+
+When the request fails, you will receive an error response with details. Common error cases include:
+
+- Invalid client key or authorization token
+- The specified room does not exist
+- One or more IDs in `members` are not in the room
+- Internal server error
+
+## Notes
+
+- **Leaving voluntarily**: Including the current user's own ID in `members` is treated as voluntarily leaving the room.
+- **System message type**: When `systemMessage: true`, the type is `leaveRoom` if the member left voluntarily, or `deleteMember` if they were removed by another user.
+- Once removed, a member will no longer be able to access the room or its message history.

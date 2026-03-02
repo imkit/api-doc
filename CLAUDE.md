@@ -1,226 +1,166 @@
-# IMKIT Doc Website - 專案文檔
+# CLAUDE.md
 
-## 專案架構說明
-- `@imkit-doc-website/` - 主要改動專案（只能改動此專案）
-- `@chat-server-document.wiki/` - 參考專案（內含 .md 文檔，需要複製內容）
-- `@pinchat-landing-page-i18n/` - 無關專案（不處理）
+This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
-## 多國語言開發
-**📋 詳細指南**: 請參考 [I18N_DEVELOPMENT_GUIDE.md](./I18N_DEVELOPMENT_GUIDE.md)
+## Development Commands
 
-### 目前支援語言
-- 🇹🇼 **繁體中文** (`zh-TW`) - 預設語言
-- 🇨🇳 **簡體中文** (`zh-CN`) - 已完成
-- 🇺🇸 **英文** (`en`) - 待開發
+```bash
+npm install       # Install dependencies
+npm run dev       # Start dev server at http://localhost:3000
+npm run build     # Build static output to ./out
+node scripts/post-build.js  # Required post-build step (run after build)
+```
 
-### 快速新增語言步驟
-1. **配置文件**: 更新 `next.config.mjs` 和 `theme.config.tsx`
-2. **建立目錄**: 在 `pages/` 下建立新語言資料夾（如 `pages/en/`）
-3. **複製結構**: 從 `pages/zh-TW/` 複製資料夾結構和 `_meta.ts` 文件
-4. **翻譯內容**: 逐一翻譯 `.md` 文件內容
-5. **測試部署**: 本地測試後提交到 GitHub
+Deployment to GitHub Pages is automatic on push to `main` via `.github/workflows/deploy.yml`.
 
-*詳細操作步驟請參考完整的開發指南文檔。*
+## Architecture
 
-## 待補充的空白 .md 文件清單
+This is a **Nextra 3.x** static documentation site built with Next.js 15 and React 19, deployed to GitHub Pages at `https://imkit.github.io/api-doc`.
 
-### 用戶 (User)
-#### 用戶列表 (User List)
-- [ ] `pages/user/user-list/get-a-user.md` 
-  - 對應 URL: https://imkit.github.io/api-doc/user/user-list/get-a-user
-  - 來源參考: `@chat-server-document.wiki/me/[Me]-Get.md`
+### Key config files
+- `next.config.mjs` — Nextra setup, i18n locales, GitHub Pages `basePath: '/api-doc'`, `output: 'export'`
+- `theme.config.tsx` — Nextra docs theme, language switcher entries
+- `pages/_meta.ts` — Root navigation (applies `layout: 'full'` to all pages)
 
-### 聊天室 (Room)
-#### 聊天室管理 (Room Management)  
-- [ ] `pages/room/room-management/update-a-room.md`
-  - 對應 URL: https://imkit.github.io/api-doc/room/room-management/update-a-room/
-  - 來源參考: `@chat-server-document.wiki/room/[Room]-Update.md`
+### i18n structure
 
-#### 聊天室成員 (Room Members)
-- [ ] `pages/room/room-members/list-members.md`
-  - 對應 URL: https://imkit.github.io/api-doc/room/room-members/list-members/
-  - 來源參考: 需要找對應的文檔
+Three supported locales (configured in `next.config.mjs`):
+- `zh-TW` — Traditional Chinese, **default locale**
+- `zh-CN` — Simplified Chinese
+- `en` — English
 
-- [ ] `pages/room/room-members/search-a-member.md`
-  - 對應 URL: https://imkit.github.io/api-doc/room/room-members/search-a-member/
-  - 來源參考: 需要找對應的文檔
+Pages live under `pages/[locale]/`. Each directory needs a `_meta.ts` navigation file. Every locale must mirror the same folder and file structure.
 
-### 訊息 (Message)
-#### 訊息功能 (Message Basic)
-- [ ] `pages/message/message-basic/get-a-message.md`
-  - 對應 URL: https://imkit.github.io/api-doc/message/message-basic/get-a-message/
-  - 來源參考: 需要找對應的文檔
+```
+pages/
+├── zh-TW/          # Primary locale — source of truth for structure
+├── zh-CN/          # Must match zh-TW structure
+└── en/             # Must match zh-TW structure
+```
 
-- [ ] `pages/message/message-basic/delete-a-message.md`
-  - 對應 URL: https://imkit.github.io/api-doc/message/message-basic/delete-a-message/
-  - 來源參考: 需要找對應的文檔
+### Navigation metadata
 
-- [ ] `pages/message/message-basic/send-a-message.md`
-  - 對應 URL: https://imkit.github.io/api-doc/message/message-basic/send-a-message/
-  - 來源參考: `@chat-server-document.wiki/room/[Room]-Send-Message.md`
+Each folder contains a `_meta.ts` that defines sidebar titles:
+```ts
+export default {
+  "some-page": { title: "Page Title" }
+}
+```
 
-- [ ] `pages/message/message-basic/search-message.md`
-  - 對應 URL: https://imkit.github.io/api-doc/message/message-basic/search-message/
-  - 來源參考: `@chat-server-document.wiki/[Search].md`
+## Content Workflow
 
-- [ ] `pages/message/message-basic/get-message-by-a-room.md`
-  - 對應 URL: https://imkit.github.io/api-doc/message/message-basic/get-message-by-a-room/
-  - 來源參考: `@chat-server-document.wiki/room/[Room]-List-Room-Messages-V3.md`
+Source reference docs live in `@chat-server-document.wiki/` (a sibling repo — read only, do not modify). The published site only uses files in this repo (`@imkit-doc-website/`, i.e. the current directory).
 
-- [ ] `pages/message/message-basic/list-messages.md`
-  - 對應 URL: https://imkit.github.io/api-doc/message/message-basic/list-messages/
-  - 來源參考: 需要找對應的文檔
+1. Read the source `.md` from `@chat-server-document.wiki/`
+2. Reformat to the layout spec below
+3. Write to the corresponding `pages/[locale]/` path
+4. Ensure the same file exists (or is created) in all three locale directories
 
-#### 未讀計算 (Message Badge)
-- [ ] `pages/message/message-badge/get-unread-message-by-a-room.md`
-  - 對應 URL: https://imkit.github.io/api-doc/message/message-badge/get-unread-message-by-a-room/
-  - 來源參考: `@chat-server-document.wiki/badge/[Badge]-Count-unreads-by-room-tags.md`
+## Document Layout Spec
 
-- [ ] `pages/message/message-badge/get-unread-message-by-a-user.md`
-  - 對應 URL: https://imkit.github.io/api-doc/message/message-badge/get-unread-message-by-a-user/
-  - 來源參考: `@chat-server-document.wiki/me/[Me]-Badge.md`
+**Reference file**: `pages/en/user/user-list/list-users.md`
 
-### 管理機制 (Moderation)
-#### 封鎖用戶 (Block User)
-- [ ] `pages/moderation/block-user/block-a-user.md`
-  - 對應 URL: https://imkit.github.io/api-doc/moderation/block-user/block-a-user/
-  - 來源參考: `@chat-server-document.wiki/blocklist/[Blocklist]-Block-a-user.md`
+All API doc pages must follow this structure:
 
-- [ ] `pages/moderation/block-user/unblock-a-user.md`
-  - 對應 URL: https://imkit.github.io/api-doc/moderation/block-user/unblock-a-user/
-  - 來源參考: `@chat-server-document.wiki/blocklist/[Blocklist]-Unblock-a-user.md`
-
-- [ ] `pages/moderation/block-user/list-blocked-users.md`
-  - 對應 URL: https://imkit.github.io/api-doc/moderation/block-user/list-blocked-users/
-  - 來源參考: `@chat-server-document.wiki/blocklist/[Blocklist]-Get-my-blocklist.md`
-
-#### 靜音成員 (Mute Member)
-- [ ] `pages/moderation/mute-member/mute-a-member.md`
-  - 對應 URL: https://imkit.github.io/api-doc/moderation/mute-member/mute-a-member/
-  - 來源參考: `@chat-server-document.wiki/me/[Me]-Mute-room.md`
-
-- [ ] `pages/moderation/mute-member/unmute-a-member.md`
-  - 對應 URL: https://imkit.github.io/api-doc/moderation/mute-member/unmute-a-member/
-  - 來源參考: `@chat-server-document.wiki/me/[Me]-UnMute-Room.md`
-
-- [ ] `pages/moderation/mute-member/list-muted-members.md`
-  - 對應 URL: https://imkit.github.io/api-doc/moderation/mute-member/list-muted-members/
-  - 來源參考: 需要找對應的文檔
-
-#### 禁止成員 (Ban Member)
-- [ ] `pages/moderation/ban-member/ban-a-member.md`
-  - 對應 URL: https://imkit.github.io/api-doc/moderation/ban-member/ban-a-member/
-  - 來源參考: 需要找對應的文檔
-
-- [ ] `pages/moderation/ban-member/unban-a-member.md`
-  - 對應 URL: https://imkit.github.io/api-doc/moderation/ban-member/unban-a-member/
-  - 來源參考: 需要找對應的文檔
-
-- [ ] `pages/moderation/ban-member/list-banned-members.md`
-  - 對應 URL: https://imkit.github.io/api-doc/moderation/ban-member/list-banned-members/
-  - 來源參考: 需要找對應的文檔
-
-#### 凍結聊天室 (Freeze Chatroom)
-- [ ] `pages/moderation/freeze-chatroom/freeze-a-chatroom.md`
-  - 對應 URL: https://imkit.github.io/api-doc/moderation/freeze-chatroom/freeze-a-chatroom/
-  - 來源參考: 需要找對應的文檔
-
-#### 敏感用詞 (Sensitive Word)
-- [ ] `pages/moderation/sensitive-word/blocklist.md`
-  - 對應 URL: https://imkit.github.io/api-doc/moderation/sensitive-word/blocklist/
-  - 來源參考: 需要找對應的文檔
-
-### Webhook
-- [ ] `pages/webhook/webhook/webhook.md`
-  - 對應 URL: https://imkit.github.io/api-doc/webhook/webhook/webhook/
-  - 來源參考: `@chat-server-document.wiki/Webhook.md`
-
-## 工作流程
-1. 從 `@chat-server-document.wiki/` 找到對應的 .md 文件
-2. 讀取內容並適當格式化
-3. 複製到對應的 `@imkit-doc-website/pages/` 目錄下的 .md 文件
-4. 確保格式符合既定的 Layout 規範
-
-## Layout 規範
-**參考檔案**：`@imkit-doc-website/pages/user/user-list/list-users.md`
-
-### 標準結構
 ```markdown
-# 標題
+# Page Title
 
-## 概述
-API 的詳細說明和用途
+## Overview
+Brief description of what the API does and when to use it.
 
 ------
 
-## API 端點
+## API Endpoint
 
-### 功能名稱
-功能的簡短描述
+### Operation Name
+Short description.
 
 ```http
 METHOD /api/path
 ```
 
 #### Headers
-| 參數 | 類型 | 必填 | 說明 |
-| ---- | ---- | ---- | ---- |
-| ... | ... | ✅/❌ | ... |
+| Parameter | Type | Required | Description |
+| --------- | ---- | -------- | ----------- |
+| `IM-API-KEY` | string | ✅ | Your API key |
 
 #### Query Parameters / Post Body
-| 參數 | 類型 | 必填 | 說明 |
-| ---- | ---- | ---- | ---- |
-| ... | ... | ✅/❌ | ... |
+| Parameter | Type | Required | Description |
+| --------- | ---- | -------- | ----------- |
 
-#### 範例請求
+#### Example Request
 ```http
-實際的 HTTP 請求範例
+GET /api/path?param=value
 ```
 
 #### Response
-**成功回應（200 OK）**
-| 參數 | 類型 | 說明 |
-| ---- | ---- | ---- |
-| ... | ... | ... |
+**Success Response (200 OK)**
+| Parameter | Type | Description |
+| --------- | ---- | ----------- |
 
-#### 範例回應
+#### Example Response
 ```json
-{
-  實際的 JSON 回應範例
-}
+{ "RC": 0, "RM": "OK", "result": {} }
 ```
 
-#### 錯誤回應
-**HTTP狀態碼** - 錯誤說明
+#### Error Response
+**400 Bad Request** - Description
 ```json
-{
-  錯誤回應範例
-}
+{ "RC": 400, "RM": "..." }
 ```
 
 ------
 
-## 使用場景
-### 場景分類
-- **具體用途**：詳細說明
+## Use Cases
+### Category
+- **Use case**: Description
 
 ------
 
-## 注意事項
-- **重點提醒**：具體說明
+## Notes
+- **Key point**: Details
 ```
 
-### 格式要點
-1. **分隔線**：使用 `------` 分隔主要區塊
-2. **表格欄位**：統一使用中文（參數、類型、必填、說明）
-3. **必填標示**：✅ 必填，❌ 選填
-4. **程式碼區塊**：使用適當的語言標籤（`http`, `json`, `javascript` 等）
-5. **區塊標題**：使用 `##` 和 `###` 層級結構
-6. **強調格式**：使用 `**粗體**` 強調重點
+### Format rules
+- Section dividers: `------` (6 dashes)
+- Required: ✅, Optional: ❌
+- Code blocks: use language tags (`http`, `json`, `javascript`)
+- zh-TW pages use Traditional Chinese headings and content; en pages use English
 
-## 注意事項
-- 只能改動 `@imkit-doc-website/` 專案
-- 所有內容來源應為 `@chat-server-document.wiki/` 
-- 需要保持 API 文檔的完整性和準確性
-- **嚴格遵循 Layout 規範**：確保所有文檔格式一致
-- **內容本土化**：適當翻譯技術術語為繁體中文
+## Pending Pages (Todo)
+
+Pages that exist as placeholders and need content filled in. For each, find the source in `@chat-server-document.wiki/` and apply the layout spec above.
+
+### User
+- [ ] `pages/zh-TW/user/user-list/get-a-user.md` — source: `me/[Me]-Get.md`
+
+### Room
+- [ ] `pages/zh-TW/room/room-management/update-a-room.md` — source: `room/[Room]-Update.md`
+- [ ] `pages/zh-TW/room/room-members/list-members.md`
+- [ ] `pages/zh-TW/room/room-members/search-a-member.md`
+
+### Message
+- [ ] `pages/zh-TW/message/message-basic/get-a-message.md`
+- [ ] `pages/zh-TW/message/message-basic/delete-a-message.md`
+- [ ] `pages/zh-TW/message/message-basic/send-a-message.md` — source: `room/[Room]-Send-Message.md`
+- [ ] `pages/zh-TW/message/message-basic/search-message.md` — source: `[Search].md`
+- [ ] `pages/zh-TW/message/message-basic/get-message-by-a-room.md` — source: `room/[Room]-List-Room-Messages-V3.md`
+- [ ] `pages/zh-TW/message/message-basic/list-messages.md`
+- [ ] `pages/zh-TW/message/message-badge/get-unread-message-by-a-room.md` — source: `badge/[Badge]-Count-unreads-by-room-tags.md`
+- [ ] `pages/zh-TW/message/message-badge/get-unread-message-by-a-user.md` — source: `me/[Me]-Badge.md`
+
+### Moderation
+- [ ] `pages/zh-TW/moderation/block-user/block-a-user.md` — source: `blocklist/[Blocklist]-Block-a-user.md`
+- [ ] `pages/zh-TW/moderation/block-user/unblock-a-user.md` — source: `blocklist/[Blocklist]-Unblock-a-user.md`
+- [ ] `pages/zh-TW/moderation/block-user/list-blocked-users.md` — source: `blocklist/[Blocklist]-Get-my-blocklist.md`
+- [ ] `pages/zh-TW/moderation/mute-member/mute-a-member.md` — source: `me/[Me]-Mute-room.md`
+- [ ] `pages/zh-TW/moderation/mute-member/unmute-a-member.md` — source: `me/[Me]-UnMute-Room.md`
+- [ ] `pages/zh-TW/moderation/mute-member/list-muted-members.md`
+- [ ] `pages/zh-TW/moderation/ban-member/ban-a-member.md`
+- [ ] `pages/zh-TW/moderation/ban-member/unban-a-member.md`
+- [ ] `pages/zh-TW/moderation/ban-member/list-banned-members.md`
+- [ ] `pages/zh-TW/moderation/freeze-chatroom/freeze-a-chatroom.md`
+- [ ] `pages/zh-TW/moderation/sensitive-word/blocklist.md`
+
+### Webhook
+- [ ] `pages/zh-TW/webhook/webhook/webhook.md` — source: `Webhook.md`

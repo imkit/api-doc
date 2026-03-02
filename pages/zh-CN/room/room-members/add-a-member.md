@@ -1,61 +1,59 @@
 # 添加成员
 
-# 向聊天室添加多个成员
+此端点允许您将一位或多位用户添加到指定聊天室。支持邀请确认机制，并可选择是否自动生成系统消息通知。此 API 仅供服务端使用，需要适当的身份验证。
 
-### 路径
-
-/rooms/:id/members
-
-### 方法
-
-Post
-
-### 请求头：
-
-| 字段            | 说明  |
-| ---------------- | ------------ |
-| IM-CLIENT-KEY    | 客户端密钥   |
-| IM-Authorization | 客户端令牌 |
-
-### 路径参数
-
-| 参数名 | 说明 |
-| ---- | ----------- |
-| :id  | 聊天室ID     |
-
-### JSON 请求体
-
-| 参数名               | 类型    | 说明                                                  |
-| ------------------ | ------- | ------------------------------------------------------------ |
-| invitees           | Array   | 客户端ID列表                                                   |
-| systemMessage      | Boolean | （可选）默认为 false。创建添加成员的系统消息。 |
-| invitationRequired | Boolean | （可选）默认为 false。被邀请者是否需要邀请来决定加入或拒绝。仅限于**群聊**。 |
-
-此 API 将创建一个 addMembers 系统消息
-
-https://github.com/FUNTEKco/imkit-chatserver-v2/wiki/%5BMessage%5D-Format#add-member
+## HTTP 请求
 
 ```
-## 添加成员
-curl -X "POST" "http://localhost:3100/rooms/{roomID}/members" \
-     -H 'IM-CLIENT-KEY: {IM-CLIENT-KEY}' \
-     -H 'IM-Authorization: {TOKEN}' \
+POST /rooms/:id/members
+```
+
+## 身份验证
+
+在请求标头中包含您的客户端密钥和授权令牌：
+
+| 标头               | 说明         | 必填 |
+| ------------------ | ------------ | ---- |
+| `IM-CLIENT-KEY`    | 客户端密钥   | ✅    |
+| `IM-Authorization` | 客户端令牌   | ✅    |
+
+## 路径参数
+
+| 参数  | 类型   | 说明             | 必填 |
+| ----- | ------ | ---------------- | ---- |
+| `:id` | string | 聊天室唯一标识符 | ✅    |
+
+## 请求内容
+
+| 参数                 | 类型          | 必填 | 说明                                                                             |
+| -------------------- | ------------- | ---- | -------------------------------------------------------------------------------- |
+| `invitees`           | array[string] | ✅    | 要添加的成员客户端 ID 数组                                                       |
+| `systemMessage`      | boolean       | ❌    | 是否自动生成添加成员的系统消息，默认为 `false`                                   |
+| `invitationRequired` | boolean       | ❌    | 被邀请者是否需要接受邀请才能加入，默认为 `false`。仅适用于**群组**聊天室         |
+
+## 使用示例
+
+### 示例一：邀请多位成员（需接受邀请）
+
+**cURL 示例：**
+
+```bash
+curl -X "POST" "http://localhost:3100/rooms/demo-room/members" \
+     -H 'IM-CLIENT-KEY: {您的_CLIENT_KEY}' \
+     -H 'IM-Authorization: {您的_TOKEN}' \
      -H 'Content-Type: application/json; charset=utf-8' \
-     -d $'{
-  "invitees": [
-    "ccc",
-    "bbb"
-  ],
-  "invitationRequired": true,
-  "systemMessage": false
-}'
+     -d '{"invitees": ["ccc", "bbb"], "invitationRequired": true, "systemMessage": true}'
 ```
+
+**JavaScript 示例：**
 
 ```javascript
-axios.post(
+const response = await axios.post(
   `http://localhost:3100/rooms/${roomID}/members`,
   {
     invitees: ["ccc", "bbb"],
+    invitationRequired: true,
+    systemMessage: true,
   },
   {
     headers: {
@@ -67,11 +65,35 @@ axios.post(
 );
 ```
 
-### 响应结果
+### 示例二：直接添加成员（无需邀请确认）
 
-更新后的聊天室数据。
+**JavaScript 示例：**
 
-````json
+```javascript
+const response = await axios.post(
+  `http://localhost:3100/rooms/${roomID}/members`,
+  {
+    invitees: ["ccc", "bbb"],
+    invitationRequired: false,
+    systemMessage: true,
+  },
+  {
+    headers: {
+      "IM-CLIENT-KEY": `${IM_CLIENT_KEY}`,
+      "IM-Authorization": `${TOKEN}`,
+      "Content-Type": "application/json; charset=utf-8",
+    },
+  }
+);
+```
+
+## 响应
+
+### 成功响应
+
+当请求成功时，API 会返回更新后的聊天室信息：
+
+```json
 {
   "RC": 0,
   "RM": "OK",
@@ -80,21 +102,29 @@ axios.post(
     "name": "Demo",
     "cover": "http://loremflickr.com/240/240/style?demo",
     "description": "public demo room",
+    "roomType": "group",
+    "webhook": "meet-taipei-intro",
+    "botState": "CONTACT",
+    "botMode": false,
+    "encrypted": false,
+    "serviceStatus": 0,
+    "roomTags": ["demo", "foo", "bar"],
+    "status": 1,
     "lastMessage": {
       "_id": "5e5b88e91da9d53097b13840",
       "room": "demo-room",
-      "messageType": "deleteMember",
+      "messageType": "addMember",
       "sender": {
         "_id": "aaa",
-        "avatarUrl": "http://loremflickr.com/240/240/style?1569804629",
         "nickname": "AAA",
+        "avatarUrl": "http://loremflickr.com/240/240/style?1569804629",
         "id": "aaa",
         "lastLoginTimeMS": 0
       },
       "member": {
         "_id": "ccc",
-        "avatarUrl": "https://globalassets.starbucks.com/assets/c1f4cd02de24483eb86c696401ad4213.jpg",
         "nickname": "CCC",
+        "avatarUrl": "https://example.com/avatar.jpg",
         "id": "ccc",
         "lastLoginTimeMS": 0
       },
@@ -105,199 +135,58 @@ axios.post(
       "updatedAtMS": 1583057129059,
       "createdAtMS": 1583057129059
     },
-    "roomType": "group",
-    "webhook": "meet-taipei-intro",
-    "botState": "CONTACT",
-    "botMode": false,
-    "encrypted": false,
-    "serviceStatus": 0,
-    "roomTags": [
-      "demo",
-      "foo",
-      "bar"
-    ],
-    "status": 1,
-    "memberProperties": [
-      {
-        "badge": 180,
-        "lastRead": "5b87e48e3f5be1360a37e7b4",
-        "client": "STARBUCKS"
-      },
-      {
-        "badge": 212,
-        "lastRead": "5af6927707dbb43a32dfd29a",
-        "client": "test-user"
-      },
-      {
-        "badge": 222,
-        "client": "12345"
-      },
-      {
-        "badge": 207,
-        "lastRead": "5b4f4af9638db622c7b60aa3",
-        "client": "samsung-358436073080420"
-      },
-      {
-        "badge": 23,
-        "lastRead": "5e344ffc3a14440b637097f8",
-        "client": "sss"
-      },
-      {
-        "badge": 174,
-        "lastRead": "5b8e9f31002bae3cd3ce022e",
-        "client": "google-generic-x86"
-      },
-      {
-        "badge": 174,
-        "lastRead": "5b8e9f31002bae3cd3ce022e",
-        "client": "bonbonbon"
-      },
-      {
-        "badge": 171,
-        "lastRead": "5b8fe660118d4d1f04c3b684",
-        "client": "samsung-herolte"
-      },
-      {
-        "badge": 222,
-        "client": "bbb"
-      },
-      {
-        "badge": 220,
-        "client": "ccc"
-      },
-      {
-        "lastRead": "5e5b88e91da9d53097b13840",
-        "badge": 0,
-        "client": "aaa"
-      },
-      {
-        "badge": 0,
-        "lastRead": "5d58059914d165090e769360",
-        "client": "1485248560558"
-      },
-      {
-        "badge": 222,
-        "client": "bossiniTW"
-      },
-      {
-        "badge": 0,
-        "lastRead": "5dcadf48951bee23caaf0dd6",
-        "client": "pinchat_agent_269"
-      },
-      {
-        "badge": 0,
-        "lastRead": "5dcac4d2613d3508cda438c8",
-        "client": "BOT"
-      },
-      {
-        "badge": 222,
-        "client": "robot001"
-      }
-    ],
     "members": [
       {
-        "_id": "STARBUCKS",
-        "nickname": "Madeline",
-        "avatarUrl": "https://globalassets.starbucks.com/assets/c1f4cd02de24483eb86c696401ad4213.jpg",
-        "description": "Store Description lal alll",
+        "_id": "aaa",
+        "nickname": "AAA",
+        "avatarUrl": "http://loremflickr.com/240/240/style?1569804629",
         "isRobot": false,
-        "id": "STARBUCKS",
-        "lastLoginTimeMS": 1583057133276
-      },
-      {
-        "_id": "test-user",
-        "avatarUrl": "https://globalassets.starbucks.com/assets/c1f4cd02de24483eb86c696401ad4213.jpg",
-        "nickname": "Maisie",
-        "isRobot": false,
-        "id": "test-user",
-        "lastLoginTimeMS": 1583057133276
-      },
-      {
-        "_id": "12345",
-        "isRobot": false,
-        "id": "12345",
-        "lastLoginTimeMS": 1583057133276
-      },
-      {
-        "_id": "samsung-358436073080420",
-        "description": "description la la #1531924629059",
-        "nickname": "samsung-herolte",
-        "avatarUrl": "",
-        "userAgent": "Dalvik/2.1.0 (Linux; U; Android 8.0.0; SM-G930F Build/R16NW)",
-        "isRobot": false,
-        "id": "samsung-358436073080420",
-        "lastLoginTimeMS": 1531924629461
-      },
-      {
-        "_id": "google-generic-x86",
-        "nickname": "google-generic_x86",
-        "description": "description la la #1536074034718",
-        "avatarUrl": "",
-        "userAgent": "Dalvik/2.1.0 (Linux; U; Android 8.1.0; Android SDK built for x86 Build/OSM1.180201.007)",
-        "isRobot": false,
-        "id": "google-generic-x86",
-        "lastLoginTimeMS": 1536074046906
-      },
-      {
-        "_id": "bonbonbon",
-        "nickname": "bonbonbon",
-        "description": "description la la #1536073706411",
-        "avatarUrl": "",
-        "userAgent": "Dalvik/2.1.0 (Linux; U; Android 8.1.0; Android SDK built for x86 Build/OSM1.180201.007)",
-        "isRobot": false,
-        "id": "bonbonbon",
-        "lastLoginTimeMS": 1536073718631
-      },
-      {
-        "_id": "samsung-herolte",
-        "nickname": "samsung-herolte",
-        "description": "description la la #1536157340251",
-        "avatarUrl": "",
-        "userAgent": "Dalvik/2.1.0 (Linux; U; Android 8.0.0; SM-G930F Build/R16NW)",
-        "isRobot": false,
-        "id": "samsung-herolte",
-        "lastLoginTimeMS": 1536157340491
+        "id": "aaa",
+        "lastLoginTimeMS": 1541926310026
       },
       {
         "_id": "bbb",
-        "description": "description la la #1541824599613",
-        "avatarUrl": "",
         "nickname": "bbb",
-        "userAgent": "Dalvik/2.1.0 (Linux; U; Android 8.1.0; Android SDK built for x86 Build/OSM1.180201.007)",
+        "avatarUrl": "",
         "isRobot": false,
         "id": "bbb",
         "lastLoginTimeMS": 1541824600261
       },
       {
-        "_id": "sss",
-        "nickname": "SSS",
-        "description": "some description",
-        "avatarUrl": "https://lumiere-a.akamaihd.net/v1/images/f_frozen2_header_mobile_18432_d258f93f.jpeg",
-        "userAgent": "imkit-ios-sdk-v3-demo/1 CFNetwork/1121.2.1 Darwin/19.3.0",
+        "_id": "ccc",
+        "nickname": "CCC",
+        "avatarUrl": "https://example.com/avatar.jpg",
         "isRobot": false,
-        "id": "sss",
-        "lastLoginTimeMS": 1580526441451
-      },
-      {
-        "_id": "robot001",
-        "nickname": "Quinn Robot",
-        "isRobot": true,
-        "id": "robot001",
-        "lastLoginTimeMS": 1583057133276
-      },
-      {
-        "_id": "aaa",
-        "description": "description la la #1541926309694",
-        "avatarUrl": "http://loremflickr.com/240/240/style?1569804629",
-        "nickname": "AAA",
-        "userAgent": "Dalvik/2.1.0 (Linux; U; Android 8.1.0; Android SDK built for x86 Build/OSM1.180201.007)",
-        "isRobot": false,
-        "id": "aaa",
-        "lastLoginTimeMS": 1541926310026
+        "id": "ccc",
+        "lastLoginTimeMS": 0
       }
     ],
     "id": "demo-room",
     "createdTimeMS": 1525001412492
   }
-}```
-````
+}
+```
+
+### 响应字段
+
+| 字段     | 类型   | 说明                     |
+| -------- | ------ | ------------------------ |
+| `RC`     | number | 响应码（0 表示成功）     |
+| `RM`     | string | 响应消息                 |
+| `result` | object | 更新后的聊天室完整信息   |
+
+## 错误处理
+
+当请求失败时，您会收到包含错误详细信息的错误响应。常见的错误情况包括：
+
+- 无效的客户端密钥或授权令牌
+- 指定的聊天室不存在
+- `invitees` 中包含不存在的用户 ID
+- 服务器内部错误
+
+## 使用注意事项
+
+- **`invitationRequired`**：设为 `true` 时，被邀请者需主动接受邀请才会加入聊天室；设为 `false` 时，被邀请者会直接加入
+- **系统消息**：设置 `systemMessage: true` 时，系统会自动在聊天室内生成"添加成员"通知消息
+- **单聊聊天室**：`invitationRequired` 对单聊（`direct`）聊天室无效，系统会自动设为 `false`
+- 成功添加后，响应会包含更新后的完整聊天室信息，包含最新的成员列表

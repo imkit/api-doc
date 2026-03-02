@@ -1,60 +1,108 @@
 # 聊天室列表
 
-# List Rooms
+此端點允許您取得目前用戶所加入的聊天室清單，支援分頁、排序及條件篩選。適用於聊天室列表顯示、增量同步等場景。
 
-### path
+## HTTP 請求
 
-/rooms
+```
+GET /rooms
+```
 
-### Method
+## 身份驗證
 
-GET
+在請求標頭中包含您的用戶端金鑰和授權權杖：
 
-### URL Query Parameters
+| 標頭               | 說明               | 必填 |
+| ------------------ | ------------------ | ---- |
+| `IM-CLIENT-KEY`    | 用戶端金鑰         | ✅    |
+| `IM-CLIENT-ID`     | 當前用戶的用戶端 ID | ✅    |
+| `IM-Authorization` | 用戶端權杖         | ✅    |
 
-| Field           | type              | Description                                                  |
-| --------------- | ----------------- | ------------------------------------------------------------ |
-| sort            | String            | (Optional) Sorting criteria                                  |
-| skip            | Integer           | (Optional) Paging offset. Default 0.                         |
-| limit           | Integer           | (Optional) Limit of rooms in response. Default 0, unlimited. |
-| updatedAfter    | String or Integer | (Optional) Constraint rooms that have last message or crated after the specified timestamp. Should be formatted in ISO-8601 or Epoch in milliseconds |
-| pref            | JSON              | Filter by user's room preferences. e.g {"tags": "some-tag"}  |
-| sortUnreadFirst | Interger          | (optional) non-zero to sort unread rooms first               |
+## 查詢參數
 
-#### Sort Parameter Example
+| 參數              | 類型               | 必填 | 說明                                                                                     |
+| ----------------- | ------------------ | ---- | ---------------------------------------------------------------------------------------- |
+| `sort`            | string             | ❌    | 排序條件，可組合多個欄位，以空格分隔；前綴 `-` 表示遞減排序                             |
+| `skip`            | integer            | ❌    | 分頁偏移量，預設為 `0`                                                                    |
+| `limit`           | integer            | ❌    | 回傳聊天室數量上限，預設為 `0`（不限制）                                                  |
+| `updatedAfter`    | string 或 integer  | ❌    | 篩選在指定時間戳後有最新訊息或建立的聊天室，格式支援 ISO-8601 字串或毫秒 Epoch 整數       |
+| `pref`            | JSON               | ❌    | 依用戶的聊天室偏好設定篩選，例如 `{"tags": "some-tag"}`                                   |
+| `sortUnreadFirst` | integer            | ❌    | 非零值時，優先排序有未讀訊息的聊天室                                                     |
 
-Sort by lastMessage and created time in descending order
+### sort 參數範例
+
+**依最新訊息和建立時間遞減排序：**
 
 ```
 -lastMessage -createdTime
 ```
 
-Sort by createdTime in ascending order
+**依建立時間遞增排序：**
 
 ```
 createdTime
 ```
 
-### Request Sample
+## 使用範例
 
+### 範例一：取得聊天室列表（分頁 + 時間篩選）
+
+**cURL 範例：**
+
+```bash
+curl "http://localhost:3100/rooms?skip=0&limit=20&sort=-lastMessage&updatedAfter=2020-10-15T03:28:54Z" \
+     -H 'IM-CLIENT-KEY: {您的_CLIENT_KEY}' \
+     -H 'IM-CLIENT-ID: {您的_CLIENT_ID}' \
+     -H 'IM-Authorization: {您的_TOKEN}'
 ```
-## List Rooms
-curl "http://localhost:3100/rooms?skip=0&limit=20&sort=createdTime&updatedAfter=2020-10-15T03:28:54Z" \
-     -H 'IM-CLIENT-KEY: {IM-CLIENT-KEY}' \
-     -H 'IM-CLIENT-ID: sss' \
-     -H 'IM-Authorization: {TOKEN}' \
-     -H 'origin: https://imkitdemo.com' \
-     -H 'X-Forwarded-For: 192.168.1.22'
 
+**JavaScript 範例：**
+
+```javascript
+const response = await axios.get(
+  "http://localhost:3100/rooms",
+  {
+    params: {
+      skip: 0,
+      limit: 20,
+      sort: "-lastMessage",
+      updatedAfter: "2020-10-15T03:28:54Z",
+    },
+    headers: {
+      "IM-CLIENT-KEY": `${IM_CLIENT_KEY}`,
+      "IM-CLIENT-ID": `${CLIENT_ID}`,
+      "IM-Authorization": `${TOKEN}`,
+    },
+  }
+);
 ```
 
-### Response Result
+### 範例二：依標籤篩選聊天室並優先顯示未讀
 
-| Property   | Description            |
-| ---------- | ---------------------- |
-| totalCount | (int) room count       |
-| data       | (array) Array of Rooms |
-| inspect    | Diagnosis info         |
+**JavaScript 範例：**
+
+```javascript
+const response = await axios.get(
+  "http://localhost:3100/rooms",
+  {
+    params: {
+      pref: JSON.stringify({ tags: "some-tag" }),
+      sortUnreadFirst: 1,
+    },
+    headers: {
+      "IM-CLIENT-KEY": `${IM_CLIENT_KEY}`,
+      "IM-CLIENT-ID": `${CLIENT_ID}`,
+      "IM-Authorization": `${TOKEN}`,
+    },
+  }
+);
+```
+
+## 回應
+
+### 成功回應
+
+當請求成功時，API 會回傳符合條件的聊天室清單：
 
 ```json
 {
@@ -67,16 +115,8 @@ curl "http://localhost:3100/rooms?skip=0&limit=20&sort=createdTime&updatedAfter=
         "appID": "SampleApp",
         "members": "sss",
         "$or": [
-          {
-            "lastMessage": {
-              "$gt": "5f87c2cf0000000000000000"
-            }
-          },
-          {
-            "createdTime": {
-              "$gt": "2020-10-15T03:32:31.000Z"
-            }
-          }
+          { "lastMessage": { "$gt": "5f87c2cf0000000000000000" } },
+          { "createdTime": { "$gt": "2020-10-15T03:32:31.000Z" } }
         ],
         "status": 1
       },
@@ -84,61 +124,28 @@ curl "http://localhost:3100/rooms?skip=0&limit=20&sort=createdTime&updatedAfter=
     },
     "data": [
       {
-        "members": [
-          {
-            "isRobot": false,
-            "_id": "bonbonbon",
-            "nickname": "bonbonbon",
-            "description": "description la la #1536073706411",
-            "avatarUrl": "",
-            "userAgent": "Dalvik/2.1.0 (Linux; U; Android 8.1.0; Android SDK built for x86 Build/OSM1.180201.007)",
-            "id": "bonbonbon",
-            "lastLoginTimeMS": 1536073718631
-          },
-          {
-            "isRobot": false,
-            "_id": "sss",
-            "nickname": "Elsa",
-            "description": "description la la #1583637224106",
-            "avatarUrl": "https://lumiere-a.akamaihd.net/v1/images/f_frozen2_header_mobile_18432_d258f93f.jpeg",
-            "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/81.0.4044.129 Safari/537.36",
-            "id": "sss",
-            "lastLoginTimeMS": 1588744338369
-          },
-          {
-            "isRobot": false,
-            "_id": "aaa",
-            "description": "description la la #1541926309694",
-            "avatarUrl": "http://loremflickr.com/240/240/style?1569804629",
-            "nickname": "AAA",
-            "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.132 Safari/537.36",
-            "id": "aaa",
-            "lastLoginTimeMS": 1583726632592
-          }
-        ],
-        "status": 1,
-        "roomTags": [
-          "demo",
-          "foo",
-          "bar"
-        ],
-        "serviceStatus": 0,
-        "encrypted": false,
-        "botMode": false,
-        "botState": "CONTACT",
         "_id": "demo-room",
         "name": "Demo Demo",
         "cover": "http://loremflickr.com/240/240/style?demo",
         "description": "public demo room",
+        "roomType": "group",
+        "webhook": "meet-taipei-intro",
+        "botState": "CONTACT",
+        "botMode": false,
+        "encrypted": false,
+        "serviceStatus": 0,
+        "roomTags": ["demo", "foo", "bar"],
+        "status": 1,
+        "unread": 0,
+        "muted": false,
         "lastMessage": {
-          "reactions": [],
           "_id": "5f890cf37d980e06f6aaf349",
-          "message": "Helloこんにちは SIKTMLNP 11:01:07",
+          "message": "Hello SIKTMLNP 11:01:07",
           "room": "demo-room",
           "sender": {
             "_id": "sss",
             "nickname": "Elsa",
-            "avatarUrl": "https://lumiere-a.akamaihd.net/v1/images/f_frozen2_header_mobile_18432_d258f93f.jpeg",
+            "avatarUrl": "https://example.com/avatar.jpg",
             "id": "sss",
             "lastLoginTimeMS": 0
           },
@@ -151,17 +158,20 @@ curl "http://localhost:3100/rooms?skip=0&limit=20&sort=createdTime&updatedAfter=
           "createdAtMS": 1602817267925,
           "reactionCount": 0
         },
-        "roomType": "group",
-        "webhook": "meet-taipei-intro",
-        "unread": 0,
-        "muted": false,
+        "members": [
+          {
+            "_id": "sss",
+            "nickname": "Elsa",
+            "avatarUrl": "https://example.com/avatar.jpg",
+            "isRobot": false,
+            "id": "sss",
+            "lastLoginTimeMS": 1588744338369
+          }
+        ],
         "pref": {
-          "tags": [
-            "demo",
-            "sample"
-          ],
+          "tags": ["demo", "sample"],
           "tagColors": {
-            "demo": "#f2d700"
+            "demo": "#f2d700",
             "sample": "#ffa01a"
           },
           "hidden": false,
@@ -176,3 +186,64 @@ curl "http://localhost:3100/rooms?skip=0&limit=20&sort=createdTime&updatedAfter=
   }
 }
 ```
+
+### 回應欄位
+
+| 欄位                  | 類型          | 說明                         |
+| --------------------- | ------------- | ---------------------------- |
+| `RC`                  | number        | 回應代碼（0 表示成功）       |
+| `RM`                  | string        | 回應訊息                     |
+| `result.totalCount`   | number        | 符合條件的聊天室總數         |
+| `result.data`         | array         | 聊天室物件陣列               |
+| `result.inspect`      | object        | 診斷資訊（查詢條件與耗時）   |
+
+#### 聊天室物件欄位
+
+| 欄位            | 類型          | 說明                                   |
+| --------------- | ------------- | -------------------------------------- |
+| `_id`           | string        | 聊天室唯一識別碼                       |
+| `name`          | string        | 聊天室名稱                             |
+| `cover`         | string        | 聊天室封面圖片 URL                     |
+| `description`   | string        | 聊天室描述                             |
+| `roomType`      | string        | 聊天室類型（`"direct"` 或 `"group"`）  |
+| `webhook`       | string        | Webhook 金鑰或 URL                     |
+| `botState`      | string        | 機器人狀態                             |
+| `botMode`       | boolean       | 是否啟用機器人模式                     |
+| `encrypted`     | boolean       | 是否加密                               |
+| `serviceStatus` | number        | 服務狀態                               |
+| `roomTags`      | array[string] | 聊天室標籤陣列                         |
+| `status`        | number        | 聊天室狀態（`1` 表示正常）             |
+| `unread`        | number        | 目前用戶的未讀訊息數量                 |
+| `muted`         | boolean       | 目前用戶是否靜音此聊天室               |
+| `lastMessage`   | object        | 最新一則訊息物件                       |
+| `members`       | array[object] | 聊天室成員陣列                         |
+| `pref`          | object        | 目前用戶對此聊天室的個人偏好設定       |
+| `createdTimeMS` | number        | 聊天室建立時間戳（毫秒）               |
+
+#### 偏好設定物件欄位（`pref`）
+
+| 欄位        | 類型          | 說明                               |
+| ----------- | ------------- | ---------------------------------- |
+| `tags`      | array[string] | 用戶為此聊天室自訂的標籤           |
+| `tagColors` | object        | 各標籤對應的顏色（十六進位色碼）   |
+| `hidden`    | boolean       | 是否隱藏此聊天室                   |
+| `sticky`    | boolean       | 是否置頂此聊天室                   |
+| `muted`     | boolean       | 是否靜音此聊天室的通知             |
+| `folder`    | string        | 所屬資料夾名稱                     |
+
+## 錯誤處理
+
+當請求失敗時，您會收到包含錯誤詳細資訊的錯誤回應。常見的錯誤情況包括：
+
+- 無效的用戶端金鑰或授權權杖
+- `updatedAfter` 時間格式不正確
+- `pref` 參數的 JSON 格式無效
+- 伺服器內部錯誤
+
+## 使用注意事項
+
+- **增量同步**：使用 `updatedAfter` 搭配上次請求的時間戳，可實現高效的增量同步，避免每次拉取全量資料
+- **分頁建議**：建議搭配 `limit` 和 `skip` 進行分頁，避免一次回傳過多資料影響效能
+- **排序**：`sort` 欄位以空格分隔多個條件，前綴 `-` 代表遞減排序
+- **`pref` 篩選**：`pref` 參數為 JSON 格式，需進行 URL 編碼後傳遞
+- **`inspect` 欄位**：僅供除錯使用，包含實際查詢條件與執行耗時，正式環境可忽略
