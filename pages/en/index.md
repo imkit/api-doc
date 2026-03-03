@@ -1,6 +1,6 @@
 # Introduction
 
-The IMKIT Platform API is the core API service of the IMKIT Chat Server, developed by [FUNTEK](httsp://funtek.co/), specifically designed for developers integrating the IMKIT SDK. It allows you to quickly build real-time messaging services for various scenarios. Whether it's 1-on-1 private conversations or multi-user group chats, the IMKIT Platform API can meet your scenario requirements.
+The IMKIT Platform API is the core API service of the IMKIT Chat Server, developed by [FUNTEK](https://funtek.co/), specifically designed for developers integrating the IMKIT SDK. It allows you to quickly build real-time messaging services for various scenarios. Whether it's 1-on-1 private conversations or multi-user group chats, the IMKIT Platform API can meet your scenario requirements.
 
 You can also visit our [official website](https://imkit.io/) to learn more about IMKIT's product information.
 

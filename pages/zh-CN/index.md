@@ -1,6 +1,6 @@
 # 基本介绍
 
-IMKIT Platform API 是 IMKIT Chat Server 的核心 API 服务，由 [FUNTEK 乐堤科技](httsp://funtek.co/) 开发，专为导入 IMKIT SDK 的开发者所设计，让您能够快速建立各种场景的即时通讯服务。无论是 1-on-1 私人对谈或多人群组聊天，IMKIT Platform API 都能满足您的场景需求。
+IMKIT Platform API 是 IMKIT Chat Server 的核心 API 服务，由 [FUNTEK 乐堤科技](https://funtek.co/) 开发，专为导入 IMKIT SDK 的开发者所设计，让您能够快速建立各种场景的即时通讯服务。无论是 1-on-1 私人对谈或多人群组聊天，IMKIT Platform API 都能满足您的场景需求。
 
 你也可以访问我们的 [官方网站](https://imkit.io/) 以了解更多关于 IMKIT 的产品信息。
 
