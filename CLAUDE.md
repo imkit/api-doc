@@ -129,38 +129,11 @@ GET /api/path?param=value
 
 ## Pending Pages (Todo)
 
-Pages that exist as placeholders and need content filled in. For each, find the source in `@chat-server-document.wiki/` and apply the layout spec above.
-
-### User
-- [ ] `pages/zh-TW/user/user-list/get-a-user.md` — source: `me/[Me]-Get.md`
-
-### Room
-- [ ] `pages/zh-TW/room/room-management/update-a-room.md` — source: `room/[Room]-Update.md`
-- [ ] `pages/zh-TW/room/room-members/list-members.md`
-- [ ] `pages/zh-TW/room/room-members/search-a-member.md`
+Pages that still need content filled in (across all three locales: zh-TW, zh-CN, en).
 
 ### Message
-- [ ] `pages/zh-TW/message/message-basic/get-a-message.md`
-- [ ] `pages/zh-TW/message/message-basic/delete-a-message.md`
-- [ ] `pages/zh-TW/message/message-basic/send-a-message.md` — source: `room/[Room]-Send-Message.md`
-- [ ] `pages/zh-TW/message/message-basic/search-message.md` — source: `[Search].md`
-- [ ] `pages/zh-TW/message/message-basic/get-message-by-a-room.md` — source: `room/[Room]-List-Room-Messages-V3.md`
-- [ ] `pages/zh-TW/message/message-basic/list-messages.md`
-- [ ] `pages/zh-TW/message/message-badge/get-unread-message-by-a-room.md` — source: `badge/[Badge]-Count-unreads-by-room-tags.md`
-- [ ] `pages/zh-TW/message/message-badge/get-unread-message-by-a-user.md` — source: `me/[Me]-Badge.md`
+- [ ] `pages/[locale]/message/message-basic/get-a-message.md`
 
 ### Moderation
-- [ ] `pages/zh-TW/moderation/block-user/block-a-user.md` — source: `blocklist/[Blocklist]-Block-a-user.md`
-- [ ] `pages/zh-TW/moderation/block-user/unblock-a-user.md` — source: `blocklist/[Blocklist]-Unblock-a-user.md`
-- [ ] `pages/zh-TW/moderation/block-user/list-blocked-users.md` — source: `blocklist/[Blocklist]-Get-my-blocklist.md`
-- [ ] `pages/zh-TW/moderation/mute-member/mute-a-member.md` — source: `me/[Me]-Mute-room.md`
-- [ ] `pages/zh-TW/moderation/mute-member/unmute-a-member.md` — source: `me/[Me]-UnMute-Room.md`
-- [ ] `pages/zh-TW/moderation/mute-member/list-muted-members.md`
-- [ ] `pages/zh-TW/moderation/ban-member/ban-a-member.md`
-- [ ] `pages/zh-TW/moderation/ban-member/unban-a-member.md`
-- [ ] `pages/zh-TW/moderation/ban-member/list-banned-members.md`
-- [ ] `pages/zh-TW/moderation/freeze-chatroom/freeze-a-chatroom.md`
-- [ ] `pages/zh-TW/moderation/sensitive-word/blocklist.md`
-
-### Webhook
-- [ ] `pages/zh-TW/webhook/webhook/webhook.md` — source: `Webhook.md`
+- [ ] `pages/[locale]/moderation/mute-member/list-muted-members.md`
+- [ ] `pages/[locale]/moderation/sensitive-word/blocklist.md`
