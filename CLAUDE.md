@@ -127,13 +127,3 @@ GET /api/path?param=value
 - Code blocks: use language tags (`http`, `json`, `javascript`)
 - zh-TW pages use Traditional Chinese headings and content; en pages use English
 
-## Pending Pages (Todo)
-
-Pages that still need content filled in (across all three locales: zh-TW, zh-CN, en).
-
-### Message
-- [ ] `pages/[locale]/message/message-basic/get-a-message.md`
-
-### Moderation
-- [ ] `pages/[locale]/moderation/mute-member/list-muted-members.md`
-- [ ] `pages/[locale]/moderation/sensitive-word/blocklist.md`
