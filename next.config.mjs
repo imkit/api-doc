@@ -22,7 +22,7 @@ export default withNextra({
     unoptimized: true
   },
   
-  // GitHub Pages 子路徑配置
-  basePath: '/api-doc',
-  assetPrefix: '/api-doc',
+  // Custom domain 不需要子路徑
+  basePath: '',
+  assetPrefix: '',
 })

@@ -22,7 +22,7 @@ const config: DocsThemeConfig = {
       <meta property="og:title" content={title ? `${title} - IMKIT` : 'IMKIT Platform API'} />
       <meta property="og:description" content="IMKIT Platform API Document" />
       <title>{title ? `${title} - IMKIT` : 'IMKIT Platform API'}</title>
-      <link rel="icon" type="image/png" href="/api-doc/favicon.png" />
+      <link rel="icon" type="image/png" href="/favicon.png" />
     </>
   ),
 
