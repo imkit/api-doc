@@ -1,51 +1,45 @@
 # 创建用户
 
+## 概述
+
 此端点允许您在系统中创建新的用户。此 API 仅供服务器端使用，需要适当的身份验证。
 
-## HTTP 请求
+------
 
-```
+## API 端点
+
+### 创建用户
+在系统中创建新的用户端。
+
+```http
 POST /admin/clients
 ```
 
-## 身份验证
+#### Headers
 
-在请求标头中包含您的平台 API 密钥：
+| 参数 | 类型 | 必填 | 说明 |
+| ---- | ---- | ---- | ---- |
+| `IM-API-KEY` | string | ✅ | 您的平台 API 密钥 |
+| `Content-Type` | string | ✅ | `application/json; charset=utf-8` |
 
-| 标头         | 说明              | 必填 |
-| ------------ | ----------------- | ---- |
-| `IM-API-KEY` | 您的平台 API 密钥 | ✅    |
-
-## 请求内容
+#### Post Body
 
 请求内容应包含 JSON 格式的用户端信息。
 
-### 必填参数
+| 参数 | 类型 | 必填 | 说明 |
+| ---- | ---- | ---- | ---- |
+| `_id` | string | ✅ | 用户端唯一识别码 |
+| `nickname` | string | ❌ | 用户端显示名称 |
+| `avatarUrl` | string | ❌ | 用户端头像图片 URL |
+| `issueAccessToken` | boolean | ❌ | 设为 `true` 以产生新的访问令牌；设为 `false` 或省略以使用自定义 token |
+| `token` | string | ❌ | 要绑定到用户端的自定义 token（当 `issueAccessToken` 为 `false` 或省略时使用） |
+| `expirationDate` | string | ❌ | Token 过期时间（ISO 格式，当使用自定义 token 时设置） |
 
-| 参数  | 类型   | 说明             |
-| ----- | ------ | ---------------- |
-| `_id` | string | 用户端唯一识别码 |
+#### 示例请求
 
-### 选填参数
-
-| 参数        | 类型   | 说明               |
-| ----------- | ------ | ------------------ |
-| `nickname`  | string | 用户端显示名称     |
-| `avatarUrl` | string | 用户端头像图片 URL |
-
-## 身份验证选项
-
-创建用户时，您可以选择两种身份验证方式：
-
-### 选项一：聊天服务器发行 Token
+##### 选项一：聊天服务器发行 Token
 
 使用此选项让聊天服务器自动为用户产生新的访问令牌。
-
-| 参数               | 类型    | 说明                           |
-| ------------------ | ------- | ------------------------------ |
-| `issueAccessToken` | boolean | 设为 `true` 以产生新的访问令牌 |
-
-**请求示例：**
 
 ```javascript
 const response = await axios.post(
@@ -65,17 +59,9 @@ const response = await axios.post(
 );
 ```
 
-### 选项二：自定义 Token 绑定
+##### 选项二：自定义 Token 绑定
 
 使用此选项将特定的 token 绑定到用户，并设置自定义的过期时间。
-
-| 参数               | 类型    | 说明                       |
-| ------------------ | ------- | -------------------------- |
-| `issueAccessToken` | boolean | 设为 `false` 或省略此参数  |
-| `token`            | string  | 要绑定到用户端的自定义 token |
-| `expirationDate`   | string  | Token 过期时间（ISO 格式） |
-
-**请求示例：**
 
 ```http
 POST /admin/clients HTTP/1.1
@@ -92,11 +78,31 @@ Host: imkit-dev.funtek.io
 }
 ```
 
-## 响应
+#### Response
 
-### 成功响应
+**成功响应（200 OK）**
 
 当请求成功时，API 会返回创建的用户端信息：
+
+| 参数 | 类型 | 说明 |
+| ---- | ---- | ---- |
+| `RC` | number | 响应代码（0 表示成功） |
+| `RM` | string | 响应消息 |
+| `result` | object | 创建的用户端信息 |
+
+**用户端对象字段**
+
+| 参数 | 类型 | 说明 |
+| ---- | ---- | ---- |
+| `_id` | string | 用户唯一识别码 |
+| `nickname` | string | 用户显示名称 |
+| `avatarUrl` | string | 用户头像图片 URL |
+| `token` | string | 访问令牌（仅在 `issueAccessToken` 为 true 时出现） |
+| `expirationDate` | string | Token 过期时间（仅在发行 token 时出现） |
+| `lastLoginTimeMS` | number | 最后登录时间戳（毫秒） |
+| `updatedAt` | string | 最后更新时间戳（ISO 格式） |
+
+#### 示例响应
 
 ```json
 {
@@ -127,39 +133,29 @@ Host: imkit-dev.funtek.io
 }
 ```
 
-### 响应字段
-
-| 字段     | 类型   | 说明                   |
-| -------- | ------ | ---------------------- |
-| `RC`     | number | 响应代码（0 表示成功） |
-| `RM`     | string | 响应消息               |
-| `result` | object | 创建的用户端信息       |
-
-#### 用户端对象字段
-
-| 字段              | 类型   | 说明                                               |
-| ----------------- | ------ | -------------------------------------------------- |
-| `_id`             | string | 用户唯一识别码                                     |
-| `nickname`        | string | 用户显示名称                                       |
-| `avatarUrl`       | string | 用户头像图片 URL                                   |
-| `token`           | string | 访问令牌（仅在 `issueAccessToken` 为 true 时出现） |
-| `expirationDate`  | string | Token 过期时间（仅在发行 token 时出现）            |
-| `lastLoginTimeMS` | number | 最后登录时间戳（毫秒）                             |
-| `updatedAt`       | string | 最后更新时间戳（ISO 格式）                         |
-
-## 错误处理
+#### 错误响应
 
 当请求失败时，您会收到包含错误详细信息的错误响应。常见的错误情况包括：
 
-- 无效的 API 密钥
-- 缺少必填参数
-- 无效的 token 格式
-- 服务器内部错误
+- **无效的 API 密钥** - 提供的 `IM-API-KEY` 无效或已过期
+- **缺少必填参数** - 未提供必要的 `_id` 参数
+- **无效的 token 格式** - 自定义 token 格式不正确
+- **服务器内部错误** - 服务器端发生未预期的错误
 
-## 使用注意事项
+------
 
-- 此端点用于创建新用户端
-- 每个用户端都需要唯一的 `_id` 识别码
-- 响应中的 `token` 字段仅在 `issueAccessToken` 设为 `true` 时包含
-- 所有时间戳均为 UTC 格式
-- 头像图片的文件大小应控制在合理范围内
+## 使用场景
+
+### 用户注册
+- **使用服务器发行 Token 创建用户**：当新用户注册时，设置 `issueAccessToken: true` 让系统自动产生访问令牌
+- **使用自定义 Token 创建用户**：当需要整合外部身份验证系统时，绑定自定义 token 并设置过期时间
+
+------
+
+## 注意事项
+
+- **唯一识别码**：每个用户端都需要唯一的 `_id` 识别码
+- **Token 字段**：响应中的 `token` 字段仅在 `issueAccessToken` 设为 `true` 时包含
+- **时间戳格式**：所有时间戳均为 UTC 格式
+- **头像图片**：头像图片的文件大小应控制在合理范围内
+- **服务器端专用**：此端点用于创建新用户端，仅供服务器端使用

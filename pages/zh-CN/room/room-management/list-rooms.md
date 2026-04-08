@@ -1,53 +1,59 @@
 # 聊天室列表
 
+## 概述
+
 此端点允许您获取当前用户已加入的聊天室列表，支持分页、排序及条件筛选。适用于聊天室列表展示、增量同步等场景。
 
-## HTTP 请求
+------
 
-```
+## API 端点
+
+### 获取聊天室列表
+
+获取当前用户已加入的聊天室列表，支持分页、排序及条件筛选。
+
+```http
 GET /rooms
 ```
 
-## 身份验证
+#### Headers
 
-在请求标头中包含您的客户端密钥和授权令牌：
+| 参数 | 类型 | 必填 | 说明 |
+| --- | --- | --- | --- |
+| `IM-CLIENT-KEY` | string | ✅ | 客户端密钥 |
+| `IM-CLIENT-ID` | string | ✅ | 当前用户的客户端 ID |
+| `IM-Authorization` | string | ✅ | 客户端令牌 |
 
-| 标头               | 说明               | 必填 |
-| ------------------ | ------------------ | ---- |
-| `IM-CLIENT-KEY`    | 客户端密钥         | ✅    |
-| `IM-CLIENT-ID`     | 当前用户的客户端 ID | ✅    |
-| `IM-Authorization` | 客户端令牌         | ✅    |
+#### Query Parameters
 
-## 查询参数
+| 参数 | 类型 | 必填 | 说明 |
+| --- | --- | --- | --- |
+| `sort` | string | ❌ | 排序条件，可组合多个字段，以空格分隔；前缀 `-` 表示降序排列 |
+| `skip` | integer | ❌ | 分页偏移量，默认为 `0` |
+| `limit` | integer | ❌ | 返回聊天室数量上限，默认为 `0`（不限制） |
+| `updatedAfter` | string 或 integer | ❌ | 筛选在指定时间戳后有最新消息或创建的聊天室，格式支持 ISO-8601 字符串或毫秒 Epoch 整数 |
+| `pref` | JSON | ❌ | 按用户的聊天室偏好设置筛选，例如 `{"tags": "some-tag"}` |
+| `sortUnreadFirst` | integer | ❌ | 非零值时，优先排列有未读消息的聊天室 |
 
-| 参数              | 类型               | 必填 | 说明                                                                                       |
-| ----------------- | ------------------ | ---- | ------------------------------------------------------------------------------------------ |
-| `sort`            | string             | ❌    | 排序条件，可组合多个字段，以空格分隔；前缀 `-` 表示降序排列                               |
-| `skip`            | integer            | ❌    | 分页偏移量，默认为 `0`                                                                      |
-| `limit`           | integer            | ❌    | 返回聊天室数量上限，默认为 `0`（不限制）                                                    |
-| `updatedAfter`    | string 或 integer  | ❌    | 筛选在指定时间戳后有最新消息或创建的聊天室，格式支持 ISO-8601 字符串或毫秒 Epoch 整数       |
-| `pref`            | JSON               | ❌    | 按用户的聊天室偏好设置筛选，例如 `{"tags": "some-tag"}`                                     |
-| `sortUnreadFirst` | integer            | ❌    | 非零值时，优先排列有未读消息的聊天室                                                       |
+**sort 参数示例**
 
-### sort 参数示例
-
-**按最新消息和创建时间降序排列：**
+按最新消息和创建时间降序排列：
 
 ```
 -lastMessage -createdTime
 ```
 
-**按创建时间升序排列：**
+按创建时间升序排列：
 
 ```
 createdTime
 ```
 
-## 使用示例
+#### 示例请求
 
-### 示例一：获取聊天室列表（分页 + 时间筛选）
+**示例一：获取聊天室列表（分页 + 时间筛选）**
 
-**cURL 示例：**
+cURL 示例：
 
 ```bash
 curl "http://localhost:3100/rooms?skip=0&limit=20&sort=-lastMessage&updatedAfter=2020-10-15T03:28:54Z" \
@@ -56,7 +62,7 @@ curl "http://localhost:3100/rooms?skip=0&limit=20&sort=-lastMessage&updatedAfter
      -H 'IM-Authorization: {您的_TOKEN}'
 ```
 
-**JavaScript 示例：**
+JavaScript 示例：
 
 ```javascript
 const response = await axios.get(
@@ -77,9 +83,7 @@ const response = await axios.get(
 );
 ```
 
-### 示例二：按标签筛选并优先显示未读聊天室
-
-**JavaScript 示例：**
+**示例二：按标签筛选并优先显示未读聊天室**
 
 ```javascript
 const response = await axios.get(
@@ -98,11 +102,53 @@ const response = await axios.get(
 );
 ```
 
-## 响应
+#### Response
 
-### 成功响应
+**成功响应（200 OK）**
 
-当请求成功时，API 会返回符合条件的聊天室列表：
+| 参数 | 类型 | 说明 |
+| --- | --- | --- |
+| `RC` | number | 响应码（0 表示成功） |
+| `RM` | string | 响应消息 |
+| `result.totalCount` | number | 符合条件的聊天室总数 |
+| `result.data` | array | 聊天室对象数组 |
+| `result.inspect` | object | 诊断信息（查询条件与耗时） |
+
+**聊天室对象字段**
+
+| 参数 | 类型 | 说明 |
+| --- | --- | --- |
+| `_id` | string | 聊天室唯一标识符 |
+| `name` | string | 聊天室名称 |
+| `cover` | string | 聊天室封面图片 URL |
+| `description` | string | 聊天室描述 |
+| `roomType` | string | 聊天室类型（`"direct"` 或 `"group"`） |
+| `webhook` | string | Webhook 密钥或 URL |
+| `botState` | string | 机器人状态 |
+| `botMode` | boolean | 是否启用机器人模式 |
+| `encrypted` | boolean | 是否加密 |
+| `serviceStatus` | number | 服务状态 |
+| `roomTags` | array[string] | 聊天室标签数组 |
+| `status` | number | 聊天室状态（`1` 表示正常） |
+| `unread` | number | 当前用户的未读消息数量 |
+| `muted` | boolean | 当前用户是否已静音此聊天室 |
+| `lastMessage` | object | 最新一条消息对象 |
+| `members` | array[object] | 聊天室成员数组 |
+| `pref` | object | 当前用户对此聊天室的个人偏好设置 |
+| `createdTimeMS` | number | 聊天室创建时间戳（毫秒） |
+
+**偏好设置对象字段（`pref`）**
+
+| 参数 | 类型 | 说明 |
+| --- | --- | --- |
+| `tags` | array[string] | 用户为此聊天室自定义的标签 |
+| `tagColors` | object | 各标签对应的颜色（十六进制色码） |
+| `hidden` | boolean | 是否隐藏此聊天室 |
+| `sticky` | boolean | 是否置顶此聊天室 |
+| `muted` | boolean | 是否静音此聊天室的通知 |
+| `folder` | string | 所属文件夹名称 |
+
+#### 示例响应
 
 ```json
 {
@@ -187,51 +233,7 @@ const response = await axios.get(
 }
 ```
 
-### 响应字段
-
-| 字段                  | 类型          | 说明                             |
-| --------------------- | ------------- | -------------------------------- |
-| `RC`                  | number        | 响应码（0 表示成功）             |
-| `RM`                  | string        | 响应消息                         |
-| `result.totalCount`   | number        | 符合条件的聊天室总数             |
-| `result.data`         | array         | 聊天室对象数组                   |
-| `result.inspect`      | object        | 诊断信息（查询条件与耗时）       |
-
-#### 聊天室对象字段
-
-| 字段            | 类型          | 说明                                     |
-| --------------- | ------------- | ---------------------------------------- |
-| `_id`           | string        | 聊天室唯一标识符                         |
-| `name`          | string        | 聊天室名称                               |
-| `cover`         | string        | 聊天室封面图片 URL                       |
-| `description`   | string        | 聊天室描述                               |
-| `roomType`      | string        | 聊天室类型（`"direct"` 或 `"group"`）    |
-| `webhook`       | string        | Webhook 密钥或 URL                       |
-| `botState`      | string        | 机器人状态                               |
-| `botMode`       | boolean       | 是否启用机器人模式                       |
-| `encrypted`     | boolean       | 是否加密                                 |
-| `serviceStatus` | number        | 服务状态                                 |
-| `roomTags`      | array[string] | 聊天室标签数组                           |
-| `status`        | number        | 聊天室状态（`1` 表示正常）               |
-| `unread`        | number        | 当前用户的未读消息数量                   |
-| `muted`         | boolean       | 当前用户是否已静音此聊天室               |
-| `lastMessage`   | object        | 最新一条消息对象                         |
-| `members`       | array[object] | 聊天室成员数组                           |
-| `pref`          | object        | 当前用户对此聊天室的个人偏好设置         |
-| `createdTimeMS` | number        | 聊天室创建时间戳（毫秒）                 |
-
-#### 偏好设置对象字段（`pref`）
-
-| 字段        | 类型          | 说明                               |
-| ----------- | ------------- | ---------------------------------- |
-| `tags`      | array[string] | 用户为此聊天室自定义的标签         |
-| `tagColors` | object        | 各标签对应的颜色（十六进制色码）   |
-| `hidden`    | boolean       | 是否隐藏此聊天室                   |
-| `sticky`    | boolean       | 是否置顶此聊天室                   |
-| `muted`     | boolean       | 是否静音此聊天室的通知             |
-| `folder`    | string        | 所属文件夹名称                     |
-
-## 错误处理
+#### 错误响应
 
 当请求失败时，您会收到包含错误详细信息的错误响应。常见的错误情况包括：
 
@@ -240,7 +242,20 @@ const response = await axios.get(
 - `pref` 参数的 JSON 格式无效
 - 服务器内部错误
 
-## 使用注意事项
+------
+
+## 使用场景
+
+### 聊天室列表展示
+- **首页聊天室列表**：使用分页和排序获取用户的聊天室列表
+- **标签筛选**：通过 `pref` 参数按标签筛选特定聊天室
+
+### 增量同步
+- **高效同步**：使用 `updatedAfter` 搭配上次请求的时间戳，仅拉取有更新的聊天室
+
+------
+
+## 注意事项
 
 - **增量同步**：使用 `updatedAfter` 搭配上次请求的时间戳，可实现高效的增量同步，避免每次拉取全量数据
 - **分页建议**：建议搭配 `limit` 和 `skip` 进行分页，避免一次返回过多数据影响性能

@@ -1,46 +1,54 @@
 # Recall a Message
 
+## Overview
+
 This endpoint allows a user to recall a specified message in a room. After recalling, the original message content is cleared and the message type changes to `recall`. All members in the room will see that the message has been recalled. Both client and platform API authentication are supported.
 
-## HTTP Request
+------
 
-```
+## API Endpoint
+
+### Recall a Message
+
+Recall a specified message in a room.
+
+```http
 POST /rooms/:roomId/message
 ```
 
-## Authentication
+#### Headers
 
 This API supports two authentication methods. Use one of the following:
 
-### Client Authentication
+**Client Authentication**
 
-| Header             | Description  | Required |
-| ------------------ | ------------ | -------- |
-| `IM-CLIENT-KEY`    | Client Key   | ✅        |
-| `IM-Authorization` | Client Token | ✅        |
+| Parameter          | Type   | Required | Description  |
+| ------------------ | ------ | -------- | ------------ |
+| `IM-CLIENT-KEY`    | string | ✅       | Client Key   |
+| `IM-Authorization` | string | ✅       | Client Token |
 
-### Platform API Authentication
+**Platform API Authentication**
 
-| Header       | Description      | Required |
-| ------------ | ---------------- | -------- |
-| `IM-API-KEY` | Platform API Key | ✅        |
+| Parameter    | Type   | Required | Description      |
+| ------------ | ------ | -------- | ---------------- |
+| `IM-API-KEY` | string | ✅       | Platform API Key |
 
-## Path Parameters
+#### Path Parameters
 
-| Parameter  | Type   | Description    | Required |
-| ---------- | ------ | -------------- | -------- |
-| `:roomId`  | string | Unique room ID | ✅        |
+| Parameter  | Type   | Required | Description    |
+| ---------- | ------ | -------- | -------------- |
+| `:roomId`  | string | ✅       | Unique room ID |
 
-## Request Body
+#### Post Body
 
 | Parameter     | Type   | Required | Description                         |
 | ------------- | ------ | -------- | ----------------------------------- |
-| `messageType` | string | ✅        | Must be set to `"recall"`           |
-| `_id`         | string | ✅        | ID of the message to recall         |
+| `messageType` | string | ✅       | Must be set to `"recall"`           |
+| `_id`         | string | ✅       | ID of the message to recall         |
 
-## Examples
+#### Example Request
 
-### Example 1: Recall Using Client Authentication
+**Example 1: Recall Using Client Authentication**
 
 **cURL:**
 
@@ -71,7 +79,7 @@ const response = await axios.post(
 );
 ```
 
-### Example 2: Recall Using Platform API Authentication
+**Example 2: Recall Using Platform API Authentication**
 
 **JavaScript:**
 
@@ -91,11 +99,23 @@ const response = await axios.post(
 );
 ```
 
-## Response
+#### Response
 
-### Success Response
+**Success Response (200 OK)**
 
-When the request succeeds, the API returns the recalled message object with its content cleared:
+| Parameter             | Type   | Description                                       |
+| --------------------- | ------ | ------------------------------------------------- |
+| `RC`                  | number | Response code (0 means success)                   |
+| `RM`                  | string | Response message                                  |
+| `result._id`          | string | Message unique ID                                 |
+| `result.message`      | string | Message content (empty string after recall)       |
+| `result.room`         | string | Room ID the message belongs to                    |
+| `result.sender`       | object | Sender information                                |
+| `result.messageType`  | string | Message type (becomes `"recall"` after recalling) |
+| `result.messageTimeMS`| number | Message send timestamp (milliseconds)             |
+| `result.updatedAtMS`  | number | Last updated timestamp (milliseconds)             |
+
+#### Example Response
 
 ```json
 {
@@ -123,21 +143,7 @@ When the request succeeds, the API returns the recalled message object with its 
 }
 ```
 
-### Response Fields
-
-| Field                 | Type   | Description                                        |
-| --------------------- | ------ | -------------------------------------------------- |
-| `RC`                  | number | Response code (0 means success)                    |
-| `RM`                  | string | Response message                                   |
-| `result._id`          | string | Message unique ID                                  |
-| `result.message`      | string | Message content (empty string after recall)        |
-| `result.room`         | string | Room ID the message belongs to                     |
-| `result.sender`       | object | Sender information                                 |
-| `result.messageType`  | string | Message type (becomes `"recall"` after recalling)  |
-| `result.messageTimeMS`| number | Message send timestamp (milliseconds)              |
-| `result.updatedAtMS`  | number | Last updated timestamp (milliseconds)              |
-
-## Error Handling
+#### Error Response
 
 When the request fails, you will receive an error response with details. Common error cases include:
 
@@ -145,6 +151,18 @@ When the request fails, you will receive an error response with details. Common 
 - The specified message or room does not exist
 - Insufficient permission to recall the message
 - Internal server error
+
+------
+
+## Use Cases
+
+### Message Management
+
+- **Correct Mistaken Messages**: Users can immediately recall a message sent in error
+- **Remove Sensitive Information**: Recall messages containing sensitive or inappropriate content
+- **Backend Administration**: Administrators can recall violating messages via the Platform API
+
+------
 
 ## Notes
 

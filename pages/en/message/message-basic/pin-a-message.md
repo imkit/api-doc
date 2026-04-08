@@ -1,31 +1,37 @@
 # Pin a Message
 
+## Overview
+
 This endpoint allows a room owner or administrator to pin a specified message to the top of the room, making it easy for members to quickly find important content.
 
-## HTTP Request
+------
 
-```
+## API Endpoint
+
+### Pin a Message
+
+Pin a specified message to the top of the room.
+
+```http
 POST /messages/:id/pin
 ```
 
-## Authentication
+#### Headers
 
-Include your client key and authorization token in the request headers:
+| Parameter          | Type   | Required | Description  |
+| ------------------ | ------ | -------- | ------------ |
+| `IM-CLIENT-KEY`    | string | ✅       | Client Key   |
+| `IM-Authorization` | string | ✅       | Client Token |
 
-| Header             | Description  | Required |
-| ------------------ | ------------ | -------- |
-| `IM-CLIENT-KEY`    | Client Key   | ✅        |
-| `IM-Authorization` | Client Token | ✅        |
+#### Path Parameters
 
-## Path Parameters
-
-| Parameter | Type   | Description        | Required |
-| --------- | ------ | ------------------ | -------- |
-| `:id`     | string | Unique message ID  | ✅        |
+| Parameter | Type   | Required | Description       |
+| --------- | ------ | -------- | ----------------- |
+| `:id`     | string | ✅       | Unique message ID |
 
 No request body is required for this API.
 
-## Examples
+#### Example Request
 
 **cURL:**
 
@@ -50,11 +56,24 @@ const response = await axios.post(
 );
 ```
 
-## Response
+#### Response
 
-### Success Response
+**Success Response (200 OK)**
 
-When the request succeeds, the API returns the pinned message object:
+| Parameter             | Type    | Description                                          |
+| --------------------- | ------- | ---------------------------------------------------- |
+| `RC`                  | number  | Response code (0 means success)                      |
+| `RM`                  | string  | Response message                                     |
+| `result._id`          | string  | Message unique ID                                    |
+| `result.message`      | string  | Message content                                      |
+| `result.room`         | string  | Room ID the message belongs to                       |
+| `result.sender`       | object  | Sender information                                   |
+| `result.messageType`  | string  | Message type                                         |
+| `result.pinned`       | boolean | Whether the message is pinned (`true` after pinning) |
+| `result.messageTimeMS`| number  | Message send timestamp (milliseconds)                |
+| `result.updatedAtMS`  | number  | Last updated timestamp (milliseconds)                |
+
+#### Example Response
 
 ```json
 {
@@ -83,22 +102,7 @@ When the request succeeds, the API returns the pinned message object:
 }
 ```
 
-### Response Fields
-
-| Field                 | Type    | Description                                   |
-| --------------------- | ------- | --------------------------------------------- |
-| `RC`                  | number  | Response code (0 means success)               |
-| `RM`                  | string  | Response message                              |
-| `result._id`          | string  | Message unique ID                             |
-| `result.message`      | string  | Message content                               |
-| `result.room`         | string  | Room ID the message belongs to                |
-| `result.sender`       | object  | Sender information                            |
-| `result.messageType`  | string  | Message type                                  |
-| `result.pinned`       | boolean | Whether the message is pinned (`true` after pinning) |
-| `result.messageTimeMS`| number  | Message send timestamp (milliseconds)         |
-| `result.updatedAtMS`  | number  | Last updated timestamp (milliseconds)         |
-
-## Error Handling
+#### Error Response
 
 When the request fails, you will receive an error response with details. Common error cases include:
 
@@ -106,6 +110,17 @@ When the request fails, you will receive an error response with details. Common 
 - The specified message does not exist
 - The current user is not the room owner or an admin
 - Internal server error
+
+------
+
+## Use Cases
+
+### Important Message Management
+
+- **Pin Announcements**: Pin important announcements to the top of the room so all members can see them
+- **Quick Access**: Allow members to find key information without scrolling through message history
+
+------
 
 ## Notes
 

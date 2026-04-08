@@ -1,51 +1,45 @@
 # 更新用戶
 
+## 概述
+
 此端點允許您更新系統中現有的用戶資訊。此 API 僅供伺服器端使用，需要適當的身份驗證。
 
-## HTTP 請求
+------
 
-```
+## API 端點
+
+### 更新用戶
+更新系統中現有的用戶端資訊。
+
+```http
 POST /admin/clients
 ```
 
-## 身份驗證
+#### Headers
 
-在請求標頭中包含您的平台 API 金鑰：
+| 參數 | 類型 | 必填 | 說明 |
+| ---- | ---- | ---- | ---- |
+| `IM-API-KEY` | string | ✅ | 您的平台 API 金鑰 |
+| `Content-Type` | string | ✅ | `application/json; charset=utf-8` |
 
-| 標頭         | 類型   | 說明              | 必填 |
-| ------------ | ------ | ----------------- | ---- |
-| `IM-API-KEY` | string | 您的平台 API 金鑰 | ✅    |
-
-## 請求內容
+#### Post Body
 
 請求內容應包含 JSON 格式的用戶端更新資訊。
 
-### 必填參數
+| 參數 | 類型 | 必填 | 說明 |
+| ---- | ---- | ---- | ---- |
+| `_id` | string | ✅ | 要更新的用戶端唯一識別碼 |
+| `nickname` | string | ❌ | 用戶端顯示名稱 |
+| `avatarUrl` | string | ❌ | 用戶端頭像圖片 URL |
+| `issueAccessToken` | boolean | ❌ | 設為 `true` 以重新產生存取權杖；設為 `false` 或省略以使用自訂 token |
+| `token` | string | ❌ | 要綁定的新 token（當 `issueAccessToken` 為 `false` 或省略時使用） |
+| `expirationDate` | string | ❌ | Token 過期時間（ISO 格式，當使用自訂 token 時設定） |
 
-| 參數  | 類型   | 說明                     |
-| ----- | ------ | ------------------------ |
-| `_id` | string | 要更新的用戶端唯一識別碼 |
+#### 範例請求
 
-### 可更新參數
-
-| 參數        | 類型   | 說明               |
-| ----------- | ------ | ------------------ |
-| `nickname`  | string | 用戶端顯示名稱     |
-| `avatarUrl` | string | 用戶端頭像圖片 URL |
-
-## Token 管理選項
-
-更新用戶時，您可以選擇不同的 Token 管理方式：
-
-### 選項一：重新發行存取 Token
+##### 選項一：重新發行存取 Token
 
 使用此選項為現有用戶重新產生新的存取權杖。
-
-| 參數               | 類型    | 說明                           |
-| ------------------ | ------- | ------------------------------ |
-| `issueAccessToken` | boolean | 設為 `true` 以重新產生存取權杖 |
-
-**請求範例：**
 
 ```javascript
 const response = await axios.post(
@@ -65,17 +59,9 @@ const response = await axios.post(
 );
 ```
 
-### 選項二：綁定指定 Token
+##### 選項二：綁定指定 Token
 
 使用此選項將新的自訂 token 綁定到現有用戶端。
-
-| 參數               | 類型    | 說明                       |
-| ------------------ | ------- | -------------------------- |
-| `issueAccessToken` | boolean | 設為 `false` 或省略此參數  |
-| `token`            | string  | 要綁定的新 token           |
-| `expirationDate`   | string  | Token 過期時間（ISO 格式） |
-
-**請求範例：**
 
 ```http
 POST /admin/clients HTTP/1.1
@@ -92,11 +78,9 @@ Host: imkit-dev.funtek.io
 }
 ```
 
-### 選項三：僅更新基本資訊
+##### 選項三：僅更新基本資訊
 
 如果只需要更新用戶端的基本資訊（如暱稱、頭像），可以省略所有 token 相關參數。
-
-**請求範例：**
 
 ```javascript
 const response = await axios.post(
@@ -115,11 +99,31 @@ const response = await axios.post(
 );
 ```
 
-## 回應
+#### Response
 
-### 成功回應
+**成功回應（200 OK）**
 
 當請求成功時，API 會回傳更新後的用戶端資訊：
+
+| 參數 | 類型 | 說明 |
+| ---- | ---- | ---- |
+| `RC` | number | 回應代碼（0 表示成功） |
+| `RM` | string | 回應訊息 |
+| `result` | object | 更新後的用戶端資訊 |
+
+**用戶端物件欄位**
+
+| 參數 | 類型 | 說明 |
+| ---- | ---- | ---- |
+| `_id` | string | 用戶唯一識別碼 |
+| `nickname` | string | 更新後的用戶顯示名稱 |
+| `avatarUrl` | string | 更新後的用戶頭像圖片 URL |
+| `token` | string | 存取權杖（僅在重新發行或綁定新 token 時出現） |
+| `expirationDate` | string | Token 過期時間（僅在有 token 操作時出現） |
+| `updatedAt` | string | 最後更新時間戳（ISO 格式） |
+| `lastLoginTimeMS` | number | 最後登入時間戳（毫秒） |
+
+#### 範例回應
 
 ```json
 {
@@ -150,43 +154,36 @@ const response = await axios.post(
 }
 ```
 
-### 回應欄位
-
-| 欄位     | 類型   | 說明                   |
-| -------- | ------ | ---------------------- |
-| `RC`     | number | 回應代碼（0 表示成功） |
-| `RM`     | string | 回應訊息               |
-| `result` | object | 更新後的用戶端資訊     |
-
-#### 用戶端物件欄位
-
-| 欄位              | 類型   | 說明                                          |
-| ----------------- | ------ | --------------------------------------------- |
-| `_id`             | string | 用戶唯一識別碼                                |
-| `nickname`        | string | 更新後的用戶顯示名稱                          |
-| `avatarUrl`       | string | 更新後的用戶頭像圖片 URL                      |
-| `token`           | string | 存取權杖（僅在重新發行或綁定新 token 時出現） |
-| `expirationDate`  | string | Token 過期時間（僅在有 token 操作時出現）     |
-| `updatedAt`       | string | 最後更新時間戳（ISO 格式）                    |
-| `lastLoginTimeMS` | number | 最後登入時間戳（毫秒）                        |
-
-## 錯誤處理
+#### 錯誤回應
 
 當請求失敗時，您會收到包含錯誤詳細資訊的錯誤回應。常見的錯誤情況包括：
 
-- 無效的 API 金鑰
-- 用戶端不存在（指定的 `_id` 找不到）
-- 無效的 token 格式
-- 參數格式錯誤
-- 伺服器內部錯誤
+- **無效的 API 金鑰** - 提供的 `IM-API-KEY` 無效或已過期
+- **用戶端不存在** - 指定的 `_id` 找不到對應的用戶端
+- **無效的 token 格式** - 自訂 token 格式不正確
+- **參數格式錯誤** - 提供的參數格式不符合要求
+- **伺服器內部錯誤** - 伺服器端發生未預期的錯誤
 
-## 使用注意事項
+------
 
-- 此端點專用於更新現有用戶端的資訊
-- 必須提供有效的 `_id` 來識別要更新的用戶端
-- 如果用戶端不存在，請求將會失敗
-- 只有提供的欄位會被更新，未提供的欄位保持原值
-- 重新發行 token 會使舊的 token 失效
-- 綁定新 token 會替換原有的 token
-- 所有時間戳均為 UTC 格式
-- 頭像圖片的檔案大小應控制在合理範圍內
+## 使用場景
+
+### 用戶資訊維護
+- **更新顯示名稱與頭像**：當用戶修改個人資料時，僅更新 `nickname` 和 `avatarUrl` 等基本資訊
+- **重新發行存取權杖**：當用戶的 token 即將過期或需要刷新時，設定 `issueAccessToken: true` 重新產生
+
+### Token 管理
+- **綁定自訂 Token**：當整合外部身份驗證系統時，將自訂的 token 綁定到現有用戶端
+- **Token 輪換**：定期更換用戶的 token 以提升安全性
+
+------
+
+## 注意事項
+
+- **用戶必須存在**：必須提供有效的 `_id` 來識別要更新的用戶端，如果用戶端不存在，請求將會失敗
+- **部分更新**：只有提供的欄位會被更新，未提供的欄位保持原值
+- **Token 失效**：重新發行 token 會使舊的 token 失效
+- **Token 替換**：綁定新 token 會替換原有的 token
+- **時間戳格式**：所有時間戳均為 UTC 格式
+- **頭像圖片**：頭像圖片的檔案大小應控制在合理範圍內
+- **伺服器端專用**：此端點專用於更新現有用戶端的資訊

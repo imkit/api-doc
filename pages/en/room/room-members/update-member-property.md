@@ -1,39 +1,45 @@
 # Update Member Property
 
+## Overview
+
 This endpoint allows you to update a custom property for a specific member in a room, such as role, location, score, level, or any other custom field. This API is for server-side use only and requires proper authentication.
 
-## HTTP Request
+------
 
-```
+## API Endpoint
+
+### Update Member Property
+
+Update a custom property for a specific member in a room.
+
+```http
 PUT /rooms/:id/member/:client
 ```
 
-## Authentication
+#### Headers
 
-Include your client key and authorization token in the request headers:
+| Parameter | Type | Required | Description |
+| --- | --- | --- | --- |
+| `IM-CLIENT-KEY` | string | ✅ | Client Key |
+| `IM-Authorization` | string | ✅ | Client Token |
 
-| Header             | Description  | Required |
-| ------------------ | ------------ | -------- |
-| `IM-CLIENT-KEY`    | Client Key   | ✅        |
-| `IM-Authorization` | Client Token | ✅        |
+#### Path Parameters
 
-## Path Parameters
+| Parameter | Type | Required | Description |
+| --- | --- | --- | --- |
+| `:id` | string | ✅ | Unique room ID |
+| `:client` | string | ✅ | Member client ID |
 
-| Parameter | Type   | Description      | Required |
-| --------- | ------ | ---------------- | -------- |
-| `:id`     | string | Unique room ID   | ✅        |
-| `:client` | string | Member client ID | ✅        |
+#### Post Body
 
-## Request Body
+| Parameter | Type | Required | Description |
+| --- | --- | --- | --- |
+| `property` | string | ✅ | Name of the member property to update |
+| `value` | mixed | ✅ | New value for the property |
 
-| Parameter  | Type   | Required | Description                           |
-| ---------- | ------ | -------- | ------------------------------------- |
-| `property` | string | ✅        | Name of the member property to update |
-| `value`    | mixed  | ✅        | New value for the property            |
+#### Example Request
 
-## Examples
-
-### Example 1: Assign Admin Role
+**Example 1: Assign Admin Role**
 
 **cURL:**
 
@@ -64,7 +70,7 @@ const response = await axios.put(
 );
 ```
 
-### Example 2: Update a Custom Property
+**Example 2: Update a Custom Property**
 
 **JavaScript:**
 
@@ -85,11 +91,17 @@ const response = await axios.put(
 );
 ```
 
-## Response
+#### Response
 
-### Success Response
+**Success Response (200 OK)**
 
-When the request succeeds, the API returns the updated room data:
+| Parameter | Type | Description |
+| --- | --- | --- |
+| `RC` | number | Response code (0 means success) |
+| `RM` | string | Response message |
+| `result` | object | Updated room data with full details |
+
+#### Example Response
 
 ```json
 {
@@ -115,21 +127,27 @@ When the request succeeds, the API returns the updated room data:
 }
 ```
 
-### Response Fields
-
-| Field    | Type   | Description                         |
-| -------- | ------ | ----------------------------------- |
-| `RC`     | number | Response code (0 means success)     |
-| `RM`     | string | Response message                    |
-| `result` | object | Updated room data with full details |
-
-## Error Handling
+#### Error Response
 
 When the request fails, you will receive an error response with details. Common error cases include:
 
 - Invalid client key or authorization token
 - The specified room or member does not exist
 - Internal server error
+
+------
+
+## Use Cases
+
+### Role Management
+- **Assign admin**: Set `property` to `"role"` and `value` to `"admin"` to assign the admin role
+
+### Custom Properties
+- **Set score**: Set `property` to `"score"` to track a member's score in the room
+- **Set level**: Set `property` to `"level"` to manage member levels
+- **Set location**: Set `property` to `"location"` to record member location information
+
+------
 
 ## Notes
 

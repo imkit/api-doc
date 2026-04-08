@@ -1,31 +1,37 @@
 # Unpin a Message
 
+## Overview
+
 This endpoint allows a room owner or administrator to unpin the currently pinned message, removing it from the top of the room.
 
-## HTTP Request
+------
 
-```
+## API Endpoint
+
+### Unpin a Message
+
+Remove the currently pinned message from the top of the room.
+
+```http
 DELETE /messages/:id/pin
 ```
 
-## Authentication
+#### Headers
 
-Include your client key and authorization token in the request headers:
+| Parameter          | Type   | Required | Description  |
+| ------------------ | ------ | -------- | ------------ |
+| `IM-CLIENT-KEY`    | string | ✅       | Client Key   |
+| `IM-Authorization` | string | ✅       | Client Token |
 
-| Header             | Description  | Required |
-| ------------------ | ------------ | -------- |
-| `IM-CLIENT-KEY`    | Client Key   | ✅        |
-| `IM-Authorization` | Client Token | ✅        |
+#### Path Parameters
 
-## Path Parameters
-
-| Parameter | Type   | Description        | Required |
-| --------- | ------ | ------------------ | -------- |
-| `:id`     | string | Unique message ID  | ✅        |
+| Parameter | Type   | Required | Description       |
+| --------- | ------ | -------- | ----------------- |
+| `:id`     | string | ✅       | Unique message ID |
 
 No request body is required for this API.
 
-## Examples
+#### Example Request
 
 **cURL:**
 
@@ -49,11 +55,24 @@ const response = await axios.delete(
 );
 ```
 
-## Response
+#### Response
 
-### Success Response
+**Success Response (200 OK)**
 
-When the request succeeds, the API returns the unpinned message object:
+| Parameter             | Type    | Description                                               |
+| --------------------- | ------- | --------------------------------------------------------- |
+| `RC`                  | number  | Response code (0 means success)                           |
+| `RM`                  | string  | Response message                                          |
+| `result._id`          | string  | Message unique ID                                         |
+| `result.message`      | string  | Message content                                           |
+| `result.room`         | string  | Room ID the message belongs to                            |
+| `result.sender`       | object  | Sender information                                        |
+| `result.messageType`  | string  | Message type                                              |
+| `result.pinned`       | boolean | Whether the message is pinned (`false` after unpinning)   |
+| `result.messageTimeMS`| number  | Message send timestamp (milliseconds)                     |
+| `result.updatedAtMS`  | number  | Last updated timestamp (milliseconds)                     |
+
+#### Example Response
 
 ```json
 {
@@ -82,22 +101,7 @@ When the request succeeds, the API returns the unpinned message object:
 }
 ```
 
-### Response Fields
-
-| Field                 | Type    | Description                                      |
-| --------------------- | ------- | ------------------------------------------------ |
-| `RC`                  | number  | Response code (0 means success)                  |
-| `RM`                  | string  | Response message                                 |
-| `result._id`          | string  | Message unique ID                                |
-| `result.message`      | string  | Message content                                  |
-| `result.room`         | string  | Room ID the message belongs to                   |
-| `result.sender`       | object  | Sender information                               |
-| `result.messageType`  | string  | Message type                                     |
-| `result.pinned`       | boolean | Whether the message is pinned (`false` after unpinning) |
-| `result.messageTimeMS`| number  | Message send timestamp (milliseconds)            |
-| `result.updatedAtMS`  | number  | Last updated timestamp (milliseconds)            |
-
-## Error Handling
+#### Error Response
 
 When the request fails, you will receive an error response with details. Common error cases include:
 
@@ -105,6 +109,17 @@ When the request fails, you will receive an error response with details. Common 
 - The specified message does not exist
 - The current user is not the room owner or an admin
 - Internal server error
+
+------
+
+## Use Cases
+
+### Message Management
+
+- **Remove Outdated Announcements**: Unpin messages that are no longer relevant to keep the room clean
+- **Replace Pinned Content**: Unpin the old message before pinning a new important one
+
+------
 
 ## Notes
 

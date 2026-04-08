@@ -1,31 +1,37 @@
 # 釘選訊息
 
+## 概述
+
 此端點允許聊天室擁有者或管理員將指定訊息釘選至聊天室頂部，方便成員快速查閱重要訊息。每個聊天室同一時間只能有一則釘選訊息。
 
-## HTTP 請求
+------
 
-```
+## API 端點
+
+### 釘選訊息
+
+將指定訊息釘選至聊天室頂部。
+
+```http
 POST /messages/:id/pin
 ```
 
-## 身份驗證
+#### Headers
 
-在請求標頭中包含您的用戶端金鑰和授權權杖：
+| 參數               | 類型   | 必填 | 說明         |
+| ------------------ | ------ | ---- | ------------ |
+| `IM-CLIENT-KEY`    | string | ✅   | 用戶端金鑰   |
+| `IM-Authorization` | string | ✅   | 用戶端權杖   |
 
-| 標頭               | 說明         | 必填 |
-| ------------------ | ------------ | ---- |
-| `IM-CLIENT-KEY`    | 用戶端金鑰   | ✅    |
-| `IM-Authorization` | 用戶端權杖   | ✅    |
+#### Path Parameters
 
-## 路徑參數
-
-| 參數  | 類型   | 說明             | 必填 |
-| ----- | ------ | ---------------- | ---- |
-| `:id` | string | 訊息唯一識別碼   | ✅    |
+| 參數  | 類型   | 必填 | 說明             |
+| ----- | ------ | ---- | ---------------- |
+| `:id` | string | ✅   | 訊息唯一識別碼   |
 
 此 API 無需請求內容（Request Body）。
 
-## 使用範例
+#### 範例請求
 
 **cURL 範例：**
 
@@ -50,11 +56,24 @@ const response = await axios.post(
 );
 ```
 
-## 回應
+#### Response
 
-### 成功回應
+**成功回應（200 OK）**
 
-當請求成功時，API 會回傳已釘選的訊息物件：
+| 參數                  | 類型    | 說明                               |
+| --------------------- | ------- | ---------------------------------- |
+| `RC`                  | number  | 回應代碼（0 表示成功）             |
+| `RM`                  | string  | 回應訊息                           |
+| `result._id`          | string  | 訊息唯一識別碼                     |
+| `result.message`      | string  | 訊息內容                           |
+| `result.room`         | string  | 所屬聊天室 ID                      |
+| `result.sender`       | object  | 訊息發送者資訊                     |
+| `result.messageType`  | string  | 訊息類型                           |
+| `result.pinned`       | boolean | 是否已釘選（釘選後為 `true`）      |
+| `result.messageTimeMS`| number  | 訊息發送時間戳（毫秒）             |
+| `result.updatedAtMS`  | number  | 最後更新時間戳（毫秒）             |
+
+#### 範例回應
 
 ```json
 {
@@ -83,22 +102,7 @@ const response = await axios.post(
 }
 ```
 
-### 回應欄位
-
-| 欄位                  | 類型    | 說明                               |
-| --------------------- | ------- | ---------------------------------- |
-| `RC`                  | number  | 回應代碼（0 表示成功）             |
-| `RM`                  | string  | 回應訊息                           |
-| `result._id`          | string  | 訊息唯一識別碼                     |
-| `result.message`      | string  | 訊息內容                           |
-| `result.room`         | string  | 所屬聊天室 ID                      |
-| `result.sender`       | object  | 訊息發送者資訊                     |
-| `result.messageType`  | string  | 訊息類型                           |
-| `result.pinned`       | boolean | 是否已釘選（釘選後為 `true`）      |
-| `result.messageTimeMS`| number  | 訊息發送時間戳（毫秒）             |
-| `result.updatedAtMS`  | number  | 最後更新時間戳（毫秒）             |
-
-## 錯誤處理
+#### 錯誤回應
 
 當請求失敗時，您會收到包含錯誤詳細資訊的錯誤回應。常見的錯誤情況包括：
 
@@ -107,7 +111,18 @@ const response = await axios.post(
 - 當前用戶不是聊天室擁有者或管理員
 - 伺服器內部錯誤
 
-## 使用注意事項
+------
+
+## 使用場景
+
+### 重要訊息管理
+
+- **公告置頂**：將重要公告釘選至聊天室頂部，確保所有成員都能看到
+- **快速查閱**：讓成員無需翻閱歷史訊息即可找到關鍵資訊
+
+------
+
+## 注意事項
 
 - **權限限制**：僅聊天室**擁有者（owner）**或**管理員（admin）**可以執行釘選操作
 - 若要取消釘選，請使用[取消釘選訊息](./unpin-a-message) API

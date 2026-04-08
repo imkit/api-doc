@@ -1,31 +1,36 @@
 # Unmute Room Notification
 
+## Overview
+
 This endpoint allows the current user to unmute a previously muted room, restoring push notifications for new messages. This is a personal preference setting that only affects the current user and does not impact other members.
 
-## HTTP Request
+------
 
-```
+## API Endpoint
+
+### Unmute Room Notification
+Unmute a previously muted room to restore push notifications.
+
+```http
 DELETE /me/mute/:room
 ```
 
-## Authentication
+#### Headers
 
-Include your client key and authorization token in the request headers:
+| Parameter | Type | Required | Description |
+| --- | --- | --- | --- |
+| `IM-CLIENT-KEY` | string | ✅ | Client Key |
+| `IM-Authorization` | string | ✅ | Client Token |
 
-| Header             | Description  | Required |
-| ------------------ | ------------ | -------- |
-| `IM-CLIENT-KEY`    | Client Key   | ✅        |
-| `IM-Authorization` | Client Token | ✅        |
+#### Path Parameters
 
-## Path Parameters
-
-| Parameter | Type   | Description    | Required |
-| --------- | ------ | -------------- | -------- |
-| `:room`   | string | Unique room ID | ✅        |
+| Parameter | Type | Required | Description |
+| --- | --- | --- | --- |
+| `:room` | string | ✅ | Unique room ID |
 
 No request body is required for this API.
 
-## Examples
+#### Example Request
 
 **cURL:**
 
@@ -49,11 +54,21 @@ const response = await axios.delete(
 );
 ```
 
-## Response
+#### Response
 
-### Success Response
+**Success Response (200 OK)**
 
-When the request succeeds, the API returns the updated current user data. The `mute` array will no longer contain the unmuted room ID:
+| Parameter | Type | Description |
+| --- | --- | --- |
+| `RC` | number | Response code (0 means success) |
+| `RM` | string | Response message |
+| `result` | object | Updated current user data |
+| `result._id` | string | User unique ID |
+| `result.nickname` | string | User display name |
+| `result.email` | string | User email |
+| `result.mute` | array[string] | Array of muted room IDs (room removed after unmuting) |
+
+#### Example Response
 
 ```json
 {
@@ -77,19 +92,7 @@ When the request succeeds, the API returns the updated current user data. The `m
 }
 ```
 
-### Response Fields
-
-| Field             | Type          | Description                                           |
-| ----------------- | ------------- | ----------------------------------------------------- |
-| `RC`              | number        | Response code (0 means success)                       |
-| `RM`              | string        | Response message                                      |
-| `result`          | object        | Updated current user data                             |
-| `result._id`      | string        | User unique ID                                        |
-| `result.nickname` | string        | User display name                                     |
-| `result.email`    | string        | User email                                            |
-| `result.mute`     | array[string] | Array of muted room IDs (room removed after unmuting) |
-
-## Error Handling
+#### Error Response
 
 When the request fails, you will receive an error response with details. Common error cases include:
 
@@ -97,8 +100,16 @@ When the request fails, you will receive an error response with details. Common 
 - The specified room does not exist
 - Internal server error
 
+------
+
+## Use Cases
+
+- **Restore room notifications**: When a user wants to resume receiving push notifications for a room, they can unmute it
+- **Mute a room**: To mute a room, use the [Mute Room Notification](./mute-room-notification) API
+
+------
+
 ## Notes
 
 - **Personal preference**: The unmute setting only affects the current user. Other members' notifications are not impacted.
 - **Mute state**: After a successful request, the room ID is removed from the `mute` array in the response, which represents all rooms currently muted by the user.
-- To mute a room, use the [Mute Room Notification](./mute-room-notification) API.

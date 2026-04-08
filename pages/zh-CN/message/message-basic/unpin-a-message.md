@@ -1,31 +1,37 @@
 # 取消置顶消息
 
+## 概述
+
 此端点允许聊天室拥有者或管理员取消当前置顶的消息，将其从聊天室顶部移除。
 
-## HTTP 请求
+------
 
-```
+## API 端点
+
+### 取消置顶消息
+
+取消当前置顶的消息，将其从聊天室顶部移除。
+
+```http
 DELETE /messages/:id/pin
 ```
 
-## 身份验证
+#### Headers
 
-在请求标头中包含您的客户端密钥和授权令牌：
+| 参数               | 类型   | 必填 | 说明         |
+| ------------------ | ------ | ---- | ------------ |
+| `IM-CLIENT-KEY`    | string | ✅   | 客户端密钥   |
+| `IM-Authorization` | string | ✅   | 客户端令牌   |
 
-| 标头               | 说明         | 必填 |
-| ------------------ | ------------ | ---- |
-| `IM-CLIENT-KEY`    | 客户端密钥   | ✅    |
-| `IM-Authorization` | 客户端令牌   | ✅    |
+#### Path Parameters
 
-## 路径参数
-
-| 参数  | 类型   | 说明             | 必填 |
-| ----- | ------ | ---------------- | ---- |
-| `:id` | string | 消息唯一标识符   | ✅    |
+| 参数  | 类型   | 必填 | 说明             |
+| ----- | ------ | ---- | ---------------- |
+| `:id` | string | ✅   | 消息唯一标识符   |
 
 此 API 无需请求内容（Request Body）。
 
-## 使用示例
+#### 示例请求
 
 **cURL 示例：**
 
@@ -49,11 +55,24 @@ const response = await axios.delete(
 );
 ```
 
-## 响应
+#### Response
 
-### 成功响应
+**成功响应（200 OK）**
 
-当请求成功时，API 会返回已取消置顶的消息对象：
+| 参数                  | 类型    | 说明                               |
+| --------------------- | ------- | ---------------------------------- |
+| `RC`                  | number  | 响应码（0 表示成功）               |
+| `RM`                  | string  | 响应消息                           |
+| `result._id`          | string  | 消息唯一标识符                     |
+| `result.message`      | string  | 消息内容                           |
+| `result.room`         | string  | 所属聊天室 ID                      |
+| `result.sender`       | object  | 消息发送者信息                     |
+| `result.messageType`  | string  | 消息类型                           |
+| `result.pinned`       | boolean | 是否已置顶（取消后为 `false`）     |
+| `result.messageTimeMS`| number  | 消息发送时间戳（毫秒）             |
+| `result.updatedAtMS`  | number  | 最后更新时间戳（毫秒）             |
+
+#### 示例响应
 
 ```json
 {
@@ -82,22 +101,7 @@ const response = await axios.delete(
 }
 ```
 
-### 响应字段
-
-| 字段                  | 类型    | 说明                               |
-| --------------------- | ------- | ---------------------------------- |
-| `RC`                  | number  | 响应码（0 表示成功）               |
-| `RM`                  | string  | 响应消息                           |
-| `result._id`          | string  | 消息唯一标识符                     |
-| `result.message`      | string  | 消息内容                           |
-| `result.room`         | string  | 所属聊天室 ID                      |
-| `result.sender`       | object  | 消息发送者信息                     |
-| `result.messageType`  | string  | 消息类型                           |
-| `result.pinned`       | boolean | 是否已置顶（取消后为 `false`）     |
-| `result.messageTimeMS`| number  | 消息发送时间戳（毫秒）             |
-| `result.updatedAtMS`  | number  | 最后更新时间戳（毫秒）             |
-
-## 错误处理
+#### 错误响应
 
 当请求失败时，您会收到包含错误详细信息的错误响应。常见的错误情况包括：
 
@@ -106,7 +110,18 @@ const response = await axios.delete(
 - 当前用户不是聊天室拥有者或管理员
 - 服务器内部错误
 
-## 使用注意事项
+------
+
+## 使用场景
+
+### 消息管理
+
+- **移除过时公告**：当置顶的消息不再相关时，取消置顶以保持聊天室整洁
+- **更换置顶内容**：取消置顶旧消息后，可置顶新的重要消息
+
+------
+
+## 注意事项
 
 - **权限限制**：仅聊天室**拥有者（owner）**或**管理员（admin）**可以执行取消置顶操作
 - 若要置顶消息，请使用[置顶消息](./pin-a-message) API

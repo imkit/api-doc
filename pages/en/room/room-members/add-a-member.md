@@ -1,39 +1,45 @@
 # Add a Member
 
+## Overview
+
 This endpoint allows you to add one or more users to a specified room. It supports an invitation confirmation mechanism and optionally generates a system message notification. This API is for server-side use only and requires proper authentication.
 
-## HTTP Request
+------
 
-```
+## API Endpoint
+
+### Add a Member
+
+Add one or more users to a specified room.
+
+```http
 POST /rooms/:id/members
 ```
 
-## Authentication
+#### Headers
 
-Include your client key and authorization token in the request headers:
+| Parameter | Type | Required | Description |
+| --- | --- | --- | --- |
+| `IM-CLIENT-KEY` | string | ✅ | Client Key |
+| `IM-Authorization` | string | ✅ | Client Token |
 
-| Header             | Description  | Required |
-| ------------------ | ------------ | -------- |
-| `IM-CLIENT-KEY`    | Client Key   | ✅        |
-| `IM-Authorization` | Client Token | ✅        |
+#### Path Parameters
 
-## Path Parameters
+| Parameter | Type | Required | Description |
+| --- | --- | --- | --- |
+| `:id` | string | ✅ | Unique room ID |
 
-| Parameter | Type   | Description    | Required |
-| --------- | ------ | -------------- | -------- |
-| `:id`     | string | Unique room ID | ✅        |
+#### Post Body
 
-## Request Body
+| Parameter | Type | Required | Description |
+| --- | --- | --- | --- |
+| `invitees` | array[string] | ✅ | Array of client IDs to add to the room |
+| `systemMessage` | boolean | ❌ | Whether to automatically generate an "add member" system message. Default: `false` |
+| `invitationRequired` | boolean | ❌ | Whether invitees must accept the invitation before joining. Default: `false`. Applies to **group** rooms only |
 
-| Parameter            | Type          | Required | Description                                                                                              |
-| -------------------- | ------------- | -------- | -------------------------------------------------------------------------------------------------------- |
-| `invitees`           | array[string] | ✅        | Array of client IDs to add to the room                                                                   |
-| `systemMessage`      | boolean       | ❌        | Whether to automatically generate an "add member" system message. Default: `false`                       |
-| `invitationRequired` | boolean       | ❌        | Whether invitees must accept the invitation before joining. Default: `false`. Applies to **group** rooms only |
+#### Example Request
 
-## Examples
-
-### Example 1: Invite Members with Confirmation Required
+**Example 1: Invite Members with Confirmation Required**
 
 **cURL:**
 
@@ -65,7 +71,7 @@ const response = await axios.post(
 );
 ```
 
-### Example 2: Add Members Directly (No Invitation Required)
+**Example 2: Add Members Directly (No Invitation Required)**
 
 **JavaScript:**
 
@@ -87,11 +93,17 @@ const response = await axios.post(
 );
 ```
 
-## Response
+#### Response
 
-### Success Response
+**Success Response (200 OK)**
 
-When the request succeeds, the API returns the updated room data:
+| Parameter | Type | Description |
+| --- | --- | --- |
+| `RC` | number | Response code (0 means success) |
+| `RM` | string | Response message |
+| `result` | object | Updated room data with full details |
+
+#### Example Response
 
 ```json
 {
@@ -167,15 +179,7 @@ When the request succeeds, the API returns the updated room data:
 }
 ```
 
-### Response Fields
-
-| Field    | Type   | Description                         |
-| -------- | ------ | ----------------------------------- |
-| `RC`     | number | Response code (0 means success)     |
-| `RM`     | string | Response message                    |
-| `result` | object | Updated room data with full details |
-
-## Error Handling
+#### Error Response
 
 When the request fails, you will receive an error response with details. Common error cases include:
 
@@ -184,9 +188,22 @@ When the request fails, you will receive an error response with details. Common 
 - One or more IDs in `invitees` do not exist
 - Internal server error
 
+------
+
+## Use Cases
+
+### Invitation Flow
+- **Invite with confirmation**: Set `invitationRequired: true` so invitees must accept before joining
+- **Direct add**: Set `invitationRequired: false` to add members immediately without confirmation
+
+### System Notifications
+- **Automatic notifications**: When `systemMessage: true`, the system automatically creates an "add member" notification in the room
+
+------
+
 ## Notes
 
 - **`invitationRequired`**: When `true`, invitees must accept the invitation before joining. When `false`, they are added immediately.
 - **System message**: When `systemMessage: true`, the system automatically creates an "add member" notification in the room.
-- **Direct rooms**: `invitationRequired` has no effect on direct (`direct`) rooms — the system always sets it to `false`.
+- **Direct rooms**: `invitationRequired` has no effect on direct (`direct`) rooms -- the system always sets it to `false`.
 - The response includes the full updated room data, including the latest member list.

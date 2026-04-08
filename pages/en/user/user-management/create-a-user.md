@@ -1,51 +1,45 @@
 # Create User
 
+## Overview
+
 This endpoint allows you to create new users in the system. This API is for server-side use only and requires proper authentication.
 
-## HTTP Request
+------
 
-```
+## API Endpoint
+
+### Create User
+Create a new client in the system.
+
+```http
 POST /admin/clients
 ```
 
-## Authentication
+#### Headers
 
-Include your platform API key in the request headers:
+| Parameter | Type | Required | Description |
+| --------- | ---- | -------- | ----------- |
+| `IM-API-KEY` | string | ✅ | Your platform API key |
+| `Content-Type` | string | ✅ | `application/json; charset=utf-8` |
 
-| Header       | Description            | Required |
-| ------------ | ---------------------- | -------- |
-| `IM-API-KEY` | Your platform API key | ✅       |
-
-## Request Body
+#### Post Body
 
 The request body should contain client information in JSON format.
 
-### Required Parameters
+| Parameter | Type | Required | Description |
+| --------- | ---- | -------- | ----------- |
+| `_id` | string | ✅ | Client unique ID |
+| `nickname` | string | ❌ | Client display name |
+| `avatarUrl` | string | ❌ | Client avatar image URL |
+| `issueAccessToken` | boolean | ❌ | Set to `true` to generate new access token; set to `false` or omit to use custom token |
+| `token` | string | ❌ | Custom token to bind to the client (used when `issueAccessToken` is `false` or omitted) |
+| `expirationDate` | string | ❌ | Token expiration time (ISO format, set when using custom token) |
 
-| Parameter | Type   | Description            |
-| --------- | ------ | ---------------------- |
-| `_id`     | string | Client unique ID       |
+#### Example Request
 
-### Optional Parameters
-
-| Parameter   | Type   | Description          |
-| ----------- | ------ | -------------------- |
-| `nickname`  | string | Client display name  |
-| `avatarUrl` | string | Client avatar image URL |
-
-## Authentication Options
-
-When creating a user, you can choose between two authentication methods:
-
-### Option 1: Chat Server Issued Token
+##### Option 1: Chat Server Issued Token
 
 Use this option to let the chat server automatically generate a new access token for the user.
-
-| Parameter          | Type    | Description                            |
-| ------------------ | ------- | -------------------------------------- |
-| `issueAccessToken` | boolean | Set to `true` to generate new access token |
-
-**Request Example:**
 
 ```javascript
 const response = await axios.post(
@@ -65,17 +59,9 @@ const response = await axios.post(
 );
 ```
 
-### Option 2: Custom Token Binding
+##### Option 2: Custom Token Binding
 
 Use this option to bind a specific token to the user with custom expiration time.
-
-| Parameter          | Type    | Description                           |
-| ------------------ | ------- | ------------------------------------- |
-| `issueAccessToken` | boolean | Set to `false` or omit this parameter |
-| `token`            | string  | Custom token to bind to the client    |
-| `expirationDate`   | string  | Token expiration time (ISO format)    |
-
-**Request Example:**
 
 ```http
 POST /admin/clients HTTP/1.1
@@ -92,11 +78,31 @@ Host: imkit-dev.funtek.io
 }
 ```
 
-## Response
+#### Response
 
-### Success Response
+**Success Response (200 OK)**
 
 When the request is successful, the API returns the created client information:
+
+| Parameter | Type | Description |
+| --------- | ---- | ----------- |
+| `RC` | number | Response code (0 means success) |
+| `RM` | string | Response message |
+| `result` | object | Created client information |
+
+**Client Object Fields**
+
+| Parameter | Type | Description |
+| --------- | ---- | ----------- |
+| `_id` | string | User unique identifier |
+| `nickname` | string | User display name |
+| `avatarUrl` | string | User avatar image URL |
+| `token` | string | Access token (only appears when `issueAccessToken` is true) |
+| `expirationDate` | string | Token expiration time (only appears when token is issued) |
+| `lastLoginTimeMS` | number | Last login timestamp (milliseconds) |
+| `updatedAt` | string | Last update timestamp (ISO format) |
+
+#### Example Response
 
 ```json
 {
@@ -127,39 +133,29 @@ When the request is successful, the API returns the created client information:
 }
 ```
 
-### Response Fields
-
-| Field    | Type   | Description                      |
-| -------- | ------ | -------------------------------- |
-| `RC`     | number | Response code (0 means success) |
-| `RM`     | string | Response message                 |
-| `result` | object | Created client information       |
-
-#### Client Object Fields
-
-| Field             | Type   | Description                                                   |
-| ----------------- | ------ | ------------------------------------------------------------- |
-| `_id`             | string | User unique identifier                                        |
-| `nickname`        | string | User display name                                             |
-| `avatarUrl`       | string | User avatar image URL                                         |
-| `token`           | string | Access token (only appears when `issueAccessToken` is true)  |
-| `expirationDate`  | string | Token expiration time (only appears when token is issued)    |
-| `lastLoginTimeMS` | number | Last login timestamp (milliseconds)                          |
-| `updatedAt`       | string | Last update timestamp (ISO format)                           |
-
-## Error Handling
+#### Error Response
 
 When the request fails, you will receive an error response containing detailed error information. Common error scenarios include:
 
-- Invalid API key
-- Missing required parameters
-- Invalid token format
-- Internal server error
+- **Invalid API key** - The provided `IM-API-KEY` is invalid or expired
+- **Missing required parameters** - The required `_id` parameter was not provided
+- **Invalid token format** - The custom token format is incorrect
+- **Internal server error** - An unexpected error occurred on the server side
 
-## Usage Notes
+------
 
-- This endpoint is used to create new clients
-- Each client requires a unique `_id` identifier
-- The `token` field in the response is only included when `issueAccessToken` is set to `true`
-- All timestamps are in UTC format
-- Avatar image file size should be kept within reasonable limits
+## Use Cases
+
+### User Registration
+- **Create user with server-issued token**: When a new user registers, set `issueAccessToken: true` to let the system automatically generate an access token
+- **Create user with custom token**: When integrating with an external authentication system, bind a custom token and set the expiration time
+
+------
+
+## Notes
+
+- **Unique identifier**: Each client requires a unique `_id` identifier
+- **Token field**: The `token` field in the response is only included when `issueAccessToken` is set to `true`
+- **Timestamp format**: All timestamps are in UTC format
+- **Avatar image**: Avatar image file size should be kept within reasonable limits
+- **Server-side only**: This endpoint is used to create new clients and is for server-side use only

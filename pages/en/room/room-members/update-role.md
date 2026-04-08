@@ -1,46 +1,52 @@
 # Update Member Role
 
+## Overview
+
 This endpoint allows you to update the role of a specific member in a room. When a member is promoted to admin, the system automatically generates a corresponding system message in the room. This API is for server-side use only and requires proper authentication.
 
-## HTTP Request
+------
 
-```
+## API Endpoint
+
+### Update Member Role
+
+Update the role of a specific member in a room.
+
+```http
 PUT /rooms/:id/member/:client
 ```
 
-## Authentication
+#### Headers
 
-Include your client key and authorization token in the request headers:
+| Parameter | Type | Required | Description |
+| --- | --- | --- | --- |
+| `IM-CLIENT-KEY` | string | ✅ | Client Key |
+| `IM-Authorization` | string | ✅ | Client Token |
 
-| Header             | Description  | Required |
-| ------------------ | ------------ | -------- |
-| `IM-CLIENT-KEY`    | Client Key   | ✅        |
-| `IM-Authorization` | Client Token | ✅        |
+#### Path Parameters
 
-## Path Parameters
+| Parameter | Type | Required | Description |
+| --- | --- | --- | --- |
+| `:id` | string | ✅ | Unique room ID |
+| `:client` | string | ✅ | Member client ID |
 
-| Parameter | Type   | Description      | Required |
-| --------- | ------ | ---------------- | -------- |
-| `:id`     | string | Unique room ID   | ✅        |
-| `:client` | string | Member client ID | ✅        |
+#### Post Body
 
-## Request Body
+| Parameter | Type | Required | Description |
+| --- | --- | --- | --- |
+| `property` | string | ✅ | Must be set to `"role"` |
+| `value` | string | ✅ | Role value: `"admin"` or `"member"` |
 
-| Parameter  | Type   | Required | Description                                  |
-| ---------- | ------ | -------- | -------------------------------------------- |
-| `property` | string | ✅        | Must be set to `"role"`                      |
-| `value`    | string | ✅        | Role value: `"admin"` or `"member"`          |
+**Role Values**
 
-### Role Values
+| Value | Description |
+| --- | --- |
+| `"admin"` | Administrator with permissions to manage room members |
+| `"member"` | Regular member |
 
-| Value      | Description                                          |
-| ---------- | ---------------------------------------------------- |
-| `"admin"`  | Administrator with permissions to manage room members |
-| `"member"` | Regular member                                       |
+#### Example Request
 
-## Examples
-
-### Example 1: Promote a Member to Admin
+**Example 1: Promote a Member to Admin**
 
 **cURL:**
 
@@ -71,7 +77,7 @@ const response = await axios.put(
 );
 ```
 
-### Example 2: Demote an Admin to Regular Member
+**Example 2: Demote an Admin to Regular Member**
 
 **JavaScript:**
 
@@ -92,11 +98,17 @@ const response = await axios.put(
 );
 ```
 
-## Response
+#### Response
 
-### Success Response
+**Success Response (200 OK)**
 
-When the request succeeds, the API returns the updated room data:
+| Parameter | Type | Description |
+| --- | --- | --- |
+| `RC` | number | Response code (0 means success) |
+| `RM` | string | Response message |
+| `result` | object | Updated room data with full details |
+
+#### Example Response
 
 ```json
 {
@@ -122,15 +134,7 @@ When the request succeeds, the API returns the updated room data:
 }
 ```
 
-### Response Fields
-
-| Field    | Type   | Description                         |
-| -------- | ------ | ----------------------------------- |
-| `RC`     | number | Response code (0 means success)     |
-| `RM`     | string | Response message                    |
-| `result` | object | Updated room data with full details |
-
-## Error Handling
+#### Error Response
 
 When the request fails, you will receive an error response with details. Common error cases include:
 
@@ -138,6 +142,16 @@ When the request fails, you will receive an error response with details. Common 
 - The specified room or member does not exist
 - `value` is not a valid role
 - Internal server error
+
+------
+
+## Use Cases
+
+### Permission Management
+- **Promote to admin**: Change a member's role from `"member"` to `"admin"` to grant room management permissions
+- **Demote to regular member**: Change an admin's role from `"admin"` to `"member"` to revoke management permissions
+
+------
 
 ## Notes
 

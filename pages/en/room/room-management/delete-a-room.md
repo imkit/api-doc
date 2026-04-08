@@ -1,31 +1,35 @@
 # Delete Room
 
+## Overview
+
 This endpoint allows you to permanently delete a specified room and all of its messages. Once deleted, the room data and all message history will be completely removed from the database and cannot be recovered. This API is for server-side use only and requires proper authentication.
 
-## HTTP Request
+------
 
-```
+## API Endpoint
+
+### Delete Room
+
+Permanently delete a specified room and all of its messages.
+
+```http
 DELETE /rooms/:id
 ```
 
-## Authentication
+#### Headers
 
-Include your client key and authorization token in the request headers:
+| Parameter | Type | Required | Description |
+| --- | --- | --- | --- |
+| `IM-CLIENT-KEY` | string | ✅ | Client Key |
+| `IM-Authorization` | string | ✅ | Client Token |
 
-| Header             | Description    | Required |
-| ------------------ | -------------- | -------- |
-| `IM-CLIENT-KEY`    | Client Key     | ✅        |
-| `IM-Authorization` | Client Token   | ✅        |
+#### Path Parameters
 
-## Path Parameters
+| Parameter | Type | Required | Description |
+| --- | --- | --- | --- |
+| `:id` | string | ✅ | Unique room ID |
 
-| Parameter | Type   | Description          | Required |
-| --------- | ------ | -------------------- | -------- |
-| `:id`     | string | Unique room ID       | ✅        |
-
-## Examples
-
-### Example: Delete a Room
+#### Example Request
 
 **cURL:**
 
@@ -51,11 +55,24 @@ const response = await axios.delete(
 );
 ```
 
-## Response
+#### Response
 
-### Success Response
+**Success Response (200 OK)**
 
-When the request succeeds, the API returns the result of the delete operation:
+| Parameter | Type | Description |
+| --- | --- | --- |
+| `RC` | number | Response code (0 means success) |
+| `RM` | string | Response message |
+| `result` | object | Result of the delete operation |
+
+**Result Object Fields**
+
+| Parameter | Type | Description |
+| --- | --- | --- |
+| `n` | number | Number of documents affected |
+| `ok` | number | Whether the operation succeeded (1 = yes) |
+
+#### Example Response
 
 ```json
 {
@@ -68,22 +85,7 @@ When the request succeeds, the API returns the result of the delete operation:
 }
 ```
 
-### Response Fields
-
-| Field    | Type   | Description                        |
-| -------- | ------ | ---------------------------------- |
-| `RC`     | number | Response code (0 means success)    |
-| `RM`     | string | Response message                   |
-| `result` | object | Result of the delete operation     |
-
-#### Result Object Fields
-
-| Field  | Type   | Description                             |
-| ------ | ------ | --------------------------------------- |
-| `n`    | number | Number of documents affected            |
-| `ok`   | number | Whether the operation succeeded (1 = yes) |
-
-## Error Handling
+#### Error Response
 
 When the request fails, you will receive an error response with details. Common error cases include:
 
@@ -91,6 +93,16 @@ When the request fails, you will receive an error response with details. Common 
 - The specified room does not exist
 - Insufficient permission to delete the room
 - Internal server error
+
+------
+
+## Use Cases
+
+### Room Management
+- **Clean up unused rooms**: Permanently delete rooms that are no longer active or needed
+- **Data management**: Remove rooms and all associated message history when necessary
+
+------
 
 ## Notes
 

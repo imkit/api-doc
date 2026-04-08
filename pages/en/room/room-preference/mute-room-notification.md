@@ -1,31 +1,36 @@
 # Mute Room Notification
 
+## Overview
+
 This endpoint allows the current user to mute notifications for a specified room. Once muted, new messages in that room will no longer trigger push notifications. This is a personal preference setting that only affects the current user and does not impact other members.
 
-## HTTP Request
+------
 
-```
+## API Endpoint
+
+### Mute Room Notification
+Mute a specified room to stop receiving push notifications.
+
+```http
 POST /me/mute/:room
 ```
 
-## Authentication
+#### Headers
 
-Include your client key and authorization token in the request headers:
+| Parameter | Type | Required | Description |
+| --- | --- | --- | --- |
+| `IM-CLIENT-KEY` | string | ✅ | Client Key |
+| `IM-Authorization` | string | ✅ | Client Token |
 
-| Header             | Description  | Required |
-| ------------------ | ------------ | -------- |
-| `IM-CLIENT-KEY`    | Client Key   | ✅        |
-| `IM-Authorization` | Client Token | ✅        |
+#### Path Parameters
 
-## Path Parameters
-
-| Parameter | Type   | Description    | Required |
-| --------- | ------ | -------------- | -------- |
-| `:room`   | string | Unique room ID | ✅        |
+| Parameter | Type | Required | Description |
+| --- | --- | --- | --- |
+| `:room` | string | ✅ | Unique room ID |
 
 No request body is required for this API.
 
-## Examples
+#### Example Request
 
 **cURL:**
 
@@ -50,11 +55,21 @@ const response = await axios.post(
 );
 ```
 
-## Response
+#### Response
 
-### Success Response
+**Success Response (200 OK)**
 
-When the request succeeds, the API returns the updated current user data. The `mute` array will contain the newly muted room ID:
+| Parameter | Type | Description |
+| --- | --- | --- |
+| `RC` | number | Response code (0 means success) |
+| `RM` | string | Response message |
+| `result` | object | Updated current user data |
+| `result._id` | string | User unique ID |
+| `result.nickname` | string | User display name |
+| `result.email` | string | User email |
+| `result.mute` | array[string] | Array of muted room IDs (room added after muting) |
+
+#### Example Response
 
 ```json
 {
@@ -78,19 +93,7 @@ When the request succeeds, the API returns the updated current user data. The `m
 }
 ```
 
-### Response Fields
-
-| Field             | Type          | Description                                         |
-| ----------------- | ------------- | --------------------------------------------------- |
-| `RC`              | number        | Response code (0 means success)                     |
-| `RM`              | string        | Response message                                    |
-| `result`          | object        | Updated current user data                           |
-| `result._id`      | string        | User unique ID                                      |
-| `result.nickname` | string        | User display name                                   |
-| `result.email`    | string        | User email                                          |
-| `result.mute`     | array[string] | Array of muted room IDs (room added after muting)   |
-
-## Error Handling
+#### Error Response
 
 When the request fails, you will receive an error response with details. Common error cases include:
 
@@ -98,8 +101,16 @@ When the request fails, you will receive an error response with details. Common 
 - The specified room does not exist
 - Internal server error
 
+------
+
+## Use Cases
+
+- **Stop notifications for a specific room**: When a user does not want to be disturbed by messages in a room, they can mute it
+- **Unmute**: To unmute a room, use the [Unmute Room Notification](./unmute-room-notification) API
+
+------
+
 ## Notes
 
 - **Personal preference**: The mute setting only affects the current user. Other members' notifications are not impacted.
 - **Mute state**: After a successful request, the room ID is added to the `mute` array in the response, which represents all rooms currently muted by the user.
-- To unmute a room, use the [Unmute Room Notification](./unmute-room-notification) API.

@@ -1,38 +1,44 @@
 # Remove a Member
 
+## Overview
+
 This endpoint allows you to remove one or more members from a specified room. If the current user's own ID is included in the `members` array, it means the current user is leaving the room voluntarily. This API is for server-side use only and requires proper authentication.
 
-## HTTP Request
+------
 
-```
+## API Endpoint
+
+### Remove a Member
+
+Remove one or more members from a specified room.
+
+```http
 POST /rooms/:id/delete/members
 ```
 
-## Authentication
+#### Headers
 
-Include your client key and authorization token in the request headers:
+| Parameter | Type | Required | Description |
+| --- | --- | --- | --- |
+| `IM-CLIENT-KEY` | string | ✅ | Client Key |
+| `IM-Authorization` | string | ✅ | Client Token |
 
-| Header             | Description  | Required |
-| ------------------ | ------------ | -------- |
-| `IM-CLIENT-KEY`    | Client Key   | ✅        |
-| `IM-Authorization` | Client Token | ✅        |
+#### Path Parameters
 
-## Path Parameters
+| Parameter | Type | Required | Description |
+| --- | --- | --- | --- |
+| `:id` | string | ✅ | Unique room ID |
 
-| Parameter | Type   | Description    | Required |
-| --------- | ------ | -------------- | -------- |
-| `:id`     | string | Unique room ID | ✅        |
+#### Post Body
 
-## Request Body
+| Parameter | Type | Required | Description |
+| --- | --- | --- | --- |
+| `members` | array[string] | ✅ | Array of member IDs to remove. If the current user's own ID is included, they will leave the room voluntarily. |
+| `systemMessage` | boolean | ❌ | Whether to generate a `leaveRoom` or `deleteMember` system message. Default: `false` |
 
-| Parameter       | Type          | Required | Description                                                                                                     |
-| --------------- | ------------- | -------- | --------------------------------------------------------------------------------------------------------------- |
-| `members`       | array[string] | ✅        | Array of member IDs to remove. If the current user's own ID is included, they will leave the room voluntarily. |
-| `systemMessage` | boolean       | ❌        | Whether to generate a `leaveRoom` or `deleteMember` system message. Default: `false`                           |
+#### Example Request
 
-## Examples
-
-### Example 1: Remove Specific Members
+**Example 1: Remove Specific Members**
 
 **cURL:**
 
@@ -63,7 +69,7 @@ const response = await axios.post(
 );
 ```
 
-### Example 2: Current User Leaves the Room
+**Example 2: Current User Leaves the Room**
 
 **JavaScript:**
 
@@ -84,11 +90,17 @@ const response = await axios.post(
 );
 ```
 
-## Response
+#### Response
 
-### Success Response
+**Success Response (200 OK)**
 
-When the request succeeds, the API returns the updated room data:
+| Parameter | Type | Description |
+| --- | --- | --- |
+| `RC` | number | Response code (0 means success) |
+| `RM` | string | Response message |
+| `result` | object | Updated room data with full details |
+
+#### Example Response
 
 ```json
 {
@@ -131,15 +143,7 @@ When the request succeeds, the API returns the updated room data:
 }
 ```
 
-### Response Fields
-
-| Field    | Type   | Description                         |
-| -------- | ------ | ----------------------------------- |
-| `RC`     | number | Response code (0 means success)     |
-| `RM`     | string | Response message                    |
-| `result` | object | Updated room data with full details |
-
-## Error Handling
+#### Error Response
 
 When the request fails, you will receive an error response with details. Common error cases include:
 
@@ -147,6 +151,19 @@ When the request fails, you will receive an error response with details. Common 
 - The specified room does not exist
 - One or more IDs in `members` are not in the room
 - Internal server error
+
+------
+
+## Use Cases
+
+### Member Management
+- **Remove members**: Administrators can remove one or more members from a room
+- **Leave voluntarily**: Users can leave a room by including their own ID in the request
+
+### System Notifications
+- **Automatic notifications**: When `systemMessage: true`, the system generates a `leaveRoom` or `deleteMember` system message depending on the context
+
+------
 
 ## Notes
 

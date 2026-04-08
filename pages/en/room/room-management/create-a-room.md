@@ -1,45 +1,54 @@
 # Create Room
 
-# Create and join room with members
+## Overview
 
-Create room, and the current user (caller) auto joins the room with specified invitees.
+Create a room and the current user (caller) auto joins the room with specified invitees. This API is for server-side use only and requires proper authentication.
 
-Note that: if the caller is admin (platform-api-key), the admin user would also join the room.
+Note: If the caller is admin (platform-api-key), the admin user would also join the room.
 
-### path
+------
 
-/rooms/createAndJoin
+## API Endpoint
 
-### Method
+### Create and Join Room
 
-POST
+Create a new room, with the caller automatically joining and optionally inviting specified members.
 
-### Headers:
-
-| Field            | Description  |
-| ---------------- | ------------ |
-| IM-CLIENT-KEY    | Client Key   |
-| IM-Authorization | Client Token |
-
-### Post Body
-
-| Field              | Type            | Description                                                  |
-| ------------------ | --------------- | ------------------------------------------------------------ |
-| \_id               | String          | (Optional) Custom Room ID                                    |
-| name               | String          | (Optional) Room name                                         |
-| cover              | String          | (Optional) Room cover image URL                              |
-| roomType           | String          | (Optional) "direct" or "group"                               |
-| description        | String          | (Optional) Text or serialized json data                      |
-| roomTags           | Array[String]   | (Optional) shared room tags for search                       |
-| webhook            | String          | (Optional) Webhook Key or URL                                |
-| botMode            | Boolean         | (Optional) Is room robot enabled                             |
-| invitee            | String or Array | (optional) String of Client ID or Array of Client IDS. Add member(s) to the created room |
-| systemMessage      | Bool            | (Optional) Should automatically create system message or not (add member message) |
-| invitationRequired | Boolean         | (Optional) Whether required invitation for invitee to decide to join or decline Only for **group** chat. <br/> For **direct** chat, invitationRequired would be `false` by system, invitee would be immediately added to direct chat without invitation. |
-| extParams          | String          | (Optional) extended custom parameters, could be formatted as param1=value1&param2=value2 or a JSON string or custom encoded text |
-
+```http
+POST /rooms/createAndJoin
 ```
-## Create And Join Room
+
+#### Headers
+
+| Parameter | Type | Required | Description |
+| --- | --- | --- | --- |
+| `IM-CLIENT-KEY` | string | ✅ | Client Key |
+| `IM-Authorization` | string | ✅ | Client Token |
+
+#### Post Body
+
+| Parameter | Type | Required | Description |
+| --- | --- | --- | --- |
+| `_id` | string | ❌ | Custom Room ID |
+| `name` | string | ❌ | Room name |
+| `cover` | string | ❌ | Room cover image URL |
+| `roomType` | string | ❌ | "direct" or "group" |
+| `description` | string | ❌ | Text or serialized json data |
+| `roomTags` | array[string] | ❌ | Shared room tags for search |
+| `webhook` | string | ❌ | Webhook Key or URL |
+| `botMode` | boolean | ❌ | Is room robot enabled |
+| `invitee` | string or array | ❌ | String of Client ID or Array of Client IDs. Add member(s) to the created room |
+| `systemMessage` | boolean | ❌ | Should automatically create system message or not (add member message) |
+| `invitationRequired` | boolean | ❌ | Whether required invitation for invitee to decide to join or decline. Only for **group** chat. For **direct** chat, invitationRequired would be `false` by system, invitee would be immediately added to direct chat without invitation. |
+| `extParams` | string | ❌ | Extended custom parameters, could be formatted as param1=value1&param2=value2 or a JSON string or custom encoded text |
+
+#### Example Request
+
+**Create a group chat room (with invitation required)**
+
+cURL:
+
+```bash
 curl -X "POST" "http://localhost:3100/rooms/createAndJoin" \
      -H 'IM-CLIENT-KEY: {IM-CLIENT-KEY}' \
      -H 'IM-Authorization: {TOKEN}' \
@@ -56,7 +65,7 @@ curl -X "POST" "http://localhost:3100/rooms/createAndJoin" \
 }'
 ```
 
-Create a group chat room
+JavaScript - Create a group chat room:
 
 ```javascript
 axios.post(
@@ -78,7 +87,7 @@ axios.post(
 );
 ```
 
-Create a 1-on-1 direct room
+JavaScript - Create a 1-on-1 direct room:
 
 ```javascript
 axios.post(
@@ -98,9 +107,38 @@ axios.post(
 );
 ```
 
-### Response Result
+#### Response
 
-Created Room data
+**Success Response (200 OK)**
+
+| Parameter | Type | Description |
+| --- | --- | --- |
+| `RC` | number | Response code (0 means success) |
+| `RM` | string | Response message |
+| `result` | object | Created room data |
+
+**Room Object Fields**
+
+| Parameter | Type | Description |
+| --- | --- | --- |
+| `_id` | string | Unique room ID |
+| `name` | string | Room name |
+| `cover` | string | Room cover image URL |
+| `description` | string | Room description |
+| `roomType` | string | Room type ("direct" or "group") |
+| `webhook` | string | Webhook key or URL |
+| `botState` | string | Bot state |
+| `botMode` | boolean | Whether bot mode is enabled |
+| `encrypted` | boolean | Whether the room is encrypted |
+| `serviceStatus` | number | Service status |
+| `roomTags` | array[string] | Room tag array |
+| `status` | number | Room status |
+| `lastMessage` | object | Last message object |
+| `memberProperties` | array[object] | Member properties array |
+| `members` | array[object] | Member objects array |
+| `createdTimeMS` | number | Creation timestamp (milliseconds) |
+
+#### Example Response
 
 ```json
 {
@@ -328,3 +366,37 @@ Created Room data
   }
 }
 ```
+
+#### Error Response
+
+When the request fails, you will receive an error response with details. Common error cases include:
+
+- Invalid client key or authorization token
+- Invalid room type
+- Specified invitee does not exist
+- Internal server error
+
+------
+
+## Use Cases
+
+### Group Chat
+- **Group with invitation required**: Set `invitationRequired` to `true`, invitees must accept the invitation before joining
+- **Group with immediate join**: Set `invitationRequired` to `false`, invitees are immediately added
+
+### Direct Chat
+- **Create 1-on-1 direct room**: Set `roomType` to `"direct"`, system automatically sets `invitationRequired` to `false`, invitee is immediately added
+
+------
+
+## Notes
+
+- This endpoint creates a new room and adds the caller and specified invitees
+- If room ID (`_id`) is not specified, the system will auto-generate a unique identifier
+- For **group rooms** (`roomType: "group"`), set `invitationRequired` to `true` to require invitees to accept
+- For **direct rooms** (`roomType: "direct"`), `invitationRequired` is automatically set to `false` by the system
+- The caller (current user) automatically becomes a room member
+- If using admin key (platform-api-key), the admin user also automatically joins the room
+- All timestamps are in UTC format, in milliseconds
+- Cover image file size should be kept within reasonable limits
+- `roomTags` can be used for room search functionality
