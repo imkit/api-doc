@@ -15,10 +15,10 @@ Deployment to GitHub Pages is automatic on push to `main` via `.github/workflows
 
 ## Architecture
 
-This is a **Nextra 3.x** static documentation site built with Next.js 15 and React 19, deployed to GitHub Pages at `https://imkit.github.io/api-doc`.
+This is a **Nextra 3.x** static documentation site built with Next.js 15 and React 19, deployed to GitHub Pages at `https://docs.imkit.io`.
 
 ### Key config files
-- `next.config.mjs` — Nextra setup, i18n locales, GitHub Pages `basePath: '/api-doc'`, `output: 'export'`
+- `next.config.mjs` — Nextra setup, i18n locales, custom domain (docs.imkit.io), `output: 'export'`
 - `theme.config.tsx` — Nextra docs theme, language switcher entries
 - `pages/_meta.ts` — Root navigation (applies `layout: 'full'` to all pages)
 
