@@ -46,7 +46,7 @@ GET /rooms/{id}/messages/v3
 ```http
 GET /rooms/demo-room/messages/v3?limit=50 HTTP/1.1
 IM-CLIENT-KEY: {IM-CLIENT-KEY}
-IM-Authorization: {TOKEN}
+IM-Authorization: {IM-Authorization}
 Host: your-app.imkit.io
 Connection: close
 ```
@@ -56,7 +56,7 @@ Connection: close
 ```http
 GET /rooms/demo-room/messages/v3?limit=50&beforeMessage=5f890cf37d980e06f6aaf349 HTTP/1.1
 IM-CLIENT-KEY: {IM-CLIENT-KEY}
-IM-Authorization: {TOKEN}
+IM-Authorization: {IM-Authorization}
 Host: your-app.imkit.io
 Connection: close
 ```
@@ -66,7 +66,7 @@ Connection: close
 ```http
 GET /rooms/demo-room/messages/v3?afterTime=2024-01-01T00:00:00Z&limit=100 HTTP/1.1
 IM-CLIENT-KEY: {IM-CLIENT-KEY}
-IM-Authorization: {TOKEN}
+IM-Authorization: {IM-Authorization}
 Host: your-app.imkit.io
 Connection: close
 ```
@@ -92,8 +92,8 @@ const response = await axios.get(
 
 ```bash
 curl -X "GET" "https://your-app.imkit.io/rooms/demo-room/messages/v3?limit=50" \
-     -H 'IM-CLIENT-KEY: {您的_CLIENT_KEY}' \
-     -H 'IM-Authorization: {您的_TOKEN}'
+     -H 'IM-CLIENT-KEY: {IM-CLIENT-KEY}' \
+     -H 'IM-Authorization: {IM-Authorization}'
 ```
 
 #### Response

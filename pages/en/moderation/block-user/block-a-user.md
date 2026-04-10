@@ -36,7 +36,7 @@ POST /blockStatus/my/{blockee}
 ```http
 POST /blockStatus/my/ccc HTTP/1.1
 IM-CLIENT-KEY: {IM-CLIENT-KEY}
-IM-Authorization: {TOKEN}
+IM-Authorization: {IM-Authorization}
 Host: your-app.imkit.io
 Connection: close
 ```
@@ -46,7 +46,7 @@ Connection: close
 ```http
 POST /blockStatus/my/user123 HTTP/1.1
 IM-CLIENT-KEY: {IM-CLIENT-KEY}
-IM-Authorization: {TOKEN}
+IM-Authorization: {IM-Authorization}
 Host: your-app.imkit.io
 Connection: close
 ```
@@ -70,8 +70,8 @@ const response = await axios.post(
 
 ```bash
 curl -X "POST" "https://your-app.imkit.io/blockStatus/my/{blockee}" \
-     -H 'IM-CLIENT-KEY: {您的_CLIENT_KEY}' \
-     -H 'IM-Authorization: {您的_TOKEN}'
+     -H 'IM-CLIENT-KEY: {IM-CLIENT-KEY}' \
+     -H 'IM-Authorization: {IM-Authorization}'
 ```
 
 #### Response

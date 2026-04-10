@@ -72,7 +72,7 @@ const response = await axios.delete(
 
 ```bash
 curl -X "DELETE" "https://your-app.imkit.io/admin/clients/{client_id}/token" \
-     -H 'IM-API-KEY: {您的_API_KEY}' \
+     -H 'IM-API-KEY: {IM-API-KEY}' \
      -H 'Content-Type: application/json' \
      -d '{"token": "old-token-xyz"}'
 ```

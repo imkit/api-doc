@@ -45,8 +45,8 @@ POST /rooms/:id/members
 
 ```bash
 curl -X "POST" "https://your-app.imkit.io/rooms/demo-room/members" \
-     -H 'IM-CLIENT-KEY: {您的_CLIENT_KEY}' \
-     -H 'IM-Authorization: {您的_TOKEN}' \
+     -H 'IM-CLIENT-KEY: {IM-CLIENT-KEY}' \
+     -H 'IM-Authorization: {IM-Authorization}' \
      -H 'Content-Type: application/json; charset=utf-8' \
      -d '{"invitees": ["ccc", "bbb"], "invitationRequired": true, "systemMessage": true}'
 ```

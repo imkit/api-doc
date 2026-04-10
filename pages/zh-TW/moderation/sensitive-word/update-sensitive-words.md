@@ -124,7 +124,7 @@ const response = await axios.post(
 
 ```bash
 curl -X "POST" "https://your-app.imkit.io/config" \
-     -H 'IM-API-KEY: {您的_API_KEY}' \
+     -H 'IM-API-KEY: {IM-API-KEY}' \
      -H 'Content-Type: application/json' \
      -d '{"censorship": {"keywords": ["foo", "bar"]}}'
 ```

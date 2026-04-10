@@ -123,7 +123,7 @@ const response = await axios.post(
 
 ```bash
 curl -X "POST" "https://your-app.imkit.io/messages" \
-     -H 'IM-API-KEY: {您的_API_KEY}' \
+     -H 'IM-API-KEY: {IM-API-KEY}' \
      -H 'Content-Type: application/json; charset=utf-8' \
      -d $'{
   "room": "project-room-001",

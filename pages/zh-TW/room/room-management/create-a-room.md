@@ -87,7 +87,7 @@ const response = await axios.post(
 
 ```bash
 curl -X "POST" "https://your-app.imkit.io/rooms/" \
-     -H 'IM-API-KEY: {您的_API_KEY}' \
+     -H 'IM-API-KEY: {IM-API-KEY}' \
      -H 'Content-Type: application/json; charset=utf-8' \
      -d $'{
   "name": "專案討論群",

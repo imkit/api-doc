@@ -58,8 +58,8 @@ const response = await axios.get(
 
 ```bash
 curl -X "GET" "https://your-app.imkit.io/rooms/58871b877390be11d5f1ab30" \
-     -H 'IM-CLIENT-KEY: {您的_CLIENT_KEY}' \
-     -H 'IM-Authorization: {您的_TOKEN}'
+     -H 'IM-CLIENT-KEY: {IM-CLIENT-KEY}' \
+     -H 'IM-Authorization: {IM-Authorization}'
 ```
 
 #### Response

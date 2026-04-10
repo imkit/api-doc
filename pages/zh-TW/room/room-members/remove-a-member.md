@@ -44,8 +44,8 @@ POST /rooms/:id/delete/members
 
 ```bash
 curl -X "POST" "https://your-app.imkit.io/rooms/demo-room/delete/members" \
-     -H 'IM-CLIENT-KEY: {您的_CLIENT_KEY}' \
-     -H 'IM-Authorization: {您的_TOKEN}' \
+     -H 'IM-CLIENT-KEY: {IM-CLIENT-KEY}' \
+     -H 'IM-Authorization: {IM-Authorization}' \
      -H 'Content-Type: application/json; charset=utf-8' \
      -d '{"members": ["ccc", "bbb"], "systemMessage": true}'
 ```

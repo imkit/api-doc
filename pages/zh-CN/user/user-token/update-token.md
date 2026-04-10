@@ -67,7 +67,7 @@ const response = await axios.put(
 
 ```bash
 curl -X "PUT" "https://your-app.imkit.io/admin/clients/{client_id}/token" \
-     -H 'IM-API-KEY: {您的_API_KEY}' \
+     -H 'IM-API-KEY: {IM-API-KEY}' \
      -H 'Content-Type: application/json' \
      -d '{"token": "new-token-001", "expirationDate": "2026-01-01T00:00:00Z"}'
 ```

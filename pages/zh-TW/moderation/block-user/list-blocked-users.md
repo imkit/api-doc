@@ -30,7 +30,7 @@ GET /blockStatus/my
 ```http
 GET /blockStatus/my HTTP/1.1
 IM-CLIENT-KEY: {IM-CLIENT-KEY}
-IM-Authorization: {TOKEN}
+IM-Authorization: {IM-Authorization}
 Host: your-app.imkit.io
 Connection: close
 ```
@@ -53,8 +53,8 @@ const response = await axios.get(
 
 ```bash
 curl -X "GET" "https://your-app.imkit.io/blockStatus/my" \
-     -H 'IM-CLIENT-KEY: {您的_CLIENT_KEY}' \
-     -H 'IM-Authorization: {您的_TOKEN}'
+     -H 'IM-CLIENT-KEY: {IM-CLIENT-KEY}' \
+     -H 'IM-Authorization: {IM-Authorization}'
 ```
 
 #### Response

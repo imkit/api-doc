@@ -57,9 +57,9 @@ cURL 範例：
 
 ```bash
 curl "https://your-app.imkit.io/rooms?skip=0&limit=20&sort=-lastMessage&updatedAfter=2020-10-15T03:28:54Z" \
-     -H 'IM-CLIENT-KEY: {您的_CLIENT_KEY}' \
+     -H 'IM-CLIENT-KEY: {IM-CLIENT-KEY}' \
      -H 'IM-CLIENT-ID: {您的_CLIENT_ID}' \
-     -H 'IM-Authorization: {您的_TOKEN}'
+     -H 'IM-Authorization: {IM-Authorization}'
 ```
 
 JavaScript 範例：

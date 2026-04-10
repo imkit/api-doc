@@ -27,8 +27,8 @@ GET /config
 
 ```http
 GET /config HTTP/1.1
-IM-CLIENT-KEY: {CLIENT_KEY}
-IM-Authorization: {CLIENT_TOKEN}
+IM-CLIENT-KEY: {IM-CLIENT-KEY}
+IM-Authorization: {IM-Authorization}
 Host: your-app.imkit.io
 Connection: close
 ```
@@ -51,8 +51,8 @@ const response = await axios.get(
 
 ```bash
 curl -X "GET" "https://your-app.imkit.io/config" \
-     -H 'IM-CLIENT-KEY: {您的_CLIENT_KEY}' \
-     -H 'IM-Authorization: {您的_TOKEN}'
+     -H 'IM-CLIENT-KEY: {IM-CLIENT-KEY}' \
+     -H 'IM-Authorization: {IM-Authorization}'
 ```
 
 #### Response

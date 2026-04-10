@@ -36,8 +36,8 @@ POST /me/mute/:room
 
 ```bash
 curl -X "POST" "https://your-app.imkit.io/me/mute/demo-room" \
-     -H 'IM-CLIENT-KEY: {您的_CLIENT_KEY}' \
-     -H 'IM-Authorization: {您的_TOKEN}'
+     -H 'IM-CLIENT-KEY: {IM-CLIENT-KEY}' \
+     -H 'IM-Authorization: {IM-Authorization}'
 ```
 
 **JavaScript 範例：**

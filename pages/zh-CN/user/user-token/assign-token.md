@@ -82,7 +82,7 @@ const response = await axios.post(
 
 ```bash
 curl -X "POST" "https://your-app.imkit.io/admin/clients" \
-     -H 'IM-API-KEY: {您的_API_KEY}' \
+     -H 'IM-API-KEY: {IM-API-KEY}' \
      -H 'Content-Type: application/json' \
      -d '{"_id": "user002", "nickname": "John", "avatarUrl": "https://example.com/avatar.jpg", "issueAccessToken": false, "token": "my-custom-token-xyz", "expirationDate": "2025-06-30T12:00:00Z"}'
 ```

@@ -89,8 +89,8 @@ const response = await axios.put(
 
 ```bash
 curl -X "PUT" "https://your-app.imkit.io/rooms/{id}" \
-     -H 'IM-CLIENT-KEY: {您的_CLIENT_KEY}' \
-     -H 'IM-Authorization: {您的_TOKEN}' \
+     -H 'IM-CLIENT-KEY: {IM-CLIENT-KEY}' \
+     -H 'IM-Authorization: {IM-Authorization}' \
      -H 'Content-Type: application/json' \
      -d '{"status": 0}'
 ```

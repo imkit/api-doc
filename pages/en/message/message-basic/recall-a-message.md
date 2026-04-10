@@ -54,8 +54,8 @@ POST /rooms/:roomId/message
 
 ```bash
 curl -X "POST" "https://your-app.imkit.io/rooms/demo-room/message" \
-     -H 'IM-CLIENT-KEY: {您的_CLIENT_KEY}' \
-     -H 'IM-Authorization: {您的_TOKEN}' \
+     -H 'IM-CLIENT-KEY: {IM-CLIENT-KEY}' \
+     -H 'IM-Authorization: {IM-Authorization}' \
      -H 'Content-Type: application/json; charset=utf-8' \
      -d '{"_id": "5ce3d80bd594874e495895a4", "messageType": "recall"}'
 ```

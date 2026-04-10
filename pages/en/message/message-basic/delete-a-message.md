@@ -36,8 +36,8 @@ DELETE /rooms/{roomID}/messages/{messageID}
 
 ```http
 DELETE /rooms/test-room-123/messages/5f890cf37d980e06f6aaf349 HTTP/1.1
-IM-CLIENT-KEY: {CLIENT_KEY}
-IM-Authorization: {ACCESS_TOKEN}
+IM-CLIENT-KEY: {IM-CLIENT-KEY}
+IM-Authorization: {IM-Authorization}
 Content-Type: application/json; charset=utf-8
 Connection: close
 ```
@@ -46,8 +46,8 @@ Connection: close
 
 ```http
 DELETE /rooms/test-room-123/messages/_all HTTP/1.1
-IM-CLIENT-KEY: {CLIENT_KEY}
-IM-Authorization: {ACCESS_TOKEN}
+IM-CLIENT-KEY: {IM-CLIENT-KEY}
+IM-Authorization: {IM-Authorization}
 Content-Type: application/json; charset=utf-8
 Connection: close
 ```

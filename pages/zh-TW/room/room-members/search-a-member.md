@@ -50,8 +50,8 @@ GET /rooms/{id}
 async function getRoomMembers(roomId) {
   const response = await fetch(`/rooms/${roomId}`, {
     headers: {
-      'IM-CLIENT-KEY': '{CLIENT_KEY}',
-      'IM-Authorization': '{TOKEN}'
+      'IM-CLIENT-KEY': '{IM-CLIENT-KEY}',
+      'IM-Authorization': '{IM-Authorization}'
     }
   });
   const data = await response.json();

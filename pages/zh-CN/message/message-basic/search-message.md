@@ -39,7 +39,7 @@ POST /search
 
 ```http
 POST /search HTTP/1.1
-IM-Authorization: {TOKEN}
+IM-Authorization: {IM-Authorization}
 IM-CLIENT-KEY: {IM-CLIENT-KEY}
 Content-Type: application/json; charset=utf-8
 Host: your-app.imkit.io
@@ -56,7 +56,7 @@ Connection: close
 
 ```http
 POST /search HTTP/1.1
-IM-Authorization: {TOKEN}
+IM-Authorization: {IM-Authorization}
 IM-CLIENT-KEY: {IM-CLIENT-KEY}
 Content-Type: application/json; charset=utf-8
 Host: your-app.imkit.io
@@ -73,7 +73,7 @@ Connection: close
 
 ```http
 POST /search HTTP/1.1
-IM-Authorization: {TOKEN}
+IM-Authorization: {IM-Authorization}
 IM-CLIENT-KEY: {IM-CLIENT-KEY}
 Content-Type: application/json; charset=utf-8
 Host: your-app.imkit.io
@@ -110,8 +110,8 @@ const response = await axios.post(
 
 ```bash
 curl -X "POST" "https://your-app.imkit.io/search" \
-     -H 'IM-CLIENT-KEY: {您的_CLIENT_KEY}' \
-     -H 'IM-Authorization: {您的_TOKEN}' \
+     -H 'IM-CLIENT-KEY: {IM-CLIENT-KEY}' \
+     -H 'IM-Authorization: {IM-Authorization}' \
      -H 'Content-Type: application/json' \
      -d '{"type": ["messages"], "keyword": "hello", "limit": 20}'
 ```

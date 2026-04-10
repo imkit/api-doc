@@ -74,7 +74,7 @@ const response = await axios.delete(
 
 ```bash
 curl -X "DELETE" "https://your-app.imkit.io/config/censorship" \
-     -H 'IM-API-KEY: {您的_API_KEY}'
+     -H 'IM-API-KEY: {IM-API-KEY}'
 ```
 
 #### Response

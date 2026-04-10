@@ -45,8 +45,8 @@ PUT /rooms/:id/member/:client
 
 ```bash
 curl -X "PUT" "https://your-app.imkit.io/rooms/demo-room/member/user-001" \
-     -H 'IM-CLIENT-KEY: {您的_CLIENT_KEY}' \
-     -H 'IM-Authorization: {您的_TOKEN}' \
+     -H 'IM-CLIENT-KEY: {IM-CLIENT-KEY}' \
+     -H 'IM-Authorization: {IM-Authorization}' \
      -H 'Content-Type: application/json; charset=utf-8' \
      -d '{"property": "role", "value": "admin"}'
 ```

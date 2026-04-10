@@ -91,7 +91,7 @@ const response = await axios.get(
 
 ```bash
 curl -X "GET" "https://your-app.imkit.io/admin/clients?q=%7B%22nickname%22%3A%7B%22%24regex%22%3A%22.*AB.*%22%7D%7D&limit=20&skip=0" \
-     -H 'IM-API-KEY: {您的_API_KEY}'
+     -H 'IM-API-KEY: {IM-API-KEY}'
 ```
 
 #### Response

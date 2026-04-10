@@ -35,8 +35,8 @@ DELETE /rooms/:id
 
 ```bash
 curl -X "DELETE" "https://your-app.imkit.io/rooms/test-room-123" \
-     -H 'IM-CLIENT-KEY: {您的_CLIENT_KEY}' \
-     -H 'IM-Authorization: {您的_TOKEN}' \
+     -H 'IM-CLIENT-KEY: {IM-CLIENT-KEY}' \
+     -H 'IM-Authorization: {IM-Authorization}' \
      -H 'Content-Type: application/json; charset=utf-8'
 ```
 
