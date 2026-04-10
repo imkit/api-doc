@@ -65,7 +65,7 @@ const response = await axios.post(
 
 ```http
 POST /admin/clients HTTP/1.1
-IM-API-KEY: {您的_API_金鑰}
+IM-API-KEY: {IM-API-KEY}
 Content-Type: application/json; charset=utf-8
 Host: your-app.imkit.io
 
