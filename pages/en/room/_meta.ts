@@ -1,11 +1,11 @@
 export default {
   "room-management": {
-    title: "Room Management"
+    title: "聊天室管理"
   },
   "room-members": {
-    title: "Room Members"
+    title: "聊天室成員"
   },
   "room-preference": {
-    title: "Room Preference"
+    title: "聊天室偏好設定"
   }
 }

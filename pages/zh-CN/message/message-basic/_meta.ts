@@ -27,7 +27,7 @@ export default {
   },
   "get-message-by-a-room":
   {
-    title: "獲取聊天室訊息"
+    title: "取得聊天室訊息"
   },
   "list-messages":
   {

@@ -1,10 +1,10 @@
 export default {
   "api-key": {
-    title: "API Key"
+    title: "API 金鑰"
   },
   "client-key":
   {
-    title: "Client Key"
+    title: "用戶端金鑰"
   }
 }
 

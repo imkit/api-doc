@@ -1,8 +1,8 @@
-# 解除靜音成員
+# 替用戶取消靜音聊天室
 
 ## 概述
 
-解除靜音成員功能讓管理員可以移除特定客戶端對指定聊天室的靜音狀態，恢復該客戶端對聊天室的通知接收。此功能與靜音成員功能相對應，適用於恢復通知、重新啟用提醒和聊天室管理。
+由管理員替指定用戶取消特定聊天室的靜音狀態，恢復該用戶對聊天室的通知接收。此功能與「替用戶靜音聊天室」相對應。
 
 ------
 
@@ -34,11 +34,9 @@ DELETE /admin/clients/{uid}/mute/{room}
 **解除特定聊天室靜音**
 
 ```http
-DELETE /admin/clients/aaa/mute/demo?limit=10&skip=100 HTTP/1.1
-IM-API-KEY: fangho_imkit_0412_2018_001_apikey
+DELETE /admin/clients/aaa/mute/demo HTTP/1.1
+IM-API-KEY: {IM-API-KEY}
 Host: your-app.imkit.io
-Connection: close
-User-Agent: Paw/3.1.10 (Macintosh; OS X/10.15.7) GCDHTTPRequest
 ```
 
 **JavaScript 範例：**

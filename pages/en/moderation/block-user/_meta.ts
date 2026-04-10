@@ -1,14 +1,14 @@
 export default {
   "block-a-user": {
-    title: "Block a User"
+    title: "封鎖用戶"
   },
   "unblock-a-user":
   {
-    title: "Unblock a User"
+    title: "解除封鎖用戶"
   },
   "list-blocked-users":
   {
-    title: "List Blocked Users"
+    title: "列出封鎖用戶"
   }
 }
 

@@ -34,7 +34,7 @@ POST /admin/clients
 | 參數 | 類型 | 必填 | 說明 |
 | ---- | ---- | ---- | ---- |
 | `_id` | string | ✅ | 用戶唯一識別碼 |
-| `nickname` | string | ✅ | 用戶顯示名稱 |
+| `nickname` | string | ❌ | 用戶顯示名稱 |
 | `avatarUrl` | string | ❌ | 用戶頭像 URL |
 | `issueAccessToken` | boolean | ✅ | 設為 `false` 以啟用此授權模式 |
 | `token` | string | ✅ | 您系統產生的自訂 token |

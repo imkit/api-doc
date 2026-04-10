@@ -21,7 +21,7 @@ GET /rooms
 | 參數 | 類型 | 必填 | 說明 |
 | --- | --- | --- | --- |
 | `IM-CLIENT-KEY` | string | ✅ | 用戶端金鑰 |
-| `IM-CLIENT-ID` | string | ✅ | 當前用戶的用戶端 ID |
+| `IM-CLIENT-ID` | string | ✅ | 當前用戶的用戶端 ID（此端點需要額外提供，用於計算未讀數等用戶相關資料） |
 | `IM-Authorization` | string | ✅ | 用戶端權杖 |
 
 #### Query Parameters

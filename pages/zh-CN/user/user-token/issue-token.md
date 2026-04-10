@@ -33,7 +33,7 @@ POST /admin/clients
 | 參數 | 類型 | 必填 | 說明 |
 | ---- | ---- | ---- | ---- |
 | `_id` | string | ✅ | 用戶唯一識別碼 |
-| `nickname` | string | ✅ | 用戶顯示名稱 |
+| `nickname` | string | ❌ | 用戶顯示名稱 |
 | `avatarUrl` | string | ❌ | 用戶頭像 URL |
 | `issueAccessToken` | boolean | ✅ | 設為 `true` 以啟用此授權模式 |
 
@@ -145,7 +145,7 @@ curl -X "POST" "https://your-app.imkit.io/admin/clients" \
 ## 注意事項
 
 - **Token 有效期限**：由 Chat Server 管理，請留意 `expirationDate` 欄位
-- **Token 過期**：過期後需要重新建立用戶以取得新的 token
+- **Token 過期**：過期後可再次呼叫同一端點（`POST /admin/clients` 搭配 `issueAccessToken: true`）重新取得 token，不需要刪除用戶
 - **無法自訂**：此模式下無法自訂 token 內容或過期時間
 - **快取建議**：建議在應用程式中快取 token 以避免重複請求
 - **使用 Token**：取得 token 後，在後續的 API 呼叫中透過 `IM-Authorization` header 傳遞

@@ -1,27 +1,27 @@
 export default {
   "add-a-member": 
   {
-    title: "Add a Member"
+    title: "添加成員"
   },
   "remove-a-member":
   {
-    title: "Remove a Member"
+    title: "移除成員"
   },
    "list-members": 
   {
-    title: "List Members"
+    title: "聊天室成員列表"
   },
    "search-a-member": 
   {
-    title: "Search a Member"
+    title: "搜尋成員"
   },
    "update-member-property": 
   {
-    title: "Update Member Property"
+    title: "更新成員屬性"
   },
    "update-role": 
   {
-    title: "Update Member Role"
+    title: "更新成員角色"
   }
 }
 

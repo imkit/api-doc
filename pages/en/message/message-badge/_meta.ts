@@ -1,10 +1,10 @@
 export default {
   "get-unread-message-by-a-room": {
-    title: "Get Unread Message by a Room"
+    title: "獲取聊天室未讀訊息"
   },
   "get-unread-message-by-a-user":
   {
-    title: "Get Unread Message by a User"
+    title: "獲取用戶未讀訊息"
   }
 }
 

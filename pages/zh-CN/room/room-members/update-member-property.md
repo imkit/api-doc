@@ -30,7 +30,7 @@ PUT /rooms/:id/member/:client
 | `:id` | string | ✅ | 聊天室唯一識別碼 |
 | `:client` | string | ✅ | 成員的用戶端 ID |
 
-#### Post Body
+#### Request Body
 
 | 參數 | 類型 | 必填 | 說明 |
 | --- | --- | --- | --- |

@@ -1,8 +1,8 @@
-# 靜音成員
+# 替用戶靜音聊天室
 
 ## 概述
 
-靜音指定聊天室功能讓用戶可以暫時停止接收特定聊天室的通知，但不會影響用戶在該聊天室的參與權限。此功能適用於臨時減少干擾或過濾不重要的聊天室通知。
+由管理員替指定用戶靜音特定聊天室的通知。靜音後該用戶將不再收到該聊天室的推播通知，但不影響其在聊天室中的參與權限。此功能適用於管理員代替用戶管理通知偏好。
 
 ------
 
@@ -34,12 +34,9 @@ POST /admin/clients/{uid}/mute/{room}
 **靜音特定聊天室**
 
 ```http
-POST /admin/clients/aaa/mute/demo?limit=10&skip=100 HTTP/1.1
+POST /admin/clients/aaa/mute/demo HTTP/1.1
 IM-API-KEY: {IM-API-KEY}
 Host: your-app.imkit.io
-Connection: close
-User-Agent: Paw/3.1.10 (Macintosh; OS X/10.15.7) GCDHTTPRequest
-Content-Length: 0
 ```
 
 **JavaScript 範例：**

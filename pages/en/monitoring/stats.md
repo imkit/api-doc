@@ -53,8 +53,8 @@ curl -X GET "https://your-app.imkit.io/admin/stats" \
 | `RC`                  | number | 回應代碼（0 表示成功）                       |
 | `RM`                  | string | 回應訊息                                     |
 | `result`              | object | 統計結果                                     |
-| `result.clientKey`    | string | Client Key                                   |
-| `result.apiKey`       | string | API Key                                      |
+| `result.clientKey`    | string | Client Key（敏感資訊，請勿記錄至日誌）       |
+| `result.apiKey`       | string | API Key（敏感資訊，請勿記錄至日誌）          |
 | `result.startTime`    | string | 統計起始時間（ISO 格式）                     |
 | `result.endTime`      | string | 統計結束時間（ISO 格式）                     |
 | `result.start`        | number | 統計起始時間（Unix 時間戳，秒）              |

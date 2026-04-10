@@ -180,7 +180,7 @@ const response = await axios.post(
 
 ## 注意事項
 
-- **用戶必須存在**：必須提供有效的 `_id` 來識別要更新的用戶端，如果用戶端不存在，請求將會失敗
+- **用戶必須存在**：此頁面的使用場景為更新已存在的用戶。若需同時支援建立和更新，請參考[建立用戶](/zh-TW/user/user-management/create-a-user)
 - **部分更新**：只有提供的欄位會被更新，未提供的欄位保持原值
 - **Token 失效**：重新發行 token 會使舊的 token 失效
 - **Token 替換**：綁定新 token 會替換原有的 token

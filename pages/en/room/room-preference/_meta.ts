@@ -1,11 +1,11 @@
 export default {
   "mute-room-notification": 
   {
-    title: "Mute Room Notification"
+    title: "靜音聊天室通知"
   },
   "unmute-room-notification":
   {
-    title: "Unmute Room Notification"
+    title: "取消靜音聊天室通知"
   }
 }
 
