@@ -1,16 +1,16 @@
-# Get User Information
+# 獲取用戶資訊
 
-## Overview
+## 概述
 
-Get detailed information about the currently logged-in user. This API can be used to obtain personal profile, login status, and other related information of the current authenticated user.
+取得目前已登入用戶的詳細資訊。此 API 可用於獲取當前認證用戶的個人資料、登入狀態和其他相關資訊。
 
 ------
 
-## API Endpoint
+## API 端點
 
-### Get Current User Information
+### 獲取當前用戶資訊
 
-Get complete data of the currently logged-in user.
+取得目前已登入用戶的完整資料。
 
 ```http
 GET /me
@@ -18,16 +18,16 @@ GET /me
 
 #### Headers
 
-| Parameter       | Type   | Required | Description  |
-| --------------- | ------ | -------- | ------------ |
-| `IM-CLIENT-KEY` | string | ✅       | Client Key   |
-| `IM-Authorization` | string | ✅       | Client Token |
+| 參數            | 類型   | 必填 | 說明           |
+| --------------- | ------ | ---- | -------------- |
+| `IM-CLIENT-KEY` | string | ✅    | Client Key     |
+| `IM-Authorization` | string | ✅    | Client Token   |
 
-#### Example Request
+#### 範例請求
 
 ```http
 GET /me HTTP/1.1
-Authorization: fVy7YhqBZqEzNO9LhMmcyA==
+IM-Authorization: fVy7YhqBZqEzNO9LhMmcyA==
 IM-CLIENT-KEY: 9FSk26d4AIbZh0k44F5+DzbetgAJA9WjC7WP36Khm6c=
 Host: 104.199.197.188:3100
 Connection: close
@@ -35,29 +35,29 @@ Connection: close
 
 #### Response
 
-**Success Response (200 OK)**
+**成功回應（200 OK）**
 
-| Parameter | Type   | Description                      |
-| --------- | ------ | -------------------------------- |
-| `RC`      | number | Response code (0 means success) |
-| `RM`      | string | Response message                 |
-| `result`  | object | User detailed information        |
+| 參數     | 類型   | 說明                   |
+| -------- | ------ | ---------------------- |
+| `RC`     | number | 回應代碼（0 表示成功） |
+| `RM`     | string | 回應訊息               |
+| `result` | object | 用戶詳細資訊           |
 
-**User Object Structure**
+**用戶物件結構**
 
-| Parameter             | Type    | Description                                |
-| --------------------- | ------- | ------------------------------------------ |
-| `_id`                 | string  | User unique identifier                     |
-| `email`               | string  | User email                                 |
-| `nickname`            | string  | User display name                          |
-| `appID`               | string  | Application identifier                     |
-| `avatarUrl`           | string  | User avatar URL                            |
-| `address`             | object  | Last connection network address info       |
-| `userAgent`           | string  | Last used browser/application info         |
-| `lastLoginTimeMS`     | number  | Last login time (millisecond timestamp)    |
-| `notificationEnabled` | boolean | Whether notifications are enabled          |
+| 參數                    | 類型   | 說明                          |
+| ----------------------- | ------ | ----------------------------- |
+| `_id`                   | string | 用戶唯一識別碼                |
+| `email`                 | string | 用戶電子郵件                  |
+| `nickname`              | string | 用戶顯示名稱                  |
+| `appID`                 | string | 應用程式識別碼                |
+| `avatarUrl`             | string | 用戶頭像 URL                  |
+| `address`               | object | 最後連線的網路地址資訊        |
+| `userAgent`             | string | 最後使用的瀏覽器/應用程式資訊 |
+| `lastLoginTimeMS`       | number | 最後登入時間（毫秒時間戳）    |
+| `notificationEnabled`   | boolean| 是否啟用通知                  |
 
-#### Example Response
+#### 範例回應
 
 ```json
 {
@@ -82,9 +82,9 @@ Connection: close
 }
 ```
 
-#### Error Response
+#### 錯誤回應
 
-**401 Unauthorized** - Authentication failed
+**401 Unauthorized** - 認證失敗
 
 ```json
 {
@@ -97,7 +97,7 @@ Connection: close
 }
 ```
 
-**403 Forbidden** - Invalid Client Key
+**403 Forbidden** - 無效的 Client Key
 
 ```json
 {
@@ -112,23 +112,23 @@ Connection: close
 
 ------
 
-## Use Cases
+## 使用場景
 
-### User Data Display
-- **Personal Profile Page**: Display user's personal information in the application
-- **Settings Page**: Load current user settings for editing
-- **Permission Check**: Verify user identity and permissions
+### 用戶資料顯示
+- **個人資料頁面**：在應用程式中顯示用戶的個人資訊
+- **設定頁面**：載入當前用戶設定進行編輯
+- **權限檢查**：確認用戶身分和權限
 
-### Status Check
-- **Login Verification**: Confirm if user login status is valid
-- **Session Management**: Check if user session has expired
-- **Notification Settings**: Confirm user's notification preferences
+### 狀態檢查
+- **登入驗證**：確認用戶登入狀態是否有效
+- **會話管理**：檢查用戶會話是否過期
+- **通知設定**：確認用戶的通知偏好設定
 
 ------
 
-## Notes
+## 注意事項
 
-- **Authentication Required**: This API requires valid user authentication
-- **Sensitive Information**: Will not return passwords or other sensitive information
-- **Caching Recommendations**: User information can be appropriately cached to improve performance
-- **Privacy Protection**: Only returns information for the current authenticated user
+- **認證必要性**：此 API 需要有效的用戶認證
+- **敏感資訊**：不會返回密碼等敏感資訊
+- **快取建議**：用戶資訊可以適當快取以提升效能
+- **隱私保護**：僅返回當前認證用戶的資訊

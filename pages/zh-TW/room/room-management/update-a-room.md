@@ -50,7 +50,7 @@ PUT /rooms/{id}
 ```http
 PUT /rooms/58871b877390be11d5f1ab30 HTTP/1.1
 IM-CLIENT-KEY: 9FSk26d4AIbZh0k44F5+DzbetgAJA9WjC7WP36Khm6c=
-Authorization: fVy7YhqBZqEzNO9LhMmcyA==
+IM-Authorization: fVy7YhqBZqEzNO9LhMmcyA==
 Content-Type: application/json; charset=utf-8
 Host: localhost:3100
 Connection: close

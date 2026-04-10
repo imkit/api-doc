@@ -1,24 +1,24 @@
-# Issue Token
+# 核發 Token
 
-Tokens are issued by IMKIT Chat Server.
+Token 由 IMKIT Chat Server 來進行核發。
 
-## Overview
+## 概述
 
-User data is created by your server, but authorization tokens are issued and managed by IMKIT Chat Server. This mode is suitable for applications that want rapid integration without needing to manage token lifecycles themselves.
+使用者資料由您的伺服器建立，但授權 token 由 IMKIT Chat Server 核發與控管。此模式適合希望快速整合且不需要自行管理 token 生命週期的應用程式。
 
-## Implementation Flow
+## 實作流程
 
-1. Create Client using `/admin/clients` API with `issueAccessToken: true`
-2. Chat Server will issue access token, which can be used for subsequent API calls
-3. Use the returned token for client authentication
+1. 使用 `/admin/clients` API 建立 Client，並設定 `issueAccessToken: true`
+2. Chat Server 將 issue access token，可用於後續 API 呼叫
+3. 使用回傳的 token 進行用戶端認證
 
 ------
 
-## API Endpoint
+## API 端點
 
-### Create User and Issue Token
+### 建立用戶並 Issue Token
 
-Create a new user and have Chat Server automatically issue access token.
+建立新用戶並由 Chat Server 自動 issue access token。
 
 ```http
 POST /admin/clients
@@ -26,21 +26,21 @@ POST /admin/clients
 
 #### Headers
 
-| Parameter      | Type   | Required | Description        |
-| -------------- | ------ | -------- | ------------------ |
-| `IM-API-KEY`   | string | ✅       | Your API key       |
-| `Content-Type` | string | ✅       | `application/json` |
+| 參數           | 類型   | 必填 | 說明               |
+| -------------- | ------ | ---- | ------------------ |
+| `IM-API-KEY`   | string | ✅    | 您的 API 金鑰      |
+| `Content-Type` | string | ✅    | `application/json` |
 
 #### Request Body
 
-| Parameter          | Type    | Required | Description                      |
-| ------------------ | ------- | -------- | -------------------------------- |
-| `_id`              | string  | ✅       | User unique identifier           |
-| `nickname`         | string  | ✅       | User display name                |
-| `avatarUrl`        | string  | ❌       | User avatar URL                  |
-| `issueAccessToken` | boolean | ✅       | Set to `true` to enable this authorization mode |
+| 參數               | 類型    | 必填 | 說明                         |
+| ------------------ | ------- | ---- | ---------------------------- |
+| `_id`              | string  | ✅    | 用戶唯一識別碼               |
+| `nickname`         | string  | ✅    | 用戶顯示名稱                 |
+| `avatarUrl`        | string  | ❌    | 用戶頭像 URL                 |
+| `issueAccessToken` | boolean | ✅    | 設為 `true` 以啟用此授權模式 |
 
-#### Example Request
+#### 範例請求
 
 ```json
 {
@@ -53,18 +53,18 @@ POST /admin/clients
 
 #### Response
 
-**Success Response (200 OK)**
+**成功回應（200 OK）**
 
-| Parameter          | Type    | Description                         |
-| ------------------ | ------- | ----------------------------------- |
-| `_id`              | string  | User unique identifier              |
-| `nickname`         | string  | User display name                   |
-| `avatarUrl`        | string  | User avatar URL                     |
-| `issueAccessToken` | boolean | Token issue mode                    |
-| `token`            | string  | Access token issued by Chat Server |
-| `expirationDate`   | string  | Token expiration time (ISO 8601 format) |
+| 參數               | 類型    | 說明                                 |
+| ------------------ | ------- | ------------------------------------ |
+| `_id`              | string  | 用戶唯一識別碼                       |
+| `nickname`         | string  | 用戶顯示名稱                         |
+| `avatarUrl`        | string  | 用戶頭像 URL                         |
+| `issueAccessToken` | boolean | Token issue 模式                     |
+| `token`            | string  | 由 Chat Server issue 的 access token |
+| `expirationDate`   | string  | Token 過期時間（ISO 8601 格式）      |
 
-#### Example Response
+#### 範例回應
 
 ```json
 {
@@ -77,9 +77,9 @@ POST /admin/clients
 }
 ```
 
-#### Error Response
+#### 錯誤回應
 
-**400 Bad Request** - Request parameter error
+**400 Bad Request** - 請求參數錯誤
 
 ```json
 {
@@ -88,7 +88,7 @@ POST /admin/clients
 }
 ```
 
-**401 Unauthorized** - Invalid API key
+**401 Unauthorized** - API 金鑰無效
 
 ```json
 {
@@ -97,7 +97,7 @@ POST /admin/clients
 }
 ```
 
-**409 Conflict** - User already exists
+**409 Conflict** - 用戶已存在
 
 ```json
 {
@@ -108,17 +108,17 @@ POST /admin/clients
 
 ------
 
-## Using Token
+## 使用 Token
 
-After obtaining the token, you can use this token in subsequent API calls:
+取得 token 後，您可以在後續的 API 呼叫中使用此 token：
 
 ```http
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+IM-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
 ```
 
-## Notes
+## 注意事項
 
-- Token validity period is managed by Chat Server, please pay attention to the `expirationDate` field
-- After token expiration, you need to recreate the user to get a new token
-- In this mode, you cannot customize token content or expiration time
-- Recommend caching tokens in your application to avoid duplicate requests
+- Token 有效期限由 Chat Server 管理，請留意 `expirationDate` 欄位
+- Token 過期後需要重新建立用戶以取得新的 token
+- 此模式下無法自訂 token 內容或過期時間
+- 建議在應用程式中快取 token 以避免重複請求

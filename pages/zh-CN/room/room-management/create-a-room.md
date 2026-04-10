@@ -1,142 +1,169 @@
-# 创建聊天室
+# 建立聊天室
 
 ## 概述
 
-创建聊天室，当前用户（调用者）将自动加入并邀请指定的成员。此 API 仅供服务端使用，需要适当的身份验证。
-
-注意：如果调用者是管理员（platform-api-key），管理员用户也将加入聊天室。
+此端點允許您在系統中建立新的聊天室，並可同時指定成員。此 API 建立聊天室但不會自動加入呼叫者，適合由後端服務進行聊天室管理。
 
 ------
 
-## API 端点
+## API 端點
 
-### 创建并加入聊天室
+### 建立聊天室
 
-创建新的聊天室，调用者自动加入并可邀请指定成员。
+在系統中建立新的聊天室。
 
 ```http
-POST /rooms/createAndJoin
+POST /rooms/
 ```
 
 #### Headers
 
-| 参数 | 类型 | 必填 | 说明 |
-| --- | --- | --- | --- |
-| `IM-CLIENT-KEY` | string | ✅ | 客户端密钥 |
-| `Authorization` | string | ✅ | 客户端令牌 |
-| `Content-Type` | string | ✅ | JSON |
+| 參數 | 類型 | 必填 | 說明 |
+| ---- | ---- | ---- | ---- |
+| `IM-API-KEY` | string | ✅ | 您的平台 API 金鑰 |
+| `Content-Type` | string | ✅ | `application/json; charset=utf-8` |
 
 #### Post Body
 
-| 参数 | 类型 | 必填 | 说明 |
-| --- | --- | --- | --- |
-| `name` | string | ❌ | 聊天室名称 |
-| `isPublic` | boolean | ❌ | 聊天室是否公开（true/false） |
-| `description` | string | ❌ | 聊天室描述 |
-| `invitees` | array | ❌ | 成员列表，创建聊天室时将邀请这些成员 |
-| `invitees[]._id` | string | ❌ | 用户ID |
-| `invitees[].role` | string | ❌ | 用户在聊天室中的角色，"member", "admin", "owner" |
-| `invitees[].extraData` | object | ❌ | 成员在聊天室中的额外数据 |
-| `memberExtraData` | object | ❌ | 成员的默认额外数据 |
-| `avatarUrl` | string | ❌ | 聊天室头像图片URL |
+| 參數 | 類型 | 必填 | 說明 |
+| ---- | ---- | ---- | ---- |
+| `_id` | string | ❌ | 自訂聊天室 ID，若未指定則自動產生 |
+| `name` | string | ❌ | 聊天室名稱 |
+| `cover` | string | ❌ | 聊天室封面圖片 URL |
+| `roomType` | string | ❌ | 聊天室類型：`"direct"`（一對一）或 `"group"`（群組） |
+| `members` | array[string] | ❌ | 成員用戶端 ID 陣列 |
+| `description` | string | ❌ | 聊天室描述，可為純文字或序列化的 JSON 資料 |
+| `roomTags` | array[string] | ❌ | 聊天室標籤陣列，用於搜尋和分類 |
+| `webhook` | string | ❌ | Webhook 金鑰或 URL |
+| `botMode` | boolean | ❌ | 是否啟用聊天室機器人 |
+| `extParams` | string | ❌ | 擴充自訂參數，格式為 `param1=value1&param2=value2` |
+| `systemMessage` | boolean | ❌ | 是否自動產生系統訊息（如加入成員訊息） |
+| `owner` | string | ❌ | 聊天室擁有者 ID |
 
-#### 示例请求
+#### 範例請求
 
-**cURL 示例：**
+##### 建立一對一聊天室
+
+```javascript
+const response = await axios.post(
+  "https://your-app.imkit.io/rooms/",
+  {
+    roomType: "direct",
+    members: ["user-a", "user-b"],
+  },
+  {
+    headers: {
+      "IM-API-KEY": process.env.IM_API_KEY,
+      "Content-Type": "application/json; charset=utf-8",
+    },
+  }
+);
+```
+
+##### 建立群組聊天室
+
+```javascript
+const response = await axios.post(
+  "https://your-app.imkit.io/rooms/",
+  {
+    _id: "project-room-001",
+    name: "專案討論群",
+    cover: "https://example.com/cover.jpg",
+    roomType: "group",
+    roomTags: ["project", "team-a"],
+    members: ["user-a", "user-b", "user-c"],
+    systemMessage: true,
+  },
+  {
+    headers: {
+      "IM-API-KEY": process.env.IM_API_KEY,
+      "Content-Type": "application/json; charset=utf-8",
+    },
+  }
+);
+```
+
+##### cURL 範例
 
 ```bash
-curl -X "POST" "http://localhost:3100/rooms/createAndJoin" \
-     -H 'IM-CLIENT-KEY: {IM-CLIENT-KEY}' \
-     -H 'Authorization: {TOKEN}' \
+curl -X "POST" "https://your-app.imkit.io/rooms/" \
+     -H 'IM-API-KEY: {您的_API_KEY}' \
      -H 'Content-Type: application/json; charset=utf-8' \
-     -d '{
-  "name": "room name",
-  "isPublic": true,
-  "description": "this is room description",
-  "memberExtraData": {
-    "key1": "val1",
-    "key2": "val2"
-  },
-  "invitees": [
-    {
-      "_id": "user id",
-      "role": "user",
-      "extraData": {
-        "key1": "val1",
-        "key2": "val2"
-      }
-    }
-  ],
-  "avatarUrl": "http://xxxx.xxx.xxx/xxx.jpg"
+     -d $'{
+  "name": "專案討論群",
+  "roomType": "group",
+  "roomTags": ["project", "team-a"],
+  "members": ["user-a", "user-b", "user-c"]
 }'
 ```
 
 #### Response
 
-**成功响应（200 OK）**
+**成功回應（200 OK）**
 
-| 参数 | 类型 | 说明 |
-| --- | --- | --- |
-| `RC` | number | 响应码，0 表示成功 |
-| `RM` | string | 响应消息 |
-| `result.name` | string | 聊天室名称 |
-| `result.isPublic` | boolean | 聊天室是否公开（true/false） |
-| `result.description` | string | 聊天室描述 |
-| `result.memberExtraData` | object | 成员的默认额外数据 |
-| `result.avatarUrl` | string | 聊天室头像图片URL |
-| `result._id` | string | 聊天室ID |
-| `result.appID` | string | 应用ID |
-| `result.created` | string | 创建时间 |
-| `result.updated` | string | 更新时间 |
+| 參數 | 類型 | 說明 |
+| ---- | ---- | ---- |
+| `RC` | number | 回應代碼（0 表示成功） |
+| `RM` | string | 回應訊息 |
+| `result` | object | 建立的聊天室資訊 |
 
-#### 示例响应
+**聊天室物件欄位**
+
+| 參數 | 類型 | 說明 |
+| ---- | ---- | ---- |
+| `_id` | string | 聊天室唯一識別碼 |
+| `name` | string | 聊天室名稱 |
+| `cover` | string | 聊天室封面圖片 URL |
+| `roomType` | string | 聊天室類型（`"direct"` 或 `"group"`） |
+| `members` | array[string] | 成員 ID 陣列 |
+| `roomTags` | array[string] | 聊天室標籤陣列 |
+| `appID` | string | 應用程式識別碼 |
+
+#### 範例回應
 
 ```json
 {
   "RC": 0,
   "RM": "OK",
   "result": {
-    "name": "room name",
-    "isPublic": true,
-    "description": "this is room description",
-    "memberExtraData": {
-      "key1": "val1",
-      "key2": "val2"
-    },
-    "avatarUrl": "http://xxxx.xxx.xxx/xxx.jpg",
-    "_id": "5e53f94bb3c9de001f92d058",
-    "appID": "your-app-id",
-    "created": "2020-02-24T09:43:07.988Z",
-    "updated": "2020-02-24T09:43:07.988Z",
-    "__v": 0,
-    "id": "5e53f94bb3c9de001f92d058"
+    "_id": "project-room-001",
+    "appID": "SampleApp",
+    "name": "專案討論群",
+    "cover": "https://example.com/cover.jpg",
+    "roomType": "group",
+    "roomTags": ["project", "team-a"],
+    "members": ["user-a", "user-b", "user-c"]
   }
 }
 ```
 
-#### 错误响应
+#### 錯誤回應
 
-当请求失败时，您会收到包含错误详细信息的错误响应。常见的错误情况包括：
+當請求失敗時，您會收到包含錯誤詳細資訊的錯誤回應。常見的錯誤情況包括：
 
-- 无效的客户端密钥或授权令牌
-- 无效的聊天室类型
-- 指定的受邀者不存在
-- 服务器内部错误
-
-------
-
-## 使用场景
-
-### 创建聊天室
-- **创建公开聊天室**：设置 `isPublic` 为 `true`，创建公开可见的聊天室
-- **创建私有聊天室**：设置 `isPublic` 为 `false`，创建仅限邀请成员可见的聊天室
-- **带角色的成员邀请**：通过 `invitees` 指定成员及其角色（member、admin、owner）
+- **無效的 API 金鑰** — 提供的 `IM-API-KEY` 無效或已過期
+- **無效的聊天室類型** — `roomType` 不是 `"direct"` 或 `"group"`
+- **成員不存在** — `members` 中包含不存在的用戶 ID
+- **伺服器內部錯誤** — 伺服器端發生未預期的錯誤
 
 ------
 
-## 注意事项
+## 使用場景
 
-- 如果调用者是管理员（platform-api-key），管理员用户也将加入聊天室
-- `invitees` 中的每个成员可以指定不同的角色和额外数据
-- `memberExtraData` 为所有成员提供默认的额外数据
-- 创建成功后会返回完整的聊天室信息，包含系统生成的 ID 和时间戳
+### 用戶配對
+- **一對一客服聊天**：當用戶發起客服請求時，後端建立 `direct` 聊天室，將用戶和客服人員加入
+- **訂單對談**：當訂單成立時，自動建立買賣雙方的一對一聊天室
+
+### 群組管理
+- **專案群組**：為特定專案建立群組聊天室，加入相關成員
+- **活動群組**：為活動或課程建立群組，統一管理參與者
+
+------
+
+## 注意事項
+
+- **不自動加入**：此 API 建立聊天室但呼叫者不會自動加入，適合由後端服務管理
+- **聊天室 ID**：若未指定 `_id`，系統會自動產生唯一識別碼
+- **成員管理**：可在建立時透過 `members` 直接指定成員，或之後透過「新增成員」API 加入
+- **標籤用途**：`roomTags` 可用於後續的聊天室搜尋和分類功能
+- **時間戳格式**：所有時間戳均為 UTC 格式，以毫秒為單位

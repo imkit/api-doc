@@ -7,5 +7,8 @@ export default {
   },
   "user-token": {
     title: "用戶Token"
+  },
+  "user-groups": {
+    title: "用戶群組"
   }
 }

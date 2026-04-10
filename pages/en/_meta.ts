@@ -1,29 +1,45 @@
 export default {
   quick_start:
   {
-    title: "Quick Start"
+    title: "快速開始"
   },
-  auth: 
+  basic_integration:
   {
-    title: "Authentication"
+    title: "基本串接"
+  },
+  auth:
+  {
+    title: "權限驗證"
   },
   user: 
   {
-    title: "User"
+    title: "用戶"
   },
   room: 
   {
-    title: "Room"
+    title: "聊天室"
   },
   message: 
   {
-    title: "Message"
+    title: "訊息"
   },
-  moderation: 
+  moderation:
   {
-    title: "Moderation"
+    title: "管理機制"
   },
-  webhook: 
+  push:
+  {
+    title: "推播通知"
+  },
+  config:
+  {
+    title: "系統設定"
+  },
+  monitoring:
+  {
+    title: "監控"
+  },
+  webhook:
   {
     title: "Webhook"
   }

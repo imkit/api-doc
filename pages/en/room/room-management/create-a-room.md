@@ -1,402 +1,169 @@
-# Create Room
+# 建立聊天室
 
-## Overview
+## 概述
 
-Create a room and the current user (caller) auto joins the room with specified invitees. This API is for server-side use only and requires proper authentication.
-
-Note: If the caller is admin (platform-api-key), the admin user would also join the room.
+此端點允許您在系統中建立新的聊天室，並可同時指定成員。此 API 建立聊天室但不會自動加入呼叫者，適合由後端服務進行聊天室管理。
 
 ------
 
-## API Endpoint
+## API 端點
 
-### Create and Join Room
+### 建立聊天室
 
-Create a new room, with the caller automatically joining and optionally inviting specified members.
+在系統中建立新的聊天室。
 
 ```http
-POST /rooms/createAndJoin
+POST /rooms/
 ```
 
 #### Headers
 
-| Parameter | Type | Required | Description |
-| --- | --- | --- | --- |
-| `IM-CLIENT-KEY` | string | ✅ | Client Key |
-| `IM-Authorization` | string | ✅ | Client Token |
+| 參數 | 類型 | 必填 | 說明 |
+| ---- | ---- | ---- | ---- |
+| `IM-API-KEY` | string | ✅ | 您的平台 API 金鑰 |
+| `Content-Type` | string | ✅ | `application/json; charset=utf-8` |
 
 #### Post Body
 
-| Parameter | Type | Required | Description |
-| --- | --- | --- | --- |
-| `_id` | string | ❌ | Custom Room ID |
-| `name` | string | ❌ | Room name |
-| `cover` | string | ❌ | Room cover image URL |
-| `roomType` | string | ❌ | "direct" or "group" |
-| `description` | string | ❌ | Text or serialized json data |
-| `roomTags` | array[string] | ❌ | Shared room tags for search |
-| `webhook` | string | ❌ | Webhook Key or URL |
-| `botMode` | boolean | ❌ | Is room robot enabled |
-| `invitee` | string or array | ❌ | String of Client ID or Array of Client IDs. Add member(s) to the created room |
-| `systemMessage` | boolean | ❌ | Should automatically create system message or not (add member message) |
-| `invitationRequired` | boolean | ❌ | Whether required invitation for invitee to decide to join or decline. Only for **group** chat. For **direct** chat, invitationRequired would be `false` by system, invitee would be immediately added to direct chat without invitation. |
-| `extParams` | string | ❌ | Extended custom parameters, could be formatted as param1=value1&param2=value2 or a JSON string or custom encoded text |
+| 參數 | 類型 | 必填 | 說明 |
+| ---- | ---- | ---- | ---- |
+| `_id` | string | ❌ | 自訂聊天室 ID，若未指定則自動產生 |
+| `name` | string | ❌ | 聊天室名稱 |
+| `cover` | string | ❌ | 聊天室封面圖片 URL |
+| `roomType` | string | ❌ | 聊天室類型：`"direct"`（一對一）或 `"group"`（群組） |
+| `members` | array[string] | ❌ | 成員用戶端 ID 陣列 |
+| `description` | string | ❌ | 聊天室描述，可為純文字或序列化的 JSON 資料 |
+| `roomTags` | array[string] | ❌ | 聊天室標籤陣列，用於搜尋和分類 |
+| `webhook` | string | ❌ | Webhook 金鑰或 URL |
+| `botMode` | boolean | ❌ | 是否啟用聊天室機器人 |
+| `extParams` | string | ❌ | 擴充自訂參數，格式為 `param1=value1&param2=value2` |
+| `systemMessage` | boolean | ❌ | 是否自動產生系統訊息（如加入成員訊息） |
+| `owner` | string | ❌ | 聊天室擁有者 ID |
 
-#### Example Request
+#### 範例請求
 
-**Create a group chat room (with invitation required)**
+##### 建立一對一聊天室
 
-cURL:
+```javascript
+const response = await axios.post(
+  "https://your-app.imkit.io/rooms/",
+  {
+    roomType: "direct",
+    members: ["user-a", "user-b"],
+  },
+  {
+    headers: {
+      "IM-API-KEY": process.env.IM_API_KEY,
+      "Content-Type": "application/json; charset=utf-8",
+    },
+  }
+);
+```
+
+##### 建立群組聊天室
+
+```javascript
+const response = await axios.post(
+  "https://your-app.imkit.io/rooms/",
+  {
+    _id: "project-room-001",
+    name: "專案討論群",
+    cover: "https://example.com/cover.jpg",
+    roomType: "group",
+    roomTags: ["project", "team-a"],
+    members: ["user-a", "user-b", "user-c"],
+    systemMessage: true,
+  },
+  {
+    headers: {
+      "IM-API-KEY": process.env.IM_API_KEY,
+      "Content-Type": "application/json; charset=utf-8",
+    },
+  }
+);
+```
+
+##### cURL 範例
 
 ```bash
-curl -X "POST" "http://localhost:3100/rooms/createAndJoin" \
-     -H 'IM-CLIENT-KEY: {IM-CLIENT-KEY}' \
-     -H 'IM-Authorization: {TOKEN}' \
+curl -X "POST" "https://your-app.imkit.io/rooms/" \
+     -H 'IM-API-KEY: {您的_API_KEY}' \
      -H 'Content-Type: application/json; charset=utf-8' \
      -d $'{
-  "_id": "demo-room",
-  "invitationRequired": false,
-  "room-type": "group",
-  "systemMessage": true,
-  "invitee": [
-    "ccc",
-    "bbb"
-  ],
+  "name": "專案討論群",
+  "roomType": "group",
+  "roomTags": ["project", "team-a"],
+  "members": ["user-a", "user-b", "user-c"]
 }'
-```
-
-JavaScript - Create a group chat room:
-
-```javascript
-axios.post(
-  "http://localhost:3100/rooms/createAndJoin",
-  {
-    _id: "demo-room",
-    invitationRequired: true,
-    systemMessage: true,
-    invitee: ["ccc", "bbb"],
-    roomType: "group",
-  },
-  {
-    headers: {
-      "IM-CLIENT-KEY": `${IM_CLIENT_KEY}`,
-      "IM-Authorization": `${TOKEN}`,
-      "Content-Type": "application/json; charset=utf-8",
-    },
-  }
-);
-```
-
-JavaScript - Create a 1-on-1 direct room:
-
-```javascript
-axios.post(
-  "http://localhost:3100/rooms/createAndJoin",
-  {
-    systemMessage: true,
-    invitee: ["ccc"],
-    roomType: "direct",
-  },
-  {
-    headers: {
-      "IM-CLIENT-KEY": `${IM_CLIENT_KEY}`,
-      "IM-Authorization": `${TOKEN}`,
-      "Content-Type": "application/json; charset=utf-8",
-    },
-  }
-);
 ```
 
 #### Response
 
-**Success Response (200 OK)**
+**成功回應（200 OK）**
 
-| Parameter | Type | Description |
-| --- | --- | --- |
-| `RC` | number | Response code (0 means success) |
-| `RM` | string | Response message |
-| `result` | object | Created room data |
+| 參數 | 類型 | 說明 |
+| ---- | ---- | ---- |
+| `RC` | number | 回應代碼（0 表示成功） |
+| `RM` | string | 回應訊息 |
+| `result` | object | 建立的聊天室資訊 |
 
-**Room Object Fields**
+**聊天室物件欄位**
 
-| Parameter | Type | Description |
-| --- | --- | --- |
-| `_id` | string | Unique room ID |
-| `name` | string | Room name |
-| `cover` | string | Room cover image URL |
-| `description` | string | Room description |
-| `roomType` | string | Room type ("direct" or "group") |
-| `webhook` | string | Webhook key or URL |
-| `botState` | string | Bot state |
-| `botMode` | boolean | Whether bot mode is enabled |
-| `encrypted` | boolean | Whether the room is encrypted |
-| `serviceStatus` | number | Service status |
-| `roomTags` | array[string] | Room tag array |
-| `status` | number | Room status |
-| `lastMessage` | object | Last message object |
-| `memberProperties` | array[object] | Member properties array |
-| `members` | array[object] | Member objects array |
-| `createdTimeMS` | number | Creation timestamp (milliseconds) |
+| 參數 | 類型 | 說明 |
+| ---- | ---- | ---- |
+| `_id` | string | 聊天室唯一識別碼 |
+| `name` | string | 聊天室名稱 |
+| `cover` | string | 聊天室封面圖片 URL |
+| `roomType` | string | 聊天室類型（`"direct"` 或 `"group"`） |
+| `members` | array[string] | 成員 ID 陣列 |
+| `roomTags` | array[string] | 聊天室標籤陣列 |
+| `appID` | string | 應用程式識別碼 |
 
-#### Example Response
+#### 範例回應
 
 ```json
 {
   "RC": 0,
   "RM": "OK",
   "result": {
-    "_id": "demo-room",
-    "name": "Demo",
-    "cover": "http://loremflickr.com/240/240/style?demo",
-    "description": "public demo room",
-    "lastMessage": {
-      "_id": "5e5b89a77508ac31c0d91835",
-      "room": "demo-room",
-      "messageType": "deleteMember",
-      "sender": {
-        "_id": "aaa",
-        "avatarUrl": "http://loremflickr.com/240/240/style?1569804629",
-        "nickname": "AAA",
-        "id": "aaa",
-        "lastLoginTimeMS": 0
-      },
-      "member": {
-        "_id": "ccc",
-        "avatarUrl": "https://globalassets.starbucks.com/assets/c1f4cd02de24483eb86c696401ad4213.jpg",
-        "nickname": "CCC",
-        "id": "ccc",
-        "lastLoginTimeMS": 0
-      },
-      "message": "CCC",
-      "appID": "SampleApp",
-      "id": "5e5b89a77508ac31c0d91835",
-      "messageTimeMS": 1583057319965,
-      "updatedAtMS": 1583057319967,
-      "createdAtMS": 1583057319967
-    },
+    "_id": "project-room-001",
+    "appID": "SampleApp",
+    "name": "專案討論群",
+    "cover": "https://example.com/cover.jpg",
     "roomType": "group",
-    "webhook": "meet-taipei-intro",
-    "botState": "CONTACT",
-    "botMode": false,
-    "encrypted": false,
-    "serviceStatus": 0,
-    "roomTags": ["demo", "foo", "bar"],
-    "status": 1,
-    "memberProperties": [
-      {
-        "badge": 181,
-        "lastRead": "5b87e48e3f5be1360a37e7b4",
-        "client": "STARBUCKS"
-      },
-      {
-        "badge": 213,
-        "lastRead": "5af6927707dbb43a32dfd29a",
-        "client": "test-user"
-      },
-      {
-        "badge": 223,
-        "client": "12345"
-      },
-      {
-        "badge": 208,
-        "lastRead": "5b4f4af9638db622c7b60aa3",
-        "client": "samsung-358436073080420"
-      },
-      {
-        "badge": 24,
-        "lastRead": "5e344ffc3a14440b637097f8",
-        "client": "sss"
-      },
-      {
-        "badge": 175,
-        "lastRead": "5b8e9f31002bae3cd3ce022e",
-        "client": "google-generic-x86"
-      },
-      {
-        "badge": 175,
-        "lastRead": "5b8e9f31002bae3cd3ce022e",
-        "client": "bonbonbon"
-      },
-      {
-        "badge": 172,
-        "lastRead": "5b8fe660118d4d1f04c3b684",
-        "client": "samsung-herolte"
-      },
-      {
-        "badge": 223,
-        "client": "bbb"
-      },
-      {
-        "badge": 220,
-        "client": "ccc"
-      },
-      {
-        "lastRead": "5e5b89a77508ac31c0d91835",
-        "badge": 0,
-        "client": "aaa"
-      },
-      {
-        "badge": 0,
-        "lastRead": "5d58059914d165090e769360",
-        "client": "1485248560558"
-      },
-      {
-        "badge": 223,
-        "client": "bossiniTW"
-      },
-      {
-        "badge": 0,
-        "lastRead": "5dcadf48951bee23caaf0dd6",
-        "client": "pinchat_agent_269"
-      },
-      {
-        "badge": 0,
-        "lastRead": "5dcac4d2613d3508cda438c8",
-        "client": "BOT"
-      },
-      {
-        "badge": 223,
-        "client": "robot001"
-      }
-    ],
-    "members": [
-      {
-        "_id": "STARBUCKS",
-        "nickname": "Madeline",
-        "avatarUrl": "https://globalassets.starbucks.com/assets/c1f4cd02de24483eb86c696401ad4213.jpg",
-        "description": "Store Description lal alll",
-        "isRobot": false,
-        "id": "STARBUCKS",
-        "lastLoginTimeMS": 1583057339129
-      },
-      {
-        "_id": "test-user",
-        "avatarUrl": "https://globalassets.starbucks.com/assets/c1f4cd02de24483eb86c696401ad4213.jpg",
-        "nickname": "Maisie",
-        "isRobot": false,
-        "id": "test-user",
-        "lastLoginTimeMS": 1583057339130
-      },
-      {
-        "_id": "12345",
-        "isRobot": false,
-        "id": "12345",
-        "lastLoginTimeMS": 1583057339129
-      },
-      {
-        "_id": "samsung-358436073080420",
-        "description": "description la la #1531924629059",
-        "nickname": "samsung-herolte",
-        "avatarUrl": "",
-        "userAgent": "Dalvik/2.1.0 (Linux; U; Android 8.0.0; SM-G930F Build/R16NW)",
-        "isRobot": false,
-        "id": "samsung-358436073080420",
-        "lastLoginTimeMS": 1531924629461
-      },
-      {
-        "_id": "google-generic-x86",
-        "nickname": "google-generic_x86",
-        "description": "description la la #1536074034718",
-        "avatarUrl": "",
-        "userAgent": "Dalvik/2.1.0 (Linux; U; Android 8.1.0; Android SDK built for x86 Build/OSM1.180201.007)",
-        "isRobot": false,
-        "id": "google-generic-x86",
-        "lastLoginTimeMS": 1536074046906
-      },
-      {
-        "_id": "bonbonbon",
-        "nickname": "bonbonbon",
-        "description": "description la la #1536073706411",
-        "avatarUrl": "",
-        "userAgent": "Dalvik/2.1.0 (Linux; U; Android 8.1.0; Android SDK built for x86 Build/OSM1.180201.007)",
-        "isRobot": false,
-        "id": "bonbonbon",
-        "lastLoginTimeMS": 1536073718631
-      },
-      {
-        "_id": "samsung-herolte",
-        "nickname": "samsung-herolte",
-        "description": "description la la #1536157340251",
-        "avatarUrl": "",
-        "userAgent": "Dalvik/2.1.0 (Linux; U; Android 8.0.0; SM-G930F Build/R16NW)",
-        "isRobot": false,
-        "id": "samsung-herolte",
-        "lastLoginTimeMS": 1536157340491
-      },
-      {
-        "_id": "bbb",
-        "description": "description la la #1541824599613",
-        "avatarUrl": "",
-        "nickname": "bbb",
-        "userAgent": "Dalvik/2.1.0 (Linux; U; Android 8.1.0; Android SDK built for x86 Build/OSM1.180201.007)",
-        "isRobot": false,
-        "id": "bbb",
-        "lastLoginTimeMS": 1541824600261
-      },
-      {
-        "_id": "sss",
-        "nickname": "SSS",
-        "description": "some description",
-        "avatarUrl": "https://lumiere-a.akamaihd.net/v1/images/f_frozen2_header_mobile_18432_d258f93f.jpeg",
-        "userAgent": "imkit-ios-sdk-v3-demo/1 CFNetwork/1121.2.1 Darwin/19.3.0",
-        "isRobot": false,
-        "id": "sss",
-        "lastLoginTimeMS": 1580526441451
-      },
-      {
-        "_id": "robot001",
-        "nickname": "Quinn Robot",
-        "isRobot": true,
-        "id": "robot001",
-        "lastLoginTimeMS": 1583057339130
-      },
-      {
-        "_id": "aaa",
-        "description": "description la la #1541926309694",
-        "avatarUrl": "http://loremflickr.com/240/240/style?1569804629",
-        "nickname": "AAA",
-        "userAgent": "Dalvik/2.1.0 (Linux; U; Android 8.1.0; Android SDK built for x86 Build/OSM1.180201.007)",
-        "isRobot": false,
-        "id": "aaa",
-        "lastLoginTimeMS": 1541926310026
-      }
-    ],
-    "id": "demo-room",
-    "createdTimeMS": 1525001412492
+    "roomTags": ["project", "team-a"],
+    "members": ["user-a", "user-b", "user-c"]
   }
 }
 ```
 
-#### Error Response
+#### 錯誤回應
 
-When the request fails, you will receive an error response with details. Common error cases include:
+當請求失敗時，您會收到包含錯誤詳細資訊的錯誤回應。常見的錯誤情況包括：
 
-- Invalid client key or authorization token
-- Invalid room type
-- Specified invitee does not exist
-- Internal server error
-
-------
-
-## Use Cases
-
-### Group Chat
-- **Group with invitation required**: Set `invitationRequired` to `true`, invitees must accept the invitation before joining
-- **Group with immediate join**: Set `invitationRequired` to `false`, invitees are immediately added
-
-### Direct Chat
-- **Create 1-on-1 direct room**: Set `roomType` to `"direct"`, system automatically sets `invitationRequired` to `false`, invitee is immediately added
+- **無效的 API 金鑰** — 提供的 `IM-API-KEY` 無效或已過期
+- **無效的聊天室類型** — `roomType` 不是 `"direct"` 或 `"group"`
+- **成員不存在** — `members` 中包含不存在的用戶 ID
+- **伺服器內部錯誤** — 伺服器端發生未預期的錯誤
 
 ------
 
-## Notes
+## 使用場景
 
-- This endpoint creates a new room and adds the caller and specified invitees
-- If room ID (`_id`) is not specified, the system will auto-generate a unique identifier
-- For **group rooms** (`roomType: "group"`), set `invitationRequired` to `true` to require invitees to accept
-- For **direct rooms** (`roomType: "direct"`), `invitationRequired` is automatically set to `false` by the system
-- The caller (current user) automatically becomes a room member
-- If using admin key (platform-api-key), the admin user also automatically joins the room
-- All timestamps are in UTC format, in milliseconds
-- Cover image file size should be kept within reasonable limits
-- `roomTags` can be used for room search functionality
+### 用戶配對
+- **一對一客服聊天**：當用戶發起客服請求時，後端建立 `direct` 聊天室，將用戶和客服人員加入
+- **訂單對談**：當訂單成立時，自動建立買賣雙方的一對一聊天室
+
+### 群組管理
+- **專案群組**：為特定專案建立群組聊天室，加入相關成員
+- **活動群組**：為活動或課程建立群組，統一管理參與者
+
+------
+
+## 注意事項
+
+- **不自動加入**：此 API 建立聊天室但呼叫者不會自動加入，適合由後端服務管理
+- **聊天室 ID**：若未指定 `_id`，系統會自動產生唯一識別碼
+- **成員管理**：可在建立時透過 `members` 直接指定成員，或之後透過「新增成員」API 加入
+- **標籤用途**：`roomTags` 可用於後續的聊天室搜尋和分類功能
+- **時間戳格式**：所有時間戳均為 UTC 格式，以毫秒為單位

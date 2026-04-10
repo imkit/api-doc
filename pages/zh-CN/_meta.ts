@@ -3,7 +3,11 @@ export default {
   {
     title: "快速開始"
   },
-  auth: 
+  basic_integration:
+  {
+    title: "基本串接"
+  },
+  auth:
   {
     title: "權限驗證"
   },
@@ -19,11 +23,23 @@ export default {
   {
     title: "訊息"
   },
-  moderation: 
+  moderation:
   {
     title: "管理機制"
   },
-  webhook: 
+  push:
+  {
+    title: "推播通知"
+  },
+  config:
+  {
+    title: "系統設定"
+  },
+  monitoring:
+  {
+    title: "監控"
+  },
+  webhook:
   {
     title: "Webhook"
   }

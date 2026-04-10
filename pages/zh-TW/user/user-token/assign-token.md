@@ -147,7 +147,7 @@ DELETE /admin/clients/{user_id}/token
 使用您的自訂 token 進行 API 呼叫：
 
 ```http
-Authorization: Bearer my-custom-token-xyz
+IM-Authorization: Bearer my-custom-token-xyz
 ```
 
 ## 注意事項

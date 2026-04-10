@@ -1,16 +1,16 @@
-# Update Room
+# 更新聊天室
 
-## Overview
+## 概述
 
-Update information and settings of an existing chat room. This API allows modification of basic room information, permission settings, administrator configurations, etc. Limited to room owners, administrators, or platform administrators.
+更新現有聊天室的資訊和設定。此 API 允許修改聊天室的基本資訊、權限設定、管理員配置等。僅限聊天室的擁有者、管理員或平台管理員使用。
 
 ------
 
-## API Endpoint
+## API 端點
 
-### Update Room Information
+### 更新聊天室資訊
 
-Modify properties and settings of a specified chat room.
+修改指定聊天室的屬性和設定。
 
 ```http
 PUT /rooms/{id}
@@ -18,39 +18,39 @@ PUT /rooms/{id}
 
 #### Headers
 
-| Parameter       | Type   | Required | Description    |
-| --------------- | ------ | -------- | -------------- |
-| `IM-CLIENT-KEY` | string | ✅        | Client Key     |
-| `IM-Authorization` | string | ✅        | Client Token   |
+| 參數            | 類型   | 必填 | 說明           |
+| --------------- | ------ | ---- | -------------- |
+| `IM-CLIENT-KEY` | string | ✅    | Client Key     |
+| `IM-Authorization` | string | ✅    | Client Token   |
 
 #### Path Parameters
 
-| Parameter | Type   | Required | Description |
-| --------- | ------ | -------- | ----------- |
-| `id`      | string | ✅        | Room ID     |
+| 參數 | 類型   | 必填 | 說明        |
+| ---- | ------ | ---- | ----------- |
+| `id` | string | ✅    | 聊天室 ID   |
 
 #### Post Body
 
-| Parameter     | Type    | Required | Description                                                                         |
-| ------------- | ------- | -------- | ----------------------------------------------------------------------------------- |
-| `name`        | string  | ❌        | Room name                                                                           |
-| `cover`       | string  | ❌        | Room cover image URL                                                                |
-| `description` | string  | ❌        | Room description                                                                    |
-| `roomTags`    | array   | ❌        | Shared room tags array                                                              |
-| `webhook`     | string  | ❌        | Webhook key or URL                                                                  |
-| `botMode`     | boolean | ❌        | Whether to enable room robot                                                        |
-| `extParams`   | string  | ❌        | Extended custom parameters, format: param1=value1&param2=value2&...                |
-| `opening`     | number  | ❌        | Opening status: 0=closed for joining or invitation, 1=open for joining and invitation |
-| `owner`       | string  | ❌        | New owner client ID (limited to platform admin or room super user)                 |
-| `managers`    | array   | ❌        | Manager client ID array (limited to platform admin or room super user)             |
-| `status`      | number  | ❌        | Room status: 0=invalid, 1=valid                                                    |
+| 參數          | 類型    | 必填 | 說明                                                      |
+| ------------- | ------- | ---- | --------------------------------------------------------- |
+| `name`        | string  | ❌    | 聊天室名稱                                                |
+| `cover`       | string  | ❌    | 聊天室封面圖片 URL                                        |
+| `description` | string  | ❌    | 聊天室描述                                                |
+| `roomTags`    | array   | ❌    | 共享聊天室標籤陣列                                        |
+| `webhook`     | string  | ❌    | Webhook 金鑰或 URL                                        |
+| `botMode`     | boolean | ❌    | 是否啟用聊天室機器人                                      |
+| `extParams`   | string  | ❌    | 擴展自訂參數，格式：param1=value1&param2=value2&...      |
+| `opening`     | number  | ❌    | 開放狀態：0=關閉加入或邀請，1=開放加入和邀請              |
+| `owner`       | string  | ❌    | 新的擁有者客戶端 ID（限平台管理員或聊天室超級用戶）       |
+| `managers`    | array   | ❌    | 管理員客戶端 ID 陣列（限平台管理員或聊天室超級用戶）      |
+| `status`      | number  | ❌    | 聊天室狀態：0=無效，1=有效                                |
 
-#### Request Example
+#### 範例請求
 
 ```http
 PUT /rooms/58871b877390be11d5f1ab30 HTTP/1.1
 IM-CLIENT-KEY: 9FSk26d4AIbZh0k44F5+DzbetgAJA9WjC7WP36Khm6c=
-Authorization: fVy7YhqBZqEzNO9LhMmcyA==
+IM-Authorization: fVy7YhqBZqEzNO9LhMmcyA==
 Content-Type: application/json; charset=utf-8
 Host: localhost:3100
 Connection: close
@@ -64,27 +64,27 @@ Connection: close
 
 #### Response
 
-**Success Response (200 OK)**
+**成功回應（200 OK）**
 
-| Parameter | Type   | Description                    |
-| --------- | ------ | ------------------------------ |
-| `RC`      | number | Response code (0 for success) |
-| `RM`      | string | Response message               |
-| `result`  | object | Updated room data              |
+| 參數     | 類型   | 說明                   |
+| -------- | ------ | ---------------------- |
+| `RC`     | number | 回應代碼（0 表示成功） |
+| `RM`     | string | 回應訊息               |
+| `result` | object | 更新後的聊天室資料     |
 
-**Room Object Structure**
+**聊天室物件結構**
 
-| Parameter     | Type   | Description               |
-| ------------- | ------ | ------------------------- |
-| `_id`         | string | Room unique identifier    |
-| `name`        | string | Room name                 |
-| `cover`       | string | Room cover image URL      |
-| `description` | string | Room description          |
-| `status`      | number | Room status               |
-| `lastMessage` | object | Last message information  |
-| `members`     | array  | Room member list          |
+| 參數            | 類型   | 說明                      |
+| --------------- | ------ | ------------------------- |
+| `_id`           | string | 聊天室唯一識別碼          |
+| `name`          | string | 聊天室名稱                |
+| `cover`         | string | 聊天室封面圖片 URL        |
+| `description`   | string | 聊天室描述                |
+| `status`        | number | 聊天室狀態                |
+| `lastMessage`   | object | 最後一則訊息資訊          |
+| `members`       | array  | 聊天室成員列表            |
 
-#### Response Example
+#### 範例回應
 
 ```json
 {
@@ -120,9 +120,9 @@ Connection: close
 }
 ```
 
-#### Error Responses
+#### 錯誤回應
 
-**401 Unauthorized** - Authentication failed
+**401 Unauthorized** - 認證失敗
 
 ```json
 {
@@ -135,7 +135,7 @@ Connection: close
 }
 ```
 
-**403 Forbidden** - Insufficient permissions
+**403 Forbidden** - 權限不足
 
 ```json
 {
@@ -148,7 +148,7 @@ Connection: close
 }
 ```
 
-**404 Not Found** - Room does not exist
+**404 Not Found** - 聊天室不存在
 
 ```json
 {
@@ -163,29 +163,29 @@ Connection: close
 
 ------
 
-## Use Cases
+## 使用場景
 
-### Room Management
-- **Basic Information Maintenance**: Update room name, description, cover image
-- **Permission Management**: Adjust room opening status and administrator configuration
-- **Feature Settings**: Enable or disable bot mode
+### 聊天室管理
+- **基本資訊維護**：更新聊天室名稱、描述、封面圖片
+- **權限管理**：調整聊天室開放狀態和管理員配置
+- **功能設定**：啟用或停用機器人模式
 
-### Management Console
-- **Batch Management**: Batch update room settings through management interface
-- **Content Moderation**: Modify inappropriate room information
-- **Ownership Transfer**: Transfer room ownership to other users
+### 管理後台
+- **批量管理**：透過管理介面批量更新聊天室設定
+- **內容審核**：修改不當的聊天室資訊
+- **所有權轉移**：將聊天室擁有權轉移給其他用戶
 
-### System Integration
-- **Webhook Configuration**: Set webhook endpoint for the room
-- **Extension Parameters**: Integrate third-party systems through extParams
-- **Status Management**: Enable or disable specific rooms
+### 系統整合
+- **Webhook 配置**：設定聊天室的 Webhook 接收端點
+- **擴展參數**：透過 extParams 整合第三方系統
+- **狀態管理**：啟用或停用特定聊天室
 
 ------
 
-## Notes
+## 注意事項
 
-- **Permission Restrictions**: Only room owners, administrators, or platform administrators can perform updates
-- **Ownership Transfer**: Changing owner and managers requires higher permissions
-- **Parameter Validation**: All parameters are optional, only provided fields are updated
-- **Status Impact**: Setting status=0 will make the room invalid
-- **Opening Settings**: opening parameter affects whether new users can join the room
+- **權限限制**：僅聊天室擁有者、管理員或平台管理員可執行更新
+- **所有權轉移**：更改 owner 和 managers 需要更高權限
+- **參數驗證**：所有參數都是選擇性的，只更新提供的欄位
+- **狀態影響**：設定 status=0 會讓聊天室變為無效狀態
+- **開放設定**：opening 參數影響新用戶是否能加入聊天室

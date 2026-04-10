@@ -1,44 +1,46 @@
-# Client Key
+# 用戶端金鑰
 
-## Overview
+## 概述
 
-Client Key is an authentication key used for frontend applications to connect to Chat Server in the IMKIT Platform API. It is primarily used for SDK initialization and establishing WebSocket connections, different from the API Key used for backend APIs.
-
-------
-
-## Client Key Features
-
-### Basic Information
-
-| Property | Description |
-| ------------ | -------------------------- |
-| **Purpose** | Frontend SDK connection to Chat Server |
-| **Format** | JWT Token format |
-| **Validity** | Long-term valid (unless actively revoked) |
-| **Scope** | Specific application scope |
-| **Security Level** | Public (can be exposed in frontend code) |
-
-### Differences from API Key
-
-| Item | Client Key | API Key |
-| ------------ | --------------- | ------------- |
-| **Use Case** | Frontend SDK initialization | Backend API calls |
-| **Security** | Publicly visible | Private storage |
-| **Permission Scope** | Connection and basic operations | Complete management permissions |
-| **Exposure Risk** | Low risk | High risk |
+Client Key（`IM-CLIENT-KEY`）是 IMKIT Platform API 中用於識別應用程式的認證金鑰，需搭配用戶 Token（`IM-Authorization`）一起使用，代表「以特定用戶的身分」執行操作。它主要用於 SDK 初始化、建立 WebSocket 連線，以及執行用戶層級的 API 操作。
 
 ------
 
-## Obtaining Client Key
+## Client Key 特性
 
-### Through IMKIT Dashboard
+### 基本資訊
 
-1. Log in to [IMKIT Dashboard](https://dashboard.imkit.io/)
-2. Select your application
-3. Enter the "Settings" page
-4. Copy the Client Key
+| 屬性         | 說明                                   |
+| ------------ | -------------------------------------- |
+| **用途**     | 識別應用程式，搭配用戶 Token 執行操作  |
+| **搭配**     | 需搭配 `IM-Authorization`（用戶 Token）|
+| **格式**     | JWT Token 格式                         |
+| **有效期**   | 長期有效（除非主動撤銷）               |
+| **作用域**   | 操作範圍受用戶權限限制                 |
+| **安全等級** | 公開（可暴露在前端代碼中）             |
 
-### Sample Client Key
+### 與 API Key 的差異
+
+| 項目         | Client Key (`IM-CLIENT-KEY`)          | API Key (`IM-API-KEY`)   |
+| ------------ | ------------------------------------- | ------------------------ |
+| **搭配**     | 需搭配用戶 Token (`IM-Authorization`) | 單獨使用                 |
+| **身分**     | 以特定用戶身分操作                    | 以平台管理員身分操作     |
+| **使用方**   | SDK 前端 / 後端                       | 僅後端                   |
+| **權限範圍** | 受用戶權限限制                        | 完整管理權限             |
+| **安全性**   | 公開可見                              | 必須保密                 |
+
+------
+
+## 取得 Client Key
+
+### 透過 IMKIT Dashboard
+
+1. 登入 [IMKIT Dashboard](https://dashboard.imkit.io/)
+2. 選擇您的應用程式
+3. 進入「設定」頁面
+4. 複製 Client Key
+
+### 範例 Client Key
 
 ```
 eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJhcGlLZXkiOiIySllwWWhEYVFsSVFsRFN2VkxDTExvMk1QekZmVm05allweHcydnVCcm1rPSIsImNyZWF0ZUF0IjoxNTkxOTcyNTc2NDE0LCJjbGllbnRJZCI6IjJiM2JkNWNjLTRhODYtNGE0MC1hMTU0LTE2NDA0MDE0ZGE4OCJ9.bdIWOcPfDrNuLRszgtrQDaQiow_X-WolzjDhtiLEED8
@@ -46,9 +48,9 @@ eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJhcGlLZXkiOiIySllwWWhEYVFsSVFsRFN2VkxDTEx
 
 ------
 
-## Usage
+## 使用方式
 
-### Web SDK Initialization
+### Web SDK 初始化
 
 ```javascript
 const config = {
@@ -60,7 +62,7 @@ const config = {
 window.IMKitUI.init(config);
 ```
 
-### iOS SDK Initialization
+### iOS SDK 初始化
 
 ```swift
 let config = IMKitConfig(
@@ -72,7 +74,7 @@ let config = IMKitConfig(
 IMKit.shared.initialize(config: config)
 ```
 
-### Android SDK Initialization
+### Android SDK 初始化
 
 ```kotlin
 val config = IMKitConfig(
@@ -86,68 +88,70 @@ IMKit.initialize(config)
 
 ------
 
-## Client Key Permissions
+## Client Key 權限
 
-### Allowed Operations
+### 允許的操作（需搭配用戶 Token）
 
-- ✅ Establish WebSocket connection
-- ✅ Receive real-time messages
-- ✅ Send chat messages
-- ✅ Join/leave chat rooms
-- ✅ Upload multimedia files
-- ✅ Update user status
+- ✅ 建立 WebSocket 連線
+- ✅ 接收和發送聊天訊息
+- ✅ 加入/離開聊天室
+- ✅ 管理聊天室成員
+- ✅ 上傳多媒體檔案
+- ✅ 更新用戶狀態
+- ✅ 封鎖/禁止用戶
+- ✅ 釘選/撤回訊息
 
-### Disallowed Operations
+### 不允許的操作（需使用 API Key）
 
-- ❌ Create/delete users
-- ❌ Manage chat room permissions
-- ❌ Access management APIs
-- ❌ Modify application settings
-- ❌ Revoke other users' tokens
-
-------
-
-## Security Considerations
-
-### Why Can Client Key Be Public?
-
-1. **Limited Permissions**: Client Key can only perform frontend connection operations
-2. **User Scope**: Requires a valid user token to operate
-3. **No Management Permissions**: Cannot access sensitive management functions
-4. **Application Isolation**: Can only connect to specific applications
-
-### Best Practices
-
-- **Version Control**: Client Key can be included in version control
-- **Environment Separation**: Use different Client Keys for different environments
-- **Regular Rotation**: Although risk is lower, still recommend periodic replacement
-- **Usage Monitoring**: Monitor Client Key usage
+- ❌ 建立/刪除用戶
+- ❌ 管理用戶 Token
+- ❌ 修改應用程式設定
+- ❌ 存取跨聊天室訊息記錄
+- ❌ 批次發送訊息
 
 ------
 
-## Frequently Asked Questions
+## 安全性考量
 
-### Q: What are the risks if Client Key is leaked?
+### 為什麼 Client Key 可以公開？
 
-**A:** Risk is relatively low, attackers still need a valid user token to perform actual operations. However, it's recommended to immediately replace with a new Client Key when a leak is discovered.
+1. **有限權限**：操作範圍受用戶權限限制
+2. **需搭配 Token**：必須配合有效的用戶 Token 才能操作
+3. **無管理權限**：無法執行用戶管理、Token 管理等管理操作
+4. **應用程式隔離**：只能連接到特定的應用程式
 
-### Q: Can Client Key be used in mobile applications?
+### 最佳實務
 
-**A:** Yes, Client Key is designed to be safely embedded in mobile applications, including native iOS/Android apps.
-
-### Q: Will Client Key expire?
-
-**A:** Client Key does not expire by default, but you can manually revoke and generate a new Client Key in the Dashboard.
-
-### Q: Can an application have multiple Client Keys?
-
-**A:** Currently, each application can only have one Client Key. To replace, first revoke the old one then generate a new one.
+- **版本控制**：可以將 Client Key 加入版本控制
+- **環境區分**：不同環境使用不同的 Client Key
+- **定期輪換**：雖然風險較低，仍建議定期更換
+- **監控使用**：監控 Client Key 的使用情況
 
 ------
 
-## Error Handling
+## 常見問題
 
-### Common Errors
+### Q: Client Key 洩露會有什麼風險？
+
+**A:** 風險相對較低，攻擊者仍需要有效的 user token 才能進行實際操作。但建議發現洩露時立即更換新的 Client Key。
+
+### Q: 可以在移動應用程式中使用 Client Key 嗎？
+
+**A:** 可以，Client Key 設計為可以安全地嵌入在移動應用程式中，包括原生 iOS/Android 應用。
+
+### Q: Client Key 會過期嗎？
+
+**A:** Client Key 預設不會過期，但您可以在 Dashboard 中手動撤銷並生成新的 Client Key。
+
+### Q: 一個應用程式可以有多個 Client Key 嗎？
+
+**A:** 目前每個應用程式只能有一個 Client Key，如需更換請先撤銷舊的再生成新的。
+
+------
+
+## 錯誤處理
+
+### 常見錯誤
 
 **Invalid Client Key**
 

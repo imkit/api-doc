@@ -1,25 +1,25 @@
 # 指派 Token
 
-由您自行产生 token 后，指派给 IMKIT Chat Server 进行使用。
+由您自行產生 token 後，指派給 IMKIT Chat Server 進行使用。
 
 ## 概述
 
-由您自行产生与验证使用者 token，IMKIT 将仅负责消息处理。此模式适合已有现有认证系统且希望完全控制 token 生命周期的应用程序。
+由您自行產生與驗證使用者 token，IMKIT 將僅負責訊息處理。此模式適合已有現有認證系統且希望完全控制 token 生命週期的應用程式。
 
-## 实现流程
+## 實作流程
 
-1. 在您的系统中产生自定义 token
-2. 使用 `/admin/clients` API 建立 Client，传入您提供的 token 与 expirationDate
-3. 后续可通过 API 更新 token 或撤销 token
-4. 您的系统负责 token 验证逻辑
+1. 在您的系統中產生自訂 token
+2. 使用 `/admin/clients` API 建立 Client，傳入您提供的 token 與 expirationDate
+3. 後續可透過 API 更新 token 或撤銷 token
+4. 您的系統負責 token 驗證邏輯
 
 ------
 
-## API 端点
+## API 端點
 
-### 建立用户并指派 External Token
+### 建立用戶並指派 External Token
 
-建立新用户并指派由您系统产生的 access token。
+建立新用戶並指派由您系統產生的 access token。
 
 ```http
 POST /admin/clients
@@ -27,23 +27,23 @@ POST /admin/clients
 
 #### Headers
 
-| 参数           | 类型   | 必填 | 说明               |
+| 參數           | 類型   | 必填 | 說明               |
 | -------------- | ------ | ---- | ------------------ |
-| `IM-API-KEY`   | string | ✅    | 您的 API 密钥      |
+| `IM-API-KEY`   | string | ✅    | 您的 API 金鑰      |
 | `Content-Type` | string | ✅    | `application/json` |
 
 #### Request Body
 
-| 参数               | 类型    | 必填 | 说明                            |
+| 參數               | 類型    | 必填 | 說明                            |
 | ------------------ | ------- | ---- | ------------------------------- |
-| `_id`              | string  | ✅    | 用户唯一识别码                  |
-| `nickname`         | string  | ✅    | 用户显示名称                    |
-| `avatarUrl`        | string  | ❌    | 用户头像 URL                    |
-| `issueAccessToken` | boolean | ✅    | 设为 `false` 以启用此授权模式   |
-| `token`            | string  | ✅    | 您系统产生的自定义 token          |
-| `expirationDate`   | string  | ✅    | Token 过期时间（ISO 8601 格式） |
+| `_id`              | string  | ✅    | 用戶唯一識別碼                  |
+| `nickname`         | string  | ✅    | 用戶顯示名稱                    |
+| `avatarUrl`        | string  | ❌    | 用戶頭像 URL                    |
+| `issueAccessToken` | boolean | ✅    | 設為 `false` 以啟用此授權模式   |
+| `token`            | string  | ✅    | 您系統產生的自訂 token          |
+| `expirationDate`   | string  | ✅    | Token 過期時間（ISO 8601 格式） |
 
-#### 示例请求
+#### 範例請求
 
 ```json
 {
@@ -58,18 +58,18 @@ POST /admin/clients
 
 #### Response
 
-**成功响应（200 OK）**
+**成功回應（200 OK）**
 
-| 参数               | 类型    | 说明                                              |
+| 參數               | 類型    | 說明                                              |
 | ------------------ | ------- | ------------------------------------------------- |
-| `_id`              | string  | 用户唯一识别码                                    |
-| `nickname`         | string  | 用户显示名称                                      |
-| `avatarUrl`        | string  | 用户头像 URL                                      |
+| `_id`              | string  | 用戶唯一識別碼                                    |
+| `nickname`         | string  | 用戶顯示名稱                                      |
+| `avatarUrl`        | string  | 用戶頭像 URL                                      |
 | `issueAccessToken` | boolean | Token issue 模式（false 表示使用 external token） |
-| `token`            | string  | 您提供的自定义 token                                |
-| `expirationDate`   | string  | Token 过期时间（ISO 8601 格式）                   |
+| `token`            | string  | 您提供的自訂 token                                |
+| `expirationDate`   | string  | Token 過期時間（ISO 8601 格式）                   |
 
-#### 示例响应
+#### 範例回應
 
 ```json
 {
@@ -82,9 +82,9 @@ POST /admin/clients
 }
 ```
 
-#### 错误响应
+#### 錯誤回應
 
-**400 Bad Request** - 请求参数错误
+**400 Bad Request** - 請求參數錯誤
 
 ```json
 {
@@ -93,7 +93,7 @@ POST /admin/clients
 }
 ```
 
-**401 Unauthorized** - API 密钥无效
+**401 Unauthorized** - API 金鑰無效
 
 ```json
 {
@@ -102,7 +102,7 @@ POST /admin/clients
 }
 ```
 
-**409 Conflict** - 用户已存在
+**409 Conflict** - 用戶已存在
 
 ```json
 {
@@ -117,7 +117,7 @@ POST /admin/clients
 
 ### 更新 Token
 
-更新现有用户的 external token。
+更新現有用戶的 external token。
 
 ```http
 PUT /admin/clients/{user_id}/token
@@ -132,9 +132,9 @@ PUT /admin/clients/{user_id}/token
 }
 ```
 
-### 撤销 Token
+### 撤銷 Token
 
-撤销用户的 access token，使其无法继续使用聊天服务。
+撤銷用戶的 access token，使其無法繼續使用聊天服務。
 
 ```http
 DELETE /admin/clients/{user_id}/token
@@ -144,23 +144,23 @@ DELETE /admin/clients/{user_id}/token
 
 ## 使用 Token
 
-使用您的自定义 token 进行 API 调用：
+使用您的自訂 token 進行 API 呼叫：
 
 ```http
-Authorization: Bearer my-custom-token-xyz
+IM-Authorization: Bearer my-custom-token-xyz
 ```
 
-## 注意事项
+## 注意事項
 
-- **Token 验证责任**：您的系统需要负责验证 token 的有效性
-- **过期时间管理**：请确保 `expirationDate` 与您系统中的 token 过期时间一致
-- **Token 格式**：IMKIT 不限制 token 格式，但建议使用 JWT 或类似的标准格式
-- **安全性**：请确保 token 具有足够的熵值和适当的签名机制
-- **更新频率**：建议在 token 过期前主动更新，避免服务中断
+- **Token 驗證責任**：您的系統需要負責驗證 token 的有效性
+- **過期時間管理**：請確保 `expirationDate` 與您系統中的 token 過期時間一致
+- **Token 格式**：IMKIT 不限制 token 格式，但建議使用 JWT 或類似的標準格式
+- **安全性**：請確保 token 具有足夠的熵值和適當的簽名機制
+- **更新頻率**：建議在 token 過期前主動更新，避免服務中斷
 
-## 集成建议
+## 整合建議
 
-1. **统一认证**：将 IMKIT token 与您现有的认证系统集成
-2. **自动更新**：实现自动 token 更新机制，确保服务连续性
-3. **监控机制**：监控 token 使用状况和过期情况
-4. **错误处理**：妥善处理 token 过期和无效的情况
+1. **統一認證**：將 IMKIT token 與您現有的認證系統整合
+2. **自動更新**：實作自動 token 更新機制，確保服務連續性
+3. **監控機制**：監控 token 使用狀況和過期情況
+4. **錯誤處理**：妥善處理 token 過期和無效的情況

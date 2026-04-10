@@ -35,7 +35,7 @@ GET /me/badge
 
 ```http
 GET /me/badge HTTP/1.1
-Authorization: {TOKEN}
+IM-Authorization: {TOKEN}
 IM-CLIENT-KEY: {IM-CLIENT-KEY}
 Host: localhost:3100
 Connection: close
@@ -45,7 +45,7 @@ Connection: close
 
 ```http
 GET /me/badge?roomTags=demo&roomTags=foo HTTP/1.1
-Authorization: {TOKEN}
+IM-Authorization: {TOKEN}
 IM-CLIENT-KEY: {IM-CLIENT-KEY}
 Host: localhost:3100
 Connection: close
@@ -55,7 +55,7 @@ Connection: close
 
 ```http
 GET /me/badge?roomTags=work&roomTags=project&roomTags=meeting HTTP/1.1
-Authorization: {TOKEN}
+IM-Authorization: {TOKEN}
 IM-CLIENT-KEY: {IM-CLIENT-KEY}
 Host: localhost:3100
 Connection: close

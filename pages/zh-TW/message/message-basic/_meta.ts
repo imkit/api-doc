@@ -7,9 +7,11 @@ export default {
   {
     title: "撤回訊息"
   },
-  "send-a-message":
-  {
+  "send-a-message": {
     title: "發送訊息"
+  },
+  "batch-send-messages": {
+    title: "批次發送訊息"
   },
   "pin-a-message":
   {

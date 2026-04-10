@@ -27,7 +27,7 @@ GET /me
 
 ```http
 GET /me HTTP/1.1
-Authorization: fVy7YhqBZqEzNO9LhMmcyA==
+IM-Authorization: fVy7YhqBZqEzNO9LhMmcyA==
 IM-CLIENT-KEY: 9FSk26d4AIbZh0k44F5+DzbetgAJA9WjC7WP36Khm6c=
 Host: 104.199.197.188:3100
 Connection: close

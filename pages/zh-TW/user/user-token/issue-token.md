@@ -113,7 +113,7 @@ POST /admin/clients
 取得 token 後，您可以在後續的 API 呼叫中使用此 token：
 
 ```http
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+IM-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
 ```
 
 ## 注意事項

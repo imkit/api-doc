@@ -1,24 +1,24 @@
-# 核发 Token
+# 核發 Token
 
-Token 由 IMKIT Chat Server 来进行核发。
+Token 由 IMKIT Chat Server 來進行核發。
 
 ## 概述
 
-使用者数据由您的服务器建立，但授权 token 由 IMKIT Chat Server 核发与控管。此模式适合希望快速集成且不需要自行管理 token 生命周期的应用程序。
+使用者資料由您的伺服器建立，但授權 token 由 IMKIT Chat Server 核發與控管。此模式適合希望快速整合且不需要自行管理 token 生命週期的應用程式。
 
-## 实现流程
+## 實作流程
 
-1. 使用 `/admin/clients` API 建立 Client，并设置 `issueAccessToken: true`
-2. Chat Server 将 issue access token，可用于后续 API 调用
-3. 使用返回的 token 进行用户端认证
+1. 使用 `/admin/clients` API 建立 Client，並設定 `issueAccessToken: true`
+2. Chat Server 將 issue access token，可用於後續 API 呼叫
+3. 使用回傳的 token 進行用戶端認證
 
 ------
 
-## API 端点
+## API 端點
 
-### 建立用户并 Issue Token
+### 建立用戶並 Issue Token
 
-建立新用户并由 Chat Server 自动 issue access token。
+建立新用戶並由 Chat Server 自動 issue access token。
 
 ```http
 POST /admin/clients
@@ -26,21 +26,21 @@ POST /admin/clients
 
 #### Headers
 
-| 参数           | 类型   | 必填 | 说明               |
+| 參數           | 類型   | 必填 | 說明               |
 | -------------- | ------ | ---- | ------------------ |
-| `IM-API-KEY`   | string | ✅    | 您的 API 密钥      |
+| `IM-API-KEY`   | string | ✅    | 您的 API 金鑰      |
 | `Content-Type` | string | ✅    | `application/json` |
 
 #### Request Body
 
-| 参数               | 类型    | 必填 | 说明                         |
+| 參數               | 類型    | 必填 | 說明                         |
 | ------------------ | ------- | ---- | ---------------------------- |
-| `_id`              | string  | ✅    | 用户唯一识别码               |
-| `nickname`         | string  | ✅    | 用户显示名称                 |
-| `avatarUrl`        | string  | ❌    | 用户头像 URL                 |
-| `issueAccessToken` | boolean | ✅    | 设为 `true` 以启用此授权模式 |
+| `_id`              | string  | ✅    | 用戶唯一識別碼               |
+| `nickname`         | string  | ✅    | 用戶顯示名稱                 |
+| `avatarUrl`        | string  | ❌    | 用戶頭像 URL                 |
+| `issueAccessToken` | boolean | ✅    | 設為 `true` 以啟用此授權模式 |
 
-#### 示例请求
+#### 範例請求
 
 ```json
 {
@@ -53,18 +53,18 @@ POST /admin/clients
 
 #### Response
 
-**成功响应（200 OK）**
+**成功回應（200 OK）**
 
-| 参数               | 类型    | 说明                                 |
+| 參數               | 類型    | 說明                                 |
 | ------------------ | ------- | ------------------------------------ |
-| `_id`              | string  | 用户唯一识别码                       |
-| `nickname`         | string  | 用户显示名称                         |
-| `avatarUrl`        | string  | 用户头像 URL                         |
+| `_id`              | string  | 用戶唯一識別碼                       |
+| `nickname`         | string  | 用戶顯示名稱                         |
+| `avatarUrl`        | string  | 用戶頭像 URL                         |
 | `issueAccessToken` | boolean | Token issue 模式                     |
 | `token`            | string  | 由 Chat Server issue 的 access token |
-| `expirationDate`   | string  | Token 过期时间（ISO 8601 格式）      |
+| `expirationDate`   | string  | Token 過期時間（ISO 8601 格式）      |
 
-#### 示例响应
+#### 範例回應
 
 ```json
 {
@@ -77,9 +77,9 @@ POST /admin/clients
 }
 ```
 
-#### 错误响应
+#### 錯誤回應
 
-**400 Bad Request** - 请求参数错误
+**400 Bad Request** - 請求參數錯誤
 
 ```json
 {
@@ -88,7 +88,7 @@ POST /admin/clients
 }
 ```
 
-**401 Unauthorized** - API 密钥无效
+**401 Unauthorized** - API 金鑰無效
 
 ```json
 {
@@ -97,7 +97,7 @@ POST /admin/clients
 }
 ```
 
-**409 Conflict** - 用户已存在
+**409 Conflict** - 用戶已存在
 
 ```json
 {
@@ -110,15 +110,15 @@ POST /admin/clients
 
 ## 使用 Token
 
-取得 token 后，您可以在后续的 API 调用中使用此 token：
+取得 token 後，您可以在後續的 API 呼叫中使用此 token：
 
 ```http
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+IM-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
 ```
 
-## 注意事项
+## 注意事項
 
-- Token 有效期限由 Chat Server 管理，请留意 `expirationDate` 字段
-- Token 过期后需要重新建立用户以取得新的 token
-- 此模式下无法自定义 token 内容或过期时间
-- 建议在应用程序中缓存 token 以避免重复请求
+- Token 有效期限由 Chat Server 管理，請留意 `expirationDate` 欄位
+- Token 過期後需要重新建立用戶以取得新的 token
+- 此模式下無法自訂 token 內容或過期時間
+- 建議在應用程式中快取 token 以避免重複請求

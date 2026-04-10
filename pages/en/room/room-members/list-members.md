@@ -1,16 +1,16 @@
-# List Members
+# 列出成員
 
-## Overview
+## 概述
 
-Get detailed information of a specified chat room, including complete member list, member properties and room-related data. This API provides comprehensive room status information, suitable for member management, room monitoring and data synchronization.
+取得指定聊天室的詳細資訊，包含完整的成員列表、成員屬性和聊天室相關資料。此 API 提供聊天室的完整狀態資訊，適用於成員管理、聊天室監控和資料同步。
 
 ------
 
-## API Endpoint
+## API 端點
 
-### Get Room Details (Including Member List)
+### 取得聊天室詳細資訊（包含成員列表）
 
-Query comprehensive information of a specified room, including detailed data of all members.
+查詢指定聊天室的完整資訊，包含所有成員的詳細資料。
 
 ```http
 GET /rooms/{id}
@@ -18,23 +18,23 @@ GET /rooms/{id}
 
 #### Headers
 
-| Parameter       | Type   | Required | Description    |
-| --------------- | ------ | -------- | -------------- |
-| `IM-CLIENT-KEY` | string | ✅        | Client Key     |
-| `IM-Authorization` | string | ✅        | Client Token   |
+| 參數            | 類型   | 必填 | 說明           |
+| --------------- | ------ | ---- | -------------- |
+| `IM-CLIENT-KEY` | string | ✅    | Client Key     |
+| `IM-Authorization` | string | ✅    | Client Token   |
 
 #### Path Parameters
 
-| Parameter | Type   | Required | Description |
-| --------- | ------ | -------- | ----------- |
-| `id`      | string | ✅        | Room ID     |
+| 參數 | 類型   | 必填 | 說明        |
+| ---- | ------ | ---- | ----------- |
+| `id` | string | ✅    | 聊天室 ID   |
 
-#### Request Example
+#### 範例請求
 
 ```http
 GET /rooms/58871b877390be11d5f1ab30 HTTP/1.1
 IM-CLIENT-KEY: 9FSk26d4AIbZh0k44F5+DzbetgAJA9WjC7WP36Khm6c=
-Authorization: fVy7YhqBZqEzNO9LhMmcyA==
+IM-Authorization: fVy7YhqBZqEzNO9LhMmcyA==
 Host: localhost:3100
 Connection: close
 User-Agent: Paw/3.0.14 (Macintosh; OS X/10.11.6) GCDHTTPRequest
@@ -42,46 +42,46 @@ User-Agent: Paw/3.0.14 (Macintosh; OS X/10.11.6) GCDHTTPRequest
 
 #### Response
 
-**Success Response (200 OK)**
+**成功回應（200 OK）**
 
-| Parameter | Type   | Description                    |
-| --------- | ------ | ------------------------------ |
-| `RC`      | number | Response code (0 for success) |
-| `RM`      | string | Response message               |
-| `result`  | object | Room detailed information      |
+| 參數     | 類型   | 說明                   |
+| -------- | ------ | ---------------------- |
+| `RC`     | number | 回應代碼（0 表示成功） |
+| `RM`     | string | 回應訊息               |
+| `result` | object | 聊天室詳細資訊         |
 
-**Room Details Object Structure**
+**聊天室詳細資訊物件結構**
 
-| Parameter           | Type   | Description                                      |
-| ------------------- | ------ | ------------------------------------------------ |
-| `_id`               | string | Room unique identifier                           |
-| `appID`             | string | Application identifier                           |
-| `description`       | string | Room description                                 |
-| `lastMessage`       | object | Last message information                         |
-| `memberProperties`  | array  | Member properties list (unread count, last read)|
-| `members`           | array  | Detailed member information list                 |
-| `unread`            | number | Current user's unread message count              |
-| `isSuperuser`       | bool   | Whether current user is super user               |
+| 參數                | 類型   | 說明                          |
+| ------------------- | ------ | ----------------------------- |
+| `_id`               | string | 聊天室唯一識別碼              |
+| `appID`             | string | 應用程式識別碼                |
+| `description`       | string | 聊天室描述                    |
+| `lastMessage`       | object | 最後一則訊息資訊              |
+| `memberProperties`  | array  | 成員屬性列表（未讀數、最後讀取）|
+| `members`           | array  | 成員詳細資訊列表              |
+| `unread`            | number | 當前用戶未讀訊息數            |
+| `isSuperuser`       | bool   | 當前用戶是否為超級用戶        |
 
-**Member Object Structure**
+**成員物件結構**
 
-| Parameter         | Type   | Description                       |
-| ----------------- | ------ | --------------------------------- |
-| `_id`             | string | Member unique identifier          |
-| `nickname`        | string | Member nickname                   |
-| `avatarUrl`       | string | Member avatar URL                 |
-| `lastLoginTime`   | string | Last login time (ISO format)     |
-| `lastLoginTimeMS` | number | Last login time (millisecond timestamp) |
+| 參數              | 類型   | 說明                          |
+| ----------------- | ------ | ----------------------------- |
+| `_id`             | string | 成員唯一識別碼                |
+| `nickname`        | string | 成員暱稱                      |
+| `avatarUrl`       | string | 成員頭像 URL                  |
+| `lastLoginTime`   | string | 最後登入時間（ISO 格式）      |
+| `lastLoginTimeMS` | number | 最後登入時間（毫秒時間戳）    |
 
-**Member Properties Object Structure**
+**成員屬性物件結構**
 
-| Parameter  | Type   | Description                     |
-| ---------- | ------ | ------------------------------- |
-| `client`   | string | Member client ID                |
-| `badge`    | number | Unread message count            |
-| `lastRead` | string | Last read message ID            |
+| 參數       | 類型   | 說明                          |
+| ---------- | ------ | ----------------------------- |
+| `client`   | string | 成員客戶端 ID                 |
+| `badge`    | number | 未讀訊息數量                  |
+| `lastRead` | string | 最後讀取的訊息 ID             |
 
-#### Response Example
+#### 範例回應
 
 ```json
 {
@@ -152,9 +152,9 @@ User-Agent: Paw/3.0.14 (Macintosh; OS X/10.11.6) GCDHTTPRequest
 }
 ```
 
-#### Error Responses
+#### 錯誤回應
 
-**401 Unauthorized** - Authentication failed
+**401 Unauthorized** - 認證失敗
 
 ```json
 {
@@ -167,7 +167,7 @@ User-Agent: Paw/3.0.14 (Macintosh; OS X/10.11.6) GCDHTTPRequest
 }
 ```
 
-**403 Forbidden** - Insufficient permissions or not a member
+**403 Forbidden** - 權限不足或非成員
 
 ```json
 {
@@ -180,7 +180,7 @@ User-Agent: Paw/3.0.14 (Macintosh; OS X/10.11.6) GCDHTTPRequest
 }
 ```
 
-**404 Not Found** - Room does not exist
+**404 Not Found** - 聊天室不存在
 
 ```json
 {
@@ -195,31 +195,31 @@ User-Agent: Paw/3.0.14 (Macintosh; OS X/10.11.6) GCDHTTPRequest
 
 ------
 
-## Use Cases
+## 使用場景
 
-### Member Management
-- **Member List**: Display detailed information of all members in the room
-- **Member Monitoring**: Check login status and activity level of members
-- **Permission Check**: Verify current user's permission level in the room
+### 成員管理
+- **成員列表**：顯示聊天室內所有成員的詳細資訊
+- **成員監控**：查看成員的登入狀態和活躍度
+- **權限檢查**：確認當前用戶在聊天室中的權限級別
 
-### Room Information
-- **Room Status**: Get comprehensive status information of the room
-- **Unread Statistics**: View personal and overall unread message statistics
-- **Latest Message**: Get information of the room's last message
+### 聊天室資訊
+- **聊天室狀態**：獲取聊天室的完整狀態資訊
+- **未讀統計**：查看個人和整體的未讀訊息統計
+- **最新訊息**：獲取聊天室的最後一則訊息資訊
 
-### Application Integration
-- **Data Synchronization**: Synchronize room members and status information
-- **UI Display**: Provide complete display data for room interface
-- **Analytics**: Analyze member engagement and activity level in the room
+### 應用整合
+- **資料同步**：同步聊天室成員和狀態資訊
+- **UI 顯示**：為聊天室界面提供完整的顯示資料
+- **分析統計**：分析聊天室成員的參與度和活躍度
 
 ------
 
-## Notes
+## 注意事項
 
-- **Member Permissions**: Only room members can view detailed information
-- **Data Completeness**: Response includes complete information of member list and member properties
-- **Unread Calculation**: memberProperties contains unread message count for each member
-- **Permission Identification**: isSuperuser field identifies whether current user is an administrator
-- **Time Format**: Provides both ISO format and millisecond timestamp for time
-- **Data Volume**: Large rooms may return substantial member data, pay attention to performance handling
-- **Real-time**: Member status and unread count may need periodic updates to maintain real-time accuracy
+- **成員權限**：只有聊天室成員才能查看詳細資訊
+- **資料完整性**：回應包含成員列表和成員屬性的完整資訊
+- **未讀計算**：memberProperties 中包含每個成員的未讀訊息數量
+- **權限識別**：isSuperuser 欄位標識當前用戶是否為管理員
+- **時間格式**：提供 ISO 格式和毫秒時間戳兩種時間格式
+- **資料量**：大型聊天室可能返回大量成員資料，注意處理效能
+- **即時性**：成員狀態和未讀數可能需要定期更新以保持即時性

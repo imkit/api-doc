@@ -1,35 +1,37 @@
 export default {
   "delete-a-message":
   {
-    title: "Delete a Message"
+    title: "刪除訊息"
   },
   "recall-a-message":
   {
-    title: "Recall a Message"
+    title: "撤回訊息"
   },
-  "send-a-message":
-  {
-    title: "Send a Message"
+  "send-a-message": {
+    title: "發送訊息"
+  },
+  "batch-send-messages": {
+    title: "批次發送訊息"
   },
   "pin-a-message":
   {
-    title: "Pin a Message"
+    title: "釘選訊息"
   },
   "unpin-a-message":
   {
-    title: "Unpin a Message"
+    title: "取消釘選訊息"
   },
   "search-message":
   {
-    title: "Search Message"
+    title: "搜尋訊息"
   },
   "get-message-by-a-room":
   {
-    title: "Get Message by a Room"
+    title: "獲取聊天室訊息"
   },
   "list-messages":
   {
-    title: "List Messages"
+    title: "訊息列表"
   }
 }
 

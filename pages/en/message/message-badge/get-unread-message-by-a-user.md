@@ -1,16 +1,16 @@
-# Get Unread Messages by User
+# 獲取用戶未讀訊息
 
-## Overview
+## 概述
 
-Get the total number of unread messages for the current user. This API can count the total unread messages for a user across all authorized rooms, and supports filtering statistics by room tags, suitable for displaying the user's overall unread status.
+取得當前用戶的總未讀訊息數量。此 API 可以統計用戶在所有有權限的聊天室中的未讀訊息總數，並支援按聊天室標籤進行篩選統計，適用於顯示用戶的整體未讀狀態。
 
 ------
 
-## API Endpoint
+## API 端點
 
-### Get User's Total Unread Messages
+### 取得用戶未讀訊息總數
 
-Get the current user's unread message count, with optional tag filtering.
+獲取當前用戶的未讀訊息數量，可選擇按標籤篩選。
 
 ```http
 GET /me/badge
@@ -18,44 +18,44 @@ GET /me/badge
 
 #### Headers
 
-| Parameter       | Type   | Required | Description  |
-| --------------- | ------ | -------- | ------------ |
-| `IM-CLIENT-KEY` | string | ✅        | Client Key   |
-| `IM-Authorization` | string | ✅        | Client Token |
+| 參數               | 類型   | 必填 | 說明           |
+| ------------------ | ------ | ---- | -------------- |
+| `IM-CLIENT-KEY`    | string | ✅    | Client Key     |
+| `IM-Authorization`    | string | ✅    | Client Token   |
 
 #### Query Parameters
 
-| Parameter  | Type   | Required | Description                                                    |
-| ---------- | ------ | -------- | -------------------------------------------------------------- |
-| `roomTags` | string | ❌        | Filter by room tags (can use multiple roomTags parameters)    |
+| 參數       | 類型   | 必填 | 說明                                                      |
+| ---------- | ------ | ---- | --------------------------------------------------------- |
+| `roomTags` | string | ❌    | 按聊天室標籤篩選（可重複使用多個 roomTags 參數）          |
 
-#### Sample Request
+#### 範例請求
 
-**Get total unread message count**
+**取得總未讀訊息數**
 
 ```http
 GET /me/badge HTTP/1.1
-Authorization: {TOKEN}
+IM-Authorization: {TOKEN}
 IM-CLIENT-KEY: {IM-CLIENT-KEY}
 Host: localhost:3100
 Connection: close
 ```
 
-**Get unread message count for specific tags**
+**取得特定標籤的未讀訊息數**
 
 ```http
 GET /me/badge?roomTags=demo&roomTags=foo HTTP/1.1
-Authorization: {TOKEN}
+IM-Authorization: {TOKEN}
 IM-CLIENT-KEY: {IM-CLIENT-KEY}
 Host: localhost:3100
 Connection: close
 ```
 
-**Get unread message count for work-related rooms**
+**取得工作相關聊天室的未讀訊息數**
 
 ```http
 GET /me/badge?roomTags=work&roomTags=project&roomTags=meeting HTTP/1.1
-Authorization: {TOKEN}
+IM-Authorization: {TOKEN}
 IM-CLIENT-KEY: {IM-CLIENT-KEY}
 Host: localhost:3100
 Connection: close
@@ -63,21 +63,21 @@ Connection: close
 
 #### Response
 
-**Success Response (200 OK)**
+**成功回應（200 OK）**
 
-| Parameter | Type   | Description                      |
-| --------- | ------ | -------------------------------- |
-| `RC`      | number | Response code (0 means success) |
-| `RM`      | string | Response message                 |
-| `result`  | object | Unread message statistics result |
+| 參數     | 類型   | 說明                   |
+| -------- | ------ | ---------------------- |
+| `RC`     | number | 回應代碼（0 表示成功） |
+| `RM`     | string | 回應訊息               |
+| `result` | object | 未讀訊息統計結果       |
 
-**Result Object Structure**
+**結果物件結構**
 
-| Parameter | Type   | Description                                           |
-| --------- | ------ | ----------------------------------------------------- |
-| `badge`   | number | Unread message count (total from all qualifying rooms) |
+| 參數    | 類型   | 說明                                    |
+| ------- | ------ | --------------------------------------- |
+| `badge` | number | 未讀訊息數量（所有符合條件的聊天室總和） |
 
-#### Sample Response
+#### 範例回應
 
 ```json
 {
@@ -89,7 +89,7 @@ Connection: close
 }
 ```
 
-**Response example with tag filtering**
+**按標籤篩選的回應範例**
 
 ```json
 {
@@ -101,9 +101,9 @@ Connection: close
 }
 ```
 
-#### Error Response
+#### 錯誤回應
 
-**401 Unauthorized** - Authentication failed
+**401 Unauthorized** - 認證失敗
 
 ```json
 {
@@ -116,7 +116,7 @@ Connection: close
 }
 ```
 
-**400 Bad Request** - Invalid parameters
+**400 Bad Request** - 參數無效
 
 ```json
 {
@@ -131,30 +131,30 @@ Connection: close
 
 ------
 
-## Use Cases
+## 使用場景
 
-### Global Notification Display
-- **Total Display**: Show total unread message count on app icon or title bar
-- **Badge Marking**: Used for badge number display in mobile apps
-- **Status Indicator**: Determine if user has unread messages to handle
+### 全局通知顯示
+- **總數顯示**：在應用程式圖示或標題列顯示未讀訊息總數
+- **Badge 標記**：用於移動應用的 badge 數字顯示
+- **狀態指示**：判斷用戶是否有未讀訊息需要處理
 
-### Category Statistics
-- **Work Messages**: Count unread messages in work-related rooms
-- **Personal Messages**: Count unread messages in personal or private chats
-- **System Notifications**: Count unread messages in system announcement rooms
+### 分類統計
+- **工作訊息**：統計工作相關聊天室的未讀數量
+- **個人訊息**：統計個人或私人聊天的未讀數量
+- **系統通知**：統計系統公告類聊天室的未讀數量
 
-### User Experience Optimization
-- **Smart Reminders**: Adjust reminder frequency based on unread count
-- **Priority Display**: Sort display based on importance of different tags
-- **Quick Access**: Provide quick jump to rooms with unread messages
+### 用戶體驗最佳化
+- **智能提醒**：根據未讀數量調整提醒頻率
+- **優先級顯示**：根據不同標籤的重要性排序顯示
+- **快捷訪問**：提供快速跳轉到有未讀訊息的聊天室
 
 ------
 
-## Notes
+## 注意事項
 
-- **Permission Control**: Only counts rooms that user has permission to access
-- **Tag Filtering**: Can use multiple roomTags parameters for AND condition filtering
-- **Real-time**: Returns real-time unread count at query time
-- **Performance Considerations**: Frequent queries may affect performance, recommend moderate use
-- **Parameter Format**: Multiple tags need to use `roomTags=tag1&roomTags=tag2` format
-- **Zero Handling**: Returns 0 when there are no unread messages
+- **權限控制**：只統計用戶有權限訪問的聊天室
+- **標籤篩選**：可使用多個 roomTags 參數進行 AND 條件篩選
+- **即時性**：返回查詢當下的即時未讀數量
+- **效能考量**：頻繁查詢可能影響效能，建議適度使用
+- **參數格式**：多個標籤需使用 `roomTags=tag1&roomTags=tag2` 格式
+- **零值處理**：沒有未讀訊息時返回 0

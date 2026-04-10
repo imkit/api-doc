@@ -1,10 +1,12 @@
 export default {
   "create-a-user": {
-    title: "Create User"
+    title: "建立用戶"
   },
-  "update-a-user":
-  {
-    title: "Update User"
+  "batch-create-users": {
+    title: "批次建立用戶"
+  },
+  "update-a-user": {
+    title: "更新用戶"
   }
 }
 
