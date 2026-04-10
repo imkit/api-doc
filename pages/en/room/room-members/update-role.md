@@ -1,16 +1,16 @@
-# 更新成員角色
+# Update Member Role
 
-## 概述
+## Overview
 
-此端點允許您更新聊天室中特定成員的角色。當角色變更為管理員時，系統會自動在聊天室內產生對應的系統訊息。此 API 僅供伺服器端使用，需要適當的身份驗證。
+This endpoint allows you to update the role of a specific member in a room. When the role is changed to administrator, the system automatically generates a corresponding system message in the room. This API is for server-side use only and requires proper authentication.
 
 ------
 
-## API 端點
+## API Endpoint
 
-### 更新成員角色
+### Update Member Role
 
-更新聊天室中特定成員的角色。
+Update the role of a specific member in a room.
 
 ```http
 PUT /rooms/:id/member/:client
@@ -18,37 +18,37 @@ PUT /rooms/:id/member/:client
 
 #### Headers
 
-| 參數 | 類型 | 必填 | 說明 |
+| Parameter | Type | Required | Description |
 | --- | --- | --- | --- |
-| `IM-CLIENT-KEY` | string | ✅ | 用戶端金鑰 |
-| `IM-Authorization` | string | ✅ | 用戶端權杖 |
+| `IM-CLIENT-KEY` | string | ✅ | Client key |
+| `IM-Authorization` | string | ✅ | Client token |
 
 #### Path Parameters
 
-| 參數 | 類型 | 必填 | 說明 |
+| Parameter | Type | Required | Description |
 | --- | --- | --- | --- |
-| `:id` | string | ✅ | 聊天室唯一識別碼 |
-| `:client` | string | ✅ | 成員的用戶端 ID |
+| `:id` | string | ✅ | Room unique identifier |
+| `:client` | string | ✅ | Member's client ID |
 
 #### Request Body
 
-| 參數 | 類型 | 必填 | 說明 |
+| Parameter | Type | Required | Description |
 | --- | --- | --- | --- |
-| `property` | string | ✅ | 固定填入 `"role"` |
-| `value` | string | ✅ | 角色值，可為 `"admin"` 或 `"member"` |
+| `property` | string | ✅ | Must be set to `"role"` |
+| `value` | string | ✅ | Role value, either `"admin"` or `"member"` |
 
-**角色說明**
+**Role Descriptions**
 
-| 角色值 | 說明 |
+| Role Value | Description |
 | --- | --- |
-| `"admin"` | 管理員，擁有管理聊天室成員的權限 |
-| `"member"` | 一般成員 |
+| `"admin"` | Administrator, with permissions to manage room members |
+| `"member"` | Regular member |
 
-#### 範例請求
+#### Example Request
 
-**範例一：將成員設為管理員**
+**Example 1: Set a member as administrator**
 
-**cURL 範例：**
+**cURL Example:**
 
 ```bash
 curl -X "PUT" "https://your-app.imkit.io/rooms/demo-room/member/user-001" \
@@ -58,7 +58,7 @@ curl -X "PUT" "https://your-app.imkit.io/rooms/demo-room/member/user-001" \
      -d '{"property": "role", "value": "admin"}'
 ```
 
-**JavaScript 範例：**
+**JavaScript Example:**
 
 ```javascript
 const response = await axios.put(
@@ -77,9 +77,9 @@ const response = await axios.put(
 );
 ```
 
-**範例二：將管理員降為一般成員**
+**Example 2: Demote an administrator to a regular member**
 
-**JavaScript 範例：**
+**JavaScript Example:**
 
 ```javascript
 const response = await axios.put(
@@ -100,15 +100,15 @@ const response = await axios.put(
 
 #### Response
 
-**成功回應（200 OK）**
+**Success Response (200 OK)**
 
-| 參數 | 類型 | 說明 |
+| Parameter | Type | Description |
 | --- | --- | --- |
-| `RC` | number | 回應代碼（0 表示成功） |
-| `RM` | string | 回應訊息 |
-| `result` | object | 更新後的聊天室完整資訊 |
+| `RC` | number | Response code (0 indicates success) |
+| `RM` | string | Response message |
+| `result` | object | Complete room information after the update |
 
-#### 範例回應
+#### Example Response
 
 ```json
 {
@@ -134,27 +134,27 @@ const response = await axios.put(
 }
 ```
 
-#### 錯誤回應
+#### Error Response
 
-當請求失敗時，您會收到包含錯誤詳細資訊的錯誤回應。常見的錯誤情況包括：
+When a request fails, you will receive an error response containing error details. Common error scenarios include:
 
-- 無效的用戶端金鑰或授權權杖
-- 指定的聊天室或成員不存在
-- `value` 不是有效的角色值
-- 伺服器內部錯誤
-
-------
-
-## 使用場景
-
-### 權限管理
-- **升級為管理員**：將成員的角色從 `"member"` 變更為 `"admin"`，賦予其管理聊天室成員的權限
-- **降級為一般成員**：將管理員的角色從 `"admin"` 變更為 `"member"`，移除其管理權限
+- Invalid client key or authorization token
+- The specified room or member does not exist
+- `value` is not a valid role value
+- Internal server error
 
 ------
 
-## 注意事項
+## Use Cases
 
-- **系統訊息**：當 `value` 設為 `"admin"` 時，系統會自動在聊天室內產生 `assignAdmin` 系統訊息通知其他成員
-- `property` 欄位必須固定填入 `"role"`；若需更新其他成員屬性，請使用[更新成員屬性](./update-member-property) API
-- 此操作僅變更成員在該聊天室內的角色，不影響其他聊天室的角色設定
+### Permission Management
+- **Promote to administrator**: Change a member's role from `"member"` to `"admin"`, granting them permissions to manage room members
+- **Demote to regular member**: Change an administrator's role from `"admin"` to `"member"`, removing their management permissions
+
+------
+
+## Notes
+
+- **System message**: When `value` is set to `"admin"`, the system automatically generates an `assignAdmin` system message in the room to notify other members
+- The `property` field must always be set to `"role"`; to update other member properties, please use the [Update Member Property](./update-member-property) API
+- This operation only changes the member's role within that specific room and does not affect their roles in other rooms

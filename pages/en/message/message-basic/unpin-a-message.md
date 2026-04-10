@@ -1,16 +1,16 @@
-# 取消釘選訊息
+# Unpin a Message
 
-## 概述
+## Overview
 
-此端點允許聊天室擁有者或管理員取消目前釘選的訊息，將其從聊天室頂部移除。
+This endpoint allows chatroom owners or administrators to unpin the currently pinned message, removing it from the top of the chatroom.
 
 ------
 
-## API 端點
+## API Endpoint
 
-### 取消釘選訊息
+### Unpin a Message
 
-取消目前釘選的訊息，將其從聊天室頂部移除。
+Unpin the currently pinned message and remove it from the top of the chatroom.
 
 ```http
 DELETE /messages/:id/pin
@@ -18,22 +18,22 @@ DELETE /messages/:id/pin
 
 #### Headers
 
-| 參數               | 類型   | 必填 | 說明         |
-| ------------------ | ------ | ---- | ------------ |
-| `IM-CLIENT-KEY`    | string | ✅   | 用戶端金鑰   |
-| `IM-Authorization` | string | ✅   | 用戶端權杖   |
+| Parameter          | Type   | Required | Description    |
+| ------------------ | ------ | -------- | -------------- |
+| `IM-CLIENT-KEY`    | string | ✅       | Client Key     |
+| `IM-Authorization` | string | ✅       | Client Token   |
 
 #### Path Parameters
 
-| 參數  | 類型   | 必填 | 說明             |
-| ----- | ------ | ---- | ---------------- |
-| `:id` | string | ✅   | 訊息唯一識別碼   |
+| Parameter | Type   | Required | Description           |
+| --------- | ------ | -------- | --------------------- |
+| `:id`     | string | ✅       | Message unique ID     |
 
-此 API 無需請求內容（Request Body）。
+This API does not require a Request Body.
 
-#### 範例請求
+#### Example Request
 
-**cURL 範例：**
+**cURL Example:**
 
 ```bash
 curl -X "DELETE" "https://your-app.imkit.io/messages/5f890cf37d980e06f6aaf349/pin" \
@@ -41,7 +41,7 @@ curl -X "DELETE" "https://your-app.imkit.io/messages/5f890cf37d980e06f6aaf349/pi
      -H 'IM-Authorization: {IM-Authorization}'
 ```
 
-**JavaScript 範例：**
+**JavaScript Example:**
 
 ```javascript
 const response = await axios.delete(
@@ -57,22 +57,22 @@ const response = await axios.delete(
 
 #### Response
 
-**成功回應（200 OK）**
+**Success Response (200 OK)**
 
-| 參數                  | 類型    | 說明                               |
-| --------------------- | ------- | ---------------------------------- |
-| `RC`                  | number  | 回應代碼（0 表示成功）             |
-| `RM`                  | string  | 回應訊息                           |
-| `result._id`          | string  | 訊息唯一識別碼                     |
-| `result.message`      | string  | 訊息內容                           |
-| `result.room`         | string  | 所屬聊天室 ID                      |
-| `result.sender`       | object  | 訊息發送者資訊                     |
-| `result.messageType`  | string  | 訊息類型                           |
-| `result.pinned`       | boolean | 是否已釘選（取消後為 `false`）     |
-| `result.messageTimeMS`| number  | 訊息發送時間戳（毫秒）             |
-| `result.updatedAtMS`  | number  | 最後更新時間戳（毫秒）             |
+| Parameter             | Type    | Description                                  |
+| --------------------- | ------- | -------------------------------------------- |
+| `RC`                  | number  | Response code (0 indicates success)          |
+| `RM`                  | string  | Response message                             |
+| `result._id`          | string  | Message unique ID                            |
+| `result.message`      | string  | Message content                              |
+| `result.room`         | string  | Associated chatroom ID                       |
+| `result.sender`       | object  | Message sender information                   |
+| `result.messageType`  | string  | Message type                                 |
+| `result.pinned`       | boolean | Whether the message is pinned (`false` after unpinning) |
+| `result.messageTimeMS`| number  | Message sent timestamp (milliseconds)        |
+| `result.updatedAtMS`  | number  | Last updated timestamp (milliseconds)        |
 
-#### 範例回應
+#### Example Response
 
 ```json
 {
@@ -101,27 +101,27 @@ const response = await axios.delete(
 }
 ```
 
-#### 錯誤回應
+#### Error Response
 
-當請求失敗時，您會收到包含錯誤詳細資訊的錯誤回應。常見的錯誤情況包括：
+When a request fails, you will receive an error response containing error details. Common error scenarios include:
 
-- 無效的用戶端金鑰或授權權杖
-- 指定的訊息不存在
-- 當前用戶不是聊天室擁有者或管理員
-- 伺服器內部錯誤
-
-------
-
-## 使用場景
-
-### 訊息管理
-
-- **移除過時公告**：當釘選的訊息不再相關時，取消釘選以保持聊天室整潔
-- **更換釘選內容**：取消釘選舊訊息後，可釘選新的重要訊息
+- Invalid client key or authorization token
+- The specified message does not exist
+- The current user is not the chatroom owner or administrator
+- Internal server error
 
 ------
 
-## 注意事項
+## Use Cases
 
-- **權限限制**：僅聊天室**擁有者（owner）**或**管理員（admin）**可以執行取消釘選操作
-- 若要釘選訊息，請使用[釘選訊息](./pin-a-message) API
+### Message Management
+
+- **Remove Outdated Announcements**: Unpin messages that are no longer relevant to keep the chatroom organized
+- **Replace Pinned Content**: Unpin an old message to pin a new important message
+
+------
+
+## Notes
+
+- **Permission Restriction**: Only chatroom **owners** or **admins** can perform the unpin operation
+- To pin a message, use the [Pin a Message](./pin-a-message) API

@@ -1,16 +1,16 @@
-# 取得系統設定
+# Get Config
 
-## 概述
+## Overview
 
-取得應用程式的執行時期設定。此端點回傳系統中已設定的所有組態鍵值對，包含公告、審查詞彙、功能旗標等。用戶端可使用 `IM-CLIENT-KEY` 搭配 `IM-Authorization` 進行驗證來讀取設定。
+Retrieve the application's runtime configuration. This endpoint returns all configuration key-value pairs set in the system, including announcements, censorship keywords, feature flags, and more. Clients can authenticate using `IM-CLIENT-KEY` with `IM-Authorization` to read the configuration.
 
 ------
 
-## API 端點
+## API Endpoint
 
-### 取得系統設定
+### Get Config
 
-取得目前所有的系統組態設定。
+Retrieve all current system configuration settings.
 
 ```http
 GET /config
@@ -18,14 +18,14 @@ GET /config
 
 #### Headers
 
-| 參數               | 類型   | 必填 | 說明                       |
-| ------------------ | ------ | ---- | -------------------------- |
-| `IM-CLIENT-KEY`    | string | ✅    | 您的 Client 金鑰           |
-| `IM-Authorization` | string | ✅    | 用戶授權 token             |
+| Parameter          | Type   | Required | Description            |
+| ------------------ | ------ | -------- | ---------------------- |
+| `IM-CLIENT-KEY`    | string | ✅        | Your Client Key        |
+| `IM-Authorization` | string | ✅        | User authorization token |
 
-#### 範例請求
+#### Example Request
 
-**JavaScript（axios）**
+**JavaScript (axios)**
 
 ```javascript
 const response = await axios.get(
@@ -49,15 +49,15 @@ curl -X GET "https://your-app.imkit.io/config" \
 
 #### Response
 
-**成功回應（200 OK）**
+**Success Response (200 OK)**
 
-| 參數     | 類型   | 說明                               |
-| -------- | ------ | ---------------------------------- |
-| `RC`     | number | 回應代碼（0 表示成功）             |
-| `RM`     | string | 回應訊息                           |
-| `result` | object | 系統組態鍵值對，內容依實際設定而異 |
+| Parameter | Type   | Description                                                 |
+| --------- | ------ | ----------------------------------------------------------- |
+| `RC`      | number | Response code (0 indicates success)                         |
+| `RM`      | string | Response message                                            |
+| `result`  | object | System configuration key-value pairs, content varies by settings |
 
-#### 範例回應
+#### Example Response
 
 ```json
 {
@@ -80,9 +80,9 @@ curl -X GET "https://your-app.imkit.io/config" \
 }
 ```
 
-#### 錯誤回應
+#### Error Response
 
-**401 Unauthorized** - 授權驗證失敗
+**401 Unauthorized** - Authorization verification failed
 
 ```json
 {
@@ -97,25 +97,25 @@ curl -X GET "https://your-app.imkit.io/config" \
 
 ------
 
-## 使用場景
+## Use Cases
 
-### 功能旗標
-- **動態功能開關**：用戶端啟動時讀取功能旗標，動態啟用或停用特定功能
-- **灰度發布**：透過組態控制新功能的逐步開放
+### Feature Flags
+- **Dynamic Feature Toggles**: Read feature flags at client startup to dynamically enable or disable specific features
+- **Gradual Rollout**: Control the gradual release of new features through configuration
 
-### 公告訊息
-- **系統公告**：讀取置頂公告內容，在用戶端介面顯示
-- **維護通知**：取得排程維護資訊，提前通知用戶
+### Announcement Messages
+- **System Announcements**: Read pinned announcement content to display in the client interface
+- **Maintenance Notices**: Retrieve scheduled maintenance information to notify users in advance
 
-### 內容審查
-- **審查詞彙**：取得敏感詞列表，用於用戶端訊息過濾
-- **內容政策**：讀取內容政策設定，確保用戶端遵循規範
+### Content Moderation
+- **Censorship Keywords**: Retrieve the sensitive word list for client-side message filtering
+- **Content Policy**: Read content policy settings to ensure client compliance with guidelines
 
 ------
 
-## 注意事項
+## Notes
 
-- **用戶端可讀取**：此端點使用 `IM-CLIENT-KEY` 與 `IM-Authorization` 驗證，用戶端應用程式可直接呼叫
-- **唯讀操作**：此端點僅提供讀取功能，更新設定需使用 `POST /config`（需 `IM-API-KEY`）
-- **動態內容**：回傳的組態內容取決於管理員透過 `POST /config` 設定的項目，不同應用程式的設定可能不同
-- **快取建議**：建議用戶端適當快取組態資料，避免頻繁呼叫此 API
+- **Client Readable**: This endpoint uses `IM-CLIENT-KEY` and `IM-Authorization` for authentication, allowing client applications to call it directly
+- **Read-Only Operation**: This endpoint only provides read functionality; updating settings requires `POST /config` (which needs `IM-API-KEY`)
+- **Dynamic Content**: The returned configuration content depends on items set by the administrator via `POST /config`; different applications may have different settings
+- **Caching Recommendation**: It is recommended that clients cache configuration data appropriately to avoid frequent calls to this API

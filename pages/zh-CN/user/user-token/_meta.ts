@@ -5,7 +5,7 @@ export default {
   },
   "issue-token":
   {
-    title: "核發Token"
+    title: "核发Token"
   },
   "update-token":
   {
@@ -13,7 +13,7 @@ export default {
   },
   "revoke-token":
   {
-    title: "撤銷Token"
+    title: "撤销Token"
   }
 }
 

@@ -1,5 +1,3 @@
 export default {
-  "webhook": {
-    title: "Webhook"
-  }
+  "webhook": { title: "Webhook" }
 }

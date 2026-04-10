@@ -1,16 +1,16 @@
-# 建立聊天室
+# Create a Room
 
-## 概述
+## Overview
 
-此端點允許您在系統中建立新的聊天室，並可同時指定成員。此 API 建立聊天室但不會自動加入呼叫者，適合由後端服務進行聊天室管理。
+This endpoint allows you to create a new room in the system and optionally specify members at the same time. This API creates a room but does not automatically add the caller as a member, making it suitable for room management by backend services.
 
 ------
 
-## API 端點
+## API Endpoint
 
-### 建立聊天室
+### Create a Room
 
-在系統中建立新的聊天室。
+Create a new room in the system.
 
 ```http
 POST /rooms/
@@ -18,31 +18,31 @@ POST /rooms/
 
 #### Headers
 
-| 參數 | 類型 | 必填 | 說明 |
+| Parameter | Type | Required | Description |
 | ---- | ---- | ---- | ---- |
-| `IM-API-KEY` | string | ✅ | 您的平台 API 金鑰 |
+| `IM-API-KEY` | string | ✅ | Your platform API key |
 | `Content-Type` | string | ✅ | `application/json; charset=utf-8` |
 
 #### Post Body
 
-| 參數 | 類型 | 必填 | 說明 |
+| Parameter | Type | Required | Description |
 | ---- | ---- | ---- | ---- |
-| `_id` | string | ❌ | 自訂聊天室 ID，若未指定則自動產生 |
-| `name` | string | ❌ | 聊天室名稱 |
-| `cover` | string | ❌ | 聊天室封面圖片 URL |
-| `roomType` | string | ❌ | 聊天室類型：`"direct"`（一對一）或 `"group"`（群組） |
-| `members` | array[string] | ❌ | 成員用戶端 ID 陣列 |
-| `description` | string | ❌ | 聊天室描述，可為純文字或序列化的 JSON 資料 |
-| `roomTags` | array[string] | ❌ | 聊天室標籤陣列，用於搜尋和分類 |
-| `webhook` | string | ❌ | Webhook 金鑰或 URL |
-| `botMode` | boolean | ❌ | 是否啟用聊天室機器人 |
-| `extParams` | string | ❌ | 擴充自訂參數，格式為 `param1=value1&param2=value2` |
-| `systemMessage` | boolean | ❌ | 是否自動產生系統訊息（如加入成員訊息） |
-| `owner` | string | ❌ | 聊天室擁有者 ID |
+| `_id` | string | ❌ | Custom room ID; auto-generated if not specified |
+| `name` | string | ❌ | Room name |
+| `cover` | string | ❌ | Room cover image URL |
+| `roomType` | string | ❌ | Room type: `"direct"` (one-on-one) or `"group"` (group) |
+| `members` | array[string] | ❌ | Array of member client IDs |
+| `description` | string | ❌ | Room description; can be plain text or serialized JSON data |
+| `roomTags` | array[string] | ❌ | Room tags array for searching and categorization |
+| `webhook` | string | ❌ | Webhook key or URL |
+| `botMode` | boolean | ❌ | Whether to enable room bot |
+| `extParams` | string | ❌ | Extended custom parameters in the format `param1=value1&param2=value2` |
+| `systemMessage` | boolean | ❌ | Whether to automatically generate system messages (e.g., member join messages) |
+| `owner` | string | ❌ | Room owner ID |
 
-#### 範例請求
+#### Example Request
 
-##### 建立一對一聊天室
+##### Create a One-on-One Room
 
 ```javascript
 const response = await axios.post(
@@ -60,7 +60,7 @@ const response = await axios.post(
 );
 ```
 
-##### 建立群組聊天室
+##### Create a Group Room
 
 ```javascript
 const response = await axios.post(
@@ -83,7 +83,7 @@ const response = await axios.post(
 );
 ```
 
-##### cURL 範例
+##### cURL Example
 
 ```bash
 curl -X "POST" "https://your-app.imkit.io/rooms/" \
@@ -99,27 +99,27 @@ curl -X "POST" "https://your-app.imkit.io/rooms/" \
 
 #### Response
 
-**成功回應（200 OK）**
+**Success Response (200 OK)**
 
-| 參數 | 類型 | 說明 |
+| Parameter | Type | Description |
 | ---- | ---- | ---- |
-| `RC` | number | 回應代碼（0 表示成功） |
-| `RM` | string | 回應訊息 |
-| `result` | object | 建立的聊天室資訊 |
+| `RC` | number | Response code (0 indicates success) |
+| `RM` | string | Response message |
+| `result` | object | Created room information |
 
-**聊天室物件欄位**
+**Room Object Fields**
 
-| 參數 | 類型 | 說明 |
+| Parameter | Type | Description |
 | ---- | ---- | ---- |
-| `_id` | string | 聊天室唯一識別碼 |
-| `name` | string | 聊天室名稱 |
-| `cover` | string | 聊天室封面圖片 URL |
-| `roomType` | string | 聊天室類型（`"direct"` 或 `"group"`） |
-| `members` | array[string] | 成員 ID 陣列 |
-| `roomTags` | array[string] | 聊天室標籤陣列 |
-| `appID` | string | 應用程式識別碼 |
+| `_id` | string | Room unique identifier |
+| `name` | string | Room name |
+| `cover` | string | Room cover image URL |
+| `roomType` | string | Room type (`"direct"` or `"group"`) |
+| `members` | array[string] | Member ID array |
+| `roomTags` | array[string] | Room tags array |
+| `appID` | string | Application identifier |
 
-#### 範例回應
+#### Example Response
 
 ```json
 {
@@ -137,33 +137,33 @@ curl -X "POST" "https://your-app.imkit.io/rooms/" \
 }
 ```
 
-#### 錯誤回應
+#### Error Response
 
-當請求失敗時，您會收到包含錯誤詳細資訊的錯誤回應。常見的錯誤情況包括：
+When a request fails, you will receive an error response containing error details. Common error scenarios include:
 
-- **無效的 API 金鑰** — 提供的 `IM-API-KEY` 無效或已過期
-- **無效的聊天室類型** — `roomType` 不是 `"direct"` 或 `"group"`
-- **成員不存在** — `members` 中包含不存在的用戶 ID
-- **伺服器內部錯誤** — 伺服器端發生未預期的錯誤
-
-------
-
-## 使用場景
-
-### 用戶配對
-- **一對一客服聊天**：當用戶發起客服請求時，後端建立 `direct` 聊天室，將用戶和客服人員加入
-- **訂單對談**：當訂單成立時，自動建立買賣雙方的一對一聊天室
-
-### 群組管理
-- **專案群組**：為特定專案建立群組聊天室，加入相關成員
-- **活動群組**：為活動或課程建立群組，統一管理參與者
+- **Invalid API key** — The provided `IM-API-KEY` is invalid or expired
+- **Invalid room type** — `roomType` is not `"direct"` or `"group"`
+- **Member does not exist** — `members` contains a non-existent user ID
+- **Internal server error** — An unexpected error occurred on the server side
 
 ------
 
-## 注意事項
+## Use Cases
 
-- **不自動加入**：此 API 建立聊天室但呼叫者不會自動加入，適合由後端服務管理
-- **聊天室 ID**：若未指定 `_id`，系統會自動產生唯一識別碼
-- **成員管理**：可在建立時透過 `members` 直接指定成員，或之後透過「新增成員」API 加入
-- **標籤用途**：`roomTags` 可用於後續的聊天室搜尋和分類功能
-- **時間戳格式**：所有時間戳均為 UTC 格式，以毫秒為單位
+### User Matching
+- **One-on-one customer service chat**: When a user initiates a support request, the backend creates a `direct` room and adds both the user and the support agent
+- **Order conversation**: When an order is placed, a one-on-one room is automatically created for the buyer and seller
+
+### Group Management
+- **Project groups**: Create a group room for a specific project and add relevant members
+- **Event groups**: Create groups for events or courses to manage participants collectively
+
+------
+
+## Notes
+
+- **No auto-join**: This API creates a room but the caller is not automatically added as a member, making it suitable for backend service management
+- **Room ID**: If `_id` is not specified, the system will automatically generate a unique identifier
+- **Member management**: Members can be specified directly via `members` at creation time, or added later using the "Add a Member" API
+- **Tag usage**: `roomTags` can be used for subsequent room search and categorization features
+- **Timestamp format**: All timestamps are in UTC format, measured in milliseconds

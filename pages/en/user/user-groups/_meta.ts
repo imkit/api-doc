@@ -1,8 +1,4 @@
 export default {
-  "create-group": {
-    title: "建立用戶群組"
-  },
-  "list-groups": {
-    title: "用戶群組列表"
-  }
+  "create-group": { title: "Create Group" },
+  "list-groups": { title: "List Groups" }
 }

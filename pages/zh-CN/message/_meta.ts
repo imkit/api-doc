@@ -1,10 +1,10 @@
 export default {
   "message-basic": 
   {
-    title: "訊息功能"
+    title: "讯息功能"
   },
   "message-badge": 
   {
-    title: "未讀計算"
+    title: "未读计算"
   }
 }

@@ -2,15 +2,15 @@
 
 ## 概述
 
-更新現有聊天室的資訊和設定。此 API 允許修改聊天室的基本資訊、權限設定、管理員配置等。僅限聊天室的擁有者、管理員或平台管理員使用。
+更新现有聊天室的资讯和设定。此 API 允许修改聊天室的基本资讯、权限设定、管理员配置等。仅限聊天室的拥有者、管理员或平台管理员使用。
 
 ------
 
-## API 端點
+## API 端点
 
-### 更新聊天室資訊
+### 更新聊天室资讯
 
-修改指定聊天室的屬性和設定。
+修改指定聊天室的属性和设定。
 
 ```http
 PUT /rooms/{id}
@@ -18,34 +18,34 @@ PUT /rooms/{id}
 
 #### Headers
 
-| 參數            | 類型   | 必填 | 說明           |
+| 参数            | 类型   | 必填 | 说明           |
 | --------------- | ------ | ---- | -------------- |
 | `IM-CLIENT-KEY` | string | ✅    | Client Key     |
 | `IM-Authorization` | string | ✅    | Client Token   |
 
 #### Path Parameters
 
-| 參數 | 類型   | 必填 | 說明        |
+| 参数 | 类型   | 必填 | 说明        |
 | ---- | ------ | ---- | ----------- |
 | `id` | string | ✅    | 聊天室 ID   |
 
 #### Request Body
 
-| 參數          | 類型    | 必填 | 說明                                                      |
+| 参数          | 类型    | 必填 | 说明                                                      |
 | ------------- | ------- | ---- | --------------------------------------------------------- |
-| `name`        | string  | ❌    | 聊天室名稱                                                |
-| `cover`       | string  | ❌    | 聊天室封面圖片 URL                                        |
+| `name`        | string  | ❌    | 聊天室名称                                                |
+| `cover`       | string  | ❌    | 聊天室封面图片 URL                                        |
 | `description` | string  | ❌    | 聊天室描述                                                |
-| `roomTags`    | array   | ❌    | 共享聊天室標籤陣列                                        |
-| `webhook`     | string  | ❌    | Webhook 金鑰或 URL                                        |
-| `botMode`     | boolean | ❌    | 是否啟用聊天室機器人                                      |
-| `extParams`   | string  | ❌    | 擴展自訂參數，格式：param1=value1&param2=value2&...      |
-| `opening`     | number  | ❌    | 開放狀態：0=關閉加入或邀請，1=開放加入和邀請              |
-| `owner`       | string  | ❌    | 新的擁有者客戶端 ID（限平台管理員或聊天室超級用戶）       |
-| `managers`    | array   | ❌    | 管理員客戶端 ID 陣列（限平台管理員或聊天室超級用戶）      |
-| `status`      | number  | ❌    | 聊天室狀態：0=無效，1=有效                                |
+| `roomTags`    | array   | ❌    | 共享聊天室标签阵列                                        |
+| `webhook`     | string  | ❌    | Webhook 金钥或 URL                                        |
+| `botMode`     | boolean | ❌    | 是否启用聊天室机器人                                      |
+| `extParams`   | string  | ❌    | 扩展自订参数，格式：param1=value1&param2=value2&...      |
+| `opening`     | number  | ❌    | 开放状态：0=关闭加入或邀请，1=开放加入和邀请              |
+| `owner`       | string  | ❌    | 新的拥有者客户端 ID（限平台管理员或聊天室超级用户）       |
+| `managers`    | array   | ❌    | 管理员客户端 ID 阵列（限平台管理员或聊天室超级用户）      |
+| `status`      | number  | ❌    | 聊天室状态：0=无效，1=有效                                |
 
-#### 範例請求
+#### 范例请求
 
 ```http
 PUT /rooms/58871b877390be11d5f1ab30 HTTP/1.1
@@ -62,7 +62,7 @@ Connection: close
 }
 ```
 
-**JavaScript 範例：**
+**JavaScript 范例：**
 
 ```javascript
 const response = await axios.put(
@@ -82,7 +82,7 @@ const response = await axios.put(
 );
 ```
 
-**cURL 範例：**
+**cURL 范例：**
 
 ```bash
 curl -X "PUT" "https://your-app.imkit.io/rooms/58871b877390be11d5f1ab30" \
@@ -94,27 +94,27 @@ curl -X "PUT" "https://your-app.imkit.io/rooms/58871b877390be11d5f1ab30" \
 
 #### Response
 
-**成功回應（200 OK）**
+**成功回应（200 OK）**
 
-| 參數     | 類型   | 說明                   |
+| 参数     | 类型   | 说明                   |
 | -------- | ------ | ---------------------- |
-| `RC`     | number | 回應代碼（0 表示成功） |
-| `RM`     | string | 回應訊息               |
-| `result` | object | 更新後的聊天室資料     |
+| `RC`     | number | 回应代码（0 表示成功） |
+| `RM`     | string | 回应讯息               |
+| `result` | object | 更新后的聊天室资料     |
 
-**聊天室物件結構**
+**聊天室物件结构**
 
-| 參數            | 類型   | 說明                      |
+| 参数            | 类型   | 说明                      |
 | --------------- | ------ | ------------------------- |
-| `_id`           | string | 聊天室唯一識別碼          |
-| `name`          | string | 聊天室名稱                |
-| `cover`         | string | 聊天室封面圖片 URL        |
+| `_id`           | string | 聊天室唯一识别码          |
+| `name`          | string | 聊天室名称                |
+| `cover`         | string | 聊天室封面图片 URL        |
 | `description`   | string | 聊天室描述                |
-| `status`        | number | 聊天室狀態                |
-| `lastMessage`   | object | 最後一則訊息資訊          |
-| `members`       | array  | 聊天室成員列表            |
+| `status`        | number | 聊天室状态                |
+| `lastMessage`   | object | 最后一则讯息资讯          |
+| `members`       | array  | 聊天室成员列表            |
 
-#### 範例回應
+#### 范例回应
 
 ```json
 {
@@ -150,9 +150,9 @@ curl -X "PUT" "https://your-app.imkit.io/rooms/58871b877390be11d5f1ab30" \
 }
 ```
 
-#### 錯誤回應
+#### 错误回应
 
-**401 Unauthorized** - 認證失敗
+**401 Unauthorized** - 认证失败
 
 ```json
 {
@@ -165,7 +165,7 @@ curl -X "PUT" "https://your-app.imkit.io/rooms/58871b877390be11d5f1ab30" \
 }
 ```
 
-**403 Forbidden** - 權限不足
+**403 Forbidden** - 权限不足
 
 ```json
 {
@@ -193,29 +193,29 @@ curl -X "PUT" "https://your-app.imkit.io/rooms/58871b877390be11d5f1ab30" \
 
 ------
 
-## 使用場景
+## 使用场景
 
 ### 聊天室管理
-- **基本資訊維護**：更新聊天室名稱、描述、封面圖片
-- **權限管理**：調整聊天室開放狀態和管理員配置
-- **功能設定**：啟用或停用機器人模式
+- **基本资讯维护**：更新聊天室名称、描述、封面图片
+- **权限管理**：调整聊天室开放状态和管理员配置
+- **功能设定**：启用或停用机器人模式
 
-### 管理後台
-- **批量管理**：透過管理介面批量更新聊天室設定
-- **內容審核**：修改不當的聊天室資訊
-- **所有權轉移**：將聊天室擁有權轉移給其他用戶
+### 管理后台
+- **批量管理**：透过管理介面批量更新聊天室设定
+- **内容审核**：修改不当的聊天室资讯
+- **所有权转移**：将聊天室拥有权转移给其他用户
 
-### 系統整合
-- **Webhook 配置**：設定聊天室的 Webhook 接收端點
-- **擴展參數**：透過 extParams 整合第三方系統
-- **狀態管理**：啟用或停用特定聊天室
+### 系统整合
+- **Webhook 配置**：设定聊天室的 Webhook 接收端点
+- **扩展参数**：透过 extParams 整合第三方系统
+- **状态管理**：启用或停用特定聊天室
 
 ------
 
-## 注意事項
+## 注意事项
 
-- **權限限制**：僅聊天室擁有者、管理員或平台管理員可執行更新
-- **所有權轉移**：更改 owner 和 managers 需要更高權限
-- **參數驗證**：所有參數都是選擇性的，只更新提供的欄位
-- **狀態影響**：設定 status=0 會讓聊天室變為無效狀態
-- **開放設定**：opening 參數影響新用戶是否能加入聊天室
+- **权限限制**：仅聊天室拥有者、管理员或平台管理员可执行更新
+- **所有权转移**：更改 owner 和 managers 需要更高权限
+- **参数验证**：所有参数都是选择性的，只更新提供的栏位
+- **状态影响**：设定 status=0 会让聊天室变为无效状态
+- **开放设定**：opening 参数影响新用户是否能加入聊天室

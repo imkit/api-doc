@@ -1,5 +1,3 @@
 export default {
-  "push-to-clients": {
-    title: "推播通知至用戶"
-  }
+  "push-to-clients": { title: "Push to Clients" }
 }

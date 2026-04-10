@@ -1,16 +1,16 @@
-# 取得聊天室訊息
+# Get Messages by Room
 
-## 概述
+## Overview
 
-取得指定聊天室的訊息歷史記錄，支援時間範圍篩選和分頁查詢。此 API 與[訊息列表](/zh-TW/message/message-basic/list-messages)使用相同端點 `GET /rooms/{id}/messages/v3`，本頁聚焦於常見的查詢情境與範例。
+Retrieve the message history of a specified chatroom, with support for time range filtering and pagination. This API uses the same endpoint `GET /rooms/{id}/messages/v3` as [List Messages](/en/message/message-basic/list-messages). This page focuses on common query scenarios and examples.
 
 ------
 
-## API 端點
+## API Endpoint
 
-### 取得聊天室所有訊息
+### Get All Messages in a Chatroom
 
-獲取指定聊天室中的訊息記錄，支援分頁和時間篩選。
+Retrieve message records from a specified chatroom, with support for pagination and time filtering.
 
 ```http
 GET /rooms/{id}/messages/v3
@@ -18,30 +18,30 @@ GET /rooms/{id}/messages/v3
 
 #### Headers
 
-| 參數               | 類型   | 必填 | 說明           |
-| ------------------ | ------ | ---- | -------------- |
-| `IM-CLIENT-KEY`    | string | ✅    | Client Key     |
-| `IM-Authorization` | string | ✅    | Client Token   |
+| Parameter          | Type   | Required | Description    |
+| ------------------ | ------ | -------- | -------------- |
+| `IM-CLIENT-KEY`    | string | ✅        | Client Key     |
+| `IM-Authorization` | string | ✅        | Client Token   |
 
 #### Path Parameters
 
-| 參數 | 類型   | 必填 | 說明        |
-| ---- | ------ | ---- | ----------- |
-| `id` | string | ✅    | 聊天室 ID   |
+| Parameter | Type   | Required | Description   |
+| --------- | ------ | -------- | ------------- |
+| `id`      | string | ✅        | Chatroom ID   |
 
 #### Query Parameters
 
-| 參數               | 類型   | 必填 | 說明                                                    |
-| ------------------ | ------ | ---- | ------------------------------------------------------- |
-| `limit`            | number | ❌    | 回傳訊息的最大數量（預設：20，建議 50-100）             |
-| `beforeMessage`    | string | ❌    | 查詢指定訊息 ID 之前的訊息（用於向前分頁）              |
-| `afterMessage`     | string | ❌    | 查詢指定訊息 ID 之後的訊息（用於向後分頁）              |
-| `afterTime`        | string | ❌    | 查詢指定時間之後的訊息（ISO-8601 或毫秒時間戳格式）     |
-| `timeRangeField`   | string | ❌    | 時間範圍查詢的欄位：updatedAt, createdAt, messageTime（預設：updatedAt） |
+| Parameter          | Type   | Required | Description                                                         |
+| ------------------ | ------ | -------- | ------------------------------------------------------------------- |
+| `limit`            | number | ❌        | Maximum number of messages to return (default: 20, recommended 50-100) |
+| `beforeMessage`    | string | ❌        | Retrieve messages before the specified message ID (for backward pagination) |
+| `afterMessage`     | string | ❌        | Retrieve messages after the specified message ID (for forward pagination) |
+| `afterTime`        | string | ❌        | Retrieve messages after the specified time (ISO-8601 or millisecond timestamp format) |
+| `timeRangeField`   | string | ❌        | Field used for time range queries: updatedAt, createdAt, messageTime (default: updatedAt) |
 
-#### 範例請求
+#### Example Request
 
-**取得聊天室最新訊息**
+**Get latest messages in a chatroom**
 
 ```http
 GET /rooms/demo-room/messages/v3?limit=50 HTTP/1.1
@@ -51,7 +51,7 @@ Host: your-app.imkit.io
 Connection: close
 ```
 
-**取得歷史訊息（分頁）**
+**Get historical messages (pagination)**
 
 ```http
 GET /rooms/demo-room/messages/v3?limit=50&beforeMessage=5f890cf37d980e06f6aaf349 HTTP/1.1
@@ -61,7 +61,7 @@ Host: your-app.imkit.io
 Connection: close
 ```
 
-**取得特定時間後的訊息**
+**Get messages after a specific time**
 
 ```http
 GET /rooms/demo-room/messages/v3?afterTime=2024-01-01T00:00:00Z&limit=100 HTTP/1.1
@@ -71,7 +71,7 @@ Host: your-app.imkit.io
 Connection: close
 ```
 
-**JavaScript 範例：**
+**JavaScript Example:**
 
 ```javascript
 const response = await axios.get(
@@ -88,7 +88,7 @@ const response = await axios.get(
 );
 ```
 
-**cURL 範例：**
+**cURL Example:**
 
 ```bash
 curl -X "GET" "https://your-app.imkit.io/rooms/demo-room/messages/v3?limit=50" \
@@ -98,39 +98,39 @@ curl -X "GET" "https://your-app.imkit.io/rooms/demo-room/messages/v3?limit=50" \
 
 #### Response
 
-**成功回應（200 OK）**
+**Success Response (200 OK)**
 
-| 參數     | 類型   | 說明                   |
-| -------- | ------ | ---------------------- |
-| `RC`     | number | 回應代碼（0 表示成功） |
-| `RM`     | string | 回應訊息               |
-| `result` | object | 訊息查詢結果           |
+| Parameter | Type   | Description                         |
+| --------- | ------ | ----------------------------------- |
+| `RC`      | number | Response code (0 indicates success) |
+| `RM`      | string | Response message                    |
+| `result`  | object | Message query results               |
 
-**查詢結果結構**
+**Query Result Structure**
 
-| 參數               | 類型   | 說明                                    |
-| ------------------ | ------ | --------------------------------------- |
-| `totalCount`       | number | 聊天室中的訊息總數                      |
-| `data`             | array  | 訊息陣列（按時間順序排列）              |
-| `userDeletedIDs`   | array  | 當前用戶已刪除的訊息 ID 陣列            |
-| `inspect`          | object | 診斷資訊（包含查詢條件和執行時間）      |
+| Parameter          | Type   | Description                                        |
+| ------------------ | ------ | -------------------------------------------------- |
+| `totalCount`       | number | Total number of messages in the chatroom           |
+| `data`             | array  | Message array (sorted by time)                     |
+| `userDeletedIDs`   | array  | Array of message IDs deleted by the current user   |
+| `inspect`          | object | Diagnostic information (includes query conditions and execution time) |
 
-**訊息物件結構**
+**Message Object Structure**
 
-| 參數             | 類型    | 說明                          |
-| ---------------- | ------- | ----------------------------- |
-| `_id`            | string  | 訊息唯一識別碼                |
-| `message`        | any     | 訊息內容                      |
-| `room`           | string  | 所屬聊天室 ID                 |
-| `sender`         | object  | 發送者資訊                    |
-| `messageType`    | string  | 訊息類型                      |
-| `messageTimeMS`  | number  | 訊息發送時間（毫秒時間戳）    |
-| `updatedAtMS`    | number  | 訊息更新時間（毫秒時間戳）    |
-| `createdAtMS`    | number  | 訊息建立時間（毫秒時間戳）    |
-| `reactions`      | array   | 訊息反應列表                  |
-| `reactionCount`  | number  | 反應總數                      |
+| Parameter        | Type    | Description                              |
+| ---------------- | ------- | ---------------------------------------- |
+| `_id`            | string  | Message unique ID                        |
+| `message`        | any     | Message content                          |
+| `room`           | string  | Associated chatroom ID                   |
+| `sender`         | object  | Sender information                       |
+| `messageType`    | string  | Message type                             |
+| `messageTimeMS`  | number  | Message sent time (millisecond timestamp) |
+| `updatedAtMS`    | number  | Message updated time (millisecond timestamp) |
+| `createdAtMS`    | number  | Message created time (millisecond timestamp) |
+| `reactions`      | array   | Message reaction list                    |
+| `reactionCount`  | number  | Total number of reactions                |
 
-#### 範例回應
+#### Example Response
 
 ```json
 {
@@ -172,9 +172,9 @@ curl -X "GET" "https://your-app.imkit.io/rooms/demo-room/messages/v3?limit=50" \
 }
 ```
 
-#### 錯誤回應
+#### Error Response
 
-**401 Unauthorized** - 認證失敗
+**401 Unauthorized** - Authentication failed
 
 ```json
 {
@@ -187,7 +187,7 @@ curl -X "GET" "https://your-app.imkit.io/rooms/demo-room/messages/v3?limit=50" \
 }
 ```
 
-**403 Forbidden** - 權限不足
+**403 Forbidden** - Insufficient permissions
 
 ```json
 {
@@ -200,7 +200,7 @@ curl -X "GET" "https://your-app.imkit.io/rooms/demo-room/messages/v3?limit=50" \
 }
 ```
 
-**404 Not Found** - 聊天室不存在
+**404 Not Found** - Chatroom does not exist
 
 ```json
 {
@@ -215,30 +215,30 @@ curl -X "GET" "https://your-app.imkit.io/rooms/demo-room/messages/v3?limit=50" \
 
 ------
 
-## 使用場景
+## Use Cases
 
-### 聊天室載入
-- **初始載入**：用戶進入聊天室時載入最新訊息
-- **歷史瀏覽**：用戶向上滑動查看更早的訊息記錄
-- **重新整理**：重新載入聊天室的完整對話內容
+### Chatroom Loading
+- **Initial Load**: Load the latest messages when a user enters a chatroom
+- **History Browsing**: User scrolls up to view earlier message history
+- **Refresh**: Reload the complete conversation content of a chatroom
 
-### 訊息同步
-- **離線同步**：用戶重新上線時同步錯過的訊息
-- **跨設備同步**：在多個設備間保持訊息一致性
-- **備份恢復**：從備份中恢復聊天室的完整記錄
+### Message Synchronization
+- **Offline Sync**: Sync missed messages when a user comes back online
+- **Cross-Device Sync**: Maintain message consistency across multiple devices
+- **Backup Recovery**: Restore a chatroom's complete history from a backup
 
-### 內容分析
-- **對話分析**：分析聊天室中的對話模式和熱門話題
-- **活躍度統計**：統計聊天室的訊息量和用戶參與度
-- **內容審核**：審核聊天室中的所有對話內容
+### Content Analysis
+- **Conversation Analysis**: Analyze conversation patterns and trending topics in chatrooms
+- **Activity Statistics**: Track the message volume and user engagement in chatrooms
+- **Content Moderation**: Review all conversation content in a chatroom
 
 ------
 
-## 注意事項
+## Notes
 
-- **權限要求**：只有聊天室成員才能獲取訊息內容
-- **分頁建議**：建議使用適當的 limit 值（20-100）避免一次載入過多資料
-- **時間排序**：訊息按 updatedAt 時間排序，最新訊息在前
-- **刪除處理**：userDeletedIDs 陣列包含當前用戶已刪除的訊息，需在 UI 中過濾
-- **效能最佳化**：大型聊天室建議使用時間範圍限制以提升查詢效能
-- **即時更新**：此 API 適用於批量載入，即時訊息建議使用 WebSocket 連線
+- **Permission Requirement**: Only chatroom members can retrieve message content
+- **Pagination Recommendation**: Use an appropriate limit value (20-100) to avoid loading too much data at once
+- **Time Ordering**: Messages are sorted by updatedAt time, with the latest messages first
+- **Deletion Handling**: The userDeletedIDs array contains messages deleted by the current user and should be filtered in the UI
+- **Performance Optimization**: For large chatrooms, it is recommended to use time range restrictions to improve query performance
+- **Real-Time Updates**: This API is suitable for batch loading; for real-time messages, use a WebSocket connection

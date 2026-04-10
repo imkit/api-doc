@@ -1,8 +1,8 @@
 export default {
   "connection-count": {
-    title: "取得連線數"
+    title: "取得连线数"
   },
   "stats": {
-    title: "統計報告"
+    title: "统计报告"
   }
 }

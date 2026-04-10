@@ -1,19 +1,6 @@
 export default {
-  "assign-token": 
-  {
-    title: "指派Token"
-  },
-  "issue-token":
-  {
-    title: "核發Token"
-  },
-  "update-token":
-  {
-    title: "更新Token"
-  },
-  "revoke-token":
-  {
-    title: "撤銷Token"
-  }
+  "assign-token": { title: "Assign Token" },
+  "issue-token": { title: "Issue Token" },
+  "update-token": { title: "Update Token" },
+  "revoke-token": { title: "Revoke Token" }
 }
-

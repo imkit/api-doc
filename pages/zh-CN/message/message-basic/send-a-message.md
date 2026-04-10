@@ -1,16 +1,16 @@
-# 發送訊息
+# 发送讯息
 
 ## 概述
 
-透過平台管理 API 向指定聊天室發送訊息。可指定發送者身分，適用於系統通知、機器人訊息、後端自動化等場景。
+透过平台管理 API 向指定聊天室发送讯息。可指定发送者身分，适用于系统通知、机器人讯息、后端自动化等场景。
 
 ------
 
-## API 端點
+## API 端点
 
-### 發送聊天室訊息
+### 发送聊天室讯息
 
-以指定發送者的身分，向指定聊天室發送訊息。
+以指定发送者的身分，向指定聊天室发送讯息。
 
 ```http
 POST /messages
@@ -18,26 +18,26 @@ POST /messages
 
 #### Headers
 
-| 參數 | 類型 | 必填 | 說明 |
+| 参数 | 类型 | 必填 | 说明 |
 | ---- | ---- | ---- | ---- |
-| `IM-API-KEY` | string | ✅ | 您的平台 API 金鑰 |
+| `IM-API-KEY` | string | ✅ | 您的平台 API 金钥 |
 | `Content-Type` | string | ✅ | `application/json; charset=utf-8` |
 
 #### Post Body
 
-| 參數 | 類型 | 必填 | 說明 |
+| 参数 | 类型 | 必填 | 说明 |
 | ---- | ---- | ---- | ---- |
-| `message` | string | ✅ | 訊息內容 |
-| `messageType` | string | ✅ | 訊息類型（如 `"text"`、`"image"`、`"announcement"` 等） |
+| `message` | string | ✅ | 讯息内容 |
+| `messageType` | string | ✅ | 讯息类型（如 `"text"`、`"image"`、`"announcement"` 等） |
 | `room` | string | ✅ | 聊天室 ID |
-| `sender` | string | ✅ | 發送者用戶 ID |
-| `push` | boolean | ❌ | 是否推播通知給聊天室成員，預設為 `true` |
-| `skipTotalBadge` | boolean | ❌ | 是否跳過計算發送者的總未讀數，預設為 `false` |
-| `mentions` | array[string] | ❌ | 提及的用戶 ID 陣列 |
+| `sender` | string | ✅ | 发送者用户 ID |
+| `push` | boolean | ❌ | 是否推播通知给聊天室成员，预设为 `true` |
+| `skipTotalBadge` | boolean | ❌ | 是否跳过计算发送者的总未读数，预设为 `false` |
+| `mentions` | array[string] | ❌ | 提及的用户 ID 阵列 |
 
-#### 範例請求
+#### 范例请求
 
-**發送文字訊息**
+**发送文字讯息**
 
 ```javascript
 const response = await axios.post(
@@ -45,7 +45,7 @@ const response = await axios.post(
   {
     room: "project-room-001",
     sender: "system",
-    message: "歡迎加入專案討論群！",
+    message: "欢迎加入专案讨论群！",
     messageType: "text",
   },
   {
@@ -57,7 +57,7 @@ const response = await axios.post(
 );
 ```
 
-**發送公告訊息**
+**发送公告讯息**
 
 ```javascript
 const response = await axios.post(
@@ -65,7 +65,7 @@ const response = await axios.post(
   {
     room: "project-room-001",
     sender: "admin",
-    message: "系統將於今晚 22:00 進行維護",
+    message: "系统将于今晚 22:00 进行维护",
     messageType: "announcement",
   },
   {
@@ -77,7 +77,7 @@ const response = await axios.post(
 );
 ```
 
-**發送帶提及的訊息**
+**发送带提及的讯息**
 
 ```javascript
 const response = await axios.post(
@@ -85,7 +85,7 @@ const response = await axios.post(
   {
     room: "project-room-001",
     sender: "user-a",
-    message: "請 @user-b 確認這份文件",
+    message: "请 @user-b 确认这份文件",
     messageType: "text",
     mentions: ["user-b"],
   },
@@ -98,7 +98,7 @@ const response = await axios.post(
 );
 ```
 
-**發送訊息但不推播**
+**发送讯息但不推播**
 
 ```javascript
 const response = await axios.post(
@@ -106,7 +106,7 @@ const response = await axios.post(
   {
     room: "project-room-001",
     sender: "system",
-    message: "背景任務完成",
+    message: "背景任务完成",
     messageType: "text",
     push: false,
   },
@@ -119,7 +119,7 @@ const response = await axios.post(
 );
 ```
 
-##### cURL 範例
+##### cURL 范例
 
 ```bash
 curl -X "POST" "https://your-app.imkit.io/messages" \
@@ -128,36 +128,36 @@ curl -X "POST" "https://your-app.imkit.io/messages" \
      -d $'{
   "room": "project-room-001",
   "sender": "system",
-  "message": "歡迎加入！",
+  "message": "欢迎加入！",
   "messageType": "text"
 }'
 ```
 
 #### Response
 
-**成功回應（200 OK）**
+**成功回应（200 OK）**
 
-| 參數 | 類型 | 說明 |
+| 参数 | 类型 | 说明 |
 | ---- | ---- | ---- |
-| `RC` | number | 回應代碼（0 表示成功） |
-| `RM` | string | 回應訊息 |
-| `result` | object | 發送的訊息資料 |
+| `RC` | number | 回应代码（0 表示成功） |
+| `RM` | string | 回应讯息 |
+| `result` | object | 发送的讯息资料 |
 
-**訊息物件結構**
+**讯息物件结构**
 
-| 參數 | 類型 | 說明 |
+| 参数 | 类型 | 说明 |
 | ---- | ---- | ---- |
-| `_id` | string | 訊息唯一識別碼 |
-| `room` | string | 所屬聊天室 ID |
-| `message` | any | 訊息內容 |
-| `messageType` | string | 訊息類型 |
-| `sender` | string | 發送者 ID |
-| `appID` | string | 應用程式識別碼 |
-| `messageTimeMS` | number | 訊息發送時間（毫秒時間戳） |
-| `updatedAtMS` | number | 訊息更新時間（毫秒時間戳） |
-| `createdAtMS` | number | 訊息建立時間（毫秒時間戳） |
+| `_id` | string | 讯息唯一识别码 |
+| `room` | string | 所属聊天室 ID |
+| `message` | any | 讯息内容 |
+| `messageType` | string | 讯息类型 |
+| `sender` | string | 发送者 ID |
+| `appID` | string | 应用程式识别码 |
+| `messageTimeMS` | number | 讯息发送时间（毫秒时间戳） |
+| `updatedAtMS` | number | 讯息更新时间（毫秒时间戳） |
+| `createdAtMS` | number | 讯息建立时间（毫秒时间戳） |
 
-#### 範例回應
+#### 范例回应
 
 ```json
 {
@@ -166,7 +166,7 @@ curl -X "POST" "https://your-app.imkit.io/messages" \
   "result": {
     "_id": "58bf8f1dc3b24c04d19d9add",
     "room": "project-room-001",
-    "message": "歡迎加入專案討論群！",
+    "message": "欢迎加入专案讨论群！",
     "messageType": "text",
     "sender": "system",
     "appID": "SampleApp",
@@ -177,9 +177,9 @@ curl -X "POST" "https://your-app.imkit.io/messages" \
 }
 ```
 
-#### 錯誤回應
+#### 错误回应
 
-**401 Unauthorized** — 認證失敗
+**401 Unauthorized** — 认证失败
 
 ```json
 {
@@ -207,26 +207,26 @@ curl -X "POST" "https://your-app.imkit.io/messages" \
 
 ------
 
-## 使用場景
+## 使用场景
 
-### 系統通知
-- **系統公告**：由後端服務自動發送系統公告或維護通知
-- **狀態更新**：訂單狀態變更時自動通知相關用戶
+### 系统通知
+- **系统公告**：由后端服务自动发送系统公告或维护通知
+- **状态更新**：订单状态变更时自动通知相关用户
 
-### 機器人訊息
-- **自動回覆**：透過 API 實現聊天機器人功能
-- **智能助手**：搭配 Webhook 接收訊息並回覆
+### 机器人讯息
+- **自动回复**：透过 API 实现聊天机器人功能
+- **智能助手**：搭配 Webhook 接收讯息并回复
 
-### 應用整合
-- **第三方整合**：將外部系統的事件以訊息形式發送到聊天室
-- **工作流程**：在業務流程的關鍵節點插入聊天室通知
+### 应用整合
+- **第三方整合**：将外部系统的事件以讯息形式发送到聊天室
+- **工作流程**：在业务流程的关键节点插入聊天室通知
 
 ------
 
-## 注意事項
+## 注意事项
 
-- **發送者身分**：`sender` 必須為系統中已存在的用戶 ID
-- **推播控制**：透過 `push` 參數控制是否推播，適合靜默通知場景
-- **訊息類型**：`messageType` 為自訂欄位，可根據應用需求設定任意類型
-- **提及功能**：`mentions` 陣列中的用戶 ID 會收到提及通知
-- **與 Socket 的區別**：此 API 適用於後端服務發送訊息，一般用戶聊天由 SDK 透過 Socket 連線處理
+- **发送者身分**：`sender` 必须为系统中已存在的用户 ID
+- **推播控制**：透过 `push` 参数控制是否推播，适合静默通知场景
+- **讯息类型**：`messageType` 为自订栏位，可根据应用需求设定任意类型
+- **提及功能**：`mentions` 阵列中的用户 ID 会收到提及通知
+- **与 Socket 的区别**：此 API 适用于后端服务发送讯息，一般用户聊天由 SDK 透过 Socket 连线处理

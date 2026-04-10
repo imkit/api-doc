@@ -1,14 +1,14 @@
 export default {
   "user-management": {
-    title: "用戶管理"
+    title: "用户管理"
   },
   "user-list": {
-    title: "用戶列表"
+    title: "用户列表"
   },
   "user-token": {
-    title: "用戶Token"
+    title: "用户Token"
   },
   "user-groups": {
-    title: "用戶群組"
+    title: "用户群组"
   }
 }

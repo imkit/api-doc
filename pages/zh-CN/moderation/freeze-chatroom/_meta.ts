@@ -1,6 +1,6 @@
 export default {
   "freeze-a-chatroom": {
-    title: "凍結聊天室"
+    title: "冻结聊天室"
   }
 }
 

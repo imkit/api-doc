@@ -1,16 +1,16 @@
-# 獲取用戶資訊
+# 获取用户资讯
 
 ## 概述
 
-取得目前已登入用戶的詳細資訊。此 API 可用於獲取當前認證用戶的個人資料、登入狀態和其他相關資訊。
+取得目前已登入用户的详细资讯。此 API 可用于获取当前认证用户的个人资料、登入状态和其他相关资讯。
 
 ------
 
-## API 端點
+## API 端点
 
-### 獲取當前用戶資訊
+### 获取当前用户资讯
 
-取得目前已登入用戶的完整資料。
+取得目前已登入用户的完整资料。
 
 ```http
 GET /me
@@ -18,12 +18,12 @@ GET /me
 
 #### Headers
 
-| 參數            | 類型   | 必填 | 說明           |
+| 参数            | 类型   | 必填 | 说明           |
 | --------------- | ------ | ---- | -------------- |
 | `IM-CLIENT-KEY` | string | ✅    | Client Key     |
 | `IM-Authorization` | string | ✅    | Client Token   |
 
-#### 範例請求
+#### 范例请求
 
 ```http
 GET /me HTTP/1.1
@@ -33,7 +33,7 @@ Host: your-app.imkit.io
 Connection: close
 ```
 
-**JavaScript 範例：**
+**JavaScript 范例：**
 
 ```javascript
 const response = await axios.get(
@@ -47,7 +47,7 @@ const response = await axios.get(
 );
 ```
 
-**cURL 範例：**
+**cURL 范例：**
 
 ```bash
 curl -X "GET" "https://your-app.imkit.io/me" \
@@ -57,29 +57,29 @@ curl -X "GET" "https://your-app.imkit.io/me" \
 
 #### Response
 
-**成功回應（200 OK）**
+**成功回应（200 OK）**
 
-| 參數     | 類型   | 說明                   |
+| 参数     | 类型   | 说明                   |
 | -------- | ------ | ---------------------- |
-| `RC`     | number | 回應代碼（0 表示成功） |
-| `RM`     | string | 回應訊息               |
-| `result` | object | 用戶詳細資訊           |
+| `RC`     | number | 回应代码（0 表示成功） |
+| `RM`     | string | 回应讯息               |
+| `result` | object | 用户详细资讯           |
 
-**用戶物件結構**
+**用户物件结构**
 
-| 參數                    | 類型   | 說明                          |
+| 参数                    | 类型   | 说明                          |
 | ----------------------- | ------ | ----------------------------- |
-| `_id`                   | string | 用戶唯一識別碼                |
-| `email`                 | string | 用戶電子郵件                  |
-| `nickname`              | string | 用戶顯示名稱                  |
-| `appID`                 | string | 應用程式識別碼                |
-| `avatarUrl`             | string | 用戶頭像 URL                  |
-| `address`               | object | 最後連線的網路地址資訊        |
-| `userAgent`             | string | 最後使用的瀏覽器/應用程式資訊 |
-| `lastLoginTimeMS`       | number | 最後登入時間（毫秒時間戳）    |
-| `notificationEnabled`   | boolean| 是否啟用通知                  |
+| `_id`                   | string | 用户唯一识别码                |
+| `email`                 | string | 用户电子邮件                  |
+| `nickname`              | string | 用户显示名称                  |
+| `appID`                 | string | 应用程式识别码                |
+| `avatarUrl`             | string | 用户头像 URL                  |
+| `address`               | object | 最后连线的网路地址资讯        |
+| `userAgent`             | string | 最后使用的浏览器/应用程式资讯 |
+| `lastLoginTimeMS`       | number | 最后登入时间（毫秒时间戳）    |
+| `notificationEnabled`   | boolean| 是否启用通知                  |
 
-#### 範例回應
+#### 范例回应
 
 ```json
 {
@@ -104,9 +104,9 @@ curl -X "GET" "https://your-app.imkit.io/me" \
 }
 ```
 
-#### 錯誤回應
+#### 错误回应
 
-**401 Unauthorized** - 認證失敗
+**401 Unauthorized** - 认证失败
 
 ```json
 {
@@ -119,7 +119,7 @@ curl -X "GET" "https://your-app.imkit.io/me" \
 }
 ```
 
-**403 Forbidden** - 無效的 Client Key
+**403 Forbidden** - 无效的 Client Key
 
 ```json
 {
@@ -134,23 +134,23 @@ curl -X "GET" "https://your-app.imkit.io/me" \
 
 ------
 
-## 使用場景
+## 使用场景
 
-### 用戶資料顯示
-- **個人資料頁面**：在應用程式中顯示用戶的個人資訊
-- **設定頁面**：載入當前用戶設定進行編輯
-- **權限檢查**：確認用戶身分和權限
+### 用户资料显示
+- **个人资料页面**：在应用程式中显示用户的个人资讯
+- **设定页面**：载入当前用户设定进行编辑
+- **权限检查**：确认用户身分和权限
 
-### 狀態檢查
-- **登入驗證**：確認用戶登入狀態是否有效
-- **會話管理**：檢查用戶會話是否過期
-- **通知設定**：確認用戶的通知偏好設定
+### 状态检查
+- **登入验证**：确认用户登入状态是否有效
+- **会话管理**：检查用户会话是否过期
+- **通知设定**：确认用户的通知偏好设定
 
 ------
 
-## 注意事項
+## 注意事项
 
-- **認證必要性**：此 API 需要有效的用戶認證
-- **敏感資訊**：不會返回密碼等敏感資訊
-- **快取建議**：用戶資訊可以適當快取以提升效能
-- **隱私保護**：僅返回當前認證用戶的資訊
+- **认证必要性**：此 API 需要有效的用户认证
+- **敏感资讯**：不会返回密码等敏感资讯
+- **快取建议**：用户资讯可以适当快取以提升效能
+- **隐私保护**：仅返回当前认证用户的资讯

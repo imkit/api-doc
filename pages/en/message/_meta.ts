@@ -1,10 +1,4 @@
 export default {
-  "message-basic": 
-  {
-    title: "訊息功能"
-  },
-  "message-badge": 
-  {
-    title: "未讀計算"
-  }
+  "message-basic": { title: "Messages" },
+  "message-badge": { title: "Unread Count" }
 }

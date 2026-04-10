@@ -1,46 +1,46 @@
-# API 金鑰
+# API Key
 
-## 概述
+## Overview
 
-API Key（`IM-API-KEY`）是 IMKIT Platform API 中用於後端服務的認證金鑰，代表「以平台管理員的身分」執行操作。它擁有完整的管理權限，能夠執行用戶管理、聊天室管理、Token 管理等所有操作，且可呼叫所有 API（包含 Client Key 層級的 API），必須妥善保管在伺服器端。
+The API Key (`IM-API-KEY`) is an authentication key used for backend services in the IMKIT Platform API. It represents performing operations "as a platform administrator." It has full management permissions, enabling operations such as user management, chat room management, token management, and more. It can call all APIs (including Client Key-level APIs) and must be securely stored on the server side.
 
 ------
 
-## API Key 特性
+## API Key Characteristics
 
-### 基本資訊
+### Basic Information
 
-| 屬性         | 說明                                     |
+| Property         | Description                                     |
 | ------------ | ---------------------------------------- |
-| **用途**     | 以平台管理員身分執行操作                 |
-| **搭配**     | 單獨使用，不需搭配用戶 Token             |
-| **格式**     | Base64 編碼字串                          |
-| **有效期**   | 長期有效（除非主動撤銷）                 |
-| **作用域**   | 完整管理權限，可呼叫所有 API             |
-| **安全等級** | 機密（絕不可暴露在前端）                 |
+| **Purpose**     | Perform operations as a platform administrator                 |
+| **Pairing**     | Used independently; does not require a user Token             |
+| **Format**     | Base64-encoded string                          |
+| **Validity**   | Long-lived (unless manually revoked)                 |
+| **Scope**   | Full management permissions; can call all APIs             |
+| **Security Level** | Confidential (must never be exposed on the frontend)                 |
 
-### 與 Client Key 的差異
+### Differences from Client Key
 
-| 項目         | API Key (`IM-API-KEY`)   | Client Key (`IM-CLIENT-KEY`)          |
+| Item         | API Key (`IM-API-KEY`)   | Client Key (`IM-CLIENT-KEY`)          |
 | ------------ | ------------------------ | ------------------------------------- |
-| **搭配**     | 單獨使用                 | 需搭配用戶 Token (`IM-Authorization`) |
-| **身分**     | 以平台管理員身分操作     | 以特定用戶身分操作                    |
-| **使用方**   | 僅後端                   | SDK 前端 / 後端                       |
-| **權限範圍** | 完整管理權限             | 受用戶權限限制                        |
-| **安全性**   | 必須保密                 | 公開可見                              |
+| **Pairing**     | Used independently                 | Requires user Token (`IM-Authorization`) |
+| **Identity**     | Operates as platform administrator     | Operates as a specific user                    |
+| **Used By**   | Backend only                   | SDK frontend / Backend                       |
+| **Permission Scope** | Full management permissions             | Limited by user permissions                        |
+| **Security**   | Must be kept confidential                 | Publicly visible                              |
 
 ------
 
-## 取得 API Key
+## Obtaining the API Key
 
-### 透過 IMKIT Dashboard
+### Via IMKIT Dashboard
 
-1. 登入 [IMKIT Dashboard](https://dashboard.imkit.io/)
-2. 選擇您的應用程式
-3. 進入「API 設定」頁面
-4. 複製 API Key（僅顯示一次）
+1. Log in to the [IMKIT Dashboard](https://dashboard.imkit.io/)
+2. Select your application
+3. Navigate to the "API Settings" page
+4. Copy the API Key (displayed only once)
 
-### 範例 API Key
+### Example API Key
 
 ```
 MjJZcFlIRGFRbElRbERTdlZMQ0xMbzJNUHpGZlZtOWpZcHh3MnZ1QnJtaz0=
@@ -48,9 +48,9 @@ MjJZcFlIRGFRbElRbERTdlZMQ0xMbzJNUHpGZlZtOWpZcHh3MnZ1QnJtaz0=
 
 ------
 
-## 使用方式
+## Usage
 
-### HTTP Header 認證
+### HTTP Header Authentication
 
 ```http
 POST /admin/clients
@@ -64,7 +64,7 @@ Content-Type: application/json
 }
 ```
 
-### 程式碼範例
+### Code Examples
 
 **Node.js**
 
@@ -79,7 +79,7 @@ const headers = {
   'Content-Type': 'application/json'
 };
 
-// 建立用戶
+// Create a user
 const createUser = async (userData) => {
   try {
     const response = await axios.post(`${baseURL}/admin/clients`, userData, { headers });
@@ -146,78 +146,78 @@ function createUser($userData) {
 
 ------
 
-## API Key 權限
+## API Key Permissions
 
-### 允許的操作
+### Allowed Operations
 
-- ✅ **用戶管理**
-  - 建立、更新、刪除用戶
-  - 查詢用戶資訊
-  - 管理用戶權限
-- ✅ **Token 管理**
+- ✅ **User Management**
+  - Create, update, and delete users
+  - Query user information
+  - Manage user permissions
+- ✅ **Token Management**
   - Issue Token
-  - 更新 Token
-  - 撤銷 Token
-- ✅ **聊天室管理**
-  - 建立、刪除聊天室
-  - 管理聊天室成員
-  - 設定聊天室權限
-- ✅ **訊息管理**
-  - 發送系統訊息
-  - 刪除訊息
-  - 查詢訊息記錄
-- ✅ **應用程式設定**
-  - 修改應用程式配置
-  - 管理 Webhook 設定
-  - 查看使用統計
+  - Update Token
+  - Revoke Token
+- ✅ **Chat Room Management**
+  - Create and delete chat rooms
+  - Manage chat room members
+  - Configure chat room permissions
+- ✅ **Message Management**
+  - Send system messages
+  - Delete messages
+  - Query message history
+- ✅ **Application Settings**
+  - Modify application configuration
+  - Manage Webhook settings
+  - View usage statistics
 
-### 高風險操作
+### High-Risk Operations
 
-- ⚠️ **完全控制權**：可以存取和修改所有應用程式資料
-- ⚠️ **用戶資料**：可以存取所有用戶的私人資訊
-- ⚠️ **聊天記錄**：可以讀取所有聊天室的訊息內容
-- ⚠️ **系統設定**：可以修改應用程式的核心設定
+- ⚠️ **Full Control**: Can access and modify all application data
+- ⚠️ **User Data**: Can access all users' private information
+- ⚠️ **Chat History**: Can read message content from all chat rooms
+- ⚠️ **System Settings**: Can modify the application's core settings
 
 ------
 
-## 安全性考量
+## Security Considerations
 
-### 為什麼 API Key 必須保密？
+### Why Must the API Key Be Kept Confidential?
 
-1. **完整權限**：擁有應用程式的完全控制權
-2. **資料存取**：可以存取所有用戶和聊天資料
-3. **不可撤銷操作**：可以執行刪除等不可逆操作
-4. **無使用者驗證**：不需要額外的用戶身份驗證
+1. **Full Permissions**: Has complete control over the application
+2. **Data Access**: Can access all user and chat data
+3. **Irreversible Operations**: Can perform irreversible operations such as deletion
+4. **No User Verification**: Does not require additional user identity verification
 
-### 安全最佳實務
+### Security Best Practices
 
-#### 存儲安全
+#### Storage Security
 
-- **環境變數**：將 API Key 存放在環境變數中
-- **配置檔案**：使用加密的配置檔案管理
-- **密鑰管理服務**：使用 AWS Secrets Manager、Azure Key Vault 等
-- **版本控制排除**：絕不將 API Key 提交到版本控制系統
+- **Environment Variables**: Store the API Key in environment variables
+- **Configuration Files**: Use encrypted configuration files for management
+- **Secret Management Services**: Use AWS Secrets Manager, Azure Key Vault, etc.
+- **Version Control Exclusion**: Never commit the API Key to version control systems
 
-#### 存取控制
+#### Access Control
 
-- **最小權限原則**：僅在必要的服務中使用 API Key
-- **網路限制**：限制 API Key 的來源 IP 範圍
-- **定期輪換**：定期更換 API Key
-- **監控使用**：監控 API Key 的使用情況和異常活動
+- **Principle of Least Privilege**: Only use the API Key in services that require it
+- **Network Restrictions**: Restrict the source IP range for the API Key
+- **Regular Rotation**: Rotate the API Key periodically
+- **Usage Monitoring**: Monitor API Key usage and detect anomalous activity
 
-#### 應用程式安全
+#### Application Security
 
 ```javascript
-// ✅ 正確：在伺服器端使用
-const apiKey = process.env.IMKIT_API_KEY; // 從環境變數讀取
+// ✅ Correct: Use on the server side
+const apiKey = process.env.IMKIT_API_KEY; // Read from environment variable
 
-// ❌ 錯誤：絕不在前端暴露
+// ❌ Wrong: Never expose on the frontend
 // const apiKey = 'MjJZcFlIRGFRbElRbERTdlZMQ0xMbzJNUHpGZlZtOWpZcHh3MnZ1QnJtaz0=';
 ```
 
 ------
 
-## 環境設定範例
+## Environment Configuration Examples
 
 ### Docker
 
@@ -225,7 +225,7 @@ const apiKey = process.env.IMKIT_API_KEY; // 從環境變數讀取
 ENV IMKIT_API_KEY=MjJZcFlIRGFRbElRbERTdlZMQ0xMbzJNUHpGZlZtOWpZcHh3MnZ1QnJtaz0=
 ```
 
-### .env 檔案
+### .env File
 
 ```env
 IMKIT_API_KEY=MjJZcFlIRGFRbElRbERTdlZMQ0xMbzJNUHpGZlZtOWpZcHh3MnZ1QnJtaz0=
@@ -246,49 +246,49 @@ data:
 
 ------
 
-## 常見問題
+## FAQ
 
-### Q: API Key 洩露會有什麼風險？
+### Q: What are the risks if the API Key is leaked?
 
-**A:** 極高風險！攻擊者可以：
+**A:** Extremely high risk! An attacker could:
 
-- 完全控制您的 IMKIT 應用程式
-- 存取所有用戶資料和聊天記錄
-- 刪除或修改重要資料
-- 產生額外的費用
+- Gain full control of your IMKIT application
+- Access all user data and chat history
+- Delete or modify critical data
+- Incur additional costs
 
-**發現洩露請立即：**
+**If a leak is discovered, immediately:**
 
-1. 在 Dashboard 中撤銷舊的 API Key
-2. 生成新的 API Key
-3. 更新所有使用該 API Key 的服務
-4. 檢查是否有異常操作記錄
+1. Revoke the old API Key in the Dashboard
+2. Generate a new API Key
+3. Update all services using the API Key
+4. Check for any anomalous operation logs
 
-### Q: 可以在前端 JavaScript 中使用 API Key 嗎？
+### Q: Can I use the API Key in frontend JavaScript?
 
-**A:** 絕對不可以！前端代碼會暴露給所有用戶，使用 Client Key 進行前端整合。
+**A:** Absolutely not! Frontend code is exposed to all users. Use the Client Key for frontend integration.
 
-### Q: 如何限制 API Key 的存取範圍？
+### Q: How can I restrict the access scope of the API Key?
 
-**A:** 目前 API Key 擁有完整權限，建議通過以下方式控制：
+**A:** Currently, the API Key has full permissions. It is recommended to control access through:
 
-- 網路層面限制來源 IP
-- 應用程式層面實作權限控制
-- 使用代理服務限制可呼叫的 API
+- Restricting source IPs at the network level
+- Implementing permission controls at the application level
+- Using a proxy service to restrict callable APIs
 
-### Q: API Key 有使用頻率限制嗎？
+### Q: Is there a rate limit on API Key usage?
 
-**A:** 是的，API Key 有 rate limiting 保護：
+**A:** Yes, the API Key has rate limiting protection:
 
-- 每分鐘最多 1000 次請求
-- 超過限制會收到 429 錯誤
-- 建議實作適當的重試機制
+- Maximum of 1000 requests per minute
+- Exceeding the limit will result in a 429 error
+- It is recommended to implement appropriate retry mechanisms
 
 ------
 
-## 錯誤處理
+## Error Handling
 
-### 常見錯誤
+### Common Errors
 
 **Invalid API Key**
 

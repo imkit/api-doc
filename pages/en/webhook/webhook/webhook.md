@@ -1,45 +1,45 @@
 # Webhook
 
-## 概述
+## Overview
 
-Webhook 功能允許您註冊特定的 URL 端點來接收聊天室的即時訊息和事件通知。當聊天室中發生特定事件（如新訊息、成員加入、成員離開等）時，系統會自動向您註冊的 Webhook URL 發送 POST 請求，包含相關的事件資料。此功能適用於建立機器人、自動化處理、推播通知系統等應用場景。
-
-------
-
-## API 端點
-
-### 註冊 Webhook
-
-您可以為每個聊天室註冊 Webhook URL 來接收該聊天室的訊息和事件。
-
-Webhook 設定請參考[更新聊天室](/zh-TW/room/room-management/update-a-room) API 中的 `webhook` 屬性。
+The Webhook feature allows you to register specific URL endpoints to receive real-time messages and event notifications from chatrooms. When specific events occur in a chatroom (such as new messages, member joins, member leaves, etc.), the system will automatically send a POST request to your registered Webhook URL containing the relevant event data. This feature is suitable for building bots, automated processing, push notification systems, and other application scenarios.
 
 ------
 
-## Webhook 接收資料格式
+## API Endpoint
 
-當聊天室中發生事件時，系統會向您註冊的 Webhook URL 發送 POST 請求，包含以下 JSON 格式的資料：
+### Register a Webhook
 
-### 基本資料結構
+You can register a Webhook URL for each chatroom to receive messages and events from that chatroom.
 
-| 參數       | 類型   | 說明                                                                          |
-| ---------- | ------ | ----------------------------------------------------------------------------- |
-| `appID`    | string | 應用程式識別碼                                                                |
-| `clientID` | string | 發送者 ID                                                                     |
-| `roomID`   | string | 事件發生的聊天室 ID                                                           |
-| `event`    | string | 事件類型                                                                      |
-| `botState` | string | 聊天室當前的機器人狀態（若您的機器人實作為有限狀態機，可根據狀態和訊息決定反應） |
-| `data`     | object | 發送到聊天室的訊息或事件資料                                                  |
+For Webhook configuration, refer to the `webhook` property in the [Update a Room](/en/room/room-management/update-a-room) API.
 
 ------
 
-## 事件類型
+## Webhook Received Data Format
 
-### 加入聊天室事件
+When an event occurs in a chatroom, the system sends a POST request to your registered Webhook URL containing JSON-formatted data as follows:
 
-當用戶加入聊天室時觸發此事件。
+### Basic Data Structure
 
-**事件類型**：`JOIN_ROOM`
+| Parameter  | Type   | Description                                                                                   |
+| ---------- | ------ | --------------------------------------------------------------------------------------------- |
+| `appID`    | string | Application ID                                                                                |
+| `clientID` | string | Sender ID                                                                                     |
+| `roomID`   | string | Chatroom ID where the event occurred                                                          |
+| `event`    | string | Event type                                                                                    |
+| `botState` | string | Current bot state of the chatroom (if your bot is implemented as a finite state machine, you can determine reactions based on the state and message) |
+| `data`     | object | Message or event data sent to the chatroom                                                    |
+
+------
+
+## Event Types
+
+### Join Room Event
+
+Triggered when a user joins a chatroom.
+
+**Event Type**: `JOIN_ROOM`
 
 ```json
 {
@@ -67,11 +67,11 @@ Webhook 設定請參考[更新聊天室](/zh-TW/room/room-management/update-a-ro
 }
 ```
 
-### 新增成員事件
+### Add Members Event
 
-當聊天室新增成員時觸發此事件。
+Triggered when members are added to a chatroom.
 
-**事件類型**：`ADD_MEMBERS`
+**Event Type**: `ADD_MEMBERS`
 
 ```json
 {
@@ -99,11 +99,11 @@ Webhook 設定請參考[更新聊天室](/zh-TW/room/room-management/update-a-ro
 }
 ```
 
-### 移除成員事件
+### Remove Members Event
 
-當聊天室移除成員時觸發此事件。
+Triggered when members are removed from a chatroom.
 
-**事件類型**：`DELETE_MEMBERS`
+**Event Type**: `DELETE_MEMBERS`
 
 ```json
 {
@@ -131,11 +131,11 @@ Webhook 設定請參考[更新聊天室](/zh-TW/room/room-management/update-a-ro
 }
 ```
 
-### 訊息事件
+### Message Event
 
-當聊天室收到新訊息時觸發此事件。
+Triggered when a new message is received in a chatroom.
 
-**事件類型**：`MESSAGE`
+**Event Type**: `MESSAGE`
 
 ```json
 {
@@ -167,21 +167,21 @@ Webhook 設定請參考[更新聊天室](/zh-TW/room/room-management/update-a-ro
 
 ------
 
-## Webhook 回應格式
+## Webhook Response Format
 
-您的 Webhook 服務可以回傳 JSON 格式的回應來控制機器人行為和發送訊息。
+Your Webhook service can return a JSON-formatted response to control bot behavior and send messages.
 
-### 回應資料結構
+### Response Data Structure
 
-| 參數         | 類型    | 必填 | 說明                                                           |
-| ------------ | ------- | ---- | -------------------------------------------------------------- |
-| `senderID`   | string  | ❌    | 指定發送者 ID 來回覆訊息或發送訊息到聊天室                     |
-| `toBotState` | string  | ❌    | 將聊天室轉換到指定的機器人狀態，若要保持當前狀態請指定當前狀態 |
-| `data`       | message | ❌    | 回覆訊息內容                                                   |
+| Parameter    | Type    | Required | Description                                                                  |
+| ------------ | ------- | -------- | ---------------------------------------------------------------------------- |
+| `senderID`   | string  | ❌        | Specify a sender ID to reply or send messages to the chatroom                |
+| `toBotState` | string  | ❌        | Transition the chatroom to the specified bot state; specify the current state to maintain it |
+| `data`       | message | ❌        | Reply message content                                                        |
 
-### 範例回應
+### Example Response
 
-**基本回應**（不執行任何動作）
+**Basic response** (no action taken)
 
 ```json
 {
@@ -190,7 +190,7 @@ Webhook 設定請參考[更新聊天室](/zh-TW/room/room-management/update-a-ro
 }
 ```
 
-**機器人回覆訊息**
+**Bot reply message**
 
 ```json
 {
@@ -205,37 +205,37 @@ Webhook 設定請參考[更新聊天室](/zh-TW/room/room-management/update-a-ro
 
 ------
 
-## 使用場景
+## Use Cases
 
-### 機器人開發
-- **自動回覆**：根據收到的訊息內容自動回覆相應訊息
-- **狀態管理**：實作有限狀態機來管理對話流程
-- **指令處理**：解析用戶指令並執行相應動作
+### Bot Development
+- **Auto Reply**: Automatically reply with appropriate messages based on received message content
+- **State Management**: Implement a finite state machine to manage conversation flow
+- **Command Processing**: Parse user commands and execute corresponding actions
 
-### 通知系統
-- **自訂推播**：根據特定事件發送客製化推播通知
-- **即時監控**：監控聊天室活動並觸發相應處理
-- **事件記錄**：記錄重要事件用於分析或稽核
+### Notification System
+- **Custom Pushes**: Send customized push notifications based on specific events
+- **Real-Time Monitoring**: Monitor chatroom activity and trigger corresponding processing
+- **Event Logging**: Record important events for analysis or auditing
 
-### 系統整合
-- **第三方服務**：將聊天事件整合到其他系統或服務
-- **資料同步**：將聊天資料同步到外部資料庫或系統
-- **工作流程**：觸發自動化工作流程和業務邏輯
+### System Integration
+- **Third-Party Services**: Integrate chat events with other systems or services
+- **Data Synchronization**: Synchronize chat data to external databases or systems
+- **Workflows**: Trigger automated workflows and business logic
 
-### 內容管理
-- **訊息過濾**：自動檢測和處理不當內容
-- **內容分析**：分析訊息內容進行情感分析或關鍵字提取
-- **智能助手**：提供智能問答或客服功能
+### Content Management
+- **Message Filtering**: Automatically detect and process inappropriate content
+- **Content Analysis**: Analyze message content for sentiment analysis or keyword extraction
+- **Smart Assistant**: Provide smart Q&A or customer service functionality
 
 ------
 
-## 注意事項
+## Notes
 
-- **HTTP POST**：所有 Webhook 請求都是 HTTP POST 方法
-- **JSON 格式**：請求和回應都使用 JSON 格式
-- **即時性**：Webhook 會在事件發生時立即觸發
-- **可靠性**：建議實作重試機制和錯誤處理
-- **安全性**：建議驗證請求來源和實作適當的安全措施
-- **效能考量**：Webhook 端點應該快速回應避免超時
-- **狀態管理**：機器人狀態可用於實作複雜的對話邏輯
-- **回應格式**：不正確的回應格式可能導致機器人功能異常
+- **HTTP POST**: All Webhook requests use the HTTP POST method
+- **JSON Format**: Both requests and responses use JSON format
+- **Real-Time**: Webhooks are triggered immediately when events occur
+- **Reliability**: It is recommended to implement retry mechanisms and error handling
+- **Security**: It is recommended to verify request origins and implement appropriate security measures
+- **Performance Consideration**: Webhook endpoints should respond quickly to avoid timeouts
+- **State Management**: Bot states can be used to implement complex conversation logic
+- **Response Format**: Incorrect response formats may cause bot functionality to malfunction

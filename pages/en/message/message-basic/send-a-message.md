@@ -1,16 +1,16 @@
-# 發送訊息
+# Send a Message
 
-## 概述
+## Overview
 
-透過平台管理 API 向指定聊天室發送訊息。可指定發送者身分，適用於系統通知、機器人訊息、後端自動化等場景。
+Send a message to a specified room via the platform management API. You can specify the sender identity, making it suitable for scenarios such as system notifications, bot messages, and backend automation.
 
 ------
 
-## API 端點
+## API Endpoint
 
-### 發送聊天室訊息
+### Send a Room Message
 
-以指定發送者的身分，向指定聊天室發送訊息。
+Send a message to a specified room as a specified sender.
 
 ```http
 POST /messages
@@ -18,26 +18,26 @@ POST /messages
 
 #### Headers
 
-| 參數 | 類型 | 必填 | 說明 |
+| Parameter | Type | Required | Description |
 | ---- | ---- | ---- | ---- |
-| `IM-API-KEY` | string | ✅ | 您的平台 API 金鑰 |
+| `IM-API-KEY` | string | ✅ | Your platform API key |
 | `Content-Type` | string | ✅ | `application/json; charset=utf-8` |
 
 #### Post Body
 
-| 參數 | 類型 | 必填 | 說明 |
+| Parameter | Type | Required | Description |
 | ---- | ---- | ---- | ---- |
-| `message` | string | ✅ | 訊息內容 |
-| `messageType` | string | ✅ | 訊息類型（如 `"text"`、`"image"`、`"announcement"` 等） |
-| `room` | string | ✅ | 聊天室 ID |
-| `sender` | string | ✅ | 發送者用戶 ID |
-| `push` | boolean | ❌ | 是否推播通知給聊天室成員，預設為 `true` |
-| `skipTotalBadge` | boolean | ❌ | 是否跳過計算發送者的總未讀數，預設為 `false` |
-| `mentions` | array[string] | ❌ | 提及的用戶 ID 陣列 |
+| `message` | string | ✅ | Message content |
+| `messageType` | string | ✅ | Message type (e.g., `"text"`, `"image"`, `"announcement"`, etc.) |
+| `room` | string | ✅ | Room ID |
+| `sender` | string | ✅ | Sender user ID |
+| `push` | boolean | ❌ | Whether to send push notifications to room members, defaults to `true` |
+| `skipTotalBadge` | boolean | ❌ | Whether to skip calculating the sender's total unread count, defaults to `false` |
+| `mentions` | array[string] | ❌ | Array of mentioned user IDs |
 
-#### 範例請求
+#### Example Request
 
-**發送文字訊息**
+**Send a text message**
 
 ```javascript
 const response = await axios.post(
@@ -57,7 +57,7 @@ const response = await axios.post(
 );
 ```
 
-**發送公告訊息**
+**Send an announcement message**
 
 ```javascript
 const response = await axios.post(
@@ -77,7 +77,7 @@ const response = await axios.post(
 );
 ```
 
-**發送帶提及的訊息**
+**Send a message with mentions**
 
 ```javascript
 const response = await axios.post(
@@ -98,7 +98,7 @@ const response = await axios.post(
 );
 ```
 
-**發送訊息但不推播**
+**Send a message without push notification**
 
 ```javascript
 const response = await axios.post(
@@ -119,7 +119,7 @@ const response = await axios.post(
 );
 ```
 
-##### cURL 範例
+##### cURL Example
 
 ```bash
 curl -X "POST" "https://your-app.imkit.io/messages" \
@@ -135,29 +135,29 @@ curl -X "POST" "https://your-app.imkit.io/messages" \
 
 #### Response
 
-**成功回應（200 OK）**
+**Success Response (200 OK)**
 
-| 參數 | 類型 | 說明 |
+| Parameter | Type | Description |
 | ---- | ---- | ---- |
-| `RC` | number | 回應代碼（0 表示成功） |
-| `RM` | string | 回應訊息 |
-| `result` | object | 發送的訊息資料 |
+| `RC` | number | Response code (0 indicates success) |
+| `RM` | string | Response message |
+| `result` | object | Sent message data |
 
-**訊息物件結構**
+**Message Object Structure**
 
-| 參數 | 類型 | 說明 |
+| Parameter | Type | Description |
 | ---- | ---- | ---- |
-| `_id` | string | 訊息唯一識別碼 |
-| `room` | string | 所屬聊天室 ID |
-| `message` | any | 訊息內容 |
-| `messageType` | string | 訊息類型 |
-| `sender` | string | 發送者 ID |
-| `appID` | string | 應用程式識別碼 |
-| `messageTimeMS` | number | 訊息發送時間（毫秒時間戳） |
-| `updatedAtMS` | number | 訊息更新時間（毫秒時間戳） |
-| `createdAtMS` | number | 訊息建立時間（毫秒時間戳） |
+| `_id` | string | Message unique identifier |
+| `room` | string | Room ID the message belongs to |
+| `message` | any | Message content |
+| `messageType` | string | Message type |
+| `sender` | string | Sender ID |
+| `appID` | string | Application identifier |
+| `messageTimeMS` | number | Message sent time (millisecond timestamp) |
+| `updatedAtMS` | number | Message updated time (millisecond timestamp) |
+| `createdAtMS` | number | Message created time (millisecond timestamp) |
 
-#### 範例回應
+#### Example Response
 
 ```json
 {
@@ -177,9 +177,9 @@ curl -X "POST" "https://your-app.imkit.io/messages" \
 }
 ```
 
-#### 錯誤回應
+#### Error Response
 
-**401 Unauthorized** — 認證失敗
+**401 Unauthorized** — Authentication failed
 
 ```json
 {
@@ -192,7 +192,7 @@ curl -X "POST" "https://your-app.imkit.io/messages" \
 }
 ```
 
-**404 Not Found** — 聊天室不存在
+**404 Not Found** — Room does not exist
 
 ```json
 {
@@ -207,26 +207,26 @@ curl -X "POST" "https://your-app.imkit.io/messages" \
 
 ------
 
-## 使用場景
+## Use Cases
 
-### 系統通知
-- **系統公告**：由後端服務自動發送系統公告或維護通知
-- **狀態更新**：訂單狀態變更時自動通知相關用戶
+### System Notifications
+- **System announcements**: Automatically send system announcements or maintenance notifications from the backend service
+- **Status updates**: Automatically notify relevant users when an order status changes
 
-### 機器人訊息
-- **自動回覆**：透過 API 實現聊天機器人功能
-- **智能助手**：搭配 Webhook 接收訊息並回覆
+### Bot Messages
+- **Auto-replies**: Implement chatbot functionality through the API
+- **Smart assistant**: Receive messages via Webhook and respond accordingly
 
-### 應用整合
-- **第三方整合**：將外部系統的事件以訊息形式發送到聊天室
-- **工作流程**：在業務流程的關鍵節點插入聊天室通知
+### Application Integration
+- **Third-party integration**: Send events from external systems as messages to rooms
+- **Workflows**: Insert room notifications at key points in business processes
 
 ------
 
-## 注意事項
+## Notes
 
-- **發送者身分**：`sender` 必須為系統中已存在的用戶 ID
-- **推播控制**：透過 `push` 參數控制是否推播，適合靜默通知場景
-- **訊息類型**：`messageType` 為自訂欄位，可根據應用需求設定任意類型
-- **提及功能**：`mentions` 陣列中的用戶 ID 會收到提及通知
-- **與 Socket 的區別**：此 API 適用於後端服務發送訊息，一般用戶聊天由 SDK 透過 Socket 連線處理
+- **Sender identity**: `sender` must be an existing user ID in the system
+- **Push control**: Use the `push` parameter to control whether push notifications are sent; suitable for silent notification scenarios
+- **Message type**: `messageType` is a custom field that can be set to any type based on application requirements
+- **Mentions feature**: User IDs in the `mentions` array will receive mention notifications
+- **Difference from Socket**: This API is designed for backend services to send messages; regular user chat is handled by the SDK via Socket connections

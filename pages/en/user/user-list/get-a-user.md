@@ -1,16 +1,16 @@
-# 獲取用戶資訊
+# Get User Information
 
-## 概述
+## Overview
 
-取得目前已登入用戶的詳細資訊。此 API 可用於獲取當前認證用戶的個人資料、登入狀態和其他相關資訊。
+Retrieve the detailed information of the currently logged-in user. This API can be used to obtain the personal profile, login status, and other related information of the currently authenticated user.
 
 ------
 
-## API 端點
+## API Endpoint
 
-### 獲取當前用戶資訊
+### Get Current User Information
 
-取得目前已登入用戶的完整資料。
+Retrieve the complete profile of the currently logged-in user.
 
 ```http
 GET /me
@@ -18,12 +18,12 @@ GET /me
 
 #### Headers
 
-| 參數            | 類型   | 必填 | 說明           |
+| Parameter            | Type   | Required | Description           |
 | --------------- | ------ | ---- | -------------- |
 | `IM-CLIENT-KEY` | string | ✅    | Client Key     |
 | `IM-Authorization` | string | ✅    | Client Token   |
 
-#### 範例請求
+#### Example Request
 
 ```http
 GET /me HTTP/1.1
@@ -33,7 +33,7 @@ Host: your-app.imkit.io
 Connection: close
 ```
 
-**JavaScript 範例：**
+**JavaScript Example:**
 
 ```javascript
 const response = await axios.get(
@@ -47,7 +47,7 @@ const response = await axios.get(
 );
 ```
 
-**cURL 範例：**
+**cURL Example:**
 
 ```bash
 curl -X "GET" "https://your-app.imkit.io/me" \
@@ -57,29 +57,29 @@ curl -X "GET" "https://your-app.imkit.io/me" \
 
 #### Response
 
-**成功回應（200 OK）**
+**Success Response (200 OK)**
 
-| 參數     | 類型   | 說明                   |
+| Parameter     | Type   | Description                   |
 | -------- | ------ | ---------------------- |
-| `RC`     | number | 回應代碼（0 表示成功） |
-| `RM`     | string | 回應訊息               |
-| `result` | object | 用戶詳細資訊           |
+| `RC`     | number | Response code (0 indicates success) |
+| `RM`     | string | Response message               |
+| `result` | object | User detailed information           |
 
-**用戶物件結構**
+**User Object Structure**
 
-| 參數                    | 類型   | 說明                          |
+| Parameter                    | Type   | Description                          |
 | ----------------------- | ------ | ----------------------------- |
-| `_id`                   | string | 用戶唯一識別碼                |
-| `email`                 | string | 用戶電子郵件                  |
-| `nickname`              | string | 用戶顯示名稱                  |
-| `appID`                 | string | 應用程式識別碼                |
-| `avatarUrl`             | string | 用戶頭像 URL                  |
-| `address`               | object | 最後連線的網路地址資訊        |
-| `userAgent`             | string | 最後使用的瀏覽器/應用程式資訊 |
-| `lastLoginTimeMS`       | number | 最後登入時間（毫秒時間戳）    |
-| `notificationEnabled`   | boolean| 是否啟用通知                  |
+| `_id`                   | string | Unique user identifier                |
+| `email`                 | string | User email                  |
+| `nickname`              | string | User display name                  |
+| `appID`                 | string | Application identifier                |
+| `avatarUrl`             | string | User avatar URL                  |
+| `address`               | object | Last connected network address information        |
+| `userAgent`             | string | Last used browser/application information |
+| `lastLoginTimeMS`       | number | Last login time (millisecond timestamp)    |
+| `notificationEnabled`   | boolean| Whether notifications are enabled                  |
 
-#### 範例回應
+#### Example Response
 
 ```json
 {
@@ -104,9 +104,9 @@ curl -X "GET" "https://your-app.imkit.io/me" \
 }
 ```
 
-#### 錯誤回應
+#### Error Response
 
-**401 Unauthorized** - 認證失敗
+**401 Unauthorized** - Authentication failed
 
 ```json
 {
@@ -119,7 +119,7 @@ curl -X "GET" "https://your-app.imkit.io/me" \
 }
 ```
 
-**403 Forbidden** - 無效的 Client Key
+**403 Forbidden** - Invalid Client Key
 
 ```json
 {
@@ -134,23 +134,23 @@ curl -X "GET" "https://your-app.imkit.io/me" \
 
 ------
 
-## 使用場景
+## Use Cases
 
-### 用戶資料顯示
-- **個人資料頁面**：在應用程式中顯示用戶的個人資訊
-- **設定頁面**：載入當前用戶設定進行編輯
-- **權限檢查**：確認用戶身分和權限
+### User Profile Display
+- **Profile Page**: Display the user's personal information in the application
+- **Settings Page**: Load the current user's settings for editing
+- **Permission Check**: Verify user identity and permissions
 
-### 狀態檢查
-- **登入驗證**：確認用戶登入狀態是否有效
-- **會話管理**：檢查用戶會話是否過期
-- **通知設定**：確認用戶的通知偏好設定
+### Status Check
+- **Login Verification**: Confirm whether the user's login status is valid
+- **Session Management**: Check whether the user's session has expired
+- **Notification Settings**: Confirm the user's notification preferences
 
 ------
 
-## 注意事項
+## Notes
 
-- **認證必要性**：此 API 需要有效的用戶認證
-- **敏感資訊**：不會返回密碼等敏感資訊
-- **快取建議**：用戶資訊可以適當快取以提升效能
-- **隱私保護**：僅返回當前認證用戶的資訊
+- **Authentication Required**: This API requires valid user authentication
+- **Sensitive Information**: Sensitive information such as passwords is not returned
+- **Caching Recommendation**: User information can be appropriately cached to improve performance
+- **Privacy Protection**: Only the information of the currently authenticated user is returned

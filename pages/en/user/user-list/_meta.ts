@@ -1,10 +1,4 @@
 export default {
-  "list-users": {
-    title: "用戶列表"
-  },
-  "get-a-user":
-  {
-    title: "獲取用戶資訊"
-  }
+  "list-users": { title: "List Users" },
+  "get-a-user": { title: "Get User" }
 }
-

@@ -1,16 +1,16 @@
-# 移除成員
+# 移除成员
 
 ## 概述
 
-此端點允許您將一位或多位成員從指定聊天室中移除。若在 `members` 中傳入當前用戶自身的 ID，則代表該用戶主動離開聊天室。
+此端点允许您将一位或多位成员从指定聊天室中移除。若在 `members` 中传入当前用户自身的 ID，则代表该用户主动离开聊天室。
 
 ------
 
-## API 端點
+## API 端点
 
-### 移除成員
+### 移除成员
 
-將一位或多位成員從指定聊天室中移除。
+将一位或多位成员从指定聊天室中移除。
 
 ```http
 POST /rooms/:id/delete/members
@@ -18,29 +18,29 @@ POST /rooms/:id/delete/members
 
 #### Headers
 
-| 參數 | 類型 | 必填 | 說明 |
+| 参数 | 类型 | 必填 | 说明 |
 | --- | --- | --- | --- |
-| `IM-CLIENT-KEY` | string | ✅ | 用戶端金鑰 |
-| `IM-Authorization` | string | ✅ | 用戶端權杖 |
+| `IM-CLIENT-KEY` | string | ✅ | 用户端金钥 |
+| `IM-Authorization` | string | ✅ | 用户端权杖 |
 
 #### Path Parameters
 
-| 參數 | 類型 | 必填 | 說明 |
+| 参数 | 类型 | 必填 | 说明 |
 | --- | --- | --- | --- |
-| `:id` | string | ✅ | 聊天室唯一識別碼 |
+| `:id` | string | ✅ | 聊天室唯一识别码 |
 
 #### Post Body
 
-| 參數 | 類型 | 必填 | 說明 |
+| 参数 | 类型 | 必填 | 说明 |
 | --- | --- | --- | --- |
-| `members` | array[string] | ✅ | 要移除的成員 ID 陣列；若包含當前用戶自身 ID，代表主動離開聊天室 |
-| `systemMessage` | boolean | ❌ | 是否自動產生離開或移除成員的系統訊息（`leaveRoom` 或 `deleteMember`），預設為 `false` |
+| `members` | array[string] | ✅ | 要移除的成员 ID 阵列；若包含当前用户自身 ID，代表主动离开聊天室 |
+| `systemMessage` | boolean | ❌ | 是否自动产生离开或移除成员的系统讯息（`leaveRoom` 或 `deleteMember`），预设为 `false` |
 
-#### 範例請求
+#### 范例请求
 
-**範例一：移除指定成員**
+**范例一：移除指定成员**
 
-**cURL 範例：**
+**cURL 范例：**
 
 ```bash
 curl -X "POST" "https://your-app.imkit.io/rooms/demo-room/delete/members" \
@@ -50,7 +50,7 @@ curl -X "POST" "https://your-app.imkit.io/rooms/demo-room/delete/members" \
      -d '{"members": ["ccc", "bbb"], "systemMessage": true}'
 ```
 
-**JavaScript 範例：**
+**JavaScript 范例：**
 
 ```javascript
 const response = await axios.post(
@@ -69,9 +69,9 @@ const response = await axios.post(
 );
 ```
 
-**範例二：當前用戶主動離開聊天室**
+**范例二：当前用户主动离开聊天室**
 
-**JavaScript 範例：**
+**JavaScript 范例：**
 
 ```javascript
 const response = await axios.post(
@@ -92,15 +92,15 @@ const response = await axios.post(
 
 #### Response
 
-**成功回應（200 OK）**
+**成功回应（200 OK）**
 
-| 參數 | 類型 | 說明 |
+| 参数 | 类型 | 说明 |
 | --- | --- | --- |
-| `RC` | number | 回應代碼（0 表示成功） |
-| `RM` | string | 回應訊息 |
-| `result` | object | 更新後的聊天室完整資訊 |
+| `RC` | number | 回应代码（0 表示成功） |
+| `RM` | string | 回应讯息 |
+| `result` | object | 更新后的聊天室完整资讯 |
 
-#### 範例回應
+#### 范例回应
 
 ```json
 {
@@ -143,30 +143,30 @@ const response = await axios.post(
 }
 ```
 
-#### 錯誤回應
+#### 错误回应
 
-當請求失敗時，您會收到包含錯誤詳細資訊的錯誤回應。常見的錯誤情況包括：
+当请求失败时，您会收到包含错误详细资讯的错误回应。常见的错误情况包括：
 
-- 無效的用戶端金鑰或授權權杖
+- 无效的用户端金钥或授权权杖
 - 指定的聊天室不存在
-- `members` 中包含不在聊天室內的用戶 ID
-- 伺服器內部錯誤
+- `members` 中包含不在聊天室内的用户 ID
+- 伺服器内部错误
 
 ------
 
-## 使用場景
+## 使用场景
 
-### 成員管理
-- **移除成員**：管理員可從聊天室中移除一位或多位成員
-- **主動離開**：用戶可透過傳入自身 ID 主動離開聊天室
+### 成员管理
+- **移除成员**：管理员可从聊天室中移除一位或多位成员
+- **主动离开**：用户可透过传入自身 ID 主动离开聊天室
 
-### 系統通知
-- **自動通知**：設定 `systemMessage: true` 時，系統會根據情境自動產生 `leaveRoom` 或 `deleteMember` 類型的系統訊息
+### 系统通知
+- **自动通知**：设定 `systemMessage: true` 时，系统会根据情境自动产生 `leaveRoom` 或 `deleteMember` 类型的系统讯息
 
 ------
 
-## 注意事項
+## 注意事项
 
-- **主動離開**：在 `members` 陣列中傳入當前用戶自身的 ID，即代表該用戶主動離開聊天室
-- **系統訊息**：設定 `systemMessage: true` 時，若成員為主動離開，系統訊息類型為 `leaveRoom`；若為被移除，則為 `deleteMember`
-- 成員被移除後，將無法再存取該聊天室的任何訊息記錄
+- **主动离开**：在 `members` 阵列中传入当前用户自身的 ID，即代表该用户主动离开聊天室
+- **系统讯息**：设定 `systemMessage: true` 时，若成员为主动离开，系统讯息类型为 `leaveRoom`；若为被移除，则为 `deleteMember`
+- 成员被移除后，将无法再存取该聊天室的任何讯息记录

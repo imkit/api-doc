@@ -1,16 +1,16 @@
-# 更新敏感詞設定
+# Update Sensitive Words
 
-## 概述
+## Overview
 
-更新或建立系統的敏感詞彙審查配置。透過運行時配置系統管理封鎖用詞列表，可以即時過濾不當內容，維護聊天環境的品質。此功能適用於內容審查、敏感詞管理和平台治理。
+Update or create the system's sensitive word censorship configuration. Manage the blocked word list through the runtime configuration system to filter inappropriate content in real time and maintain the quality of the chat environment. This feature is suitable for content moderation, sensitive word management, and platform governance.
 
 ------
 
-## API 端點
+## API Endpoint
 
-### 更新敏感詞配置
+### Update Sensitive Word Configuration
 
-建立或更新運行時配置變數，包含敏感詞彙列表設定。
+Create or update runtime configuration variables, including sensitive word list settings.
 
 ```http
 POST /config
@@ -18,26 +18,26 @@ POST /config
 
 #### Headers
 
-| 參數         | 類型   | 必填 | 說明        |
-| ------------ | ------ | ---- | ----------- |
-| `IM-API-KEY` | string | ✅    | API Key     |
+| Parameter    | Type   | Required | Description |
+| ------------ | ------ | -------- | ----------- |
+| `IM-API-KEY` | string | ✅        | API Key     |
 
 #### Post Body
 
-| 參數           | 類型   | 必填 | 說明                    |
-| -------------- | ------ | ---- | ----------------------- |
-| `censorship`   | object | ❌    | 內容審查配置物件        |
-| `announcement` | object | ❌    | 公告配置物件（可選）    |
+| Parameter      | Type   | Required | Description                        |
+| -------------- | ------ | -------- | ---------------------------------- |
+| `censorship`   | object | ❌        | Content censorship configuration object |
+| `announcement` | object | ❌        | Announcement configuration object (optional) |
 
-**審查配置物件結構**
+**Censorship Configuration Object Structure**
 
-| 參數       | 類型  | 必填 | 說明                    |
-| ---------- | ----- | ---- | ----------------------- |
-| `keywords` | array | ✅    | 要封鎖的敏感詞彙陣列    |
+| Parameter  | Type  | Required | Description                         |
+| ---------- | ----- | -------- | ----------------------------------- |
+| `keywords` | array | ✅        | Array of sensitive words to block   |
 
-#### 範例請求
+#### Example Request
 
-**設定敏感詞列表**
+**Set the sensitive word list**
 
 ```http
 POST /config HTTP/1.1
@@ -60,7 +60,7 @@ Connection: close
 }
 ```
 
-**僅更新敏感詞列表**
+**Update only the sensitive word list**
 
 ```http
 POST /config HTTP/1.1
@@ -80,7 +80,7 @@ Connection: close
 }
 ```
 
-**新增敏感詞到現有列表**
+**Add sensitive words to the existing list**
 
 ```http
 POST /config HTTP/1.1
@@ -101,7 +101,7 @@ Connection: close
 }
 ```
 
-**JavaScript 範例：**
+**JavaScript Example:**
 
 ```javascript
 const response = await axios.post(
@@ -120,7 +120,7 @@ const response = await axios.post(
 );
 ```
 
-**cURL 範例：**
+**cURL Example:**
 
 ```bash
 curl -X "POST" "https://your-app.imkit.io/config" \
@@ -131,15 +131,15 @@ curl -X "POST" "https://your-app.imkit.io/config" \
 
 #### Response
 
-**成功回應（200 OK）**
+**Success Response (200 OK)**
 
-| 參數     | 類型   | 說明                   |
-| -------- | ------ | ---------------------- |
-| `RC`     | number | 回應代碼（0 表示成功） |
-| `RM`     | string | 回應訊息               |
-| `result` | object | 更新後的配置資料       |
+| Parameter | Type   | Description                         |
+| --------- | ------ | ----------------------------------- |
+| `RC`      | number | Response code (0 indicates success) |
+| `RM`      | string | Response message                    |
+| `result`  | object | Updated configuration data          |
 
-#### 範例回應
+#### Example Response
 
 ```json
 {
@@ -160,9 +160,9 @@ curl -X "POST" "https://your-app.imkit.io/config" \
 }
 ```
 
-#### 錯誤回應
+#### Error Response
 
-**401 Unauthorized** - 認證失敗
+**401 Unauthorized** - Authentication failed
 
 ```json
 {
@@ -175,7 +175,7 @@ curl -X "POST" "https://your-app.imkit.io/config" \
 }
 ```
 
-**403 Forbidden** - 權限不足
+**403 Forbidden** - Insufficient permissions
 
 ```json
 {
@@ -188,7 +188,7 @@ curl -X "POST" "https://your-app.imkit.io/config" \
 }
 ```
 
-**400 Bad Request** - 請求格式錯誤
+**400 Bad Request** - Invalid request format
 
 ```json
 {
@@ -203,31 +203,31 @@ curl -X "POST" "https://your-app.imkit.io/config" \
 
 ------
 
-## 使用場景
+## Use Cases
 
-### 敏感詞管理
-- **新增敏感詞**：添加新的敏感詞彙到過濾列表
-- **更新列表**：修改現有的敏感詞彙列表
-- **批量設定**：一次性設定多個敏感詞彙
+### Sensitive Word Management
+- **Add Sensitive Words**: Add new sensitive words to the filter list
+- **Update List**: Modify the existing sensitive word list
+- **Batch Configuration**: Set multiple sensitive words at once
 
-### 內容審查
-- **動態調整**：根據內容趨勢即時調整過濾規則
-- **緊急應對**：快速新增需要過濾的敏感內容
-- **規則優化**：根據使用情況優化過濾規則
+### Content Moderation
+- **Dynamic Adjustment**: Adjust filtering rules in real time based on content trends
+- **Emergency Response**: Quickly add sensitive content that needs to be filtered
+- **Rule Optimization**: Optimize filtering rules based on usage patterns
 
-### 平台治理
-- **政策執行**：根據平台政策更新內容過濾規則
-- **地區適應**：根據不同地區的法規調整敏感詞
-- **合規要求**：滿足法律法規的內容審查要求
+### Platform Governance
+- **Policy Enforcement**: Update content filtering rules based on platform policies
+- **Regional Adaptation**: Adjust sensitive words according to different regional regulations
+- **Compliance Requirements**: Meet legal and regulatory content review requirements
 
 ------
 
-## 注意事項
+## Notes
 
-- **平台管理員專用**：此功能僅限平台管理員使用，需要 API Key
-- **即時生效**：配置更新會立即生效，影響所有聊天內容
-- **配置覆蓋**：POST 請求會覆蓋現有配置，請確保包含完整資料
-- **備份建議**：更新前建議先查詢當前配置作為備份
-- **關鍵詞格式**：敏感詞以字串陣列形式儲存，區分大小寫
-- **運行時配置**：使用運行時配置系統，無需重啟服務即可生效
-- **完整更新**：建議包含所有需要保留的配置項目，避免遺失其他設定
+- **Platform Admin Only**: This feature is restricted to platform administrators and requires an API Key
+- **Immediate Effect**: Configuration updates take effect immediately, affecting all chat content
+- **Configuration Override**: POST requests override existing configurations; ensure you include the complete data
+- **Backup Recommendation**: It is recommended to query the current configuration as a backup before updating
+- **Keyword Format**: Sensitive words are stored as a string array and are case-sensitive
+- **Runtime Configuration**: Uses the runtime configuration system; no service restart is required for changes to take effect
+- **Complete Update**: It is recommended to include all configuration items you wish to retain to avoid losing other settings

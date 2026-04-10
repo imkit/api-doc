@@ -1,16 +1,16 @@
-# 列出成員
+# 列出成员
 
 ## 概述
 
-取得指定聊天室的成員列表。此 API 與[取得聊天室](/zh-TW/room/room-management/get-a-room)使用相同端點 `GET /rooms/{id}`，回傳的聊天室資料中包含完整的 `members` 成員陣列與 `memberProperties` 成員屬性。
+取得指定聊天室的成员列表。此 API 与[取得聊天室](/zh-TW/room/room-management/get-a-room)使用相同端点 `GET /rooms/{id}`，回传的聊天室资料中包含完整的 `members` 成员阵列与 `memberProperties` 成员属性。
 
 ------
 
-## API 端點
+## API 端点
 
-### 取得聊天室詳細資訊（包含成員列表）
+### 取得聊天室详细资讯（包含成员列表）
 
-查詢指定聊天室的完整資訊，包含所有成員的詳細資料。
+查询指定聊天室的完整资讯，包含所有成员的详细资料。
 
 ```http
 GET /rooms/{id}
@@ -18,18 +18,18 @@ GET /rooms/{id}
 
 #### Headers
 
-| 參數            | 類型   | 必填 | 說明           |
+| 参数            | 类型   | 必填 | 说明           |
 | --------------- | ------ | ---- | -------------- |
 | `IM-CLIENT-KEY` | string | ✅    | Client Key     |
 | `IM-Authorization` | string | ✅    | Client Token   |
 
 #### Path Parameters
 
-| 參數 | 類型   | 必填 | 說明        |
+| 参数 | 类型   | 必填 | 说明        |
 | ---- | ------ | ---- | ----------- |
 | `id` | string | ✅    | 聊天室 ID   |
 
-#### 範例請求
+#### 范例请求
 
 ```http
 GET /rooms/58871b877390be11d5f1ab30 HTTP/1.1
@@ -40,7 +40,7 @@ Connection: close
 User-Agent: Paw/3.0.14 (Macintosh; OS X/10.11.6) GCDHTTPRequest
 ```
 
-**JavaScript 範例：**
+**JavaScript 范例：**
 
 ```javascript
 const response = await axios.get(
@@ -54,7 +54,7 @@ const response = await axios.get(
 );
 ```
 
-**cURL 範例：**
+**cURL 范例：**
 
 ```bash
 curl -X "GET" "https://your-app.imkit.io/rooms/58871b877390be11d5f1ab30" \
@@ -64,46 +64,46 @@ curl -X "GET" "https://your-app.imkit.io/rooms/58871b877390be11d5f1ab30" \
 
 #### Response
 
-**成功回應（200 OK）**
+**成功回应（200 OK）**
 
-| 參數     | 類型   | 說明                   |
+| 参数     | 类型   | 说明                   |
 | -------- | ------ | ---------------------- |
-| `RC`     | number | 回應代碼（0 表示成功） |
-| `RM`     | string | 回應訊息               |
-| `result` | object | 聊天室詳細資訊         |
+| `RC`     | number | 回应代码（0 表示成功） |
+| `RM`     | string | 回应讯息               |
+| `result` | object | 聊天室详细资讯         |
 
-**聊天室詳細資訊物件結構**
+**聊天室详细资讯物件结构**
 
-| 參數                | 類型   | 說明                          |
+| 参数                | 类型   | 说明                          |
 | ------------------- | ------ | ----------------------------- |
-| `_id`               | string | 聊天室唯一識別碼              |
-| `appID`             | string | 應用程式識別碼                |
+| `_id`               | string | 聊天室唯一识别码              |
+| `appID`             | string | 应用程式识别码                |
 | `description`       | string | 聊天室描述                    |
-| `lastMessage`       | object | 最後一則訊息資訊              |
-| `memberProperties`  | array  | 成員屬性列表（未讀數、最後讀取）|
-| `members`           | array  | 成員詳細資訊列表              |
-| `unread`            | number | 當前用戶未讀訊息數            |
-| `isSuperuser`       | bool   | 當前用戶是否為超級用戶        |
+| `lastMessage`       | object | 最后一则讯息资讯              |
+| `memberProperties`  | array  | 成员属性列表（未读数、最后读取）|
+| `members`           | array  | 成员详细资讯列表              |
+| `unread`            | number | 当前用户未读讯息数            |
+| `isSuperuser`       | bool   | 当前用户是否为超级用户        |
 
-**成員物件結構**
+**成员物件结构**
 
-| 參數              | 類型   | 說明                          |
+| 参数              | 类型   | 说明                          |
 | ----------------- | ------ | ----------------------------- |
-| `_id`             | string | 成員唯一識別碼                |
-| `nickname`        | string | 成員暱稱                      |
-| `avatarUrl`       | string | 成員頭像 URL                  |
-| `lastLoginTime`   | string | 最後登入時間（ISO 格式）      |
-| `lastLoginTimeMS` | number | 最後登入時間（毫秒時間戳）    |
+| `_id`             | string | 成员唯一识别码                |
+| `nickname`        | string | 成员暱称                      |
+| `avatarUrl`       | string | 成员头像 URL                  |
+| `lastLoginTime`   | string | 最后登入时间（ISO 格式）      |
+| `lastLoginTimeMS` | number | 最后登入时间（毫秒时间戳）    |
 
-**成員屬性物件結構**
+**成员属性物件结构**
 
-| 參數       | 類型   | 說明                          |
+| 参数       | 类型   | 说明                          |
 | ---------- | ------ | ----------------------------- |
-| `client`   | string | 成員客戶端 ID                 |
-| `badge`    | number | 未讀訊息數量                  |
-| `lastRead` | string | 最後讀取的訊息 ID             |
+| `client`   | string | 成员客户端 ID                 |
+| `badge`    | number | 未读讯息数量                  |
+| `lastRead` | string | 最后读取的讯息 ID             |
 
-#### 範例回應
+#### 范例回应
 
 ```json
 {
@@ -174,9 +174,9 @@ curl -X "GET" "https://your-app.imkit.io/rooms/58871b877390be11d5f1ab30" \
 }
 ```
 
-#### 錯誤回應
+#### 错误回应
 
-**401 Unauthorized** - 認證失敗
+**401 Unauthorized** - 认证失败
 
 ```json
 {
@@ -189,7 +189,7 @@ curl -X "GET" "https://your-app.imkit.io/rooms/58871b877390be11d5f1ab30" \
 }
 ```
 
-**403 Forbidden** - 權限不足或非成員
+**403 Forbidden** - 权限不足或非成员
 
 ```json
 {
@@ -217,31 +217,31 @@ curl -X "GET" "https://your-app.imkit.io/rooms/58871b877390be11d5f1ab30" \
 
 ------
 
-## 使用場景
+## 使用场景
 
-### 成員管理
-- **成員列表**：顯示聊天室內所有成員的詳細資訊
-- **成員監控**：查看成員的登入狀態和活躍度
-- **權限檢查**：確認當前用戶在聊天室中的權限級別
+### 成员管理
+- **成员列表**：显示聊天室内所有成员的详细资讯
+- **成员监控**：查看成员的登入状态和活跃度
+- **权限检查**：确认当前用户在聊天室中的权限级别
 
-### 聊天室資訊
-- **聊天室狀態**：獲取聊天室的完整狀態資訊
-- **未讀統計**：查看個人和整體的未讀訊息統計
-- **最新訊息**：獲取聊天室的最後一則訊息資訊
+### 聊天室资讯
+- **聊天室状态**：获取聊天室的完整状态资讯
+- **未读统计**：查看个人和整体的未读讯息统计
+- **最新讯息**：获取聊天室的最后一则讯息资讯
 
-### 應用整合
-- **資料同步**：同步聊天室成員和狀態資訊
-- **UI 顯示**：為聊天室界面提供完整的顯示資料
-- **分析統計**：分析聊天室成員的參與度和活躍度
+### 应用整合
+- **资料同步**：同步聊天室成员和状态资讯
+- **UI 显示**：为聊天室界面提供完整的显示资料
+- **分析统计**：分析聊天室成员的参与度和活跃度
 
 ------
 
-## 注意事項
+## 注意事项
 
-- **成員權限**：只有聊天室成員才能查看詳細資訊
-- **資料完整性**：回應包含成員列表和成員屬性的完整資訊
-- **未讀計算**：memberProperties 中包含每個成員的未讀訊息數量
-- **權限識別**：isSuperuser 欄位標識當前用戶是否為管理員
-- **時間格式**：提供 ISO 格式和毫秒時間戳兩種時間格式
-- **資料量**：大型聊天室可能返回大量成員資料，注意處理效能
-- **即時性**：成員狀態和未讀數可能需要定期更新以保持即時性
+- **成员权限**：只有聊天室成员才能查看详细资讯
+- **资料完整性**：回应包含成员列表和成员属性的完整资讯
+- **未读计算**：memberProperties 中包含每个成员的未读讯息数量
+- **权限识别**：isSuperuser 栏位标识当前用户是否为管理员
+- **时间格式**：提供 ISO 格式和毫秒时间戳两种时间格式
+- **资料量**：大型聊天室可能返回大量成员资料，注意处理效能
+- **即时性**：成员状态和未读数可能需要定期更新以保持即时性

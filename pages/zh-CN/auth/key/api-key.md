@@ -1,46 +1,46 @@
-# API 金鑰
+# API 金钥
 
 ## 概述
 
-API Key（`IM-API-KEY`）是 IMKIT Platform API 中用於後端服務的認證金鑰，代表「以平台管理員的身分」執行操作。它擁有完整的管理權限，能夠執行用戶管理、聊天室管理、Token 管理等所有操作，且可呼叫所有 API（包含 Client Key 層級的 API），必須妥善保管在伺服器端。
+API Key（`IM-API-KEY`）是 IMKIT Platform API 中用于后端服务的认证金钥，代表「以平台管理员的身分」执行操作。它拥有完整的管理权限，能够执行用户管理、聊天室管理、Token 管理等所有操作，且可呼叫所有 API（包含 Client Key 层级的 API），必须妥善保管在伺服器端。
 
 ------
 
 ## API Key 特性
 
-### 基本資訊
+### 基本资讯
 
-| 屬性         | 說明                                     |
+| 属性         | 说明                                     |
 | ------------ | ---------------------------------------- |
-| **用途**     | 以平台管理員身分執行操作                 |
-| **搭配**     | 單獨使用，不需搭配用戶 Token             |
-| **格式**     | Base64 編碼字串                          |
-| **有效期**   | 長期有效（除非主動撤銷）                 |
-| **作用域**   | 完整管理權限，可呼叫所有 API             |
-| **安全等級** | 機密（絕不可暴露在前端）                 |
+| **用途**     | 以平台管理员身分执行操作                 |
+| **搭配**     | 单独使用，不需搭配用户 Token             |
+| **格式**     | Base64 编码字串                          |
+| **有效期**   | 长期有效（除非主动撤销）                 |
+| **作用域**   | 完整管理权限，可呼叫所有 API             |
+| **安全等级** | 机密（绝不可暴露在前端）                 |
 
-### 與 Client Key 的差異
+### 与 Client Key 的差异
 
-| 項目         | API Key (`IM-API-KEY`)   | Client Key (`IM-CLIENT-KEY`)          |
+| 项目         | API Key (`IM-API-KEY`)   | Client Key (`IM-CLIENT-KEY`)          |
 | ------------ | ------------------------ | ------------------------------------- |
-| **搭配**     | 單獨使用                 | 需搭配用戶 Token (`IM-Authorization`) |
-| **身分**     | 以平台管理員身分操作     | 以特定用戶身分操作                    |
-| **使用方**   | 僅後端                   | SDK 前端 / 後端                       |
-| **權限範圍** | 完整管理權限             | 受用戶權限限制                        |
-| **安全性**   | 必須保密                 | 公開可見                              |
+| **搭配**     | 单独使用                 | 需搭配用户 Token (`IM-Authorization`) |
+| **身分**     | 以平台管理员身分操作     | 以特定用户身分操作                    |
+| **使用方**   | 仅后端                   | SDK 前端 / 后端                       |
+| **权限范围** | 完整管理权限             | 受用户权限限制                        |
+| **安全性**   | 必须保密                 | 公开可见                              |
 
 ------
 
 ## 取得 API Key
 
-### 透過 IMKIT Dashboard
+### 透过 IMKIT Dashboard
 
 1. 登入 [IMKIT Dashboard](https://dashboard.imkit.io/)
-2. 選擇您的應用程式
-3. 進入「API 設定」頁面
-4. 複製 API Key（僅顯示一次）
+2. 选择您的应用程式
+3. 进入「API 设定」页面
+4. 复制 API Key（仅显示一次）
 
-### 範例 API Key
+### 范例 API Key
 
 ```
 MjJZcFlIRGFRbElRbERTdlZMQ0xMbzJNUHpGZlZtOWpZcHh3MnZ1QnJtaz0=
@@ -50,7 +50,7 @@ MjJZcFlIRGFRbElRbERTdlZMQ0xMbzJNUHpGZlZtOWpZcHh3MnZ1QnJtaz0=
 
 ## 使用方式
 
-### HTTP Header 認證
+### HTTP Header 认证
 
 ```http
 POST /admin/clients
@@ -64,7 +64,7 @@ Content-Type: application/json
 }
 ```
 
-### 程式碼範例
+### 程式码范例
 
 **Node.js**
 
@@ -79,7 +79,7 @@ const headers = {
   'Content-Type': 'application/json'
 };
 
-// 建立用戶
+// 建立用户
 const createUser = async (userData) => {
   try {
     const response = await axios.post(`${baseURL}/admin/clients`, userData, { headers });
@@ -146,78 +146,78 @@ function createUser($userData) {
 
 ------
 
-## API Key 權限
+## API Key 权限
 
-### 允許的操作
+### 允许的操作
 
-- ✅ **用戶管理**
-  - 建立、更新、刪除用戶
-  - 查詢用戶資訊
-  - 管理用戶權限
+- ✅ **用户管理**
+  - 建立、更新、删除用户
+  - 查询用户资讯
+  - 管理用户权限
 - ✅ **Token 管理**
   - Issue Token
   - 更新 Token
-  - 撤銷 Token
+  - 撤销 Token
 - ✅ **聊天室管理**
-  - 建立、刪除聊天室
-  - 管理聊天室成員
-  - 設定聊天室權限
-- ✅ **訊息管理**
-  - 發送系統訊息
-  - 刪除訊息
-  - 查詢訊息記錄
-- ✅ **應用程式設定**
-  - 修改應用程式配置
-  - 管理 Webhook 設定
-  - 查看使用統計
+  - 建立、删除聊天室
+  - 管理聊天室成员
+  - 设定聊天室权限
+- ✅ **讯息管理**
+  - 发送系统讯息
+  - 删除讯息
+  - 查询讯息记录
+- ✅ **应用程式设定**
+  - 修改应用程式配置
+  - 管理 Webhook 设定
+  - 查看使用统计
 
-### 高風險操作
+### 高风险操作
 
-- ⚠️ **完全控制權**：可以存取和修改所有應用程式資料
-- ⚠️ **用戶資料**：可以存取所有用戶的私人資訊
-- ⚠️ **聊天記錄**：可以讀取所有聊天室的訊息內容
-- ⚠️ **系統設定**：可以修改應用程式的核心設定
+- ⚠️ **完全控制权**：可以存取和修改所有应用程式资料
+- ⚠️ **用户资料**：可以存取所有用户的私人资讯
+- ⚠️ **聊天记录**：可以读取所有聊天室的讯息内容
+- ⚠️ **系统设定**：可以修改应用程式的核心设定
 
 ------
 
 ## 安全性考量
 
-### 為什麼 API Key 必須保密？
+### 为什么 API Key 必须保密？
 
-1. **完整權限**：擁有應用程式的完全控制權
-2. **資料存取**：可以存取所有用戶和聊天資料
-3. **不可撤銷操作**：可以執行刪除等不可逆操作
-4. **無使用者驗證**：不需要額外的用戶身份驗證
+1. **完整权限**：拥有应用程式的完全控制权
+2. **资料存取**：可以存取所有用户和聊天资料
+3. **不可撤销操作**：可以执行删除等不可逆操作
+4. **无使用者验证**：不需要额外的用户身份验证
 
-### 安全最佳實務
+### 安全最佳实务
 
-#### 存儲安全
+#### 存储安全
 
-- **環境變數**：將 API Key 存放在環境變數中
-- **配置檔案**：使用加密的配置檔案管理
-- **密鑰管理服務**：使用 AWS Secrets Manager、Azure Key Vault 等
-- **版本控制排除**：絕不將 API Key 提交到版本控制系統
+- **环境变数**：将 API Key 存放在环境变数中
+- **配置档案**：使用加密的配置档案管理
+- **密钥管理服务**：使用 AWS Secrets Manager、Azure Key Vault 等
+- **版本控制排除**：绝不将 API Key 提交到版本控制系统
 
 #### 存取控制
 
-- **最小權限原則**：僅在必要的服務中使用 API Key
-- **網路限制**：限制 API Key 的來源 IP 範圍
-- **定期輪換**：定期更換 API Key
-- **監控使用**：監控 API Key 的使用情況和異常活動
+- **最小权限原则**：仅在必要的服务中使用 API Key
+- **网路限制**：限制 API Key 的来源 IP 范围
+- **定期轮换**：定期更换 API Key
+- **监控使用**：监控 API Key 的使用情况和异常活动
 
-#### 應用程式安全
+#### 应用程式安全
 
 ```javascript
-// ✅ 正確：在伺服器端使用
-const apiKey = process.env.IMKIT_API_KEY; // 從環境變數讀取
+// ✅ 正确：在伺服器端使用
+const apiKey = process.env.IMKIT_API_KEY; // 从环境变数读取
 
-// ❌ 錯誤：絕不在前端暴露
+// ❌ 错误：绝不在前端暴露
 // const apiKey = 'MjJZcFlIRGFRbElRbERTdlZMQ0xMbzJNUHpGZlZtOWpZcHh3MnZ1QnJtaz0=';
 ```
 
 ------
 
-## 環境設定範例
+## 环境设定范例
 
 ### Docker
 
@@ -225,7 +225,7 @@ const apiKey = process.env.IMKIT_API_KEY; // 從環境變數讀取
 ENV IMKIT_API_KEY=MjJZcFlIRGFRbElRbERTdlZMQ0xMbzJNUHpGZlZtOWpZcHh3MnZ1QnJtaz0=
 ```
 
-### .env 檔案
+### .env 档案
 
 ```env
 IMKIT_API_KEY=MjJZcFlIRGFRbElRbERTdlZMQ0xMbzJNUHpGZlZtOWpZcHh3MnZ1QnJtaz0=
@@ -246,49 +246,49 @@ data:
 
 ------
 
-## 常見問題
+## 常见问题
 
-### Q: API Key 洩露會有什麼風險？
+### Q: API Key 泄露会有什么风险？
 
-**A:** 極高風險！攻擊者可以：
+**A:** 极高风险！攻击者可以：
 
-- 完全控制您的 IMKIT 應用程式
-- 存取所有用戶資料和聊天記錄
-- 刪除或修改重要資料
-- 產生額外的費用
+- 完全控制您的 IMKIT 应用程式
+- 存取所有用户资料和聊天记录
+- 删除或修改重要资料
+- 产生额外的费用
 
-**發現洩露請立即：**
+**发现泄露请立即：**
 
-1. 在 Dashboard 中撤銷舊的 API Key
+1. 在 Dashboard 中撤销旧的 API Key
 2. 生成新的 API Key
-3. 更新所有使用該 API Key 的服務
-4. 檢查是否有異常操作記錄
+3. 更新所有使用该 API Key 的服务
+4. 检查是否有异常操作记录
 
-### Q: 可以在前端 JavaScript 中使用 API Key 嗎？
+### Q: 可以在前端 JavaScript 中使用 API Key 吗？
 
-**A:** 絕對不可以！前端代碼會暴露給所有用戶，使用 Client Key 進行前端整合。
+**A:** 绝对不可以！前端代码会暴露给所有用户，使用 Client Key 进行前端整合。
 
-### Q: 如何限制 API Key 的存取範圍？
+### Q: 如何限制 API Key 的存取范围？
 
-**A:** 目前 API Key 擁有完整權限，建議通過以下方式控制：
+**A:** 目前 API Key 拥有完整权限，建议通过以下方式控制：
 
-- 網路層面限制來源 IP
-- 應用程式層面實作權限控制
-- 使用代理服務限制可呼叫的 API
+- 网路层面限制来源 IP
+- 应用程式层面实作权限控制
+- 使用代理服务限制可呼叫的 API
 
-### Q: API Key 有使用頻率限制嗎？
+### Q: API Key 有使用频率限制吗？
 
-**A:** 是的，API Key 有 rate limiting 保護：
+**A:** 是的，API Key 有 rate limiting 保护：
 
-- 每分鐘最多 1000 次請求
-- 超過限制會收到 429 錯誤
-- 建議實作適當的重試機制
+- 每分钟最多 1000 次请求
+- 超过限制会收到 429 错误
+- 建议实作适当的重试机制
 
 ------
 
-## 錯誤處理
+## 错误处理
 
-### 常見錯誤
+### 常见错误
 
 **Invalid API Key**
 

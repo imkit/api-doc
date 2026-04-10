@@ -1,16 +1,16 @@
-# 取得聊天室
+# Get a Room
 
-## 概述
+## Overview
 
-此端點允許您取得指定聊天室的詳細資訊，包含成員列表、最後一則訊息、成員屬性（未讀數、已讀位置）等完整資料。
+This endpoint allows you to retrieve detailed information about a specified room, including the member list, last message, member properties (unread count, read position), and other complete data.
 
 ------
 
-## API 端點
+## API Endpoint
 
-### 取得聊天室詳情
+### Get Room Details
 
-取得指定聊天室的完整資訊。
+Retrieve the complete information of a specified room.
 
 ```http
 GET /rooms/{id}
@@ -18,18 +18,18 @@ GET /rooms/{id}
 
 #### Headers
 
-| 參數 | 類型 | 必填 | 說明 |
+| Parameter | Type | Required | Description |
 | ---- | ---- | ---- | ---- |
-| `IM-CLIENT-KEY` | string | ✅ | 用戶端金鑰 |
-| `IM-Authorization` | string | ✅ | 用戶端權杖 |
+| `IM-CLIENT-KEY` | string | ✅ | Client key |
+| `IM-Authorization` | string | ✅ | Client token |
 
 #### Path Parameters
 
-| 參數 | 類型 | 必填 | 說明 |
+| Parameter | Type | Required | Description |
 | ---- | ---- | ---- | ---- |
-| `id` | string | ✅ | 聊天室 ID |
+| `id` | string | ✅ | Room ID |
 
-#### 範例請求
+#### Example Request
 
 ```javascript
 const response = await axios.get(
@@ -43,7 +43,7 @@ const response = await axios.get(
 );
 ```
 
-##### cURL 範例
+##### cURL Example
 
 ```bash
 curl "https://your-app.imkit.io/rooms/project-room-001" \
@@ -53,36 +53,36 @@ curl "https://your-app.imkit.io/rooms/project-room-001" \
 
 #### Response
 
-**成功回應（200 OK）**
+**Success Response (200 OK)**
 
-| 參數 | 類型 | 說明 |
+| Parameter | Type | Description |
 | ---- | ---- | ---- |
-| `RC` | number | 回應代碼（0 表示成功） |
-| `RM` | string | 回應訊息 |
-| `result` | object | 聊天室完整資訊 |
+| `RC` | number | Response code (0 indicates success) |
+| `RM` | string | Response message |
+| `result` | object | Complete room information |
 
-**聊天室物件欄位**
+**Room Object Fields**
 
-| 參數 | 類型 | 說明 |
+| Parameter | Type | Description |
 | ---- | ---- | ---- |
-| `_id` | string | 聊天室唯一識別碼 |
-| `appID` | string | 應用程式識別碼 |
-| `lastMessage` | object | 最後一則訊息（含發送者資訊） |
-| `memberProperties` | array[object] | 成員屬性陣列（未讀數、已讀位置） |
-| `members` | array[object] | 成員詳細資訊陣列 |
-| `unread` | number | 當前用戶的未讀訊息數 |
-| `description` | string | 聊天室描述 |
-| `isSuperuser` | boolean | 當前用戶是否為超級用戶 |
+| `_id` | string | Room unique identifier |
+| `appID` | string | Application identifier |
+| `lastMessage` | object | Last message (including sender information) |
+| `memberProperties` | array[object] | Member properties array (unread count, read position) |
+| `members` | array[object] | Member details array |
+| `unread` | number | Unread message count for the current user |
+| `description` | string | Room description |
+| `isSuperuser` | boolean | Whether the current user is a superuser |
 
-**成員屬性物件**
+**Member Properties Object**
 
-| 參數 | 類型 | 說明 |
+| Parameter | Type | Description |
 | ---- | ---- | ---- |
-| `client` | string | 成員用戶 ID |
-| `badge` | number | 未讀訊息數 |
-| `lastRead` | string | 最後已讀的訊息 ID |
+| `client` | string | Member user ID |
+| `badge` | number | Unread message count |
+| `lastRead` | string | Last read message ID |
 
-#### 範例回應
+#### Example Response
 
 ```json
 {
@@ -134,9 +134,9 @@ curl "https://your-app.imkit.io/rooms/project-room-001" \
 }
 ```
 
-#### 錯誤回應
+#### Error Response
 
-**404 Not Found** — 聊天室不存在
+**404 Not Found** — Room does not exist
 
 ```json
 {
@@ -151,21 +151,21 @@ curl "https://your-app.imkit.io/rooms/project-room-001" \
 
 ------
 
-## 使用場景
+## Use Cases
 
-### 聊天室資訊
-- **顯示詳情**：取得聊天室的成員列表和基本資訊
-- **未讀狀態**：查詢各成員的未讀訊息數和已讀位置
+### Room Information
+- **Display details**: Retrieve the member list and basic information of a room
+- **Unread status**: Query the unread message count and read position for each member
 
-### 管理操作
-- **成員確認**：確認特定用戶是否為聊天室成員
-- **狀態檢查**：檢查聊天室的最後活動時間
+### Management Operations
+- **Member verification**: Confirm whether a specific user is a member of a room
+- **Status check**: Check the last activity time of a room
 
 ------
 
-## 注意事項
+## Notes
 
-- **成員限定**：只有聊天室成員或平台管理員可以取得聊天室詳情
-- **完整資料**：回應包含所有成員的詳細資訊和屬性
-- **最後訊息**：`lastMessage` 物件包含發送者的完整資訊
-- **未讀計算**：`unread` 欄位為當前認證用戶的未讀數
+- **Members only**: Only room members or platform administrators can retrieve room details
+- **Complete data**: The response includes detailed information and properties for all members
+- **Last message**: The `lastMessage` object includes the sender's complete information
+- **Unread calculation**: The `unread` field represents the unread count for the currently authenticated user

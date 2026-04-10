@@ -1,16 +1,16 @@
-# 撤銷 Token
+# 撤销 Token
 
 ## 概述
 
-撤銷指定用戶的 access token，使其無法繼續使用聊天服務。您可以選擇撤銷特定的 token，或移除該用戶的所有 token。
+撤销指定用户的 access token，使其无法继续使用聊天服务。您可以选择撤销特定的 token，或移除该用户的所有 token。
 
 ------
 
-## API 端點
+## API 端点
 
-### 撤銷用戶 Token
+### 撤销用户 Token
 
-撤銷指定用戶的 access token。
+撤销指定用户的 access token。
 
 ```http
 DELETE /admin/clients/{client_id}/token
@@ -18,26 +18,26 @@ DELETE /admin/clients/{client_id}/token
 
 #### Headers
 
-| 參數 | 類型 | 必填 | 說明 |
+| 参数 | 类型 | 必填 | 说明 |
 | ---- | ---- | ---- | ---- |
-| `IM-API-KEY` | string | ✅ | 您的 API 金鑰 |
+| `IM-API-KEY` | string | ✅ | 您的 API 金钥 |
 | `Content-Type` | string | ✅ | `application/json` |
 
 #### Path Parameters
 
-| 參數 | 類型 | 必填 | 說明 |
+| 参数 | 类型 | 必填 | 说明 |
 | ---- | ---- | ---- | ---- |
-| `client_id` | string | ✅ | 用戶唯一識別碼 |
+| `client_id` | string | ✅ | 用户唯一识别码 |
 
 #### Request Body
 
-| 參數 | 類型 | 必填 | 說明 |
+| 参数 | 类型 | 必填 | 说明 |
 | ---- | ---- | ---- | ---- |
-| `token` | string | ❌ | 要撤銷的特定 token，若不提供則移除該用戶所有 token |
+| `token` | string | ❌ | 要撤销的特定 token，若不提供则移除该用户所有 token |
 
-#### 範例請求
+#### 范例请求
 
-**撤銷特定 Token：**
+**撤销特定 Token：**
 
 ```javascript
 const response = await axios.delete(
@@ -54,7 +54,7 @@ const response = await axios.delete(
 );
 ```
 
-**撤銷所有 Token：**
+**撤销所有 Token：**
 
 ```javascript
 const response = await axios.delete(
@@ -69,7 +69,7 @@ const response = await axios.delete(
 );
 ```
 
-**cURL 範例：**
+**cURL 范例：**
 
 ```bash
 curl -X "DELETE" "https://your-app.imkit.io/admin/clients/{client_id}/token" \
@@ -80,17 +80,17 @@ curl -X "DELETE" "https://your-app.imkit.io/admin/clients/{client_id}/token" \
 
 #### Response
 
-**成功回應（200 OK）**
+**成功回应（200 OK）**
 
-| 參數 | 類型 | 說明 |
+| 参数 | 类型 | 说明 |
 | ---- | ---- | ---- |
 | `success` | boolean | 操作是否成功 |
-| `message` | string | 操作結果訊息 |
-| `revokedTokens` | number | 被撤銷的 token 數量 |
+| `message` | string | 操作结果讯息 |
+| `revokedTokens` | number | 被撤销的 token 数量 |
 
-#### 範例回應
+#### 范例回应
 
-**撤銷特定 Token**
+**撤销特定 Token**
 
 ```json
 {
@@ -100,7 +100,7 @@ curl -X "DELETE" "https://your-app.imkit.io/admin/clients/{client_id}/token" \
 }
 ```
 
-**撤銷所有 Token**
+**撤销所有 Token**
 
 ```json
 {
@@ -110,9 +110,9 @@ curl -X "DELETE" "https://your-app.imkit.io/admin/clients/{client_id}/token" \
 }
 ```
 
-#### 錯誤回應
+#### 错误回应
 
-**401 Unauthorized** — API 金鑰無效
+**401 Unauthorized** — API 金钥无效
 
 ```json
 {
@@ -121,7 +121,7 @@ curl -X "DELETE" "https://your-app.imkit.io/admin/clients/{client_id}/token" \
 }
 ```
 
-**404 Not Found** — 用戶不存在
+**404 Not Found** — 用户不存在
 
 ```json
 {
@@ -141,24 +141,24 @@ curl -X "DELETE" "https://your-app.imkit.io/admin/clients/{client_id}/token" \
 
 ------
 
-## 使用場景
+## 使用场景
 
 ### 安全性考量
-- **帳號被盜用**：立即撤銷所有 token 以確保安全
-- **設備遺失**：撤銷特定設備的 token
-- **員工離職**：撤銷企業用戶的所有 token
+- **帐号被盗用**：立即撤销所有 token 以确保安全
+- **设备遗失**：撤销特定设备的 token
+- **员工离职**：撤销企业用户的所有 token
 
-### 系統管理
-- **強制登出**：撤銷 token 強制用戶重新登入
-- **Token 輪換**：定期撤銷舊 token 提升安全性
-- **權限變更**：撤銷 token 以重新分配權限
+### 系统管理
+- **强制登出**：撤销 token 强制用户重新登入
+- **Token 轮换**：定期撤销旧 token 提升安全性
+- **权限变更**：撤销 token 以重新分配权限
 
 ------
 
-## 注意事項
+## 注意事项
 
-- **即時生效**：Token 撤銷後立即生效，用戶將無法繼續使用聊天功能
-- **不可復原**：撤銷的 token 無法恢復，需要重新核發或指派新 token
-- **批次操作**：不提供 `token` 參數可一次撤銷用戶的所有 token
-- **優先撤銷特定 Token**：避免影響用戶其他設備，優先撤銷特定 token
-- **審計日誌**：建議記錄 token 撤銷操作以供後續審計
+- **即时生效**：Token 撤销后立即生效，用户将无法继续使用聊天功能
+- **不可复原**：撤销的 token 无法恢复，需要重新核发或指派新 token
+- **批次操作**：不提供 `token` 参数可一次撤销用户的所有 token
+- **优先撤销特定 Token**：避免影响用户其他设备，优先撤销特定 token
+- **审计日志**：建议记录 token 撤销操作以供后续审计

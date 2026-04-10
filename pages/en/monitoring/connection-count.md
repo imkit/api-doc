@@ -1,16 +1,16 @@
-# 取得連線數
+# Connection Count
 
-## 概述
+## Overview
 
-取得目前系統的 WebSocket 即時連線數量。此端點可用於即時監控系統負載、容量規劃及營運監控等用途。需具備平台 API 權限方可呼叫。
+Retrieve the current number of WebSocket real-time connections in the system. This endpoint can be used for real-time system load monitoring, capacity planning, and operational monitoring. Platform API permissions are required to call this endpoint.
 
 ------
 
-## API 端點
+## API Endpoint
 
-### 取得目前連線數
+### Get Current Connection Count
 
-查詢目前系統上的 WebSocket 連線數量。
+Query the current number of WebSocket connections on the system.
 
 ```http
 GET /admin/connection-count
@@ -18,13 +18,13 @@ GET /admin/connection-count
 
 #### Headers
 
-| 參數         | 類型   | 必填 | 說明              |
-| ------------ | ------ | ---- | ----------------- |
-| `IM-API-KEY` | string | ✅    | 您的平台 API 金鑰 |
+| Parameter    | Type   | Required | Description           |
+| ------------ | ------ | -------- | --------------------- |
+| `IM-API-KEY` | string | ✅        | Your platform API Key |
 
-#### 範例請求
+#### Example Request
 
-**JavaScript（axios）**
+**JavaScript (axios)**
 
 ```javascript
 const response = await axios.get(
@@ -46,16 +46,16 @@ curl -X GET "https://your-app.imkit.io/admin/connection-count" \
 
 #### Response
 
-**成功回應（200 OK）**
+**Success Response (200 OK)**
 
-| 參數           | 類型   | 說明                         |
-| -------------- | ------ | ---------------------------- |
-| `RC`           | number | 回應代碼（0 表示成功）       |
-| `RM`           | string | 回應訊息                     |
-| `result`       | object | 查詢結果                     |
-| `result.count` | number | 目前的 WebSocket 連線數量    |
+| Parameter      | Type   | Description                         |
+| -------------- | ------ | ----------------------------------- |
+| `RC`           | number | Response code (0 indicates success) |
+| `RM`           | string | Response message                    |
+| `result`       | object | Query result                        |
+| `result.count` | number | Current WebSocket connection count  |
 
-#### 範例回應
+#### Example Response
 
 ```json
 {
@@ -67,9 +67,9 @@ curl -X GET "https://your-app.imkit.io/admin/connection-count" \
 }
 ```
 
-#### 錯誤回應
+#### Error Response
 
-**401 Unauthorized** - API 金鑰無效
+**401 Unauthorized** - Invalid API Key
 
 ```json
 {
@@ -82,7 +82,7 @@ curl -X GET "https://your-app.imkit.io/admin/connection-count" \
 }
 ```
 
-**403 Forbidden** - 權限不足
+**403 Forbidden** - Insufficient permissions
 
 ```json
 {
@@ -97,25 +97,25 @@ curl -X GET "https://your-app.imkit.io/admin/connection-count" \
 
 ------
 
-## 使用場景
+## Use Cases
 
-### 即時監控
-- **連線數監控**：在監控儀表板即時顯示目前的 WebSocket 連線數量
-- **異常偵測**：設定連線數閾值，當超過或驟降時觸發警報
+### Real-Time Monitoring
+- **Connection Monitoring**: Display the current WebSocket connection count in real-time on a monitoring dashboard
+- **Anomaly Detection**: Set connection count thresholds to trigger alerts when counts exceed or suddenly drop
 
-### 容量規劃
-- **負載評估**：定期取得連線數，評估系統負載狀況
-- **擴展決策**：根據連線數趨勢決定是否需要擴展伺服器資源
+### Capacity Planning
+- **Load Assessment**: Periodically retrieve connection counts to assess system load conditions
+- **Scaling Decisions**: Decide whether server resources need to be scaled based on connection count trends
 
-### 營運報告
-- **使用統計**：記錄各時段連線數，產出使用報告
-- **高峰分析**：分析不同時段的連線高峰，最佳化資源配置
+### Operational Reports
+- **Usage Statistics**: Record connection counts at various time periods to generate usage reports
+- **Peak Analysis**: Analyze connection peaks at different times to optimize resource allocation
 
 ------
 
-## 注意事項
+## Notes
 
-- **需要平台 API 權限**：此端點需使用具有平台 API 權限的 `IM-API-KEY` 進行驗證
-- **即時數據**：回傳的是呼叫當下的即時連線數，每次呼叫結果可能不同
-- **WebSocket 連線**：統計的是 WebSocket 長連線數量，不包含一般 HTTP 請求
-- **監控頻率**：建議以適當的間隔輪詢（如每 30 秒或每分鐘），避免過於頻繁的呼叫
+- **Platform API Permission Required**: This endpoint requires authentication using an `IM-API-KEY` with platform API permissions
+- **Real-Time Data**: The returned value is the real-time connection count at the moment of the call; results may differ with each call
+- **WebSocket Connections**: The count includes only WebSocket persistent connections, not regular HTTP requests
+- **Monitoring Frequency**: It is recommended to poll at an appropriate interval (e.g., every 30 seconds or every minute) to avoid overly frequent calls

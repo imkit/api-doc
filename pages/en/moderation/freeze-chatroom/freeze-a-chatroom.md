@@ -1,16 +1,16 @@
-# 凍結聊天室
+# Freeze a Chatroom
 
-## 概述
+## Overview
 
-凍結聊天室功能透過更新聊天室狀態來暫停或禁用聊天室的使用。當聊天室狀態設為無效（status=0）時，聊天室將被凍結，用戶無法在其中正常互動。此功能適用於內容管理、違規處理和聊天室維護。
+The freeze chatroom feature suspends or disables a chatroom by updating its status. When the chatroom status is set to inactive (status=0), the chatroom will be frozen and users will be unable to interact normally within it. This feature is suitable for content management, violation handling, and chatroom maintenance.
 
 ------
 
-## API 端點
+## API Endpoint
 
-### 凍結指定聊天室
+### Freeze a Specified Chatroom
 
-透過更新聊天室狀態來凍結聊天室，使其變為無效狀態。
+Freeze a chatroom by updating its status to inactive.
 
 ```http
 PUT /rooms/{id}
@@ -18,26 +18,26 @@ PUT /rooms/{id}
 
 #### Headers
 
-| 參數            | 類型   | 必填 | 說明           |
-| --------------- | ------ | ---- | -------------- |
-| `IM-CLIENT-KEY` | string | ✅    | Client Key     |
-| `IM-Authorization` | string | ✅    | Client Token   |
+| Parameter          | Type   | Required | Description    |
+| ------------------ | ------ | -------- | -------------- |
+| `IM-CLIENT-KEY`    | string | ✅        | Client Key     |
+| `IM-Authorization` | string | ✅        | Client Token   |
 
 #### Path Parameters
 
-| 參數 | 類型   | 必填 | 說明        |
-| ---- | ------ | ---- | ----------- |
-| `id` | string | ✅    | 聊天室 ID   |
+| Parameter | Type   | Required | Description   |
+| --------- | ------ | -------- | ------------- |
+| `id`      | string | ✅        | Chatroom ID   |
 
 #### Post Body
 
-| 參數     | 類型   | 必填 | 說明                               |
-| -------- | ------ | ---- | ---------------------------------- |
-| `status` | number | ✅    | 聊天室狀態：0=無效（凍結），1=有效 |
+| Parameter | Type   | Required | Description                                |
+| --------- | ------ | -------- | ------------------------------------------ |
+| `status`  | number | ✅        | Chatroom status: 0=inactive (frozen), 1=active |
 
-#### 範例請求
+#### Example Request
 
-**凍結聊天室**
+**Freeze a chatroom**
 
 ```http
 PUT /rooms/58871b877390be11d5f1ab30 HTTP/1.1
@@ -52,7 +52,7 @@ Connection: close
 }
 ```
 
-**解除凍結聊天室**
+**Unfreeze a chatroom**
 
 ```http
 PUT /rooms/58871b877390be11d5f1ab30 HTTP/1.1
@@ -67,7 +67,7 @@ Connection: close
 }
 ```
 
-**JavaScript 範例：**
+**JavaScript Example:**
 
 ```javascript
 const response = await axios.put(
@@ -85,7 +85,7 @@ const response = await axios.put(
 );
 ```
 
-**cURL 範例：**
+**cURL Example:**
 
 ```bash
 curl -X "PUT" "https://your-app.imkit.io/rooms/{id}" \
@@ -97,29 +97,29 @@ curl -X "PUT" "https://your-app.imkit.io/rooms/{id}" \
 
 #### Response
 
-**成功回應（200 OK）**
+**Success Response (200 OK)**
 
-| 參數     | 類型   | 說明                   |
-| -------- | ------ | ---------------------- |
-| `RC`     | number | 回應代碼（0 表示成功） |
-| `RM`     | string | 回應訊息               |
-| `result` | object | 更新後的聊天室資料     |
+| Parameter | Type   | Description                         |
+| --------- | ------ | ----------------------------------- |
+| `RC`      | number | Response code (0 indicates success) |
+| `RM`      | string | Response message                    |
+| `result`  | object | Updated chatroom data               |
 
-**聊天室物件結構**
+**Chatroom Object Structure**
 
-| 參數            | 類型   | 說明                      |
-| --------------- | ------ | ------------------------- |
-| `_id`           | string | 聊天室唯一識別碼          |
-| `name`          | string | 聊天室名稱                |
-| `cover`         | string | 聊天室封面圖片 URL        |
-| `description`   | string | 聊天室描述                |
-| `status`        | number | 聊天室狀態（0=凍結，1=正常）|
-| `lastMessage`   | object | 最後一則訊息資訊          |
-| `members`       | array  | 聊天室成員列表            |
+| Parameter       | Type   | Description                           |
+| --------------- | ------ | ------------------------------------- |
+| `_id`           | string | Chatroom unique ID                    |
+| `name`          | string | Chatroom name                         |
+| `cover`         | string | Chatroom cover image URL              |
+| `description`   | string | Chatroom description                  |
+| `status`        | number | Chatroom status (0=frozen, 1=active)  |
+| `lastMessage`   | object | Last message information              |
+| `members`       | array  | Chatroom member list                  |
 
-#### 範例回應
+#### Example Response
 
-**凍結聊天室成功**
+**Chatroom frozen successfully**
 
 ```json
 {
@@ -155,9 +155,9 @@ curl -X "PUT" "https://your-app.imkit.io/rooms/{id}" \
 }
 ```
 
-#### 錯誤回應
+#### Error Response
 
-**401 Unauthorized** - 認證失敗
+**401 Unauthorized** - Authentication failed
 
 ```json
 {
@@ -170,7 +170,7 @@ curl -X "PUT" "https://your-app.imkit.io/rooms/{id}" \
 }
 ```
 
-**403 Forbidden** - 權限不足
+**403 Forbidden** - Insufficient permissions
 
 ```json
 {
@@ -183,7 +183,7 @@ curl -X "PUT" "https://your-app.imkit.io/rooms/{id}" \
 }
 ```
 
-**404 Not Found** - 聊天室不存在
+**404 Not Found** - Chatroom does not exist
 
 ```json
 {
@@ -198,31 +198,31 @@ curl -X "PUT" "https://your-app.imkit.io/rooms/{id}" \
 
 ------
 
-## 使用場景
+## Use Cases
 
-### 內容管理
-- **違規處理**：對違反社群規範的聊天室進行暫時凍結
-- **緊急狀況**：在發生緊急事件時快速封鎖聊天室
-- **內容審核**：暫時凍結聊天室進行內容審核
+### Content Management
+- **Violation Handling**: Temporarily freeze chatrooms that violate community guidelines
+- **Emergency Situations**: Quickly lock down a chatroom during emergency events
+- **Content Review**: Temporarily freeze a chatroom for content review
 
-### 聊天室維護
-- **系統維護**：在系統維護期間暫時凍結聊天室
-- **功能更新**：在聊天室功能更新時暫時停用
-- **資料遷移**：在進行資料遷移時暫停聊天室使用
+### Chatroom Maintenance
+- **System Maintenance**: Temporarily freeze chatrooms during system maintenance
+- **Feature Updates**: Temporarily disable chatrooms during feature updates
+- **Data Migration**: Suspend chatroom usage during data migration
 
-### 管理操作
-- **批量管理**：批量凍結或解除凍結多個聊天室
-- **權限控制**：確保只有授權用戶能執行凍結操作
-- **狀態追蹤**：監控聊天室的凍結狀態和歷史
+### Administrative Operations
+- **Batch Management**: Batch freeze or unfreeze multiple chatrooms
+- **Permission Control**: Ensure only authorized users can perform freeze operations
+- **Status Tracking**: Monitor chatroom freeze status and history
 
 ------
 
-## 注意事項
+## Notes
 
-- **權限限制**：僅聊天室擁有者、管理員或平台管理員可執行凍結操作
-- **狀態影響**：凍結的聊天室（status=0）將無法正常使用
-- **用戶體驗**：凍結期間用戶可能無法發送訊息或進行互動
-- **即時生效**：狀態更改會立即生效，影響所有聊天室成員
-- **可逆操作**：可透過設定 status=1 來解除聊天室凍結
-- **資料保存**：凍結聊天室不會刪除歷史訊息和成員資料
-- **通知機制**：凍結操作可能會觸發相關的通知或事件
+- **Permission Restriction**: Only chatroom owners, administrators, or platform administrators can perform freeze operations
+- **Status Impact**: A frozen chatroom (status=0) cannot be used normally
+- **User Experience**: During the freeze period, users may be unable to send messages or interact
+- **Immediate Effect**: The status change takes effect immediately, affecting all chatroom members
+- **Reversible Operation**: A chatroom can be unfrozen by setting status=1
+- **Data Preservation**: Freezing a chatroom does not delete historical messages or member data
+- **Notification Mechanism**: Freeze operations may trigger related notifications or events

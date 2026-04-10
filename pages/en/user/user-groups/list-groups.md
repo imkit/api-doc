@@ -1,16 +1,16 @@
-# 用戶群組列表
+# List User Groups
 
-## 概述
+## Overview
 
-查詢系統中所有的用戶群組列表。可搭配 `limit` 參數控制回傳數量。此為伺服器端 API，需使用 `IM-API-KEY` 進行驗證。
+Query the list of all user groups in the system. The `limit` parameter can be used to control the number of results returned. This is a server-side API that requires `IM-API-KEY` authentication.
 
 ------
 
-## API 端點
+## API Endpoint
 
-### 查詢用戶群組列表
+### Query User Group List
 
-取得系統中所有用戶群組的列表。
+Retrieve the list of all user groups in the system.
 
 ```http
 GET /admin/groups
@@ -18,19 +18,19 @@ GET /admin/groups
 
 #### Headers
 
-| 參數         | 類型   | 必填 | 說明              |
+| Parameter         | Type   | Required | Description              |
 | ------------ | ------ | ---- | ----------------- |
-| `IM-API-KEY` | string | ✅    | 您的平台 API 金鑰 |
+| `IM-API-KEY` | string | ✅    | Your platform API key |
 
 #### Query Parameters
 
-| 參數    | 類型   | 必填 | 說明                             |
+| Parameter    | Type   | Required | Description                             |
 | ------- | ------ | ---- | -------------------------------- |
-| `limit` | number | ❌    | 回傳的最大群組數量               |
+| `limit` | number | ❌    | Maximum number of groups to return               |
 
-#### 範例請求
+#### Example Request
 
-**JavaScript（axios）**
+**JavaScript (axios)**
 
 ```javascript
 const response = await axios.get(
@@ -55,26 +55,26 @@ curl -X GET "https://your-app.imkit.io/admin/groups?limit=50" \
 
 #### Response
 
-**成功回應（200 OK）**
+**Success Response (200 OK)**
 
-| 參數                    | 類型   | 說明                         |
+| Parameter                    | Type   | Description                         |
 | ----------------------- | ------ | ---------------------------- |
-| `RC`                    | number | 回應代碼（0 表示成功）       |
-| `RM`                    | string | 回應訊息                     |
-| `result`                | object | 查詢結果                     |
-| `result.totalCount`     | number | 群組總數                     |
-| `result.data`           | array  | 群組資料陣列                 |
+| `RC`                    | number | Response code (0 indicates success)       |
+| `RM`                    | string | Response message                     |
+| `result`                | object | Query results                     |
+| `result.totalCount`     | number | Total number of groups                     |
+| `result.data`           | array  | Array of group data                 |
 
-**群組物件結構**
+**Group Object Structure**
 
-| 參數        | 類型   | 說明                       |
+| Parameter        | Type   | Description                       |
 | ----------- | ------ | -------------------------- |
-| `_id`       | string | 群組唯一識別碼             |
-| `nickname`  | string | 群組顯示名稱               |
-| `avatarUrl` | string | 群組頭像圖片 URL           |
-| `members`   | array  | 群組成員的 Client ID 陣列  |
+| `_id`       | string | Unique group identifier             |
+| `nickname`  | string | Group display name               |
+| `avatarUrl` | string | Group avatar image URL           |
+| `members`   | array  | Array of Client IDs for group members  |
 
-#### 範例回應
+#### Example Response
 
 ```json
 {
@@ -106,9 +106,9 @@ curl -X GET "https://your-app.imkit.io/admin/groups?limit=50" \
 }
 ```
 
-#### 錯誤回應
+#### Error Response
 
-**401 Unauthorized** - API 金鑰無效
+**401 Unauthorized** - Invalid API key
 
 ```json
 {
@@ -123,21 +123,21 @@ curl -X GET "https://your-app.imkit.io/admin/groups?limit=50" \
 
 ------
 
-## 使用場景
+## Use Cases
 
-### 群組管理
-- **群組總覽**：在管理後台列出所有用戶群組，提供管理介面
-- **成員審查**：檢視各群組的成員組成，確認權限配置正確
+### Group Management
+- **Group Overview**: List all user groups in the admin dashboard to provide a management interface
+- **Member Review**: View the member composition of each group to ensure permission configurations are correct
 
-### 系統整合
-- **同步群組資料**：將群組資料同步至外部系統（如 CRM、HR 系統）
-- **權限稽核**：定期匯出群組清單，進行存取權限稽核
+### System Integration
+- **Sync Group Data**: Synchronize group data to external systems (such as CRM or HR systems)
+- **Permission Auditing**: Periodically export the group list for access permission auditing
 
 ------
 
-## 注意事項
+## Notes
 
-- **僅限伺服器端使用**：此端點需使用 `IM-API-KEY` 驗證，僅限伺服器端呼叫
-- **limit 參數**：未指定 `limit` 時，系統將回傳預設數量的群組
-- **群組概念**：回傳的是用戶群組（虛擬用戶），非群組聊天室
-- **成員資訊**：回傳的 `members` 僅包含 Client ID，如需成員詳細資訊需另行查詢用戶 API
+- **Server-Side Only**: This endpoint requires `IM-API-KEY` authentication and is for server-side use only
+- **limit Parameter**: When `limit` is not specified, the system will return a default number of groups
+- **Group Concept**: The returned results are user groups (virtual users), not group chat rooms
+- **Member Information**: The `members` field only contains Client IDs. For detailed member information, query the User API separately

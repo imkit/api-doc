@@ -1,16 +1,16 @@
-# 獲取聊天室未讀訊息
+# Get Unread Messages by Room
 
-## 概述
+## Overview
 
-根據聊天室標籤統計未讀訊息數量。此 API 允許按聊天室標籤分組統計未讀訊息，適用於顯示不同類型聊天室的未讀狀態、建立訊息摘要和管理通知提醒。
+Count unread messages by chatroom tags. This API allows grouping unread message counts by chatroom tags, suitable for displaying unread status across different types of chatrooms, building message summaries, and managing notification reminders.
 
 ------
 
-## API 端點
+## API Endpoint
 
-### 按聊天室標籤統計未讀訊息
+### Count Unread Messages by Chatroom Tags
 
-根據指定的聊天室標籤統計未讀訊息數量。
+Count unread messages based on specified chatroom tags.
 
 ```http
 POST /badges/byRoomTags
@@ -18,20 +18,20 @@ POST /badges/byRoomTags
 
 #### Headers
 
-| 參數               | 類型   | 必填 | 說明           |
-| ------------------ | ------ | ---- | -------------- |
-| `IM-CLIENT-KEY`    | string | ✅    | Client Key     |
-| `IM-Authorization` | string | ✅    | Client Token   |
+| Parameter          | Type   | Required | Description    |
+| ------------------ | ------ | -------- | -------------- |
+| `IM-CLIENT-KEY`    | string | ✅        | Client Key     |
+| `IM-Authorization` | string | ✅        | Client Token   |
 
 #### Post Body
 
-| 參數   | 類型   | 必填 | 說明                                    |
-| ------ | ------ | ---- | --------------------------------------- |
-| `tags` | array  | ❌    | 聊天室標籤陣列（省略時查詢所有標籤）    |
+| Parameter | Type   | Required | Description                                        |
+| --------- | ------ | -------- | -------------------------------------------------- |
+| `tags`    | array  | ❌        | Chatroom tag array (queries all tags when omitted)  |
 
-#### 範例請求
+#### Example Request
 
-**查詢特定標籤的未讀數量**
+**Query unread count for specific tags**
 
 ```http
 POST /badges/byRoomTags HTTP/1.1
@@ -46,7 +46,7 @@ Connection: close
 }
 ```
 
-**查詢工作相關聊天室的未讀數量**
+**Query unread count for work-related chatrooms**
 
 ```http
 POST /badges/byRoomTags HTTP/1.1
@@ -61,7 +61,7 @@ Connection: close
 }
 ```
 
-**查詢所有標籤的未讀數量**
+**Query unread count for all tags**
 
 ```http
 POST /badges/byRoomTags HTTP/1.1
@@ -76,7 +76,7 @@ Connection: close
 }
 ```
 
-**JavaScript 範例：**
+**JavaScript Example:**
 
 ```javascript
 const response = await axios.post(
@@ -94,7 +94,7 @@ const response = await axios.post(
 );
 ```
 
-**cURL 範例：**
+**cURL Example:**
 
 ```bash
 curl -X "POST" "https://your-app.imkit.io/badges/byRoomTags" \
@@ -106,22 +106,22 @@ curl -X "POST" "https://your-app.imkit.io/badges/byRoomTags" \
 
 #### Response
 
-**成功回應（200 OK）**
+**Success Response (200 OK)**
 
-| 參數     | 類型   | 說明                   |
-| -------- | ------ | ---------------------- |
-| `RC`     | number | 回應代碼（0 表示成功） |
-| `RM`     | string | 回應訊息               |
-| `result` | object | 統計結果               |
+| Parameter | Type   | Description                         |
+| --------- | ------ | ----------------------------------- |
+| `RC`      | number | Response code (0 indicates success) |
+| `RM`      | string | Response message                    |
+| `result`  | object | Statistics results                  |
 
-**統計結果結構**
+**Statistics Result Structure**
 
-| 參數         | 類型   | 說明                              |
-| ------------ | ------ | --------------------------------- |
-| `totalBadge` | number | 所有查詢標籤的未讀訊息總數        |
-| `data`       | object | 各標籤對應的未讀訊息數量          |
+| Parameter    | Type   | Description                                      |
+| ------------ | ------ | ------------------------------------------------ |
+| `totalBadge` | number | Total unread message count across all queried tags |
+| `data`       | object | Unread message count for each tag                |
 
-#### 範例回應
+#### Example Response
 
 ```json
 {
@@ -140,9 +140,9 @@ curl -X "POST" "https://your-app.imkit.io/badges/byRoomTags" \
 }
 ```
 
-#### 錯誤回應
+#### Error Response
 
-**401 Unauthorized** - 認證失敗
+**401 Unauthorized** - Authentication failed
 
 ```json
 {
@@ -155,7 +155,7 @@ curl -X "POST" "https://your-app.imkit.io/badges/byRoomTags" \
 }
 ```
 
-**400 Bad Request** - 請求參數無效
+**400 Bad Request** - Invalid request parameters
 
 ```json
 {
@@ -170,30 +170,30 @@ curl -X "POST" "https://your-app.imkit.io/badges/byRoomTags" \
 
 ------
 
-## 使用場景
+## Use Cases
 
-### 未讀狀態顯示
-- **標籤分組**：在聊天室列表中按標籤顯示未讀數量
-- **重要性分級**：根據標籤優先級顯示不同的通知狀態
-- **視覺提醒**：用不同顏色或樣式標示不同類型的未讀訊息
+### Unread Status Display
+- **Tag Grouping**: Display unread counts grouped by tags in the chatroom list
+- **Priority Levels**: Show different notification statuses based on tag priority
+- **Visual Reminders**: Use different colors or styles to indicate different types of unread messages
 
-### 通知管理
-- **智能通知**：根據聊天室標籤設定不同的通知策略
-- **批量操作**：批量標記特定標籤聊天室的訊息為已讀
-- **過濾控制**：允許用戶選擇關注特定標籤的聊天室
+### Notification Management
+- **Smart Notifications**: Set different notification strategies based on chatroom tags
+- **Batch Operations**: Batch mark messages in chatrooms with specific tags as read
+- **Filter Control**: Allow users to focus on chatrooms with specific tags
 
-### 數據統計
-- **活躍度分析**：分析不同類型聊天室的活躍程度
-- **工作流程**：統計工作相關聊天室的未處理訊息
-- **優先級管理**：識別需要優先處理的聊天室類型
+### Data Statistics
+- **Activity Analysis**: Analyze the activity level of different types of chatrooms
+- **Workflow**: Count unprocessed messages in work-related chatrooms
+- **Priority Management**: Identify chatroom types that need priority attention
 
 ------
 
-## 注意事項
+## Notes
 
-- **標籤權限**：只會統計用戶有權限訪問的聊天室
-- **空陣列處理**：傳入空陣列時會查詢所有可用標籤
-- **即時性**：統計結果為查詢當下的即時數據
-- **標籤匹配**：完全匹配指定的標籤名稱
-- **效能考量**：查詢大量標籤時可能影響響應時間
-- **零值顯示**：沒有未讀訊息的標籤會顯示為 0
+- **Tag Permissions**: Only counts chatrooms that the user has permission to access
+- **Empty Array Handling**: Passing an empty array queries all available tags
+- **Real-Time**: Statistics results reflect real-time data at the moment of the query
+- **Tag Matching**: Matches the specified tag names exactly
+- **Performance Consideration**: Querying a large number of tags may affect response time
+- **Zero Value Display**: Tags with no unread messages will display as 0

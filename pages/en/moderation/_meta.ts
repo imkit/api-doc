@@ -1,17 +1,7 @@
 export default {
-  "block-user": {
-    title: "封鎖用戶"
-  },
-  "mute-member": {
-    title: "靜音成員"
-  },
-  "ban-member": {
-    title: "禁止成員"
-  },
-  "freeze-chatroom": {
-    title: "凍結聊天室"
-  },
-  "sensitive-word": {
-    title: "敏感用詞"
-  }
+  "block-user": { title: "Block User" },
+  "mute-member": { title: "Mute Room for User" },
+  "ban-member": { title: "Ban Member" },
+  "freeze-chatroom": { title: "Freeze Room" },
+  "sensitive-word": { title: "Sensitive Words" }
 }

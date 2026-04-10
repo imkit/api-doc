@@ -1,16 +1,16 @@
-# 更新系統設定
+# Update Config
 
-## 概述
+## Overview
 
-更新應用程式的系統組態設定。透過此端點可以設定公告、審查詞彙、功能旗標等任意鍵值對。此為管理員專用 API，需使用 `IM-API-KEY` 進行驗證。
+Update the application's system configuration settings. This endpoint allows you to set announcements, censorship keywords, feature flags, and other arbitrary key-value pairs. This is an admin-only API that requires `IM-API-KEY` for authentication.
 
 ------
 
-## API 端點
+## API Endpoint
 
-### 更新系統設定
+### Update Config
 
-新增或更新系統組態的鍵值對。
+Add or update system configuration key-value pairs.
 
 ```http
 POST /config
@@ -18,22 +18,22 @@ POST /config
 
 #### Headers
 
-| 參數           | 類型   | 必填 | 說明                            |
-| -------------- | ------ | ---- | ------------------------------- |
-| `IM-API-KEY`   | string | ✅    | 您的平台 API 金鑰              |
-| `Content-Type` | string | ✅    | `application/json; charset=utf-8` |
+| Parameter      | Type   | Required | Description                       |
+| -------------- | ------ | -------- | --------------------------------- |
+| `IM-API-KEY`   | string | ✅        | Your platform API Key             |
+| `Content-Type` | string | ✅        | `application/json; charset=utf-8` |
 
 #### Post Body
 
-請求內容為任意 JSON 鍵值對，將作為系統組態儲存。
+The request body consists of arbitrary JSON key-value pairs that will be stored as system configuration.
 
-| 參數   | 類型   | 必填 | 說明                               |
-| ------ | ------ | ---- | ---------------------------------- |
-| （任意鍵）| any | ❌    | 任意鍵值對，將被儲存為系統組態設定 |
+| Parameter    | Type | Required | Description                                        |
+| ------------ | ---- | -------- | -------------------------------------------------- |
+| (any key)    | any  | ❌        | Any key-value pair, will be stored as system config |
 
-#### 範例請求
+#### Example Request
 
-**JavaScript（axios）- 設定公告**
+**JavaScript (axios) - Set announcement**
 
 ```javascript
 const response = await axios.post(
@@ -53,7 +53,7 @@ const response = await axios.post(
 );
 ```
 
-**JavaScript（axios）- 設定審查詞彙**
+**JavaScript (axios) - Set censorship keywords**
 
 ```javascript
 const response = await axios.post(
@@ -72,7 +72,7 @@ const response = await axios.post(
 );
 ```
 
-**cURL - 設定多項組態**
+**cURL - Set multiple configuration items**
 
 ```bash
 curl -X POST "https://your-app.imkit.io/config" \
@@ -95,15 +95,15 @@ curl -X POST "https://your-app.imkit.io/config" \
 
 #### Response
 
-**成功回應（200 OK）**
+**Success Response (200 OK)**
 
-| 參數     | 類型   | 說明                         |
-| -------- | ------ | ---------------------------- |
-| `RC`     | number | 回應代碼（0 表示成功）       |
-| `RM`     | string | 回應訊息                     |
-| `result` | object | 更新後的系統組態設定         |
+| Parameter | Type   | Description                            |
+| --------- | ------ | -------------------------------------- |
+| `RC`      | number | Response code (0 indicates success)    |
+| `RM`      | string | Response message                       |
+| `result`  | object | Updated system configuration settings  |
 
-#### 範例回應
+#### Example Response
 
 ```json
 {
@@ -125,9 +125,9 @@ curl -X POST "https://your-app.imkit.io/config" \
 }
 ```
 
-#### 錯誤回應
+#### Error Response
 
-**401 Unauthorized** - API 金鑰無效
+**401 Unauthorized** - Invalid API Key
 
 ```json
 {
@@ -140,7 +140,7 @@ curl -X POST "https://your-app.imkit.io/config" \
 }
 ```
 
-**400 Bad Request** - 請求格式錯誤
+**400 Bad Request** - Invalid request format
 
 ```json
 {
@@ -155,25 +155,25 @@ curl -X POST "https://your-app.imkit.io/config" \
 
 ------
 
-## 使用場景
+## Use Cases
 
-### 公告管理
-- **設定系統公告**：發布或更新系統公告訊息，可設定是否置頂顯示
-- **活動公告**：發布限時活動、促銷等資訊
+### Announcement Management
+- **Set System Announcements**: Publish or update system announcement messages, with the option to pin them
+- **Event Announcements**: Publish information about limited-time events, promotions, etc.
 
-### 內容審查設定
-- **設定審查詞彙**：新增或更新敏感詞列表，用於訊息內容過濾
-- **審查規則調整**：動態調整內容審查規則
+### Content Moderation Settings
+- **Set Censorship Keywords**: Add or update the sensitive word list for message content filtering
+- **Moderation Rule Adjustment**: Dynamically adjust content moderation rules
 
-### 功能旗標管理
-- **功能開關**：動態啟用或停用特定功能
-- **參數調整**：更新系統參數，如檔案大小限制、訊息長度限制等
+### Feature Flag Management
+- **Feature Toggles**: Dynamically enable or disable specific features
+- **Parameter Adjustment**: Update system parameters such as file size limits, message length limits, etc.
 
 ------
 
-## 注意事項
+## Notes
 
-- **僅限管理員使用**：此端點需使用 `IM-API-KEY` 驗證，僅限伺服器端呼叫
-- **覆蓋行為**：相同鍵名的設定值將被覆蓋更新
-- **任意鍵值對**：請求 body 支援任意 JSON 結構，系統不會對鍵名或值的格式做限制
-- **即時生效**：更新後的設定會立即生效，用戶端下次讀取 `GET /config` 即可取得最新設定
+- **Admin Only**: This endpoint requires `IM-API-KEY` authentication and is restricted to server-side use
+- **Override Behavior**: Settings with the same key name will be overwritten
+- **Arbitrary Key-Value Pairs**: The request body supports any JSON structure; the system does not restrict key names or value formats
+- **Immediate Effect**: Updated settings take effect immediately; clients will receive the latest settings on their next `GET /config` call

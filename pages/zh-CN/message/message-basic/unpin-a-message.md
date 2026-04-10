@@ -1,16 +1,16 @@
-# 取消釘選訊息
+# 取消钉选讯息
 
 ## 概述
 
-此端點允許聊天室擁有者或管理員取消目前釘選的訊息，將其從聊天室頂部移除。
+此端点允许聊天室拥有者或管理员取消目前钉选的讯息，将其从聊天室顶部移除。
 
 ------
 
-## API 端點
+## API 端点
 
-### 取消釘選訊息
+### 取消钉选讯息
 
-取消目前釘選的訊息，將其從聊天室頂部移除。
+取消目前钉选的讯息，将其从聊天室顶部移除。
 
 ```http
 DELETE /messages/:id/pin
@@ -18,22 +18,22 @@ DELETE /messages/:id/pin
 
 #### Headers
 
-| 參數               | 類型   | 必填 | 說明         |
+| 参数               | 类型   | 必填 | 说明         |
 | ------------------ | ------ | ---- | ------------ |
-| `IM-CLIENT-KEY`    | string | ✅   | 用戶端金鑰   |
-| `IM-Authorization` | string | ✅   | 用戶端權杖   |
+| `IM-CLIENT-KEY`    | string | ✅   | 用户端金钥   |
+| `IM-Authorization` | string | ✅   | 用户端权杖   |
 
 #### Path Parameters
 
-| 參數  | 類型   | 必填 | 說明             |
+| 参数  | 类型   | 必填 | 说明             |
 | ----- | ------ | ---- | ---------------- |
-| `:id` | string | ✅   | 訊息唯一識別碼   |
+| `:id` | string | ✅   | 讯息唯一识别码   |
 
-此 API 無需請求內容（Request Body）。
+此 API 无需请求内容（Request Body）。
 
-#### 範例請求
+#### 范例请求
 
-**cURL 範例：**
+**cURL 范例：**
 
 ```bash
 curl -X "DELETE" "https://your-app.imkit.io/messages/5f890cf37d980e06f6aaf349/pin" \
@@ -41,7 +41,7 @@ curl -X "DELETE" "https://your-app.imkit.io/messages/5f890cf37d980e06f6aaf349/pi
      -H 'IM-Authorization: {IM-Authorization}'
 ```
 
-**JavaScript 範例：**
+**JavaScript 范例：**
 
 ```javascript
 const response = await axios.delete(
@@ -57,22 +57,22 @@ const response = await axios.delete(
 
 #### Response
 
-**成功回應（200 OK）**
+**成功回应（200 OK）**
 
-| 參數                  | 類型    | 說明                               |
+| 参数                  | 类型    | 说明                               |
 | --------------------- | ------- | ---------------------------------- |
-| `RC`                  | number  | 回應代碼（0 表示成功）             |
-| `RM`                  | string  | 回應訊息                           |
-| `result._id`          | string  | 訊息唯一識別碼                     |
-| `result.message`      | string  | 訊息內容                           |
-| `result.room`         | string  | 所屬聊天室 ID                      |
-| `result.sender`       | object  | 訊息發送者資訊                     |
-| `result.messageType`  | string  | 訊息類型                           |
-| `result.pinned`       | boolean | 是否已釘選（取消後為 `false`）     |
-| `result.messageTimeMS`| number  | 訊息發送時間戳（毫秒）             |
-| `result.updatedAtMS`  | number  | 最後更新時間戳（毫秒）             |
+| `RC`                  | number  | 回应代码（0 表示成功）             |
+| `RM`                  | string  | 回应讯息                           |
+| `result._id`          | string  | 讯息唯一识别码                     |
+| `result.message`      | string  | 讯息内容                           |
+| `result.room`         | string  | 所属聊天室 ID                      |
+| `result.sender`       | object  | 讯息发送者资讯                     |
+| `result.messageType`  | string  | 讯息类型                           |
+| `result.pinned`       | boolean | 是否已钉选（取消后为 `false`）     |
+| `result.messageTimeMS`| number  | 讯息发送时间戳（毫秒）             |
+| `result.updatedAtMS`  | number  | 最后更新时间戳（毫秒）             |
 
-#### 範例回應
+#### 范例回应
 
 ```json
 {
@@ -80,7 +80,7 @@ const response = await axios.delete(
   "RM": "OK",
   "result": {
     "_id": "5f890cf37d980e06f6aaf349",
-    "message": "重要公告：明天下午兩點開會",
+    "message": "重要公告：明天下午两点开会",
     "room": "demo-room",
     "sender": {
       "_id": "aaa",
@@ -101,27 +101,27 @@ const response = await axios.delete(
 }
 ```
 
-#### 錯誤回應
+#### 错误回应
 
-當請求失敗時，您會收到包含錯誤詳細資訊的錯誤回應。常見的錯誤情況包括：
+当请求失败时，您会收到包含错误详细资讯的错误回应。常见的错误情况包括：
 
-- 無效的用戶端金鑰或授權權杖
-- 指定的訊息不存在
-- 當前用戶不是聊天室擁有者或管理員
-- 伺服器內部錯誤
-
-------
-
-## 使用場景
-
-### 訊息管理
-
-- **移除過時公告**：當釘選的訊息不再相關時，取消釘選以保持聊天室整潔
-- **更換釘選內容**：取消釘選舊訊息後，可釘選新的重要訊息
+- 无效的用户端金钥或授权权杖
+- 指定的讯息不存在
+- 当前用户不是聊天室拥有者或管理员
+- 伺服器内部错误
 
 ------
 
-## 注意事項
+## 使用场景
 
-- **權限限制**：僅聊天室**擁有者（owner）**或**管理員（admin）**可以執行取消釘選操作
-- 若要釘選訊息，請使用[釘選訊息](./pin-a-message) API
+### 讯息管理
+
+- **移除过时公告**：当钉选的讯息不再相关时，取消钉选以保持聊天室整洁
+- **更换钉选内容**：取消钉选旧讯息后，可钉选新的重要讯息
+
+------
+
+## 注意事项
+
+- **权限限制**：仅聊天室**拥有者（owner）**或**管理员（admin）**可以执行取消钉选操作
+- 若要钉选讯息，请使用[钉选讯息](./pin-a-message) API

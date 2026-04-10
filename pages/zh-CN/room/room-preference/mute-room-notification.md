@@ -1,15 +1,15 @@
-# 靜音聊天室通知
+# 静音聊天室通知
 
 ## 概述
 
-此端點允許當前用戶將指定聊天室設為靜音，靜音後該聊天室的新訊息將不會觸發推播通知。此設定為個人偏好，僅影響當前用戶，不影響其他成員。
+此端点允许当前用户将指定聊天室设为静音，静音后该聊天室的新讯息将不会触发推播通知。此设定为个人偏好，仅影响当前用户，不影响其他成员。
 
 ------
 
-## API 端點
+## API 端点
 
-### 靜音聊天室通知
-將指定聊天室設為靜音，停止接收推播通知。
+### 静音聊天室通知
+将指定聊天室设为静音，停止接收推播通知。
 
 ```http
 POST /me/mute/:room
@@ -17,22 +17,22 @@ POST /me/mute/:room
 
 #### Headers
 
-| 參數 | 類型 | 必填 | 說明 |
+| 参数 | 类型 | 必填 | 说明 |
 | --- | --- | --- | --- |
-| `IM-CLIENT-KEY` | string | ✅ | 用戶端金鑰 |
-| `IM-Authorization` | string | ✅ | 用戶端權杖 |
+| `IM-CLIENT-KEY` | string | ✅ | 用户端金钥 |
+| `IM-Authorization` | string | ✅ | 用户端权杖 |
 
 #### Path Parameters
 
-| 參數 | 類型 | 必填 | 說明 |
+| 参数 | 类型 | 必填 | 说明 |
 | --- | --- | --- | --- |
-| `:room` | string | ✅ | 聊天室唯一識別碼 |
+| `:room` | string | ✅ | 聊天室唯一识别码 |
 
-此 API 無需請求內容（Request Body）。
+此 API 无需请求内容（Request Body）。
 
-#### 範例請求
+#### 范例请求
 
-**cURL 範例：**
+**cURL 范例：**
 
 ```bash
 curl -X "POST" "https://your-app.imkit.io/me/mute/demo-room" \
@@ -40,7 +40,7 @@ curl -X "POST" "https://your-app.imkit.io/me/mute/demo-room" \
      -H 'IM-Authorization: {IM-Authorization}'
 ```
 
-**JavaScript 範例：**
+**JavaScript 范例：**
 
 ```javascript
 const response = await axios.post(
@@ -57,19 +57,19 @@ const response = await axios.post(
 
 #### Response
 
-**成功回應（200 OK）**
+**成功回应（200 OK）**
 
-| 參數 | 類型 | 說明 |
+| 参数 | 类型 | 说明 |
 | --- | --- | --- |
-| `RC` | number | 回應代碼（0 表示成功） |
-| `RM` | string | 回應訊息 |
-| `result` | object | 更新後的當前用戶資訊 |
-| `result._id` | string | 用戶唯一識別碼 |
-| `result.nickname` | string | 用戶顯示名稱 |
-| `result.email` | string | 用戶電子郵件 |
-| `result.mute` | array[string] | 已靜音的聊天室 ID 陣列（靜音後新增） |
+| `RC` | number | 回应代码（0 表示成功） |
+| `RM` | string | 回应讯息 |
+| `result` | object | 更新后的当前用户资讯 |
+| `result._id` | string | 用户唯一识别码 |
+| `result.nickname` | string | 用户显示名称 |
+| `result.email` | string | 用户电子邮件 |
+| `result.mute` | array[string] | 已静音的聊天室 ID 阵列（静音后新增） |
 
-#### 範例回應
+#### 范例回应
 
 ```json
 {
@@ -93,24 +93,24 @@ const response = await axios.post(
 }
 ```
 
-#### 錯誤回應
+#### 错误回应
 
-當請求失敗時，您會收到包含錯誤詳細資訊的錯誤回應。常見的錯誤情況包括：
+当请求失败时，您会收到包含错误详细资讯的错误回应。常见的错误情况包括：
 
-- 無效的用戶端金鑰或授權權杖
+- 无效的用户端金钥或授权权杖
 - 指定的聊天室不存在
-- 伺服器內部錯誤
+- 伺服器内部错误
 
 ------
 
-## 使用場景
+## 使用场景
 
-- **停止特定聊天室通知**：當用戶不想被某個聊天室的訊息打擾時，可將其靜音
-- **取消靜音**：若要取消靜音，請使用[取消靜音聊天室通知](./unmute-room-notification) API
+- **停止特定聊天室通知**：当用户不想被某个聊天室的讯息打扰时，可将其静音
+- **取消静音**：若要取消静音，请使用[取消静音聊天室通知](./unmute-room-notification) API
 
 ------
 
-## 注意事項
+## 注意事项
 
-- **個人偏好**：靜音設定僅影響當前用戶，其他成員的通知不受影響
-- **靜音狀態**：成功後，該聊天室 ID 會加入回應中 `mute` 陣列，代表用戶目前靜音的所有聊天室
+- **个人偏好**：静音设定仅影响当前用户，其他成员的通知不受影响
+- **静音状态**：成功后，该聊天室 ID 会加入回应中 `mute` 阵列，代表用户目前静音的所有聊天室

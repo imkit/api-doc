@@ -1,16 +1,16 @@
-# 撤銷 Token
+# Revoke Token
 
-## 概述
+## Overview
 
-撤銷指定用戶的 access token，使其無法繼續使用聊天服務。您可以選擇撤銷特定的 token，或移除該用戶的所有 token。
+Revoke the access token of a specified user, preventing them from continuing to use the chat service. You can choose to revoke a specific token or remove all tokens for that user.
 
 ------
 
-## API 端點
+## API Endpoint
 
-### 撤銷用戶 Token
+### Revoke User Token
 
-撤銷指定用戶的 access token。
+Revoke the access token of a specified user.
 
 ```http
 DELETE /admin/clients/{client_id}/token
@@ -18,26 +18,26 @@ DELETE /admin/clients/{client_id}/token
 
 #### Headers
 
-| 參數 | 類型 | 必填 | 說明 |
+| Parameter | Type | Required | Description |
 | ---- | ---- | ---- | ---- |
-| `IM-API-KEY` | string | ✅ | 您的 API 金鑰 |
+| `IM-API-KEY` | string | ✅ | Your API key |
 | `Content-Type` | string | ✅ | `application/json` |
 
 #### Path Parameters
 
-| 參數 | 類型 | 必填 | 說明 |
+| Parameter | Type | Required | Description |
 | ---- | ---- | ---- | ---- |
-| `client_id` | string | ✅ | 用戶唯一識別碼 |
+| `client_id` | string | ✅ | Unique user identifier |
 
 #### Request Body
 
-| 參數 | 類型 | 必填 | 說明 |
+| Parameter | Type | Required | Description |
 | ---- | ---- | ---- | ---- |
-| `token` | string | ❌ | 要撤銷的特定 token，若不提供則移除該用戶所有 token |
+| `token` | string | ❌ | The specific token to revoke; if not provided, all tokens for the user will be removed |
 
-#### 範例請求
+#### Example Request
 
-**撤銷特定 Token：**
+**Revoke a Specific Token:**
 
 ```javascript
 const response = await axios.delete(
@@ -54,7 +54,7 @@ const response = await axios.delete(
 );
 ```
 
-**撤銷所有 Token：**
+**Revoke All Tokens:**
 
 ```javascript
 const response = await axios.delete(
@@ -69,7 +69,7 @@ const response = await axios.delete(
 );
 ```
 
-**cURL 範例：**
+**cURL Example:**
 
 ```bash
 curl -X "DELETE" "https://your-app.imkit.io/admin/clients/{client_id}/token" \
@@ -80,17 +80,17 @@ curl -X "DELETE" "https://your-app.imkit.io/admin/clients/{client_id}/token" \
 
 #### Response
 
-**成功回應（200 OK）**
+**Success Response (200 OK)**
 
-| 參數 | 類型 | 說明 |
+| Parameter | Type | Description |
 | ---- | ---- | ---- |
-| `success` | boolean | 操作是否成功 |
-| `message` | string | 操作結果訊息 |
-| `revokedTokens` | number | 被撤銷的 token 數量 |
+| `success` | boolean | Whether the operation was successful |
+| `message` | string | Operation result message |
+| `revokedTokens` | number | Number of tokens revoked |
 
-#### 範例回應
+#### Example Response
 
-**撤銷特定 Token**
+**Revoke a Specific Token**
 
 ```json
 {
@@ -100,7 +100,7 @@ curl -X "DELETE" "https://your-app.imkit.io/admin/clients/{client_id}/token" \
 }
 ```
 
-**撤銷所有 Token**
+**Revoke All Tokens**
 
 ```json
 {
@@ -110,9 +110,9 @@ curl -X "DELETE" "https://your-app.imkit.io/admin/clients/{client_id}/token" \
 }
 ```
 
-#### 錯誤回應
+#### Error Response
 
-**401 Unauthorized** — API 金鑰無效
+**401 Unauthorized** — Invalid API key
 
 ```json
 {
@@ -121,7 +121,7 @@ curl -X "DELETE" "https://your-app.imkit.io/admin/clients/{client_id}/token" \
 }
 ```
 
-**404 Not Found** — 用戶不存在
+**404 Not Found** — User not found
 
 ```json
 {
@@ -130,7 +130,7 @@ curl -X "DELETE" "https://your-app.imkit.io/admin/clients/{client_id}/token" \
 }
 ```
 
-**404 Not Found** — Token 不存在
+**404 Not Found** — Token not found
 
 ```json
 {
@@ -141,24 +141,24 @@ curl -X "DELETE" "https://your-app.imkit.io/admin/clients/{client_id}/token" \
 
 ------
 
-## 使用場景
+## Use Cases
 
-### 安全性考量
-- **帳號被盜用**：立即撤銷所有 token 以確保安全
-- **設備遺失**：撤銷特定設備的 token
-- **員工離職**：撤銷企業用戶的所有 token
+### Security Considerations
+- **Account Compromised**: Immediately revoke all tokens to ensure security
+- **Device Lost**: Revoke the token for the specific device
+- **Employee Departure**: Revoke all tokens for the enterprise user
 
-### 系統管理
-- **強制登出**：撤銷 token 強制用戶重新登入
-- **Token 輪換**：定期撤銷舊 token 提升安全性
-- **權限變更**：撤銷 token 以重新分配權限
+### System Administration
+- **Force Logout**: Revoke a token to force the user to log in again
+- **Token Rotation**: Periodically revoke old tokens to enhance security
+- **Permission Changes**: Revoke tokens to reassign permissions
 
 ------
 
-## 注意事項
+## Notes
 
-- **即時生效**：Token 撤銷後立即生效，用戶將無法繼續使用聊天功能
-- **不可復原**：撤銷的 token 無法恢復，需要重新核發或指派新 token
-- **批次操作**：不提供 `token` 參數可一次撤銷用戶的所有 token
-- **優先撤銷特定 Token**：避免影響用戶其他設備，優先撤銷特定 token
-- **審計日誌**：建議記錄 token 撤銷操作以供後續審計
+- **Immediate Effect**: Token revocation takes effect immediately; the user will no longer be able to use chat features
+- **Irreversible**: Revoked tokens cannot be restored; a new token must be reissued or assigned
+- **Batch Operation**: Omitting the `token` parameter will revoke all tokens for the user at once
+- **Prefer Revoking Specific Tokens**: To avoid affecting the user's other devices, prefer revoking specific tokens
+- **Audit Logging**: It is recommended to log token revocation operations for future auditing

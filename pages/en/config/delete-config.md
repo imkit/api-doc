@@ -1,16 +1,16 @@
-# 刪除系統設定
+# Delete Config
 
-## 概述
+## Overview
 
-刪除應用程式中特定的系統組態項目。透過指定組態鍵名來移除對應的設定值。此為管理員專用 API，需使用 `IM-API-KEY` 進行驗證。
+Delete a specific system configuration item from the application. Remove the corresponding setting value by specifying the configuration key name. This is an admin-only API that requires `IM-API-KEY` for authentication.
 
 ------
 
-## API 端點
+## API Endpoint
 
-### 刪除指定組態項目
+### Delete a Specified Configuration Item
 
-依據鍵名刪除特定的系統組態設定。
+Delete a specific system configuration setting by key name.
 
 ```http
 DELETE /config/:key
@@ -18,19 +18,19 @@ DELETE /config/:key
 
 #### Headers
 
-| 參數         | 類型   | 必填 | 說明              |
-| ------------ | ------ | ---- | ----------------- |
-| `IM-API-KEY` | string | ✅    | 您的平台 API 金鑰 |
+| Parameter    | Type   | Required | Description             |
+| ------------ | ------ | -------- | ----------------------- |
+| `IM-API-KEY` | string | ✅        | Your platform API Key   |
 
 #### Path Parameters
 
-| 參數  | 類型   | 必填 | 說明                 |
-| ----- | ------ | ---- | -------------------- |
-| `key` | string | ✅    | 要刪除的組態鍵名     |
+| Parameter | Type   | Required | Description                        |
+| --------- | ------ | -------- | ---------------------------------- |
+| `key`     | string | ✅        | Configuration key name to delete   |
 
-#### 範例請求
+#### Example Request
 
-**JavaScript（axios）**
+**JavaScript (axios)**
 
 ```javascript
 const response = await axios.delete(
@@ -52,15 +52,15 @@ curl -X DELETE "https://your-app.imkit.io/config/announcement" \
 
 #### Response
 
-**成功回應（200 OK）**
+**Success Response (200 OK)**
 
-| 參數     | 類型   | 說明                   |
-| -------- | ------ | ---------------------- |
-| `RC`     | number | 回應代碼（0 表示成功） |
-| `RM`     | string | 回應訊息               |
-| `result` | object | 空物件                 |
+| Parameter | Type   | Description                         |
+| --------- | ------ | ----------------------------------- |
+| `RC`      | number | Response code (0 indicates success) |
+| `RM`      | string | Response message                    |
+| `result`  | object | Empty object                        |
 
-#### 範例回應
+#### Example Response
 
 ```json
 {
@@ -70,9 +70,9 @@ curl -X DELETE "https://your-app.imkit.io/config/announcement" \
 }
 ```
 
-#### 錯誤回應
+#### Error Response
 
-**401 Unauthorized** - API 金鑰無效
+**401 Unauthorized** - Invalid API Key
 
 ```json
 {
@@ -85,7 +85,7 @@ curl -X DELETE "https://your-app.imkit.io/config/announcement" \
 }
 ```
 
-**404 Not Found** - 指定的組態鍵名不存在
+**404 Not Found** - Specified configuration key does not exist
 
 ```json
 {
@@ -100,18 +100,18 @@ curl -X DELETE "https://your-app.imkit.io/config/announcement" \
 
 ------
 
-## 使用場景
+## Use Cases
 
-### 組態管理
-- **移除過期公告**：刪除已不再需要的系統公告設定
-- **清除審查詞彙**：移除整個審查詞彙設定項目
-- **停用功能旗標**：刪除特定功能旗標設定以恢復預設行為
+### Configuration Management
+- **Remove Expired Announcements**: Delete system announcement settings that are no longer needed
+- **Clear Censorship Keywords**: Remove the entire censorship keyword configuration item
+- **Disable Feature Flags**: Delete specific feature flag settings to restore default behavior
 
 ------
 
-## 注意事項
+## Notes
 
-- **僅限管理員使用**：此端點需使用 `IM-API-KEY` 驗證，僅限伺服器端呼叫
-- **不可復原**：刪除操作不可復原，請確認無誤後再執行
-- **即時生效**：刪除後立即生效，用戶端下次讀取 `GET /config` 將不再包含該項目
-- **整個鍵值刪除**：此操作會刪除整個鍵值對，若只需移除部分內容，請改用 `POST /config` 更新
+- **Admin Only**: This endpoint requires `IM-API-KEY` authentication and is restricted to server-side use
+- **Irreversible**: Delete operations cannot be undone; please confirm before proceeding
+- **Immediate Effect**: Deletion takes effect immediately; clients will no longer see the deleted item on their next `GET /config` call
+- **Entire Key-Value Deletion**: This operation deletes the entire key-value pair; if you only need to remove partial content, use `POST /config` to update instead

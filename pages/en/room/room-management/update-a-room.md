@@ -1,16 +1,16 @@
-# 更新聊天室
+# Update a Room
 
-## 概述
+## Overview
 
-更新現有聊天室的資訊和設定。此 API 允許修改聊天室的基本資訊、權限設定、管理員配置等。僅限聊天室的擁有者、管理員或平台管理員使用。
+Update the information and settings of an existing room. This API allows modifying the room's basic information, permission settings, administrator configuration, and more. Only the room owner, administrators, or platform administrators can use this API.
 
 ------
 
-## API 端點
+## API Endpoint
 
-### 更新聊天室資訊
+### Update Room Information
 
-修改指定聊天室的屬性和設定。
+Modify the properties and settings of a specified room.
 
 ```http
 PUT /rooms/{id}
@@ -18,34 +18,34 @@ PUT /rooms/{id}
 
 #### Headers
 
-| 參數            | 類型   | 必填 | 說明           |
+| Parameter       | Type   | Required | Description    |
 | --------------- | ------ | ---- | -------------- |
 | `IM-CLIENT-KEY` | string | ✅    | Client Key     |
 | `IM-Authorization` | string | ✅    | Client Token   |
 
 #### Path Parameters
 
-| 參數 | 類型   | 必填 | 說明        |
+| Parameter | Type   | Required | Description |
 | ---- | ------ | ---- | ----------- |
-| `id` | string | ✅    | 聊天室 ID   |
+| `id` | string | ✅    | Room ID     |
 
 #### Request Body
 
-| 參數          | 類型    | 必填 | 說明                                                      |
-| ------------- | ------- | ---- | --------------------------------------------------------- |
-| `name`        | string  | ❌    | 聊天室名稱                                                |
-| `cover`       | string  | ❌    | 聊天室封面圖片 URL                                        |
-| `description` | string  | ❌    | 聊天室描述                                                |
-| `roomTags`    | array   | ❌    | 共享聊天室標籤陣列                                        |
-| `webhook`     | string  | ❌    | Webhook 金鑰或 URL                                        |
-| `botMode`     | boolean | ❌    | 是否啟用聊天室機器人                                      |
-| `extParams`   | string  | ❌    | 擴展自訂參數，格式：param1=value1&param2=value2&...      |
-| `opening`     | number  | ❌    | 開放狀態：0=關閉加入或邀請，1=開放加入和邀請              |
-| `owner`       | string  | ❌    | 新的擁有者客戶端 ID（限平台管理員或聊天室超級用戶）       |
-| `managers`    | array   | ❌    | 管理員客戶端 ID 陣列（限平台管理員或聊天室超級用戶）      |
-| `status`      | number  | ❌    | 聊天室狀態：0=無效，1=有效                                |
+| Parameter     | Type    | Required | Description                                                   |
+| ------------- | ------- | ---- | ------------------------------------------------------------- |
+| `name`        | string  | ❌    | Room name                                                     |
+| `cover`       | string  | ❌    | Room cover image URL                                          |
+| `description` | string  | ❌    | Room description                                              |
+| `roomTags`    | array   | ❌    | Shared room tags array                                        |
+| `webhook`     | string  | ❌    | Webhook key or URL                                            |
+| `botMode`     | boolean | ❌    | Whether to enable room bot                                    |
+| `extParams`   | string  | ❌    | Extended custom parameters in the format: param1=value1&param2=value2&... |
+| `opening`     | number  | ❌    | Open status: 0 = closed to joining or invitations, 1 = open to joining and invitations |
+| `owner`       | string  | ❌    | New owner client ID (restricted to platform administrators or room superusers) |
+| `managers`    | array   | ❌    | Manager client ID array (restricted to platform administrators or room superusers) |
+| `status`      | number  | ❌    | Room status: 0 = inactive, 1 = active                        |
 
-#### 範例請求
+#### Example Request
 
 ```http
 PUT /rooms/58871b877390be11d5f1ab30 HTTP/1.1
@@ -62,7 +62,7 @@ Connection: close
 }
 ```
 
-**JavaScript 範例：**
+**JavaScript Example:**
 
 ```javascript
 const response = await axios.put(
@@ -82,7 +82,7 @@ const response = await axios.put(
 );
 ```
 
-**cURL 範例：**
+**cURL Example:**
 
 ```bash
 curl -X "PUT" "https://your-app.imkit.io/rooms/58871b877390be11d5f1ab30" \
@@ -94,27 +94,27 @@ curl -X "PUT" "https://your-app.imkit.io/rooms/58871b877390be11d5f1ab30" \
 
 #### Response
 
-**成功回應（200 OK）**
+**Success Response (200 OK)**
 
-| 參數     | 類型   | 說明                   |
+| Parameter | Type   | Description                |
 | -------- | ------ | ---------------------- |
-| `RC`     | number | 回應代碼（0 表示成功） |
-| `RM`     | string | 回應訊息               |
-| `result` | object | 更新後的聊天室資料     |
+| `RC`     | number | Response code (0 indicates success) |
+| `RM`     | string | Response message       |
+| `result` | object | Updated room data      |
 
-**聊天室物件結構**
+**Room Object Structure**
 
-| 參數            | 類型   | 說明                      |
+| Parameter       | Type   | Description             |
 | --------------- | ------ | ------------------------- |
-| `_id`           | string | 聊天室唯一識別碼          |
-| `name`          | string | 聊天室名稱                |
-| `cover`         | string | 聊天室封面圖片 URL        |
-| `description`   | string | 聊天室描述                |
-| `status`        | number | 聊天室狀態                |
-| `lastMessage`   | object | 最後一則訊息資訊          |
-| `members`       | array  | 聊天室成員列表            |
+| `_id`           | string | Room unique identifier    |
+| `name`          | string | Room name                 |
+| `cover`         | string | Room cover image URL      |
+| `description`   | string | Room description          |
+| `status`        | number | Room status               |
+| `lastMessage`   | object | Last message information  |
+| `members`       | array  | Room member list          |
 
-#### 範例回應
+#### Example Response
 
 ```json
 {
@@ -150,9 +150,9 @@ curl -X "PUT" "https://your-app.imkit.io/rooms/58871b877390be11d5f1ab30" \
 }
 ```
 
-#### 錯誤回應
+#### Error Response
 
-**401 Unauthorized** - 認證失敗
+**401 Unauthorized** - Authentication failed
 
 ```json
 {
@@ -165,7 +165,7 @@ curl -X "PUT" "https://your-app.imkit.io/rooms/58871b877390be11d5f1ab30" \
 }
 ```
 
-**403 Forbidden** - 權限不足
+**403 Forbidden** - Insufficient permissions
 
 ```json
 {
@@ -178,7 +178,7 @@ curl -X "PUT" "https://your-app.imkit.io/rooms/58871b877390be11d5f1ab30" \
 }
 ```
 
-**404 Not Found** - 聊天室不存在
+**404 Not Found** - Room does not exist
 
 ```json
 {
@@ -193,29 +193,29 @@ curl -X "PUT" "https://your-app.imkit.io/rooms/58871b877390be11d5f1ab30" \
 
 ------
 
-## 使用場景
+## Use Cases
 
-### 聊天室管理
-- **基本資訊維護**：更新聊天室名稱、描述、封面圖片
-- **權限管理**：調整聊天室開放狀態和管理員配置
-- **功能設定**：啟用或停用機器人模式
+### Room Management
+- **Basic information maintenance**: Update room name, description, and cover image
+- **Permission management**: Adjust room open status and administrator configuration
+- **Feature settings**: Enable or disable bot mode
 
-### 管理後台
-- **批量管理**：透過管理介面批量更新聊天室設定
-- **內容審核**：修改不當的聊天室資訊
-- **所有權轉移**：將聊天室擁有權轉移給其他用戶
+### Admin Console
+- **Batch management**: Batch update room settings through the admin interface
+- **Content moderation**: Modify inappropriate room information
+- **Ownership transfer**: Transfer room ownership to another user
 
-### 系統整合
-- **Webhook 配置**：設定聊天室的 Webhook 接收端點
-- **擴展參數**：透過 extParams 整合第三方系統
-- **狀態管理**：啟用或停用特定聊天室
+### System Integration
+- **Webhook configuration**: Set up the room's webhook receiving endpoint
+- **Extended parameters**: Integrate third-party systems via extParams
+- **Status management**: Enable or disable specific rooms
 
 ------
 
-## 注意事項
+## Notes
 
-- **權限限制**：僅聊天室擁有者、管理員或平台管理員可執行更新
-- **所有權轉移**：更改 owner 和 managers 需要更高權限
-- **參數驗證**：所有參數都是選擇性的，只更新提供的欄位
-- **狀態影響**：設定 status=0 會讓聊天室變為無效狀態
-- **開放設定**：opening 參數影響新用戶是否能加入聊天室
+- **Permission restrictions**: Only the room owner, administrators, or platform administrators can perform updates
+- **Ownership transfer**: Changing the owner and managers requires elevated permissions
+- **Parameter validation**: All parameters are optional; only the provided fields will be updated
+- **Status impact**: Setting status=0 will make the room inactive
+- **Open setting**: The opening parameter controls whether new users can join the room

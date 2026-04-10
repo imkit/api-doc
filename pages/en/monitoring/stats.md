@@ -1,16 +1,16 @@
-# 統計報告
+# Statistics Report
 
-## 概述
+## Overview
 
-取得應用程式的統計報告數據，包含用戶列表、聊天室數量、訊息數量、連線峰值及系統記憶體資訊。預設取樣最近一小時（3600 秒）的數據。適用於使用量分析、容量監控及營運報告等場景。
+Retrieve application statistics report data, including the user list, chatroom count, message count, connection peak, and system memory information. By default, the data is sampled from the most recent one hour (3600 seconds). Suitable for usage analysis, capacity monitoring, and operational reporting.
 
 ------
 
-## API 端點
+## API Endpoint
 
-### 取得統計報告
+### Get Statistics Report
 
-查詢應用程式在指定時間區間內的統計數據。
+Query the application's statistical data within a specified time range.
 
 ```http
 GET /admin/stats
@@ -18,13 +18,13 @@ GET /admin/stats
 
 #### Headers
 
-| 參數         | 類型   | 必填 | 說明              |
-| ------------ | ------ | ---- | ----------------- |
-| `IM-API-KEY` | string | ✅    | 您的平台 API 金鑰 |
+| Parameter    | Type   | Required | Description           |
+| ------------ | ------ | -------- | --------------------- |
+| `IM-API-KEY` | string | ✅        | Your platform API Key |
 
-#### 範例請求
+#### Example Request
 
-**JavaScript（axios）**
+**JavaScript (axios)**
 
 ```javascript
 const response = await axios.get(
@@ -46,28 +46,28 @@ curl -X GET "https://your-app.imkit.io/admin/stats" \
 
 #### Response
 
-**成功回應（200 OK）**
+**Success Response (200 OK)**
 
-| 參數                  | 類型   | 說明                                         |
-| --------------------- | ------ | -------------------------------------------- |
-| `RC`                  | number | 回應代碼（0 表示成功）                       |
-| `RM`                  | string | 回應訊息                                     |
-| `result`              | object | 統計結果                                     |
-| `result.clientKey`    | string | Client Key（敏感資訊，請勿記錄至日誌）       |
-| `result.apiKey`       | string | API Key（敏感資訊，請勿記錄至日誌）          |
-| `result.startTime`    | string | 統計起始時間（ISO 格式）                     |
-| `result.endTime`      | string | 統計結束時間（ISO 格式）                     |
-| `result.start`        | number | 統計起始時間（Unix 時間戳，秒）              |
-| `result.end`          | number | 統計結束時間（Unix 時間戳，秒）              |
-| `result.userList`     | array  | 期間內活躍用戶列表                           |
-| `result.roomCount`    | number | 期間內活躍聊天室數量                         |
-| `result.totalRoomCount` | number | 聊天室總數                                 |
-| `result.messageCount` | number | 期間內訊息總數                               |
-| `result.peakConnectionCount` | number | 期間內 WebSocket 連線峰值              |
-| `result.totalMem`     | number | 系統總記憶體（bytes）                        |
-| `result.freeMem`      | number | 系統可用記憶體（bytes）                      |
+| Parameter                    | Type   | Description                                          |
+| ---------------------------- | ------ | ---------------------------------------------------- |
+| `RC`                         | number | Response code (0 indicates success)                  |
+| `RM`                         | string | Response message                                     |
+| `result`                     | object | Statistics result                                    |
+| `result.clientKey`           | string | Client Key (sensitive information, do not log)       |
+| `result.apiKey`              | string | API Key (sensitive information, do not log)          |
+| `result.startTime`           | string | Statistics start time (ISO format)                   |
+| `result.endTime`             | string | Statistics end time (ISO format)                     |
+| `result.start`               | number | Statistics start time (Unix timestamp, seconds)      |
+| `result.end`                 | number | Statistics end time (Unix timestamp, seconds)        |
+| `result.userList`            | array  | List of active users during the period               |
+| `result.roomCount`           | number | Number of active chatrooms during the period         |
+| `result.totalRoomCount`      | number | Total chatroom count                                 |
+| `result.messageCount`        | number | Total message count during the period                |
+| `result.peakConnectionCount` | number | WebSocket connection peak during the period          |
+| `result.totalMem`            | number | Total system memory (bytes)                          |
+| `result.freeMem`             | number | Available system memory (bytes)                      |
 
-#### 範例回應
+#### Example Response
 
 ```json
 {
@@ -91,9 +91,9 @@ curl -X GET "https://your-app.imkit.io/admin/stats" \
 }
 ```
 
-#### 錯誤回應
+#### Error Response
 
-**401 Unauthorized** - API 金鑰無效
+**401 Unauthorized** - Invalid API Key
 
 ```json
 {
@@ -106,7 +106,7 @@ curl -X GET "https://your-app.imkit.io/admin/stats" \
 }
 ```
 
-**403 Forbidden** - 權限不足
+**403 Forbidden** - Insufficient permissions
 
 ```json
 {
@@ -121,28 +121,28 @@ curl -X GET "https://your-app.imkit.io/admin/stats" \
 
 ------
 
-## 使用場景
+## Use Cases
 
-### 使用量分析
-- **活躍用戶統計**：透過 `userList` 了解期間內的活躍用戶
-- **訊息量分析**：追蹤 `messageCount` 了解訊息傳送趨勢
-- **聊天室活躍度**：比較 `roomCount`（活躍）與 `totalRoomCount`（總數）的比例
+### Usage Analysis
+- **Active User Statistics**: Use `userList` to identify active users during the period
+- **Message Volume Analysis**: Track `messageCount` to understand message sending trends
+- **Chatroom Activity**: Compare the ratio of `roomCount` (active) to `totalRoomCount` (total)
 
-### 容量監控
-- **連線峰值追蹤**：透過 `peakConnectionCount` 了解連線高峰，規劃伺服器擴展
-- **記憶體監控**：透過 `totalMem` 與 `freeMem` 監控系統記憶體使用狀況
-- **效能基準**：建立效能基準線，偵測異常負載
+### Capacity Monitoring
+- **Peak Connection Tracking**: Use `peakConnectionCount` to understand connection peaks and plan for server scaling
+- **Memory Monitoring**: Monitor system memory usage through `totalMem` and `freeMem`
+- **Performance Baseline**: Establish performance baselines to detect abnormal loads
 
-### 營運報告
-- **每小時報告**：定期取得統計數據，產出營運報告
-- **趨勢分析**：累積歷史數據進行長期趨勢分析
+### Operational Reports
+- **Hourly Reports**: Periodically retrieve statistical data to generate operational reports
+- **Trend Analysis**: Accumulate historical data for long-term trend analysis
 
 ------
 
-## 注意事項
+## Notes
 
-- **取樣區間**：預設取樣最近一小時（3600 秒）的數據
-- **需要平台 API 權限**：此端點需使用 `IM-API-KEY` 進行驗證
-- **記憶體數據**：`totalMem` 與 `freeMem` 為伺服器主機的記憶體資訊，單位為 bytes
-- **活躍用戶**：`userList` 僅包含取樣區間內有活動的用戶，不代表所有已註冊用戶
-- **資料即時性**：統計數據為查詢當下的快照，可能有些微延遲
+- **Sampling Interval**: By default, data is sampled from the most recent one hour (3600 seconds)
+- **Platform API Permission Required**: This endpoint requires authentication using `IM-API-KEY`
+- **Memory Data**: `totalMem` and `freeMem` represent the server host's memory information, in bytes
+- **Active Users**: `userList` includes only users who were active during the sampling interval, not all registered users
+- **Data Timeliness**: Statistical data is a snapshot at the time of the query and may have slight delays

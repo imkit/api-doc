@@ -1,16 +1,16 @@
-# 釘選訊息
+# 钉选讯息
 
 ## 概述
 
-此端點允許聊天室擁有者或管理員將指定訊息釘選至聊天室頂部，方便成員快速查閱重要訊息。每個聊天室同一時間只能有一則釘選訊息。
+此端点允许聊天室拥有者或管理员将指定讯息钉选至聊天室顶部，方便成员快速查阅重要讯息。每个聊天室同一时间只能有一则钉选讯息。
 
 ------
 
-## API 端點
+## API 端点
 
-### 釘選訊息
+### 钉选讯息
 
-將指定訊息釘選至聊天室頂部。
+将指定讯息钉选至聊天室顶部。
 
 ```http
 POST /messages/:id/pin
@@ -18,22 +18,22 @@ POST /messages/:id/pin
 
 #### Headers
 
-| 參數               | 類型   | 必填 | 說明         |
+| 参数               | 类型   | 必填 | 说明         |
 | ------------------ | ------ | ---- | ------------ |
-| `IM-CLIENT-KEY`    | string | ✅   | 用戶端金鑰   |
-| `IM-Authorization` | string | ✅   | 用戶端權杖   |
+| `IM-CLIENT-KEY`    | string | ✅   | 用户端金钥   |
+| `IM-Authorization` | string | ✅   | 用户端权杖   |
 
 #### Path Parameters
 
-| 參數  | 類型   | 必填 | 說明             |
+| 参数  | 类型   | 必填 | 说明             |
 | ----- | ------ | ---- | ---------------- |
-| `:id` | string | ✅   | 訊息唯一識別碼   |
+| `:id` | string | ✅   | 讯息唯一识别码   |
 
-此 API 無需請求內容（Request Body）。
+此 API 无需请求内容（Request Body）。
 
-#### 範例請求
+#### 范例请求
 
-**cURL 範例：**
+**cURL 范例：**
 
 ```bash
 curl -X "POST" "https://your-app.imkit.io/messages/5f890cf37d980e06f6aaf349/pin" \
@@ -41,7 +41,7 @@ curl -X "POST" "https://your-app.imkit.io/messages/5f890cf37d980e06f6aaf349/pin"
      -H 'IM-Authorization: {IM-Authorization}'
 ```
 
-**JavaScript 範例：**
+**JavaScript 范例：**
 
 ```javascript
 const response = await axios.post(
@@ -58,22 +58,22 @@ const response = await axios.post(
 
 #### Response
 
-**成功回應（200 OK）**
+**成功回应（200 OK）**
 
-| 參數                  | 類型    | 說明                               |
+| 参数                  | 类型    | 说明                               |
 | --------------------- | ------- | ---------------------------------- |
-| `RC`                  | number  | 回應代碼（0 表示成功）             |
-| `RM`                  | string  | 回應訊息                           |
-| `result._id`          | string  | 訊息唯一識別碼                     |
-| `result.message`      | string  | 訊息內容                           |
-| `result.room`         | string  | 所屬聊天室 ID                      |
-| `result.sender`       | object  | 訊息發送者資訊                     |
-| `result.messageType`  | string  | 訊息類型                           |
-| `result.pinned`       | boolean | 是否已釘選（釘選後為 `true`）      |
-| `result.messageTimeMS`| number  | 訊息發送時間戳（毫秒）             |
-| `result.updatedAtMS`  | number  | 最後更新時間戳（毫秒）             |
+| `RC`                  | number  | 回应代码（0 表示成功）             |
+| `RM`                  | string  | 回应讯息                           |
+| `result._id`          | string  | 讯息唯一识别码                     |
+| `result.message`      | string  | 讯息内容                           |
+| `result.room`         | string  | 所属聊天室 ID                      |
+| `result.sender`       | object  | 讯息发送者资讯                     |
+| `result.messageType`  | string  | 讯息类型                           |
+| `result.pinned`       | boolean | 是否已钉选（钉选后为 `true`）      |
+| `result.messageTimeMS`| number  | 讯息发送时间戳（毫秒）             |
+| `result.updatedAtMS`  | number  | 最后更新时间戳（毫秒）             |
 
-#### 範例回應
+#### 范例回应
 
 ```json
 {
@@ -81,7 +81,7 @@ const response = await axios.post(
   "RM": "OK",
   "result": {
     "_id": "5f890cf37d980e06f6aaf349",
-    "message": "重要公告：明天下午兩點開會",
+    "message": "重要公告：明天下午两点开会",
     "room": "demo-room",
     "sender": {
       "_id": "aaa",
@@ -102,27 +102,27 @@ const response = await axios.post(
 }
 ```
 
-#### 錯誤回應
+#### 错误回应
 
-當請求失敗時，您會收到包含錯誤詳細資訊的錯誤回應。常見的錯誤情況包括：
+当请求失败时，您会收到包含错误详细资讯的错误回应。常见的错误情况包括：
 
-- 無效的用戶端金鑰或授權權杖
-- 指定的訊息不存在
-- 當前用戶不是聊天室擁有者或管理員
-- 伺服器內部錯誤
-
-------
-
-## 使用場景
-
-### 重要訊息管理
-
-- **公告置頂**：將重要公告釘選至聊天室頂部，確保所有成員都能看到
-- **快速查閱**：讓成員無需翻閱歷史訊息即可找到關鍵資訊
+- 无效的用户端金钥或授权权杖
+- 指定的讯息不存在
+- 当前用户不是聊天室拥有者或管理员
+- 伺服器内部错误
 
 ------
 
-## 注意事項
+## 使用场景
 
-- **權限限制**：僅聊天室**擁有者（owner）**或**管理員（admin）**可以執行釘選操作
-- 若要取消釘選，請使用[取消釘選訊息](./unpin-a-message) API
+### 重要讯息管理
+
+- **公告置顶**：将重要公告钉选至聊天室顶部，确保所有成员都能看到
+- **快速查阅**：让成员无需翻阅历史讯息即可找到关键资讯
+
+------
+
+## 注意事项
+
+- **权限限制**：仅聊天室**拥有者（owner）**或**管理员（admin）**可以执行钉选操作
+- 若要取消钉选，请使用[取消钉选讯息](./unpin-a-message) API

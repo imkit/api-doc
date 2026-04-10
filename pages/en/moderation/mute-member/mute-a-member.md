@@ -1,16 +1,16 @@
-# 替用戶靜音聊天室
+# Mute a Member
 
-## 概述
+## Overview
 
-由管理員替指定用戶靜音特定聊天室的通知。靜音後該用戶將不再收到該聊天室的推播通知，但不影響其在聊天室中的參與權限。此功能適用於管理員代替用戶管理通知偏好。
+An administrator mutes a specific chatroom's notifications for a specified user. After muting, the user will no longer receive push notifications from that chatroom, but their participation permissions in the chatroom are not affected. This feature is suitable for administrators to manage notification preferences on behalf of users.
 
 ------
 
-## API 端點
+## API Endpoint
 
-### 靜音指定聊天室
+### Mute a Specified Chatroom
 
-為指定客戶端設定聊天室靜音狀態。
+Set the mute status for a specified client's chatroom.
 
 ```http
 POST /admin/clients/{uid}/mute/{room}
@@ -18,20 +18,20 @@ POST /admin/clients/{uid}/mute/{room}
 
 #### Headers
 
-| 參數         | 類型   | 必填 | 說明        |
-| ------------ | ------ | ---- | ----------- |
-| `IM-API-KEY` | string | ✅    | API Key     |
+| Parameter    | Type   | Required | Description |
+| ------------ | ------ | -------- | ----------- |
+| `IM-API-KEY` | string | ✅        | API Key     |
 
 #### Path Parameters
 
-| 參數   | 類型   | 必填 | 說明         |
-| ------ | ------ | ---- | ------------ |
-| `uid`  | string | ✅    | 客戶端 ID    |
-| `room` | string | ✅    | 聊天室 ID    |
+| Parameter | Type   | Required | Description  |
+| --------- | ------ | -------- | ------------ |
+| `uid`     | string | ✅        | Client ID    |
+| `room`    | string | ✅        | Chatroom ID  |
 
-#### 範例請求
+#### Example Request
 
-**靜音特定聊天室**
+**Mute a specific chatroom**
 
 ```http
 POST /admin/clients/aaa/mute/demo HTTP/1.1
@@ -39,7 +39,7 @@ IM-API-KEY: {IM-API-KEY}
 Host: your-app.imkit.io
 ```
 
-**JavaScript 範例：**
+**JavaScript Example:**
 
 ```javascript
 const response = await axios.post(
@@ -53,7 +53,7 @@ const response = await axios.post(
 );
 ```
 
-**cURL 範例：**
+**cURL Example:**
 
 ```bash
 curl -X "POST" "https://your-app.imkit.io/admin/clients/{uid}/mute/{room}" \
@@ -62,32 +62,32 @@ curl -X "POST" "https://your-app.imkit.io/admin/clients/{uid}/mute/{room}" \
 
 #### Response
 
-**成功回應（200 OK）**
+**Success Response (200 OK)**
 
-| 參數     | 類型   | 說明                       |
-| -------- | ------ | -------------------------- |
-| `RC`     | number | 回應代碼（0 表示成功）     |
-| `RM`     | string | 回應訊息                   |
-| `result` | object | 更新後的客戶端資料         |
+| Parameter | Type   | Description                         |
+| --------- | ------ | ----------------------------------- |
+| `RC`      | number | Response code (0 indicates success) |
+| `RM`      | string | Response message                    |
+| `result`  | object | Updated client data                 |
 
-**客戶端資料物件結構**
+**Client Data Object Structure**
 
-| 參數              | 類型   | 說明                          |
-| ----------------- | ------ | ----------------------------- |
-| `mute`            | array  | 靜音的聊天室 ID 列表          |
-| `isRobot`         | bool   | 是否為機器人                  |
-| `_id`             | string | 客戶端唯一識別碼              |
-| `appID`           | string | 應用程式識別碼                |
-| `description`     | string | 客戶端描述                    |
-| `avatarUrl`       | string | 頭像 URL                      |
-| `nickname`        | string | 暱稱                          |
-| `email`           | string | 電子信箱                      |
-| `address`         | object | 連線地址資訊                  |
-| `userAgent`       | string | 使用者代理字串                |
-| `updatedAt`       | string | 最後更新時間                  |
-| `lastLoginTimeMS` | number | 最後登入時間（毫秒時間戳）    |
+| Parameter         | Type   | Description                             |
+| ----------------- | ------ | --------------------------------------- |
+| `mute`            | array  | List of muted chatroom IDs             |
+| `isRobot`         | bool   | Whether this is a bot                   |
+| `_id`             | string | Client unique ID                        |
+| `appID`           | string | Application ID                          |
+| `description`     | string | Client description                      |
+| `avatarUrl`       | string | Avatar URL                              |
+| `nickname`        | string | Nickname                                |
+| `email`           | string | Email address                           |
+| `address`         | object | Connection address information          |
+| `userAgent`       | string | User agent string                       |
+| `updatedAt`       | string | Last updated time                       |
+| `lastLoginTimeMS` | number | Last login time (millisecond timestamp) |
 
-#### 範例回應
+#### Example Response
 
 ```json
 {
@@ -116,9 +116,9 @@ curl -X "POST" "https://your-app.imkit.io/admin/clients/{uid}/mute/{room}" \
 }
 ```
 
-#### 錯誤回應
+#### Error Response
 
-**401 Unauthorized** - 認證失敗
+**401 Unauthorized** - Authentication failed
 
 ```json
 {
@@ -131,7 +131,7 @@ curl -X "POST" "https://your-app.imkit.io/admin/clients/{uid}/mute/{room}" \
 }
 ```
 
-**404 Not Found** - 客戶端不存在
+**404 Not Found** - Client does not exist
 
 ```json
 {
@@ -144,7 +144,7 @@ curl -X "POST" "https://your-app.imkit.io/admin/clients/{uid}/mute/{room}" \
 }
 ```
 
-**404 Not Found** - 聊天室不存在
+**404 Not Found** - Chatroom does not exist
 
 ```json
 {
@@ -159,30 +159,30 @@ curl -X "POST" "https://your-app.imkit.io/admin/clients/{uid}/mute/{room}" \
 
 ------
 
-## 使用場景
+## Use Cases
 
-### 通知管理
-- **減少干擾**：暫時停止接收特定聊天室的通知
-- **專注工作**：在重要工作時段靜音不重要的聊天室
-- **夜間模式**：夜間時段自動靜音所有聊天室
+### Notification Management
+- **Reduce Disturbances**: Temporarily stop receiving notifications from specific chatrooms
+- **Focus on Work**: Mute less important chatrooms during critical work periods
+- **Night Mode**: Automatically mute all chatrooms during nighttime hours
 
-### 用戶體驗優化
-- **個人偏好**：根據個人喜好調整通知設定
-- **情境切換**：在不同使用情境下快速調整通知狀態
-- **批量管理**：統一管理多個聊天室的通知設定
+### User Experience Optimization
+- **Personal Preferences**: Adjust notification settings based on individual preferences
+- **Context Switching**: Quickly adjust notification status for different usage contexts
+- **Batch Management**: Centrally manage notification settings for multiple chatrooms
 
-### 管理功能
-- **後台控制**：管理員可為特定用戶設定聊天室靜音
-- **用戶支援**：協助用戶解決通知相關問題
-- **系統維護**：在系統維護期間暫時靜音通知
+### Administrative Functions
+- **Backend Control**: Administrators can set chatroom mute status for specific users
+- **User Support**: Help users resolve notification-related issues
+- **System Maintenance**: Temporarily mute notifications during system maintenance
 
 ------
 
-## 注意事項
+## Notes
 
-- **僅影響通知**：靜音只會停止通知推送，不影響聊天室內的正常互動
-- **管理員權限**：此 API 需要管理員權限和 API Key
-- **持久化設定**：靜音設定會永久保存，直到手動取消
-- **陣列更新**：每次靜音會將新的聊天室 ID 加入 mute 陣列
-- **查詢參數**：API 支援 limit 和 skip 參數，但不影響靜音功能本身
-- **即時生效**：靜音設定會立即生效，無需重新登入
+- **Notifications Only**: Muting only stops push notifications and does not affect normal interactions within the chatroom
+- **Admin Permission**: This API requires administrator permissions and an API Key
+- **Persistent Setting**: The mute setting is permanently saved until manually cancelled
+- **Array Update**: Each mute operation adds the new chatroom ID to the mute array
+- **Query Parameters**: The API supports limit and skip parameters, but they do not affect the mute functionality itself
+- **Immediate Effect**: The mute setting takes effect immediately without requiring re-login

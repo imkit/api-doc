@@ -1,37 +1,11 @@
 export default {
-  "delete-a-message":
-  {
-    title: "刪除訊息"
-  },
-  "recall-a-message":
-  {
-    title: "撤回訊息"
-  },
-  "send-a-message": {
-    title: "發送訊息"
-  },
-  "batch-send-messages": {
-    title: "批次發送訊息"
-  },
-  "pin-a-message":
-  {
-    title: "釘選訊息"
-  },
-  "unpin-a-message":
-  {
-    title: "取消釘選訊息"
-  },
-  "search-message":
-  {
-    title: "搜尋訊息"
-  },
-  "get-message-by-a-room":
-  {
-    title: "取得聊天室訊息"
-  },
-  "list-messages":
-  {
-    title: "訊息列表"
-  }
+  "delete-a-message": { title: "Delete Message" },
+  "recall-a-message": { title: "Recall Message" },
+  "send-a-message": { title: "Send Message" },
+  "batch-send-messages": { title: "Batch Send Messages" },
+  "pin-a-message": { title: "Pin Message" },
+  "unpin-a-message": { title: "Unpin Message" },
+  "search-message": { title: "Search Messages" },
+  "get-message-by-a-room": { title: "Get Room Messages" },
+  "list-messages": { title: "List Messages" }
 }
-

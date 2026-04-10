@@ -1,16 +1,16 @@
-# 解除禁止成員
+# 解除禁止成员
 
 ## 概述
 
-在聊天室中解除對指定用戶的禁止狀態，恢復其在該聊天室中的正常活動權限。只有聊天室擁有者具備解除禁止的權限（限群組聊天室且設有擁有者）。解除禁止後，該用戶可以重新在聊天室中進行互動和發送訊息。
+在聊天室中解除对指定用户的禁止状态，恢复其在该聊天室中的正常活动权限。只有聊天室拥有者具备解除禁止的权限（限群组聊天室且设有拥有者）。解除禁止后，该用户可以重新在聊天室中进行互动和发送讯息。
 
 ------
 
-## API 端點
+## API 端点
 
-### 在聊天室中解除禁止指定用戶
+### 在聊天室中解除禁止指定用户
 
-將指定用戶從聊天室的禁止清單中移除，恢復其在該聊天室的活動權限。
+将指定用户从聊天室的禁止清单中移除，恢复其在该聊天室的活动权限。
 
 ```http
 DELETE /blockStatus/room/{roomID}/{blockee}
@@ -18,21 +18,21 @@ DELETE /blockStatus/room/{roomID}/{blockee}
 
 #### Headers
 
-| 參數               | 類型   | 必填 | 說明           |
+| 参数               | 类型   | 必填 | 说明           |
 | ------------------ | ------ | ---- | -------------- |
 | `IM-CLIENT-KEY`    | string | ✅    | Client Key     |
 | `IM-Authorization` | string | ✅    | Client Token   |
 
 #### Path Parameters
 
-| 參數      | 類型   | 必填 | 說明                  |
+| 参数      | 类型   | 必填 | 说明                  |
 | --------- | ------ | ---- | --------------------- |
 | `roomID`  | string | ✅    | 聊天室 ID             |
-| `blockee` | string | ✅    | 要解除禁止的用戶 ID   |
+| `blockee` | string | ✅    | 要解除禁止的用户 ID   |
 
-#### 範例請求
+#### 范例请求
 
-**解除禁止特定用戶**
+**解除禁止特定用户**
 
 ```http
 DELETE /blockStatus/room/demo-room/ccc HTTP/1.1
@@ -42,7 +42,7 @@ Host: your-app.imkit.io
 Connection: close
 ```
 
-**JavaScript 範例：**
+**JavaScript 范例：**
 
 ```javascript
 const response = await axios.delete(
@@ -56,7 +56,7 @@ const response = await axios.delete(
 );
 ```
 
-**cURL 範例：**
+**cURL 范例：**
 
 ```bash
 curl -X "DELETE" "https://your-app.imkit.io/blockStatus/room/{roomID}/{blockee}" \
@@ -66,36 +66,36 @@ curl -X "DELETE" "https://your-app.imkit.io/blockStatus/room/{roomID}/{blockee}"
 
 #### Response
 
-**成功回應（200 OK）**
+**成功回应（200 OK）**
 
-| 參數     | 類型   | 說明                   |
+| 参数     | 类型   | 说明                   |
 | -------- | ------ | ---------------------- |
-| `RC`     | number | 回應代碼（0 表示成功） |
-| `RM`     | string | 回應訊息               |
-| `result` | object | 解除禁止狀態資訊       |
+| `RC`     | number | 回应代码（0 表示成功） |
+| `RM`     | string | 回应讯息               |
+| `result` | object | 解除禁止状态资讯       |
 
-**解除禁止狀態物件結構**
+**解除禁止状态物件结构**
 
-| 參數        | 類型   | 說明                      |
+| 参数        | 类型   | 说明                      |
 | ----------- | ------ | ------------------------- |
-| `appID`     | string | 應用程式識別碼            |
-| `blockee`   | object | 被解除禁止用戶的詳細資訊  |
-| `blocker`   | string | 執行禁止的用戶 ID         |
+| `appID`     | string | 应用程式识别码            |
+| `blockee`   | object | 被解除禁止用户的详细资讯  |
+| `blocker`   | string | 执行禁止的用户 ID         |
 | `room`      | string | 聊天室 ID                 |
-| `createdAt` | string | 原禁止創建時間            |
-| `updatedAt` | string | 解除禁止時間              |
+| `createdAt` | string | 原禁止创建时间            |
+| `updatedAt` | string | 解除禁止时间              |
 
-**被解除禁止用戶物件結構**
+**被解除禁止用户物件结构**
 
-| 參數              | 類型   | 說明                          |
+| 参数              | 类型   | 说明                          |
 | ----------------- | ------ | ----------------------------- |
-| `_id`             | string | 用戶唯一識別碼                |
-| `nickname`        | string | 用戶暱稱                      |
-| `avatarUrl`       | string | 用戶頭像 URL                  |
-| `id`              | string | 用戶 ID                       |
-| `lastLoginTimeMS` | number | 最後登入時間（毫秒時間戳）    |
+| `_id`             | string | 用户唯一识别码                |
+| `nickname`        | string | 用户暱称                      |
+| `avatarUrl`       | string | 用户头像 URL                  |
+| `id`              | string | 用户 ID                       |
+| `lastLoginTimeMS` | number | 最后登入时间（毫秒时间戳）    |
 
-#### 範例回應
+#### 范例回应
 
 ```json
 {
@@ -118,9 +118,9 @@ curl -X "DELETE" "https://your-app.imkit.io/blockStatus/room/{roomID}/{blockee}"
 }
 ```
 
-#### 錯誤回應
+#### 错误回应
 
-**401 Unauthorized** - 認證失敗
+**401 Unauthorized** - 认证失败
 
 ```json
 {
@@ -133,7 +133,7 @@ curl -X "DELETE" "https://your-app.imkit.io/blockStatus/room/{roomID}/{blockee}"
 }
 ```
 
-**403 Forbidden** - 權限不足
+**403 Forbidden** - 权限不足
 
 ```json
 {
@@ -146,7 +146,7 @@ curl -X "DELETE" "https://your-app.imkit.io/blockStatus/room/{roomID}/{blockee}"
 }
 ```
 
-**404 Not Found** - 禁止關係不存在
+**404 Not Found** - 禁止关系不存在
 
 ```json
 {
@@ -159,7 +159,7 @@ curl -X "DELETE" "https://your-app.imkit.io/blockStatus/room/{roomID}/{blockee}"
 }
 ```
 
-**400 Bad Request** - 參數無效
+**400 Bad Request** - 参数无效
 
 ```json
 {
@@ -174,30 +174,30 @@ curl -X "DELETE" "https://your-app.imkit.io/blockStatus/room/{roomID}/{blockee}"
 
 ------
 
-## 使用場景
+## 使用场景
 
 ### 聊天室管理
-- **禁止解除**：聊天室擁有者解除對用戶的禁止狀態
-- **管理決策**：基於情況變化調整禁止政策
-- **成員恢復**：恢復用戶在聊天室中的正常參與權限
+- **禁止解除**：聊天室拥有者解除对用户的禁止状态
+- **管理决策**：基于情况变化调整禁止政策
+- **成员恢复**：恢复用户在聊天室中的正常参与权限
 
-### 權限管理
-- **擁有者專屬**：只有聊天室擁有者可以解除禁止
-- **權限恢復**：恢復用戶在該聊天室的完整活動權限
-- **管理彈性**：提供靈活的禁止管理機制
+### 权限管理
+- **拥有者专属**：只有聊天室拥有者可以解除禁止
+- **权限恢复**：恢复用户在该聊天室的完整活动权限
+- **管理弹性**：提供灵活的禁止管理机制
 
-### 關係修復
-- **誤判糾正**：解除因誤判而禁止的用戶
-- **情況改善**：用戶行為改善後的權限恢復
-- **和解機制**：提供聊天室成員關係修復的途徑
+### 关系修复
+- **误判纠正**：解除因误判而禁止的用户
+- **情况改善**：用户行为改善后的权限恢复
+- **和解机制**：提供聊天室成员关系修复的途径
 
 ------
 
-## 注意事項
+## 注意事项
 
-- **權限限制**：只有聊天室擁有者可以執行解除禁止操作（限群組聊天室且設有擁有者）
-- **聊天室類型**：此功能主要針對群組聊天室，且該聊天室必須設有擁有者
-- **即時生效**：解除禁止狀態會立即生效，用戶可立即在聊天室中活動
-- **禁止範圍**：解除禁止僅限於指定的聊天室，不影響其他聊天室的禁止狀態
-- **不存在處理**：嘗試解除不存在的禁止關係會返回 404 錯誤
-- **記錄保存**：解除禁止操作會更新禁止記錄的時間戳記
+- **权限限制**：只有聊天室拥有者可以执行解除禁止操作（限群组聊天室且设有拥有者）
+- **聊天室类型**：此功能主要针对群组聊天室，且该聊天室必须设有拥有者
+- **即时生效**：解除禁止状态会立即生效，用户可立即在聊天室中活动
+- **禁止范围**：解除禁止仅限于指定的聊天室，不影响其他聊天室的禁止状态
+- **不存在处理**：尝试解除不存在的禁止关系会返回 404 错误
+- **记录保存**：解除禁止操作会更新禁止记录的时间戳记

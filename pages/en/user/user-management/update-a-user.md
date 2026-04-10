@@ -1,15 +1,15 @@
-# 更新用戶
+# Update a User
 
-## 概述
+## Overview
 
-此端點允許您更新系統中現有的用戶資訊。此 API 僅供伺服器端使用，需要適當的身份驗證。
+This endpoint allows you to update existing user information in the system. This API is for server-side use only and requires proper authentication.
 
 ------
 
-## API 端點
+## API Endpoint
 
-### 更新用戶
-更新系統中現有的用戶端資訊。
+### Update a User
+Update existing user information in the system.
 
 ```http
 POST /admin/clients
@@ -17,38 +17,38 @@ POST /admin/clients
 
 #### Headers
 
-| 參數 | 類型 | 必填 | 說明 |
+| Parameter | Type | Required | Description |
 | ---- | ---- | ---- | ---- |
-| `IM-API-KEY` | string | ✅ | 您的平台 API 金鑰 |
+| `IM-API-KEY` | string | ✅ | Your platform API key |
 | `Content-Type` | string | ✅ | `application/json; charset=utf-8` |
 
-#### Post Body
+#### Request Body
 
-請求內容應包含 JSON 格式的用戶端更新資訊。
+The request body should contain user update information in JSON format.
 
-| 參數 | 類型 | 必填 | 說明 |
+| Parameter | Type | Required | Description |
 | ---- | ---- | ---- | ---- |
-| `_id` | string | ✅ | 要更新的用戶端唯一識別碼 |
-| `nickname` | string | ❌ | 用戶端顯示名稱 |
-| `avatarUrl` | string | ❌ | 用戶端頭像圖片 URL |
-| `issueAccessToken` | boolean | ❌ | 設為 `true` 以重新產生存取權杖；設為 `false` 或省略以使用自訂 token |
-| `token` | string | ❌ | 要綁定的新 token（當 `issueAccessToken` 為 `false` 或省略時使用） |
-| `expirationDate` | string | ❌ | Token 過期時間（ISO 格式，當使用自訂 token 時設定） |
+| `_id` | string | ✅ | Unique identifier of the user to update |
+| `nickname` | string | ❌ | User display name |
+| `avatarUrl` | string | ❌ | User avatar image URL |
+| `issueAccessToken` | boolean | ❌ | Set to `true` to regenerate an access token; set to `false` or omit to use a custom token |
+| `token` | string | ❌ | New token to bind (used when `issueAccessToken` is `false` or omitted) |
+| `expirationDate` | string | ❌ | Token expiration time (ISO format, set when using a custom token) |
 
-#### 範例請求
+#### Example Request
 
-##### 選項一：重新發行存取 Token
+##### Option 1: Reissue Access Token
 
-使用此選項為現有用戶重新產生新的存取權杖。
+Use this option to regenerate a new access token for an existing user.
 
 ```javascript
 const response = await axios.post(
   "https://your-app.imkit.io/admin/clients",
   {
     _id: "user123",
-    nickname: "王小華", // 更新顯示名稱
-    avatarUrl: "https://example.com/new-avatar.jpg", // 更新頭像
-    issueAccessToken: true, // 重新發行 token
+    nickname: "王小華", // Update display name
+    avatarUrl: "https://example.com/new-avatar.jpg", // Update avatar
+    issueAccessToken: true, // Reissue token
   },
   {
     headers: {
@@ -59,9 +59,9 @@ const response = await axios.post(
 );
 ```
 
-##### 選項二：綁定指定 Token
+##### Option 2: Bind a Specific Token
 
-使用此選項將新的自訂 token 綁定到現有用戶端。
+Use this option to bind a new custom token to an existing user.
 
 ```http
 POST /admin/clients HTTP/1.1
@@ -78,9 +78,9 @@ Host: your-app.imkit.io
 }
 ```
 
-##### 選項三：僅更新基本資訊
+##### Option 3: Update Basic Information Only
 
-如果只需要更新用戶端的基本資訊（如暱稱、頭像），可以省略所有 token 相關參數。
+If you only need to update the user's basic information (such as nickname and avatar), you can omit all token-related parameters.
 
 ```javascript
 const response = await axios.post(
@@ -101,29 +101,29 @@ const response = await axios.post(
 
 #### Response
 
-**成功回應（200 OK）**
+**Success Response (200 OK)**
 
-當請求成功時，API 會回傳更新後的用戶端資訊：
+When the request is successful, the API returns the updated user information:
 
-| 參數 | 類型 | 說明 |
+| Parameter | Type | Description |
 | ---- | ---- | ---- |
-| `RC` | number | 回應代碼（0 表示成功） |
-| `RM` | string | 回應訊息 |
-| `result` | object | 更新後的用戶端資訊 |
+| `RC` | number | Response code (0 indicates success) |
+| `RM` | string | Response message |
+| `result` | object | Updated user information |
 
-**用戶端物件欄位**
+**User Object Fields**
 
-| 參數 | 類型 | 說明 |
+| Parameter | Type | Description |
 | ---- | ---- | ---- |
-| `_id` | string | 用戶唯一識別碼 |
-| `nickname` | string | 更新後的用戶顯示名稱 |
-| `avatarUrl` | string | 更新後的用戶頭像圖片 URL |
-| `token` | string | 存取權杖（僅在重新發行或綁定新 token 時出現） |
-| `expirationDate` | string | Token 過期時間（僅在有 token 操作時出現） |
-| `updatedAt` | string | 最後更新時間戳（ISO 格式） |
-| `lastLoginTimeMS` | number | 最後登入時間戳（毫秒） |
+| `_id` | string | Unique user identifier |
+| `nickname` | string | Updated user display name |
+| `avatarUrl` | string | Updated user avatar image URL |
+| `token` | string | Access token (only present when a token is reissued or a new token is bound) |
+| `expirationDate` | string | Token expiration time (only present when a token operation occurs) |
+| `updatedAt` | string | Last updated timestamp (ISO format) |
+| `lastLoginTimeMS` | number | Last login timestamp (milliseconds) |
 
-#### 範例回應
+#### Example Response
 
 ```json
 {
@@ -154,36 +154,36 @@ const response = await axios.post(
 }
 ```
 
-#### 錯誤回應
+#### Error Response
 
-當請求失敗時，您會收到包含錯誤詳細資訊的錯誤回應。常見的錯誤情況包括：
+When a request fails, you will receive an error response containing error details. Common error scenarios include:
 
-- **無效的 API 金鑰** - 提供的 `IM-API-KEY` 無效或已過期
-- **用戶端不存在** - 指定的 `_id` 找不到對應的用戶端
-- **無效的 token 格式** - 自訂 token 格式不正確
-- **參數格式錯誤** - 提供的參數格式不符合要求
-- **伺服器內部錯誤** - 伺服器端發生未預期的錯誤
-
-------
-
-## 使用場景
-
-### 用戶資訊維護
-- **更新顯示名稱與頭像**：當用戶修改個人資料時，僅更新 `nickname` 和 `avatarUrl` 等基本資訊
-- **重新發行存取權杖**：當用戶的 token 即將過期或需要刷新時，設定 `issueAccessToken: true` 重新產生
-
-### Token 管理
-- **綁定自訂 Token**：當整合外部身份驗證系統時，將自訂的 token 綁定到現有用戶端
-- **Token 輪換**：定期更換用戶的 token 以提升安全性
+- **Invalid API Key** - The provided `IM-API-KEY` is invalid or expired
+- **User Not Found** - No user found with the specified `_id`
+- **Invalid Token Format** - The custom token format is incorrect
+- **Invalid Parameter Format** - The provided parameters do not meet the required format
+- **Internal Server Error** - An unexpected error occurred on the server side
 
 ------
 
-## 注意事項
+## Use Cases
 
-- **用戶必須存在**：此頁面的使用場景為更新已存在的用戶。若需同時支援建立和更新，請參考[建立用戶](/zh-TW/user/user-management/create-a-user)
-- **部分更新**：只有提供的欄位會被更新，未提供的欄位保持原值
-- **Token 失效**：重新發行 token 會使舊的 token 失效
-- **Token 替換**：綁定新 token 會替換原有的 token
-- **時間戳格式**：所有時間戳均為 UTC 格式
-- **頭像圖片**：頭像圖片的檔案大小應控制在合理範圍內
-- **伺服器端專用**：此端點專用於更新現有用戶端的資訊
+### User Information Maintenance
+- **Update Display Name and Avatar**: When a user modifies their profile, update only the basic information such as `nickname` and `avatarUrl`
+- **Reissue Access Token**: When a user's token is about to expire or needs to be refreshed, set `issueAccessToken: true` to regenerate
+
+### Token Management
+- **Bind Custom Token**: When integrating with an external authentication system, bind a custom token to an existing user
+- **Token Rotation**: Periodically replace user tokens to enhance security
+
+------
+
+## Notes
+
+- **User Must Exist**: The use case on this page is for updating existing users. If you need to support both creation and update, refer to [Create a User](/en/user/user-management/create-a-user)
+- **Partial Update**: Only the provided fields will be updated; fields not provided will retain their original values
+- **Token Invalidation**: Reissuing a token will invalidate the old token
+- **Token Replacement**: Binding a new token will replace the existing token
+- **Timestamp Format**: All timestamps are in UTC format
+- **Avatar Image**: The avatar image file size should be kept within a reasonable range
+- **Server-Side Only**: This endpoint is exclusively for updating existing user information

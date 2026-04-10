@@ -1,16 +1,16 @@
-# 更新 Token
+# Update Token
 
-## 概述
+## Overview
 
-更新指定用戶的 access token 和有效期間。適用於 token 輪換、延長有效期或更換認證憑證等場景。
+Update the access token and validity period for a specified user. Suitable for scenarios such as token rotation, extending validity, or replacing authentication credentials.
 
 ------
 
-## API 端點
+## API Endpoint
 
-### 更新用戶 Token
+### Update User Token
 
-更新指定用戶的 access token 和過期時間。
+Update the access token and expiration time for a specified user.
 
 ```http
 PUT /admin/clients/{client_id}/token
@@ -18,27 +18,27 @@ PUT /admin/clients/{client_id}/token
 
 #### Headers
 
-| 參數 | 類型 | 必填 | 說明 |
+| Parameter | Type | Required | Description |
 | ---- | ---- | ---- | ---- |
-| `IM-API-KEY` | string | ✅ | 您的 API 金鑰 |
+| `IM-API-KEY` | string | ✅ | Your API key |
 | `Content-Type` | string | ✅ | `application/json` |
 
 #### Path Parameters
 
-| 參數 | 類型 | 必填 | 說明 |
+| Parameter | Type | Required | Description |
 | ---- | ---- | ---- | ---- |
-| `client_id` | string | ✅ | 用戶唯一識別碼 |
+| `client_id` | string | ✅ | Unique user identifier |
 
 #### Request Body
 
-| 參數 | 類型 | 必填 | 說明 |
+| Parameter | Type | Required | Description |
 | ---- | ---- | ---- | ---- |
-| `token` | string | ✅ | 新的 access token |
-| `expirationDate` | string | ✅ | Token 過期時間（ISO 8601 格式） |
+| `token` | string | ✅ | New access token |
+| `expirationDate` | string | ✅ | Token expiration time (ISO 8601 format) |
 
-#### 範例請求
+#### Example Request
 
-**JavaScript 範例：**
+**JavaScript Example:**
 
 ```javascript
 const response = await axios.put(
@@ -56,7 +56,7 @@ const response = await axios.put(
 );
 ```
 
-**cURL 範例：**
+**cURL Example:**
 
 ```bash
 curl -X "PUT" "https://your-app.imkit.io/admin/clients/{client_id}/token" \
@@ -70,19 +70,19 @@ curl -X "PUT" "https://your-app.imkit.io/admin/clients/{client_id}/token" \
 
 #### Response
 
-**成功回應（200 OK）**
+**Success Response (200 OK)**
 
-| 參數 | 類型 | 說明 |
+| Parameter | Type | Description |
 | ---- | ---- | ---- |
-| `_id` | string | 用戶唯一識別碼 |
-| `nickname` | string | 用戶顯示名稱 |
-| `avatarUrl` | string | 用戶頭像 URL |
-| `issueAccessToken` | boolean | Token issue 模式 |
-| `token` | string | 更新後的 access token |
-| `expirationDate` | string | 更新後的 Token 過期時間 |
-| `updatedAt` | string | Token 更新時間（ISO 8601 格式） |
+| `_id` | string | Unique user identifier |
+| `nickname` | string | User display name |
+| `avatarUrl` | string | User avatar URL |
+| `issueAccessToken` | boolean | Token issue mode |
+| `token` | string | Updated access token |
+| `expirationDate` | string | Updated token expiration time |
+| `updatedAt` | string | Token update time (ISO 8601 format) |
 
-#### 範例回應
+#### Example Response
 
 ```json
 {
@@ -96,9 +96,9 @@ curl -X "PUT" "https://your-app.imkit.io/admin/clients/{client_id}/token" \
 }
 ```
 
-#### 錯誤回應
+#### Error Response
 
-**400 Bad Request** — 請求參數錯誤
+**400 Bad Request** — Invalid request parameters
 
 ```json
 {
@@ -107,7 +107,7 @@ curl -X "PUT" "https://your-app.imkit.io/admin/clients/{client_id}/token" \
 }
 ```
 
-**401 Unauthorized** — API 金鑰無效
+**401 Unauthorized** — Invalid API key
 
 ```json
 {
@@ -116,7 +116,7 @@ curl -X "PUT" "https://your-app.imkit.io/admin/clients/{client_id}/token" \
 }
 ```
 
-**404 Not Found** — 用戶不存在
+**404 Not Found** — User not found
 
 ```json
 {
@@ -125,7 +125,7 @@ curl -X "PUT" "https://your-app.imkit.io/admin/clients/{client_id}/token" \
 }
 ```
 
-**409 Conflict** — Token 衝突
+**409 Conflict** — Token conflict
 
 ```json
 {
@@ -136,24 +136,24 @@ curl -X "PUT" "https://your-app.imkit.io/admin/clients/{client_id}/token" \
 
 ------
 
-## 使用場景
+## Use Cases
 
-### Token 生命週期管理
-- **定期輪換**：定期更新 token 提升安全性
-- **延長有效期**：延長即將過期的 token 有效期間
-- **緊急更新**：安全事件發生時緊急更換 token
+### Token Lifecycle Management
+- **Regular Rotation**: Periodically update tokens to enhance security
+- **Extend Validity**: Extend the validity period of tokens that are about to expire
+- **Emergency Update**: Urgently replace tokens when a security incident occurs
 
-### 系統維護
-- **批次更新**：系統升級時批次更新用戶 token
-- **格式遷移**：從舊格式 token 遷移到新格式
+### System Maintenance
+- **Batch Update**: Batch update user tokens during system upgrades
+- **Format Migration**: Migrate from old token formats to new formats
 
 ------
 
-## 注意事項
+## Notes
 
-- **即時生效**：Token 更新後立即生效，舊 token 將失效
-- **唯一性檢查**：系統會檢查新 token 是否與其他用戶衝突
-- **時間格式**：`expirationDate` 必須使用 ISO 8601 格式
-- **Token 複雜度**：建議使用足夠複雜的 token 格式
-- **過期時間設定**：合理設定過期時間，平衡安全性與使用便利性
-- **同步機制**：確保與您的認證系統同步更新
+- **Immediate Effect**: Token updates take effect immediately; the old token will be invalidated
+- **Uniqueness Check**: The system checks whether the new token conflicts with other users
+- **Time Format**: `expirationDate` must be in ISO 8601 format
+- **Token Complexity**: It is recommended to use a sufficiently complex token format
+- **Expiration Time Settings**: Set a reasonable expiration time, balancing security and usability
+- **Synchronization Mechanism**: Ensure synchronization with your authentication system when updating

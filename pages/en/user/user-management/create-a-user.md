@@ -1,15 +1,15 @@
-# 建立用戶
+# Create a User
 
-## 概述
+## Overview
 
-此端點允許您在系統中建立或更新用戶。若 `_id` 不存在則建立新用戶，若已存在則更新該用戶的資料。此 API 僅供伺服器端使用，需要適當的身份驗證。
+This endpoint allows you to create or update a user in the system. If the `_id` does not exist, a new user will be created; if it already exists, the user's data will be updated. This API is for server-side use only and requires proper authentication.
 
 ------
 
-## API 端點
+## API Endpoint
 
-### 建立或更新用戶
-在系統中建立新用戶，或更新已存在的用戶資料。
+### Create or Update a User
+Create a new user in the system, or update the data of an existing user.
 
 ```http
 POST /admin/clients
@@ -17,29 +17,29 @@ POST /admin/clients
 
 #### Headers
 
-| 參數 | 類型 | 必填 | 說明 |
+| Parameter | Type | Required | Description |
 | ---- | ---- | ---- | ---- |
-| `IM-API-KEY` | string | ✅ | 您的平台 API 金鑰 |
+| `IM-API-KEY` | string | ✅ | Your platform API key |
 | `Content-Type` | string | ✅ | `application/json; charset=utf-8` |
 
-#### Post Body
+#### Request Body
 
-請求內容應包含 JSON 格式的用戶端資訊。
+The request body should contain user information in JSON format.
 
-| 參數 | 類型 | 必填 | 說明 |
+| Parameter | Type | Required | Description |
 | ---- | ---- | ---- | ---- |
-| `_id` | string | ✅ | 用戶端唯一識別碼 |
-| `nickname` | string | ❌ | 用戶端顯示名稱 |
-| `avatarUrl` | string | ❌ | 用戶端頭像圖片 URL |
-| `issueAccessToken` | boolean | ❌ | 設為 `true` 以產生新的存取權杖；設為 `false` 或省略以使用自訂 token |
-| `token` | string | ❌ | 要綁定到用戶端的自訂 token（當 `issueAccessToken` 為 `false` 或省略時使用） |
-| `expirationDate` | string | ❌ | Token 過期時間（ISO 格式，當使用自訂 token 時設定） |
+| `_id` | string | ✅ | Unique user identifier |
+| `nickname` | string | ❌ | User display name |
+| `avatarUrl` | string | ❌ | User avatar image URL |
+| `issueAccessToken` | boolean | ❌ | Set to `true` to generate a new access token; set to `false` or omit to use a custom token |
+| `token` | string | ❌ | Custom token to bind to the user (used when `issueAccessToken` is `false` or omitted) |
+| `expirationDate` | string | ❌ | Token expiration time (ISO format, set when using a custom token) |
 
-#### 範例請求
+#### Example Request
 
-##### 選項一：聊天伺服器發行 Token
+##### Option 1: Chat Server Issues Token
 
-使用此選項讓聊天伺服器自動為用戶產生新的存取權杖。
+Use this option to have the chat server automatically generate a new access token for the user.
 
 ```javascript
 const response = await axios.post(
@@ -59,9 +59,9 @@ const response = await axios.post(
 );
 ```
 
-##### 選項二：自訂 Token 綁定
+##### Option 2: Custom Token Binding
 
-使用此選項將特定的 token 綁定到用戶，並設定自訂的過期時間。
+Use this option to bind a specific token to the user and set a custom expiration time.
 
 ```http
 POST /admin/clients HTTP/1.1
@@ -80,29 +80,29 @@ Host: your-app.imkit.io
 
 #### Response
 
-**成功回應（200 OK）**
+**Success Response (200 OK)**
 
-當請求成功時，API 會回傳建立的用戶端資訊：
+When the request is successful, the API returns the created user information:
 
-| 參數 | 類型 | 說明 |
+| Parameter | Type | Description |
 | ---- | ---- | ---- |
-| `RC` | number | 回應代碼（0 表示成功） |
-| `RM` | string | 回應訊息 |
-| `result` | object | 建立的用戶端資訊 |
+| `RC` | number | Response code (0 indicates success) |
+| `RM` | string | Response message |
+| `result` | object | Created user information |
 
-**用戶端物件欄位**
+**User Object Fields**
 
-| 參數 | 類型 | 說明 |
+| Parameter | Type | Description |
 | ---- | ---- | ---- |
-| `_id` | string | 用戶唯一識別碼 |
-| `nickname` | string | 用戶顯示名稱 |
-| `avatarUrl` | string | 用戶頭像圖片 URL |
-| `token` | string | 存取權杖（僅在 `issueAccessToken` 為 true 時出現） |
-| `expirationDate` | string | Token 過期時間（僅在發行 token 時出現） |
-| `lastLoginTimeMS` | number | 最後登入時間戳（毫秒） |
-| `updatedAt` | string | 最後更新時間戳（ISO 格式） |
+| `_id` | string | Unique user identifier |
+| `nickname` | string | User display name |
+| `avatarUrl` | string | User avatar image URL |
+| `token` | string | Access token (only present when `issueAccessToken` is true) |
+| `expirationDate` | string | Token expiration time (only present when a token is issued) |
+| `lastLoginTimeMS` | number | Last login timestamp (milliseconds) |
+| `updatedAt` | string | Last updated timestamp (ISO format) |
 
-#### 範例回應
+#### Example Response
 
 ```json
 {
@@ -133,29 +133,29 @@ Host: your-app.imkit.io
 }
 ```
 
-#### 錯誤回應
+#### Error Response
 
-當請求失敗時，您會收到包含錯誤詳細資訊的錯誤回應。常見的錯誤情況包括：
+When a request fails, you will receive an error response containing error details. Common error scenarios include:
 
-- **無效的 API 金鑰** - 提供的 `IM-API-KEY` 無效或已過期
-- **缺少必填參數** - 未提供必要的 `_id` 參數
-- **無效的 token 格式** - 自訂 token 格式不正確
-- **伺服器內部錯誤** - 伺服器端發生未預期的錯誤
-
-------
-
-## 使用場景
-
-### 用戶註冊
-- **使用伺服器發行 Token 建立用戶**：當新用戶註冊時，設定 `issueAccessToken: true` 讓系統自動產生存取權杖
-- **使用自訂 Token 建立用戶**：當需要整合外部身份驗證系統時，綁定自訂 token 並設定過期時間
+- **Invalid API Key** - The provided `IM-API-KEY` is invalid or expired
+- **Missing Required Parameters** - The required `_id` parameter was not provided
+- **Invalid Token Format** - The custom token format is incorrect
+- **Internal Server Error** - An unexpected error occurred on the server side
 
 ------
 
-## 注意事項
+## Use Cases
 
-- **唯一識別碼**：每個用戶端都需要唯一的 `_id` 識別碼
-- **Token 欄位**：回應中的 `token` 欄位僅在 `issueAccessToken` 設為 `true` 時包含
-- **時間戳格式**：所有時間戳均為 UTC 格式
-- **頭像圖片**：頭像圖片的檔案大小應控制在合理範圍內
-- **伺服器端專用**：此端點用於建立新用戶端，僅供伺服器端使用
+### User Registration
+- **Create a User with Server-Issued Token**: When a new user registers, set `issueAccessToken: true` to have the system automatically generate an access token
+- **Create a User with Custom Token**: When integrating with an external authentication system, bind a custom token and set its expiration time
+
+------
+
+## Notes
+
+- **Unique Identifier**: Each user requires a unique `_id` identifier
+- **Token Field**: The `token` field in the response is only included when `issueAccessToken` is set to `true`
+- **Timestamp Format**: All timestamps are in UTC format
+- **Avatar Image**: The avatar image file size should be kept within a reasonable range
+- **Server-Side Only**: This endpoint is for creating new users and is for server-side use only

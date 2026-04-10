@@ -1,16 +1,16 @@
-# 撤回訊息
+# Recall a Message
 
-## 概述
+## Overview
 
-此端點允許用戶撤回聊天室中的指定訊息。撤回後，原訊息內容會被清空，訊息類型變更為 `recall`，聊天室中的所有成員都能看到該訊息已被撤回。支援用戶端和平台 API 兩種驗證方式。
+This endpoint allows a user to recall a specified message in a room. After recall, the original message content is cleared, the message type is changed to `recall`, and all members in the room can see that the message has been recalled. Both client-side and platform API authentication methods are supported.
 
 ------
 
-## API 端點
+## API Endpoint
 
-### 撤回訊息
+### Recall a Message
 
-撤回聊天室中的指定訊息。
+Recall a specified message in a room.
 
 ```http
 POST /rooms/:roomId/message
@@ -18,39 +18,39 @@ POST /rooms/:roomId/message
 
 #### Headers
 
-此 API 支援兩種驗證方式，擇一使用：
+This API supports two authentication methods; use one of them:
 
-**用戶端驗證**
+**Client Authentication**
 
-| 參數               | 類型   | 必填 | 說明         |
+| Parameter          | Type   | Required | Description    |
 | ------------------ | ------ | ---- | ------------ |
-| `IM-CLIENT-KEY`    | string | ✅   | 用戶端金鑰   |
-| `IM-Authorization` | string | ✅   | 用戶端權杖   |
+| `IM-CLIENT-KEY`    | string | ✅   | Client key   |
+| `IM-Authorization` | string | ✅   | Client token |
 
-**平台 API 驗證**
+**Platform API Authentication**
 
-| 參數         | 類型   | 必填 | 說明             |
+| Parameter    | Type   | Required | Description        |
 | ------------ | ------ | ---- | ---------------- |
-| `IM-API-KEY` | string | ✅   | 平台 API 金鑰    |
+| `IM-API-KEY` | string | ✅   | Platform API key |
 
 #### Path Parameters
 
-| 參數       | 類型   | 必填 | 說明             |
-| ---------- | ------ | ---- | ---------------- |
-| `:roomId`  | string | ✅   | 聊天室唯一識別碼 |
+| Parameter  | Type   | Required | Description          |
+| ---------- | ------ | ---- | -------------------- |
+| `:roomId`  | string | ✅   | Room unique identifier |
 
 #### Post Body
 
-| 參數          | 類型   | 必填 | 說明                            |
-| ------------- | ------ | ---- | ------------------------------- |
-| `messageType` | string | ✅   | 固定填入 `"recall"`             |
-| `_id`         | string | ✅   | 要撤回的訊息唯一識別碼          |
+| Parameter     | Type   | Required | Description                         |
+| ------------- | ------ | ---- | ----------------------------------- |
+| `messageType` | string | ✅   | Must be set to `"recall"`           |
+| `_id`         | string | ✅   | Unique identifier of the message to recall |
 
-#### 範例請求
+#### Example Request
 
-**範例一：用戶端驗證撤回訊息**
+**Example 1: Recall a message with client authentication**
 
-**cURL 範例：**
+**cURL Example:**
 
 ```bash
 curl -X "POST" "https://your-app.imkit.io/rooms/demo-room/message" \
@@ -60,7 +60,7 @@ curl -X "POST" "https://your-app.imkit.io/rooms/demo-room/message" \
      -d '{"_id": "5ce3d80bd594874e495895a4", "messageType": "recall"}'
 ```
 
-**JavaScript 範例：**
+**JavaScript Example:**
 
 ```javascript
 const response = await axios.post(
@@ -79,9 +79,9 @@ const response = await axios.post(
 );
 ```
 
-**範例二：平台 API 驗證撤回訊息**
+**Example 2: Recall a message with platform API authentication**
 
-**JavaScript 範例：**
+**JavaScript Example:**
 
 ```javascript
 const response = await axios.post(
@@ -101,21 +101,21 @@ const response = await axios.post(
 
 #### Response
 
-**成功回應（200 OK）**
+**Success Response (200 OK)**
 
-| 參數                  | 類型   | 說明                               |
-| --------------------- | ------ | ---------------------------------- |
-| `RC`                  | number | 回應代碼（0 表示成功）             |
-| `RM`                  | string | 回應訊息                           |
-| `result._id`          | string | 訊息唯一識別碼                     |
-| `result.message`      | string | 訊息內容（撤回後為空字串）         |
-| `result.room`         | string | 所屬聊天室 ID                      |
-| `result.sender`       | object | 撤回操作的發送者資訊               |
-| `result.messageType`  | string | 訊息類型（撤回後為 `"recall"`）    |
-| `result.messageTimeMS`| number | 訊息發送時間戳（毫秒）             |
-| `result.updatedAtMS`  | number | 最後更新時間戳（毫秒）             |
+| Parameter             | Type   | Description                            |
+| --------------------- | ------ | -------------------------------------- |
+| `RC`                  | number | Response code (0 indicates success)    |
+| `RM`                  | string | Response message                       |
+| `result._id`          | string | Message unique identifier              |
+| `result.message`      | string | Message content (empty string after recall) |
+| `result.room`         | string | Room ID the message belongs to         |
+| `result.sender`       | object | Sender information for the recall operation |
+| `result.messageType`  | string | Message type (`"recall"` after recall) |
+| `result.messageTimeMS`| number | Message sent timestamp (milliseconds)  |
+| `result.updatedAtMS`  | number | Last updated timestamp (milliseconds)  |
 
-#### 範例回應
+#### Example Response
 
 ```json
 {
@@ -143,29 +143,29 @@ const response = await axios.post(
 }
 ```
 
-#### 錯誤回應
+#### Error Response
 
-當請求失敗時，您會收到包含錯誤詳細資訊的錯誤回應。常見的錯誤情況包括：
+When a request fails, you will receive an error response containing error details. Common error scenarios include:
 
-- 無效的驗證金鑰或權杖
-- 指定的訊息或聊天室不存在
-- 無權限撤回該訊息
-- 伺服器內部錯誤
-
-------
-
-## 使用場景
-
-### 訊息管理
-
-- **誤發訊息修正**：用戶發送錯誤訊息後可立即撤回
-- **敏感資訊移除**：撤回包含敏感或不當內容的訊息
-- **後台管理**：管理員透過平台 API 撤回違規訊息
+- Invalid authentication key or token
+- The specified message or room does not exist
+- No permission to recall the message
+- Internal server error
 
 ------
 
-## 注意事項
+## Use Cases
 
-- **撤回效果**：撤回後，訊息的 `message` 欄位會變為空字串，`messageType` 變為 `"recall"`，聊天室所有成員均可看到撤回狀態
-- **`_id`**：請求 Body 中的 `_id` 為要撤回的**訊息** ID，非聊天室 ID
-- **兩種驗證**：用戶端驗證（`IM-CLIENT-KEY` + `IM-Authorization`）適用於一般用戶操作；平台 API 驗證（`IM-API-KEY`）適用於後台管理操作
+### Message Management
+
+- **Correct mistaken messages**: Users can immediately recall a message sent by mistake
+- **Remove sensitive information**: Recall messages containing sensitive or inappropriate content
+- **Backend management**: Administrators can recall violating messages via the platform API
+
+------
+
+## Notes
+
+- **Recall effect**: After recall, the message's `message` field becomes an empty string, `messageType` changes to `"recall"`, and all room members can see the recalled status
+- **`_id`**: The `_id` in the request body is the **message** ID to be recalled, not the room ID
+- **Two authentication methods**: Client authentication (`IM-CLIENT-KEY` + `IM-Authorization`) is for regular user operations; platform API authentication (`IM-API-KEY`) is for backend management operations

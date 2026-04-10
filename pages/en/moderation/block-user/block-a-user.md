@@ -1,16 +1,16 @@
-# 封鎖用戶
+# Block a User
 
-## 概述
+## Overview
 
-封鎖指定用戶，阻止其與當前用戶進行直接聊天。封鎖後，被封鎖的用戶將無法發送私人訊息給封鎖者，但不會影響在群組聊天室中的互動。此功能適用於防止騷擾和管理個人隱私。
+Block a specified user to prevent them from having direct chats with the current user. After blocking, the blocked user will be unable to send private messages to the blocker, but this will not affect interactions in group chatrooms. This feature is suitable for preventing harassment and managing personal privacy.
 
 ------
 
-## API 端點
+## API Endpoint
 
-### 封鎖指定用戶
+### Block a Specified User
 
-將指定用戶加入封鎖清單，阻止其進行直接聊天。
+Add the specified user to the block list to prevent direct chatting.
 
 ```http
 POST /blockStatus/my/{blockee}
@@ -18,20 +18,20 @@ POST /blockStatus/my/{blockee}
 
 #### Headers
 
-| 參數               | 類型   | 必填 | 說明           |
-| ------------------ | ------ | ---- | -------------- |
-| `IM-CLIENT-KEY`    | string | ✅    | Client Key     |
-| `IM-Authorization` | string | ✅    | Client Token   |
+| Parameter          | Type   | Required | Description    |
+| ------------------ | ------ | -------- | -------------- |
+| `IM-CLIENT-KEY`    | string | ✅        | Client Key     |
+| `IM-Authorization` | string | ✅        | Client Token   |
 
 #### Path Parameters
 
-| 參數      | 類型   | 必填 | 說明              |
-| --------- | ------ | ---- | ----------------- |
-| `blockee` | string | ✅    | 要封鎖的用戶 ID   |
+| Parameter | Type   | Required | Description             |
+| --------- | ------ | -------- | ----------------------- |
+| `blockee` | string | ✅        | ID of the user to block |
 
-#### 範例請求
+#### Example Request
 
-**封鎖特定用戶**
+**Block a specific user**
 
 ```http
 POST /blockStatus/my/ccc HTTP/1.1
@@ -41,7 +41,7 @@ Host: your-app.imkit.io
 Connection: close
 ```
 
-**封鎖其他用戶**
+**Block another user**
 
 ```http
 POST /blockStatus/my/user123 HTTP/1.1
@@ -51,7 +51,7 @@ Host: your-app.imkit.io
 Connection: close
 ```
 
-**JavaScript 範例：**
+**JavaScript Example:**
 
 ```javascript
 const response = await axios.post(
@@ -66,7 +66,7 @@ const response = await axios.post(
 );
 ```
 
-**cURL 範例：**
+**cURL Example:**
 
 ```bash
 curl -X "POST" "https://your-app.imkit.io/blockStatus/my/{blockee}" \
@@ -76,35 +76,35 @@ curl -X "POST" "https://your-app.imkit.io/blockStatus/my/{blockee}" \
 
 #### Response
 
-**成功回應（200 OK）**
+**Success Response (200 OK)**
 
-| 參數     | 類型   | 說明                   |
-| -------- | ------ | ---------------------- |
-| `RC`     | number | 回應代碼（0 表示成功） |
-| `RM`     | string | 回應訊息               |
-| `result` | object | 封鎖狀態資訊           |
+| Parameter | Type   | Description                         |
+| --------- | ------ | ----------------------------------- |
+| `RC`      | number | Response code (0 indicates success) |
+| `RM`      | string | Response message                    |
+| `result`  | object | Block status information            |
 
-**封鎖狀態物件結構**
+**Block Status Object Structure**
 
-| 參數        | 類型   | 說明                          |
-| ----------- | ------ | ----------------------------- |
-| `appID`     | string | 應用程式識別碼                |
-| `blockee`   | object | 被封鎖用戶的詳細資訊          |
-| `blocker`   | string | 執行封鎖的用戶 ID             |
-| `room`      | string | 關聯的聊天室 ID               |
-| `createdAt` | string | 封鎖創建時間                  |
-| `updatedAt` | string | 封鎖更新時間                  |
+| Parameter   | Type   | Description                           |
+| ----------- | ------ | ------------------------------------- |
+| `appID`     | string | Application ID                        |
+| `blockee`   | object | Detailed information of blocked user  |
+| `blocker`   | string | ID of the user who performed the block |
+| `room`      | string | Associated chatroom ID                |
+| `createdAt` | string | Block creation time                   |
+| `updatedAt` | string | Block update time                     |
 
-**被封鎖用戶物件結構**
+**Blocked User Object Structure**
 
-| 參數              | 類型   | 說明                          |
-| ----------------- | ------ | ----------------------------- |
-| `_id`             | string | 用戶唯一識別碼                |
-| `nickname`        | string | 用戶暱稱                      |
-| `avatarUrl`       | string | 用戶頭像 URL                  |
-| `lastLoginTimeMS` | number | 最後登入時間（毫秒時間戳）    |
+| Parameter         | Type   | Description                             |
+| ----------------- | ------ | --------------------------------------- |
+| `_id`             | string | User unique ID                          |
+| `nickname`        | string | User nickname                           |
+| `avatarUrl`       | string | User avatar URL                         |
+| `lastLoginTimeMS` | number | Last login time (millisecond timestamp) |
 
-#### 範例回應
+#### Example Response
 
 ```json
 {
@@ -127,9 +127,9 @@ curl -X "POST" "https://your-app.imkit.io/blockStatus/my/{blockee}" \
 }
 ```
 
-#### 錯誤回應
+#### Error Response
 
-**401 Unauthorized** - 認證失敗
+**401 Unauthorized** - Authentication failed
 
 ```json
 {
@@ -142,7 +142,7 @@ curl -X "POST" "https://your-app.imkit.io/blockStatus/my/{blockee}" \
 }
 ```
 
-**404 Not Found** - 用戶不存在
+**404 Not Found** - User does not exist
 
 ```json
 {
@@ -155,7 +155,7 @@ curl -X "POST" "https://your-app.imkit.io/blockStatus/my/{blockee}" \
 }
 ```
 
-**400 Bad Request** - 不能封鎖自己
+**400 Bad Request** - Cannot block yourself
 
 ```json
 {
@@ -168,7 +168,7 @@ curl -X "POST" "https://your-app.imkit.io/blockStatus/my/{blockee}" \
 }
 ```
 
-**409 Conflict** - 用戶已被封鎖
+**409 Conflict** - User is already blocked
 
 ```json
 {
@@ -183,30 +183,30 @@ curl -X "POST" "https://your-app.imkit.io/blockStatus/my/{blockee}" \
 
 ------
 
-## 使用場景
+## Use Cases
 
-### 個人隱私保護
-- **防止騷擾**：阻止不當用戶發送私人訊息
-- **隱私管理**：控制誰能與自己進行直接聯絡
-- **安全防護**：防範惡意用戶的持續騷擾行為
+### Personal Privacy Protection
+- **Prevent Harassment**: Block inappropriate users from sending private messages
+- **Privacy Management**: Control who can directly contact you
+- **Safety Protection**: Guard against persistent harassment from malicious users
 
-### 用戶體驗改善
-- **內容過濾**：避免接收不想要的訊息內容
-- **環境淨化**：創造更舒適的聊天環境
-- **專注工作**：減少非必要的打擾和干擾
+### User Experience Improvement
+- **Content Filtering**: Avoid receiving unwanted message content
+- **Environment Cleanup**: Create a more comfortable chat environment
+- **Focus on Work**: Reduce unnecessary disturbances and interruptions
 
-### 社群管理
-- **行為規範**：對違規用戶採取個人層級的防護措施
-- **衝突處理**：處理用戶間的個人衝突
-- **自主管理**：讓用戶自行管理個人的社交圈
+### Community Management
+- **Behavioral Standards**: Take personal-level protective measures against rule-violating users
+- **Conflict Resolution**: Handle personal conflicts between users
+- **Self-Management**: Allow users to manage their own social circle
 
 ------
 
-## 注意事項
+## Notes
 
-- **僅限直接聊天**：封鎖只影響私人聊天，不影響群組聊天室中的互動
-- **雙向效果**：封鎖生效後，雙方都無法發送私人訊息
-- **自動創建聊天室**：封鎖會關聯到相應的直接聊天室
-- **不能自封**：無法封鎖自己的帳號
-- **重複封鎖**：對已封鎖的用戶執行封鎖會返回衝突錯誤
-- **狀態持久**：封鎖狀態會持續存在，直到手動解除封鎖
+- **Direct Chat Only**: Blocking only affects private chats and does not affect interactions in group chatrooms
+- **Bidirectional Effect**: After blocking takes effect, neither party can send private messages
+- **Automatic Chatroom Creation**: Blocking is associated with the corresponding direct chatroom
+- **Cannot Block Self**: Users cannot block their own account
+- **Duplicate Blocking**: Blocking an already blocked user will return a conflict error
+- **Persistent Status**: The block status persists until manually unblocked

@@ -1,26 +1,26 @@
-# 基本串接
+# Basic Integration
 
-## 概述
+## Overview
 
-本指南將帶您完成 IMKIT 的基本串接流程。在完成「快速開始」取得 API Key 和 Chat Server URL 後，您可以透過以下三個步驟，快速建立用戶、建立聊天室，並開始第一個對談。
+This guide walks you through the basic integration process with IMKIT. After completing the "Quick Start" to obtain your API Key and Chat Server URL, you can follow these three steps to quickly create users, create a chat room, and start your first conversation.
 
 ------
 
-## 前置條件
+## Prerequisites
 
-請確認您已完成以下準備：
+Please confirm you have completed the following preparations:
 
-| 項目 | 說明 | 取得方式 |
+| Item | Description | How to Obtain |
 | ---- | ---- | -------- |
-| API Key | 後端 API 認證金鑰（`IM-API-KEY`） | IMKIT Dashboard |
-| Client Key | 用戶端連線金鑰（`IM-CLIENT-KEY`） | IMKIT Dashboard |
-| Chat Server URL | 您的 Chat Server 網址 | IMKIT Dashboard |
+| API Key | Backend API authentication key (`IM-API-KEY`) | IMKIT Dashboard |
+| Client Key | Client-side connection key (`IM-CLIENT-KEY`) | IMKIT Dashboard |
+| Chat Server URL | Your Chat Server URL | IMKIT Dashboard |
 
 ------
 
-## 步驟一：建立用戶
+## Step 1: Create Users
 
-透過 API 為您的系統中的使用者建立 IMKIT 用戶，並取得存取權杖（Token）。
+Create IMKIT users for the users in your system via the API and obtain access tokens.
 
 ```http
 POST /admin/clients
@@ -28,12 +28,12 @@ POST /admin/clients
 
 #### Headers
 
-| 參數 | 類型 | 必填 | 說明 |
+| Parameter | Type | Required | Description |
 | ---- | ---- | ---- | ---- |
-| `IM-API-KEY` | string | ✅ | 您的平台 API 金鑰 |
+| `IM-API-KEY` | string | ✅ | Your platform API key |
 | `Content-Type` | string | ✅ | `application/json; charset=utf-8` |
 
-#### 建立用戶 A
+#### Create User A
 
 ```javascript
 const axios = require("axios");
@@ -41,7 +41,7 @@ const axios = require("axios");
 const BASE_URL = "https://your-app.imkit.io";
 const API_KEY = process.env.IM_API_KEY;
 
-// 建立用戶 A 並取得 Token
+// Create User A and obtain Token
 const userA = await axios.post(
   `${BASE_URL}/admin/clients`,
   {
@@ -59,13 +59,13 @@ const userA = await axios.post(
 );
 
 const tokenA = userA.data.result.token;
-console.log("用戶 A Token:", tokenA);
+console.log("User A Token:", tokenA);
 ```
 
-#### 建立用戶 B
+#### Create User B
 
 ```javascript
-// 建立用戶 B 並取得 Token
+// Create User B and obtain Token
 const userB = await axios.post(
   `${BASE_URL}/admin/clients`,
   {
@@ -83,10 +83,10 @@ const userB = await axios.post(
 );
 
 const tokenB = userB.data.result.token;
-console.log("用戶 B Token:", tokenB);
+console.log("User B Token:", tokenB);
 ```
 
-#### 回應範例
+#### Example Response
 
 ```json
 {
@@ -103,13 +103,13 @@ console.log("用戶 B Token:", tokenB);
 }
 ```
 
-> 請將取得的 Token 安全地傳遞給前端，供 SDK 或 Web URL 使用。
+> Please securely pass the obtained Token to the frontend for use with the SDK or Web URL.
 
 ------
 
-## 步驟二：建立聊天室
+## Step 2: Create a Chat Room
 
-建立一個聊天室，並將用戶 A 和用戶 B 加入為成員。
+Create a chat room and add User A and User B as members.
 
 ```http
 POST /rooms/
@@ -117,15 +117,15 @@ POST /rooms/
 
 #### Headers
 
-| 參數 | 類型 | 必填 | 說明 |
+| Parameter | Type | Required | Description |
 | ---- | ---- | ---- | ---- |
-| `IM-API-KEY` | string | ✅ | 您的平台 API 金鑰 |
+| `IM-API-KEY` | string | ✅ | Your platform API key |
 | `Content-Type` | string | ✅ | `application/json; charset=utf-8` |
 
-#### 範例請求
+#### Example Request
 
 ```javascript
-// 建立一對一聊天室
+// Create a one-on-one chat room
 const room = await axios.post(
   `${BASE_URL}/rooms/`,
   {
@@ -141,17 +141,17 @@ const room = await axios.post(
 );
 
 const roomId = room.data.result._id;
-console.log("聊天室 ID:", roomId);
+console.log("Chat Room ID:", roomId);
 ```
 
-如需建立群組聊天室，將 `roomType` 改為 `"group"` 並加入更多成員：
+To create a group chat room, change `roomType` to `"group"` and add more members:
 
 ```javascript
-// 建立群組聊天室
+// Create a group chat room
 const groupRoom = await axios.post(
   `${BASE_URL}/rooms/`,
   {
-    name: "專案討論群",
+    name: "Project Discussion Group",
     roomType: "group",
     members: ["user-a", "user-b", "user-c"],
   },
@@ -164,7 +164,7 @@ const groupRoom = await axios.post(
 );
 ```
 
-#### 回應範例
+#### Example Response
 
 ```json
 {
@@ -182,13 +182,13 @@ const groupRoom = await axios.post(
 
 ------
 
-## 步驟三：開始對談
+## Step 3: Start a Conversation
 
-聊天室建立完成後，將用戶的 Token 帶入 Web URL，即可開始對談。
+After the chat room is created, pass the user's Token into the Web URL to start a conversation.
 
-### 使用 Web SDK
+### Using the Web SDK
 
-在您的網頁中嵌入 IMKIT Web SDK，並帶入用戶的 Token 進行初始化：
+Embed the IMKIT Web SDK in your web page and initialize it with the user's Token:
 
 ```html
 <div id="imkit-container"></div>
@@ -196,27 +196,27 @@ const groupRoom = await axios.post(
 <script>
   window.IMKitUI.init({
     domain: "https://your-app.imkit.io",
-    clientKey: "您的_CLIENT_KEY",
-    token: "用戶的_TOKEN",
+    clientKey: "YOUR_CLIENT_KEY",
+    token: "USER_TOKEN",
   });
 </script>
 ```
 
-### 使用 Web URL
+### Using Web URL
 
-若您已取得 IMKIT 提供的 Web URL，可直接將用戶 Token 作為參數帶入：
+If you have obtained the Web URL provided by IMKIT, you can directly pass the user Token as a parameter:
 
 ```
-https://your-app.imkit.io/chat?token=用戶的_TOKEN
+https://your-app.imkit.io/chat?token=USER_TOKEN
 ```
 
-您可以在自己的應用程式中透過 iframe 或直接導向的方式嵌入此 URL。
+You can embed this URL in your application via an iframe or direct navigation.
 
 ------
 
-## 完整串接流程
+## Complete Integration Flow
 
-以下是完整的後端串接範例，涵蓋建立兩位用戶和一個聊天室的完整流程：
+Below is a complete backend integration example covering the full process of creating two users and one chat room:
 
 ```javascript
 const axios = require("axios");
@@ -230,21 +230,21 @@ const headers = {
 };
 
 async function setupChat() {
-  // 1. 建立用戶 A
+  // 1. Create User A
   const userA = await axios.post(
     `${BASE_URL}/admin/clients`,
     { _id: "user-a", nickname: "Alice", issueAccessToken: true },
     { headers }
   );
 
-  // 2. 建立用戶 B
+  // 2. Create User B
   const userB = await axios.post(
     `${BASE_URL}/admin/clients`,
     { _id: "user-b", nickname: "Bob", issueAccessToken: true },
     { headers }
   );
 
-  // 3. 建立聊天室
+  // 3. Create Chat Room
   const room = await axios.post(
     `${BASE_URL}/rooms/`,
     { roomType: "direct", members: ["user-a", "user-b"] },
@@ -259,21 +259,21 @@ async function setupChat() {
 }
 
 setupChat().then((result) => {
-  console.log("串接完成！");
-  console.log("用戶 A Token:", result.tokenA);
-  console.log("用戶 B Token:", result.tokenB);
-  console.log("聊天室 ID:", result.roomId);
+  console.log("Integration complete!");
+  console.log("User A Token:", result.tokenA);
+  console.log("User B Token:", result.tokenB);
+  console.log("Chat Room ID:", result.roomId);
 });
 ```
 
 ------
 
-## 下一步
+## Next Steps
 
-完成基本串接後，您可以進一步了解：
+After completing the basic integration, you can explore further:
 
-- [權限驗證](/zh-TW/auth) — 了解 API Key 和 Client Key 的詳細用法
-- [用戶管理](/zh-TW/user/user-management) — 更多用戶管理功能
-- [聊天室管理](/zh-TW/room/room-management) — 聊天室進階操作
-- [訊息功能](/zh-TW/message/message-basic) — 透過 API 發送和管理訊息
-- [Webhook](/zh-TW/webhook) — 接收聊天室事件，實現自動化流程
+- [Authentication](/en/auth) — Learn the detailed usage of API Key and Client Key
+- [User Management](/en/user/user-management) — More user management features
+- [Chat Room Management](/en/room/room-management) — Advanced chat room operations
+- [Messaging](/en/message/message-basic) — Send and manage messages via API
+- [Webhook](/en/webhook) — Receive chat room events for automated workflows

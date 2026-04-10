@@ -1,16 +1,16 @@
-# 解除封鎖用戶
+# Unblock a User
 
-## 概述
+## Overview
 
-解除對指定用戶的封鎖狀態，恢復其與當前用戶進行直接聊天的能力。解除封鎖後，雙方可以重新發送私人訊息，但不會影響群組聊天室中的互動狀態。此功能適用於修復誤操作或重新建立聯絡關係。
+Remove the block status on a specified user, restoring their ability to have direct chats with the current user. After unblocking, both parties can send private messages again, but this will not affect the interaction status in group chatrooms. This feature is suitable for correcting accidental blocks or re-establishing contact.
 
 ------
 
-## API 端點
+## API Endpoint
 
-### 解除封鎖指定用戶
+### Unblock a Specified User
 
-將指定用戶從封鎖清單中移除，恢復直接聊天功能。
+Remove the specified user from the block list, restoring direct chat functionality.
 
 ```http
 DELETE /blockStatus/my/{blockee}
@@ -18,20 +18,20 @@ DELETE /blockStatus/my/{blockee}
 
 #### Headers
 
-| 參數               | 類型   | 必填 | 說明           |
-| ------------------ | ------ | ---- | -------------- |
-| `IM-CLIENT-KEY`    | string | ✅    | Client Key     |
-| `IM-Authorization` | string | ✅    | Client Token   |
+| Parameter          | Type   | Required | Description    |
+| ------------------ | ------ | -------- | -------------- |
+| `IM-CLIENT-KEY`    | string | ✅        | Client Key     |
+| `IM-Authorization` | string | ✅        | Client Token   |
 
 #### Path Parameters
 
-| 參數      | 類型   | 必填 | 說明                  |
-| --------- | ------ | ---- | --------------------- |
-| `blockee` | string | ✅    | 要解除封鎖的用戶 ID   |
+| Parameter | Type   | Required | Description               |
+| --------- | ------ | -------- | ------------------------- |
+| `blockee` | string | ✅        | ID of the user to unblock |
 
-#### 範例請求
+#### Example Request
 
-**解除封鎖特定用戶**
+**Unblock a specific user**
 
 ```http
 DELETE /blockStatus/my/ddd HTTP/1.1
@@ -41,7 +41,7 @@ Host: your-app.imkit.io
 Connection: close
 ```
 
-**解除封鎖其他用戶**
+**Unblock another user**
 
 ```http
 DELETE /blockStatus/my/user123 HTTP/1.1
@@ -51,7 +51,7 @@ Host: your-app.imkit.io
 Connection: close
 ```
 
-**JavaScript 範例：**
+**JavaScript Example:**
 
 ```javascript
 const response = await axios.delete(
@@ -65,7 +65,7 @@ const response = await axios.delete(
 );
 ```
 
-**cURL 範例：**
+**cURL Example:**
 
 ```bash
 curl -X "DELETE" "https://your-app.imkit.io/blockStatus/my/{blockee}" \
@@ -75,36 +75,36 @@ curl -X "DELETE" "https://your-app.imkit.io/blockStatus/my/{blockee}" \
 
 #### Response
 
-**成功回應（200 OK）**
+**Success Response (200 OK)**
 
-| 參數     | 類型   | 說明                   |
-| -------- | ------ | ---------------------- |
-| `RC`     | number | 回應代碼（0 表示成功） |
-| `RM`     | string | 回應訊息               |
-| `result` | object | 解除封鎖狀態資訊       |
+| Parameter | Type   | Description                         |
+| --------- | ------ | ----------------------------------- |
+| `RC`      | number | Response code (0 indicates success) |
+| `RM`      | string | Response message                    |
+| `result`  | object | Unblock status information          |
 
-**解除封鎖狀態物件結構**
+**Unblock Status Object Structure**
 
-| 參數        | 類型   | 說明                          |
-| ----------- | ------ | ----------------------------- |
-| `appID`     | string | 應用程式識別碼                |
-| `blockee`   | object | 被解除封鎖用戶的詳細資訊      |
-| `blocker`   | string | 執行解除封鎖的用戶 ID         |
-| `room`      | string | 關聯的聊天室 ID               |
-| `createdAt` | string | 原封鎖創建時間                |
-| `updatedAt` | string | 解除封鎖時間                  |
+| Parameter   | Type   | Description                              |
+| ----------- | ------ | ---------------------------------------- |
+| `appID`     | string | Application ID                           |
+| `blockee`   | object | Detailed information of unblocked user   |
+| `blocker`   | string | ID of the user who performed the unblock |
+| `room`      | string | Associated chatroom ID                   |
+| `createdAt` | string | Original block creation time             |
+| `updatedAt` | string | Unblock time                             |
 
-**被解除封鎖用戶物件結構**
+**Unblocked User Object Structure**
 
-| 參數              | 類型   | 說明                          |
-| ----------------- | ------ | ----------------------------- |
-| `_id`             | string | 用戶唯一識別碼                |
-| `nickname`        | string | 用戶暱稱                      |
-| `avatarUrl`       | string | 用戶頭像 URL                  |
-| `id`              | string | 用戶 ID                       |
-| `lastLoginTimeMS` | number | 最後登入時間（毫秒時間戳）    |
+| Parameter         | Type   | Description                             |
+| ----------------- | ------ | --------------------------------------- |
+| `_id`             | string | User unique ID                          |
+| `nickname`        | string | User nickname                           |
+| `avatarUrl`       | string | User avatar URL                         |
+| `id`              | string | User ID                                 |
+| `lastLoginTimeMS` | number | Last login time (millisecond timestamp) |
 
-#### 範例回應
+#### Example Response
 
 ```json
 {
@@ -127,9 +127,9 @@ curl -X "DELETE" "https://your-app.imkit.io/blockStatus/my/{blockee}" \
 }
 ```
 
-#### 錯誤回應
+#### Error Response
 
-**401 Unauthorized** - 認證失敗
+**401 Unauthorized** - Authentication failed
 
 ```json
 {
@@ -142,7 +142,7 @@ curl -X "DELETE" "https://your-app.imkit.io/blockStatus/my/{blockee}" \
 }
 ```
 
-**404 Not Found** - 封鎖關係不存在
+**404 Not Found** - Block relationship does not exist
 
 ```json
 {
@@ -155,7 +155,7 @@ curl -X "DELETE" "https://your-app.imkit.io/blockStatus/my/{blockee}" \
 }
 ```
 
-**400 Bad Request** - 參數無效
+**400 Bad Request** - Invalid parameters
 
 ```json
 {
@@ -170,30 +170,30 @@ curl -X "DELETE" "https://your-app.imkit.io/blockStatus/my/{blockee}" \
 
 ------
 
-## 使用場景
+## Use Cases
 
-### 關係修復
-- **誤操作修正**：解除因誤操作而封鎖的用戶
-- **關係改善**：重新與曾經衝突的用戶建立聯絡
-- **二次機會**：給予被封鎖用戶重新開始的機會
+### Relationship Repair
+- **Accidental Block Correction**: Unblock users who were blocked by mistake
+- **Relationship Improvement**: Re-establish contact with users after a previous conflict
+- **Second Chance**: Give blocked users an opportunity for a fresh start
 
-### 管理彈性
-- **動態管理**：根據情況變化調整封鎖狀態
-- **臨時封鎖**：短期封鎖後恢復正常聯絡
-- **測試用途**：開發和測試階段的封鎖功能驗證
+### Management Flexibility
+- **Dynamic Management**: Adjust block status based on changing circumstances
+- **Temporary Blocking**: Restore normal contact after a short-term block
+- **Testing Purposes**: Validate block functionality during development and testing
 
-### 用戶體驗最佳化
-- **便捷操作**：提供簡單的解除封鎖方式
-- **即時生效**：解除封鎖後立即恢復聊天功能
-- **狀態同步**：確保封鎖狀態在各平台同步更新
+### User Experience Optimization
+- **Convenient Operation**: Provide a simple way to unblock users
+- **Immediate Effect**: Chat functionality is restored immediately after unblocking
+- **Status Synchronization**: Ensure block status is synchronized across all platforms
 
 ------
 
-## 注意事項
+## Notes
 
-- **雙向解除**：解除封鎖後，雙方都可以重新發送私人訊息
-- **不存在處理**：嘗試解除不存在的封鎖關係會返回 404 錯誤
-- **即時生效**：解除封鎖操作會立即生效，無需等待
-- **聊天室關聯**：解除封鎖不會影響相關聊天室的存在狀態
-- **歷史記錄**：解除封鎖不會刪除之前的聊天記錄
-- **群組不影響**：解除封鎖不會影響群組聊天中的互動狀態
+- **Bidirectional Unblock**: After unblocking, both parties can send private messages again
+- **Non-Existence Handling**: Attempting to unblock a non-existent block relationship will return a 404 error
+- **Immediate Effect**: The unblock operation takes effect immediately with no waiting required
+- **Chatroom Association**: Unblocking does not affect the existence of the associated chatroom
+- **History Retention**: Unblocking does not delete previous chat history
+- **Group Unaffected**: Unblocking does not affect interaction status in group chats

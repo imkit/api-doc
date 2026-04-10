@@ -2,21 +2,21 @@
 
 ## 概述
 
-由您自行產生與驗證使用者 token，指派給 IMKIT Chat Server 進行使用。IMKIT 將僅負責訊息處理，此模式適合已有現有認證系統且希望完全控制 token 生命週期的應用程式。
+由您自行产生与验证使用者 token，指派给 IMKIT Chat Server 进行使用。IMKIT 将仅负责讯息处理，此模式适合已有现有认证系统且希望完全控制 token 生命周期的应用程式。
 
-實作流程：
-1. 在您的系統中產生自訂 token
-2. 使用 `/admin/clients` API 建立 Client，傳入您提供的 token 與 expirationDate
-3. 後續可透過「更新 Token」API 更新，或透過「撤銷 Token」API 撤銷
-4. 您的系統負責 token 驗證邏輯
+实作流程：
+1. 在您的系统中产生自订 token
+2. 使用 `/admin/clients` API 建立 Client，传入您提供的 token 与 expirationDate
+3. 后续可透过「更新 Token」API 更新，或透过「撤销 Token」API 撤销
+4. 您的系统负责 token 验证逻辑
 
 ------
 
-## API 端點
+## API 端点
 
-### 建立用戶並指派 External Token
+### 建立用户并指派 External Token
 
-建立新用戶並指派由您系統產生的 access token。
+建立新用户并指派由您系统产生的 access token。
 
 ```http
 POST /admin/clients
@@ -24,25 +24,25 @@ POST /admin/clients
 
 #### Headers
 
-| 參數 | 類型 | 必填 | 說明 |
+| 参数 | 类型 | 必填 | 说明 |
 | ---- | ---- | ---- | ---- |
-| `IM-API-KEY` | string | ✅ | 您的 API 金鑰 |
+| `IM-API-KEY` | string | ✅ | 您的 API 金钥 |
 | `Content-Type` | string | ✅ | `application/json` |
 
 #### Request Body
 
-| 參數 | 類型 | 必填 | 說明 |
+| 参数 | 类型 | 必填 | 说明 |
 | ---- | ---- | ---- | ---- |
-| `_id` | string | ✅ | 用戶唯一識別碼 |
-| `nickname` | string | ❌ | 用戶顯示名稱 |
-| `avatarUrl` | string | ❌ | 用戶頭像 URL |
-| `issueAccessToken` | boolean | ✅ | 設為 `false` 以啟用此授權模式 |
-| `token` | string | ✅ | 您系統產生的自訂 token |
-| `expirationDate` | string | ✅ | Token 過期時間（ISO 8601 格式） |
+| `_id` | string | ✅ | 用户唯一识别码 |
+| `nickname` | string | ❌ | 用户显示名称 |
+| `avatarUrl` | string | ❌ | 用户头像 URL |
+| `issueAccessToken` | boolean | ✅ | 设为 `false` 以启用此授权模式 |
+| `token` | string | ✅ | 您系统产生的自订 token |
+| `expirationDate` | string | ✅ | Token 过期时间（ISO 8601 格式） |
 
-#### 範例請求
+#### 范例请求
 
-**JavaScript 範例：**
+**JavaScript 范例：**
 
 ```javascript
 const response = await axios.post(
@@ -64,7 +64,7 @@ const response = await axios.post(
 );
 ```
 
-**cURL 範例：**
+**cURL 范例：**
 
 ```bash
 curl -X "POST" "https://your-app.imkit.io/admin/clients" \
@@ -82,18 +82,18 @@ curl -X "POST" "https://your-app.imkit.io/admin/clients" \
 
 #### Response
 
-**成功回應（200 OK）**
+**成功回应（200 OK）**
 
-| 參數 | 類型 | 說明 |
+| 参数 | 类型 | 说明 |
 | ---- | ---- | ---- |
-| `_id` | string | 用戶唯一識別碼 |
-| `nickname` | string | 用戶顯示名稱 |
-| `avatarUrl` | string | 用戶頭像 URL |
+| `_id` | string | 用户唯一识别码 |
+| `nickname` | string | 用户显示名称 |
+| `avatarUrl` | string | 用户头像 URL |
 | `issueAccessToken` | boolean | Token issue 模式（false 表示使用 external token） |
-| `token` | string | 您提供的自訂 token |
-| `expirationDate` | string | Token 過期時間（ISO 8601 格式） |
+| `token` | string | 您提供的自订 token |
+| `expirationDate` | string | Token 过期时间（ISO 8601 格式） |
 
-#### 範例回應
+#### 范例回应
 
 ```json
 {
@@ -106,9 +106,9 @@ curl -X "POST" "https://your-app.imkit.io/admin/clients" \
 }
 ```
 
-#### 錯誤回應
+#### 错误回应
 
-**400 Bad Request** — 請求參數錯誤
+**400 Bad Request** — 请求参数错误
 
 ```json
 {
@@ -117,7 +117,7 @@ curl -X "POST" "https://your-app.imkit.io/admin/clients" \
 }
 ```
 
-**401 Unauthorized** — API 金鑰無效
+**401 Unauthorized** — API 金钥无效
 
 ```json
 {
@@ -126,7 +126,7 @@ curl -X "POST" "https://your-app.imkit.io/admin/clients" \
 }
 ```
 
-**409 Conflict** — 用戶已存在
+**409 Conflict** — 用户已存在
 
 ```json
 {
@@ -137,24 +137,24 @@ curl -X "POST" "https://your-app.imkit.io/admin/clients" \
 
 ------
 
-## 使用場景
+## 使用场景
 
 ### 外部身份整合
-- **SSO 整合**：將外部身份驗證系統的 token 綁定到 IMKIT 用戶
-- **自訂過期時間**：根據業務需求設定 token 的有效期限
+- **SSO 整合**：将外部身份验证系统的 token 绑定到 IMKIT 用户
+- **自订过期时间**：根据业务需求设定 token 的有效期限
 
 ### Token 管理
-- **Token 輪換**：定期更新用戶的存取權杖以確保安全性
-- **多系統同步**：將其他系統核發的 token 同步至 IMKIT
+- **Token 轮换**：定期更新用户的存取权杖以确保安全性
+- **多系统同步**：将其他系统核发的 token 同步至 IMKIT
 
 ------
 
-## 注意事項
+## 注意事项
 
-- **Token 驗證責任**：您的系統需要負責驗證 token 的有效性
-- **過期時間管理**：請確保 `expirationDate` 與您系統中的 token 過期時間一致
-- **Token 格式**：IMKIT 不限制 token 格式，但建議使用 JWT 或類似的標準格式
-- **安全性**：請確保 token 具有足夠的熵值和適當的簽名機制
-- **更新頻率**：建議在 token 過期前主動更新，避免服務中斷
-- **統一認證**：建議將 IMKIT token 與您現有的認證系統整合，實作自動更新機制
-- **使用 Token**：取得 token 後，在後續的 API 呼叫中透過 `IM-Authorization` header 傳遞
+- **Token 验证责任**：您的系统需要负责验证 token 的有效性
+- **过期时间管理**：请确保 `expirationDate` 与您系统中的 token 过期时间一致
+- **Token 格式**：IMKIT 不限制 token 格式，但建议使用 JWT 或类似的标准格式
+- **安全性**：请确保 token 具有足够的熵值和适当的签名机制
+- **更新频率**：建议在 token 过期前主动更新，避免服务中断
+- **统一认证**：建议将 IMKIT token 与您现有的认证系统整合，实作自动更新机制
+- **使用 Token**：取得 token 后，在后续的 API 呼叫中透过 `IM-Authorization` header 传递

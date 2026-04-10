@@ -1,18 +1,7 @@
 export default {
-  "create-a-room": {
-    title: "創建聊天室"
-  },
-  "get-a-room": {
-    title: "取得聊天室"
-  },
-  "update-a-room": {
-    title: "更新聊天室"
-  },
-  "delete-a-room": {
-    title: "刪除聊天室"
-  },
-  "list-rooms": {
-    title: "聊天室列表"
-  }
+  "create-a-room": { title: "Create Room" },
+  "get-a-room": { title: "Get Room" },
+  "update-a-room": { title: "Update Room" },
+  "delete-a-room": { title: "Delete Room" },
+  "list-rooms": { title: "List Rooms" }
 }
-

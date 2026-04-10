@@ -2,15 +2,15 @@
 
 ## 概述
 
-此端點允許您取得指定聊天室的詳細資訊，包含成員列表、最後一則訊息、成員屬性（未讀數、已讀位置）等完整資料。
+此端点允许您取得指定聊天室的详细资讯，包含成员列表、最后一则讯息、成员属性（未读数、已读位置）等完整资料。
 
 ------
 
-## API 端點
+## API 端点
 
-### 取得聊天室詳情
+### 取得聊天室详情
 
-取得指定聊天室的完整資訊。
+取得指定聊天室的完整资讯。
 
 ```http
 GET /rooms/{id}
@@ -18,18 +18,18 @@ GET /rooms/{id}
 
 #### Headers
 
-| 參數 | 類型 | 必填 | 說明 |
+| 参数 | 类型 | 必填 | 说明 |
 | ---- | ---- | ---- | ---- |
-| `IM-CLIENT-KEY` | string | ✅ | 用戶端金鑰 |
-| `IM-Authorization` | string | ✅ | 用戶端權杖 |
+| `IM-CLIENT-KEY` | string | ✅ | 用户端金钥 |
+| `IM-Authorization` | string | ✅ | 用户端权杖 |
 
 #### Path Parameters
 
-| 參數 | 類型 | 必填 | 說明 |
+| 参数 | 类型 | 必填 | 说明 |
 | ---- | ---- | ---- | ---- |
 | `id` | string | ✅ | 聊天室 ID |
 
-#### 範例請求
+#### 范例请求
 
 ```javascript
 const response = await axios.get(
@@ -43,7 +43,7 @@ const response = await axios.get(
 );
 ```
 
-##### cURL 範例
+##### cURL 范例
 
 ```bash
 curl "https://your-app.imkit.io/rooms/project-room-001" \
@@ -53,36 +53,36 @@ curl "https://your-app.imkit.io/rooms/project-room-001" \
 
 #### Response
 
-**成功回應（200 OK）**
+**成功回应（200 OK）**
 
-| 參數 | 類型 | 說明 |
+| 参数 | 类型 | 说明 |
 | ---- | ---- | ---- |
-| `RC` | number | 回應代碼（0 表示成功） |
-| `RM` | string | 回應訊息 |
-| `result` | object | 聊天室完整資訊 |
+| `RC` | number | 回应代码（0 表示成功） |
+| `RM` | string | 回应讯息 |
+| `result` | object | 聊天室完整资讯 |
 
-**聊天室物件欄位**
+**聊天室物件栏位**
 
-| 參數 | 類型 | 說明 |
+| 参数 | 类型 | 说明 |
 | ---- | ---- | ---- |
-| `_id` | string | 聊天室唯一識別碼 |
-| `appID` | string | 應用程式識別碼 |
-| `lastMessage` | object | 最後一則訊息（含發送者資訊） |
-| `memberProperties` | array[object] | 成員屬性陣列（未讀數、已讀位置） |
-| `members` | array[object] | 成員詳細資訊陣列 |
-| `unread` | number | 當前用戶的未讀訊息數 |
+| `_id` | string | 聊天室唯一识别码 |
+| `appID` | string | 应用程式识别码 |
+| `lastMessage` | object | 最后一则讯息（含发送者资讯） |
+| `memberProperties` | array[object] | 成员属性阵列（未读数、已读位置） |
+| `members` | array[object] | 成员详细资讯阵列 |
+| `unread` | number | 当前用户的未读讯息数 |
 | `description` | string | 聊天室描述 |
-| `isSuperuser` | boolean | 當前用戶是否為超級用戶 |
+| `isSuperuser` | boolean | 当前用户是否为超级用户 |
 
-**成員屬性物件**
+**成员属性物件**
 
-| 參數 | 類型 | 說明 |
+| 参数 | 类型 | 说明 |
 | ---- | ---- | ---- |
-| `client` | string | 成員用戶 ID |
-| `badge` | number | 未讀訊息數 |
-| `lastRead` | string | 最後已讀的訊息 ID |
+| `client` | string | 成员用户 ID |
+| `badge` | number | 未读讯息数 |
+| `lastRead` | string | 最后已读的讯息 ID |
 
-#### 範例回應
+#### 范例回应
 
 ```json
 {
@@ -93,7 +93,7 @@ curl "https://your-app.imkit.io/rooms/project-room-001" \
     "appID": "SampleApp",
     "lastMessage": {
       "_id": "58b7b7c4c246bc0b41afb148",
-      "message": "最新的訊息內容",
+      "message": "最新的讯息内容",
       "messageType": "text",
       "sender": {
         "_id": "user-a",
@@ -128,13 +128,13 @@ curl "https://your-app.imkit.io/rooms/project-room-001" \
       }
     ],
     "unread": 5,
-    "description": "專案討論群",
+    "description": "专案讨论群",
     "isSuperuser": false
   }
 }
 ```
 
-#### 錯誤回應
+#### 错误回应
 
 **404 Not Found** — 聊天室不存在
 
@@ -151,21 +151,21 @@ curl "https://your-app.imkit.io/rooms/project-room-001" \
 
 ------
 
-## 使用場景
+## 使用场景
 
-### 聊天室資訊
-- **顯示詳情**：取得聊天室的成員列表和基本資訊
-- **未讀狀態**：查詢各成員的未讀訊息數和已讀位置
+### 聊天室资讯
+- **显示详情**：取得聊天室的成员列表和基本资讯
+- **未读状态**：查询各成员的未读讯息数和已读位置
 
 ### 管理操作
-- **成員確認**：確認特定用戶是否為聊天室成員
-- **狀態檢查**：檢查聊天室的最後活動時間
+- **成员确认**：确认特定用户是否为聊天室成员
+- **状态检查**：检查聊天室的最后活动时间
 
 ------
 
-## 注意事項
+## 注意事项
 
-- **成員限定**：只有聊天室成員或平台管理員可以取得聊天室詳情
-- **完整資料**：回應包含所有成員的詳細資訊和屬性
-- **最後訊息**：`lastMessage` 物件包含發送者的完整資訊
-- **未讀計算**：`unread` 欄位為當前認證用戶的未讀數
+- **成员限定**：只有聊天室成员或平台管理员可以取得聊天室详情
+- **完整资料**：回应包含所有成员的详细资讯和属性
+- **最后讯息**：`lastMessage` 物件包含发送者的完整资讯
+- **未读计算**：`unread` 栏位为当前认证用户的未读数

@@ -1,16 +1,16 @@
-# 批次發送訊息
+# Batch Send Messages
 
-## 概述
+## Overview
 
-透過平台管理 API 一次發送訊息到多個聊天室或多位用戶。支援樣板變數替換，適用於廣播通知、行銷推送、系統公告等場景。
+Send messages to multiple rooms or multiple users at once via the platform management API. Supports template variable substitution, making it suitable for broadcast notifications, marketing pushes, system announcements, and other scenarios.
 
 ------
 
-## API 端點
+## API Endpoint
 
-### 批次發送訊息
+### Batch Send Messages
 
-將訊息發送到多個聊天室或用戶的一對一聊天室。
+Send messages to multiple rooms or users' one-on-one rooms.
 
 ```http
 POST /messages/batch
@@ -18,33 +18,33 @@ POST /messages/batch
 
 #### Headers
 
-| 參數 | 類型 | 必填 | 說明 |
+| Parameter | Type | Required | Description |
 | ---- | ---- | ---- | ---- |
-| `IM-API-KEY` | string | ✅ | 您的平台 API 金鑰 |
+| `IM-API-KEY` | string | ✅ | Your platform API key |
 | `Content-Type` | string | ✅ | `application/json; charset=utf-8` |
 
 #### Post Body
 
-| 參數 | 類型 | 必填 | 說明 |
+| Parameter | Type | Required | Description |
 | ---- | ---- | ---- | ---- |
-| `message` | string | ✅ | 訊息內容，支援 `$pattern$` 樣板替換 |
-| `messageType` | string | ✅ | 訊息類型（如 `"text"`） |
-| `sender` | string | ❌ | 指定發送者 ID（僅管理員可用） |
-| `push` | boolean | ❌ | 是否啟用推播通知，預設為 `false` |
-| `skipTotalBadge` | boolean | ❌ | 跳過計算發送者的總未讀數，預設為 `false` |
-| `paras` | array[object] | ✅ | 接收者參數陣列 |
+| `message` | string | ✅ | Message content, supports `$pattern$` template substitution |
+| `messageType` | string | ✅ | Message type (e.g., `"text"`) |
+| `sender` | string | ❌ | Specified sender ID (admin only) |
+| `push` | boolean | ❌ | Whether to enable push notifications, defaults to `false` |
+| `skipTotalBadge` | boolean | ❌ | Skip calculating the sender's total unread count, defaults to `false` |
+| `paras` | array[object] | ✅ | Recipient parameters array |
 
-**接收者參數物件**
+**Recipient Parameter Object**
 
-| 參數 | 類型 | 必填 | 說明 |
+| Parameter | Type | Required | Description |
 | ---- | ---- | ---- | ---- |
-| `receiver` | string | ❌ | 接收者用戶 ID（發送至一對一聊天室） |
-| `room` | string | ❌ | 聊天室 ID（若指定，`receiver` 會被忽略） |
-| `$pattern$` | string | ❌ | 樣板變數的替換值 |
+| `receiver` | string | ❌ | Recipient user ID (sends to one-on-one room) |
+| `room` | string | ❌ | Room ID (if specified, `receiver` is ignored) |
+| `$pattern$` | string | ❌ | Replacement value for template variables |
 
-#### 範例請求
+#### Example Request
 
-**基本批次發送**
+**Basic batch send**
 
 ```javascript
 const response = await axios.post(
@@ -69,9 +69,9 @@ const response = await axios.post(
 );
 ```
 
-**使用樣板變數**
+**Using template variables**
 
-訊息中以 `$pattern$` 包裹的變數會被替換為每個接收者對應的值：
+Variables wrapped in `$pattern$` in the message will be replaced with the corresponding value for each recipient:
 
 ```javascript
 const response = await axios.post(
@@ -103,7 +103,7 @@ const response = await axios.post(
 );
 ```
 
-**發送至指定聊天室**
+**Send to specific rooms**
 
 ```javascript
 const response = await axios.post(
@@ -129,16 +129,16 @@ const response = await axios.post(
 
 #### Response
 
-**成功回應（200 OK）**
+**Success Response (200 OK)**
 
-| 參數 | 類型 | 說明 |
+| Parameter | Type | Description |
 | ---- | ---- | ---- |
-| `RC` | number | 回應代碼（0 表示成功） |
-| `RM` | string | 回應訊息 |
-| `result.batchID` | string | 批次任務 ID |
-| `result.count` | number | 接收者數量 |
+| `RC` | number | Response code (0 indicates success) |
+| `RM` | string | Response message |
+| `result.batchID` | string | Batch task ID |
+| `result.count` | number | Number of recipients |
 
-#### 範例回應
+#### Example Response
 
 ```json
 {
@@ -151,32 +151,32 @@ const response = await axios.post(
 }
 ```
 
-#### 錯誤回應
+#### Error Response
 
-當請求失敗時，您會收到包含錯誤詳細資訊的錯誤回應。常見的錯誤情況包括：
+When a request fails, you will receive an error response containing error details. Common error scenarios include:
 
-- **無效的 API 金鑰** — 提供的 `IM-API-KEY` 無效或已過期
-- **缺少必填參數** — 未提供 `message`、`messageType` 或 `paras`
-- **接收者不存在** — `paras` 中的 `receiver` 不存在
-- **伺服器內部錯誤** — 伺服器端發生未預期的錯誤
-
-------
-
-## 使用場景
-
-### 廣播通知
-- **系統公告**：向所有用戶推送維護通知或重要公告
-- **活動推播**：向特定用戶群發送活動或優惠訊息
-
-### 個人化訊息
-- **樣板訊息**：透過 `$pattern$` 變數，發送包含個人資訊的通知（如訂單編號、用戶名稱）
-- **帳務通知**：發送帳單到期、付款成功等個人化通知
+- **Invalid API key** — The provided `IM-API-KEY` is invalid or expired
+- **Missing required parameters** — `message`, `messageType`, or `paras` was not provided
+- **Recipient does not exist** — A `receiver` in `paras` does not exist
+- **Internal server error** — An unexpected error occurred on the server side
 
 ------
 
-## 注意事項
+## Use Cases
 
-- **非同步處理**：批次訊息會加入處理佇列，回應僅表示任務已建立
-- **樣板替換**：變數名稱需以 `$` 包裹，如 `$name$`，替換適用於 `message` 和 `extra` 欄位
-- **接收者優先順序**：若 `paras` 中同時指定 `receiver` 和 `room`，`room` 優先
-- **推播預設關閉**：`push` 預設為 `false`，需明確設為 `true` 才會推播
+### Broadcast Notifications
+- **System announcements**: Push maintenance notifications or important announcements to all users
+- **Event promotions**: Send event or promotional messages to specific user groups
+
+### Personalized Messages
+- **Template messages**: Use `$pattern$` variables to send notifications containing personal information (such as order numbers, usernames)
+- **Billing notifications**: Send personalized notifications for bill due dates, successful payments, etc.
+
+------
+
+## Notes
+
+- **Asynchronous processing**: Batch messages are added to a processing queue; the response only indicates that the task has been created
+- **Template substitution**: Variable names must be wrapped in `$`, e.g., `$name$`; substitution applies to both the `message` and `extra` fields
+- **Recipient priority**: If both `receiver` and `room` are specified in `paras`, `room` takes priority
+- **Push disabled by default**: `push` defaults to `false`; it must be explicitly set to `true` to enable push notifications

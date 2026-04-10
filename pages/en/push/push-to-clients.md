@@ -1,16 +1,16 @@
-# 推播通知至用戶
+# Push Notifications to Clients
 
-## 概述
+## Overview
 
-透過伺服器端發送自訂推播通知至指定用戶。支援 Apple Push Notification Service（APNs）及 Firebase Cloud Messaging（FCM），可同時推送至 iOS 與 Android 裝置。適用於行銷推播、系統公告、自訂提醒等場景。
+Send custom push notifications to specified users from the server side. Supports Apple Push Notification Service (APNs) and Firebase Cloud Messaging (FCM), enabling simultaneous delivery to iOS and Android devices. Suitable for marketing pushes, system announcements, custom reminders, and other scenarios.
 
 ------
 
-## API 端點
+## API Endpoint
 
-### 推播通知至指定用戶
+### Push Notifications to Specified Users
 
-向一組指定的用戶發送推播通知，支援 iOS 與 Android 平台的通知欄位設定。
+Send push notifications to a group of specified users, with notification field settings for both iOS and Android platforms.
 
 ```http
 POST /push/push2clients
@@ -18,43 +18,43 @@ POST /push/push2clients
 
 #### Headers
 
-| 參數         | 類型   | 必填 | 說明              |
-| ------------ | ------ | ---- | ----------------- |
-| `IM-API-KEY` | string | ✅    | 您的平台 API 金鑰 |
-| `Content-Type` | string | ✅  | `application/json; charset=utf-8` |
+| Parameter      | Type   | Required | Description             |
+| -------------- | ------ | -------- | ----------------------- |
+| `IM-API-KEY`   | string | ✅        | Your platform API Key   |
+| `Content-Type` | string | ✅       | `application/json; charset=utf-8` |
 
 #### Post Body
 
-| 參數      | 類型   | 必填 | 說明                             |
-| --------- | ------ | ---- | -------------------------------- |
-| `clients` | array  | ✅    | 目標用戶的 Client ID 陣列       |
-| `payload` | object | ✅    | 推播通知內容，包含平台特定欄位   |
+| Parameter | Type   | Required | Description                                   |
+| --------- | ------ | -------- | --------------------------------------------- |
+| `clients` | array  | ✅        | Array of target user Client IDs               |
+| `payload` | object | ✅        | Push notification content with platform-specific fields |
 
-**payload 物件欄位**
+**payload Object Fields**
 
-| 參數         | 類型           | 必填 | 平台    | 說明                                                                 |
-| ------------ | -------------- | ---- | ------- | -------------------------------------------------------------------- |
-| `type`       | string         | ❌    | 共用    | 通知類型，自訂分類標記                                               |
-| `expiry`     | number         | ❌    | iOS     | 通知過期時間（Unix 時間戳，秒）                                      |
-| `alert`      | string/object  | ❌    | iOS     | 通知提示，可為字串或包含 `loc-key`、`loc-args` 的物件                |
-| `badge`      | number         | ❌    | iOS     | 應用程式圖示上的未讀數字                                             |
-| `sound`      | string         | ❌    | iOS     | 通知音效檔案名稱                                                     |
-| `topic`      | string         | ❌    | iOS     | APNs topic，通常為應用程式的 Bundle ID                               |
-| `title`      | string         | ❌    | Android | 通知標題                                                             |
-| `body`       | string         | ❌    | Android | 通知內容                                                             |
-| `icon`       | string         | ❌    | Android | 通知圖示 URL                                                        |
-| `collapseKey` | string        | ❌    | Android | 摺疊鍵，相同 key 的通知會合併顯示                                    |
+| Parameter    | Type           | Required | Platform | Description                                                            |
+| ------------ | -------------- | -------- | -------- | ---------------------------------------------------------------------- |
+| `type`       | string         | ❌        | Shared   | Notification type, custom classification tag                           |
+| `expiry`     | number         | ❌        | iOS      | Notification expiration time (Unix timestamp, seconds)                 |
+| `alert`      | string/object  | ❌        | iOS      | Notification alert, can be a string or an object with `loc-key`, `loc-args` |
+| `badge`      | number         | ❌        | iOS      | Badge number on the app icon                                           |
+| `sound`      | string         | ❌        | iOS      | Notification sound file name                                           |
+| `topic`      | string         | ❌        | iOS      | APNs topic, usually the app's Bundle ID                                |
+| `title`      | string         | ❌        | Android  | Notification title                                                     |
+| `body`       | string         | ❌        | Android  | Notification body                                                      |
+| `icon`       | string         | ❌        | Android  | Notification icon URL                                                  |
+| `collapseKey` | string        | ❌        | Android  | Collapse key; notifications with the same key are collapsed            |
 
-**alert 物件欄位（當 alert 為物件時）**
+**alert Object Fields (when alert is an object)**
 
-| 參數       | 類型   | 必填 | 說明                   |
-| ---------- | ------ | ---- | ---------------------- |
-| `loc-key`  | string | ❌    | 本地化字串的鍵值       |
-| `loc-args` | array  | ❌    | 本地化字串的參數陣列   |
+| Parameter  | Type   | Required | Description                    |
+| ---------- | ------ | -------- | ------------------------------ |
+| `loc-key`  | string | ❌        | Localization string key        |
+| `loc-args` | array  | ❌        | Localization string arguments  |
 
-#### 範例請求
+#### Example Request
 
-**JavaScript（axios）**
+**JavaScript (axios)**
 
 ```javascript
 const response = await axios.post(
@@ -82,7 +82,7 @@ const response = await axios.post(
 );
 ```
 
-**使用本地化 alert 物件**
+**Using localized alert object**
 
 ```javascript
 const response = await axios.post(
@@ -131,7 +131,7 @@ curl -X POST "https://your-app.imkit.io/push/push2clients" \
 
 #### Response
 
-**成功回應（200 OK）**
+**Success Response (200 OK)**
 
 ```json
 {
@@ -141,11 +141,11 @@ curl -X POST "https://your-app.imkit.io/push/push2clients" \
 }
 ```
 
-請求成功時，伺服器會將推播通知分別發送至 APNs（iOS）與 FCM（Android）。
+When the request succeeds, the server will send push notifications to APNs (iOS) and FCM (Android) respectively.
 
-#### 錯誤回應
+#### Error Response
 
-**401 Unauthorized** - API 金鑰無效
+**401 Unauthorized** - Invalid API Key
 
 ```json
 {
@@ -158,7 +158,7 @@ curl -X POST "https://your-app.imkit.io/push/push2clients" \
 }
 ```
 
-**400 Bad Request** - 缺少必要參數
+**400 Bad Request** - Missing required parameters
 
 ```json
 {
@@ -173,27 +173,27 @@ curl -X POST "https://your-app.imkit.io/push/push2clients" \
 
 ------
 
-## 使用場景
+## Use Cases
 
-### 行銷推播
-- **促銷活動通知**：向特定用戶群發送優惠活動、折扣碼等行銷訊息
-- **個人化推薦**：根據用戶行為推送個人化的產品推薦
+### Marketing Pushes
+- **Promotional Notifications**: Send promotional campaigns, discount codes, and other marketing messages to specific user groups
+- **Personalized Recommendations**: Push personalized product recommendations based on user behavior
 
-### 系統通知
-- **維護公告**：發送系統維護、版本更新等公告訊息
-- **安全提醒**：通知用戶帳號異常登入、密碼變更等安全事件
+### System Notifications
+- **Maintenance Announcements**: Send system maintenance, version update, and other announcement messages
+- **Security Alerts**: Notify users of suspicious login activity, password changes, and other security events
 
-### 自訂提醒
-- **排程提醒**：發送預約、會議、到期提醒等時間敏感的通知
-- **狀態更新**：通知用戶訂單狀態變更、審核結果等
+### Custom Reminders
+- **Scheduled Reminders**: Send time-sensitive notifications such as appointment, meeting, and expiration reminders
+- **Status Updates**: Notify users of order status changes, review results, and similar updates
 
 ------
 
-## 注意事項
+## Notes
 
-- **僅限伺服器端使用**：此 API 需使用 `IM-API-KEY` 進行驗證，僅供伺服器端呼叫
-- **雙平台推送**：系統會同時透過 APNs（iOS）與 FCM（Android）發送推播通知
-- **裝置註冊**：用戶必須已註冊推播 token，否則通知無法送達
-- **推播配額**：請注意 APNs 與 FCM 各自的推播頻率限制，避免過度推送
-- **alert 欄位**：iOS 的 `alert` 可以是純字串或包含本地化鍵值的物件，請根據需求選擇適當的格式
-- **摺疊通知**：Android 的 `collapseKey` 可用於將相同類型的通知合併，減少用戶干擾
+- **Server-Side Only**: This API requires `IM-API-KEY` authentication and is intended for server-side use only
+- **Dual-Platform Push**: The system sends push notifications simultaneously via APNs (iOS) and FCM (Android)
+- **Device Registration**: Users must have registered a push token; otherwise, notifications cannot be delivered
+- **Push Quota**: Be mindful of APNs and FCM rate limits to avoid excessive pushing
+- **alert Field**: The iOS `alert` can be a plain string or an object containing localization keys; choose the appropriate format based on your needs
+- **Collapse Notifications**: The Android `collapseKey` can be used to merge notifications of the same type, reducing user disturbance

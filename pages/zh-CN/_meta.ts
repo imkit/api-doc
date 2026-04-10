@@ -1,11 +1,11 @@
 export default {
   index:
   {
-    title: "基本介紹"
+    title: "基本介绍"
   },
   quick_start:
   {
-    title: "快速開始"
+    title: "快速开始"
   },
   basic_integration:
   {
@@ -13,11 +13,11 @@ export default {
   },
   auth:
   {
-    title: "權限驗證"
+    title: "权限验证"
   },
   user: 
   {
-    title: "用戶"
+    title: "用户"
   },
   room: 
   {
@@ -25,11 +25,11 @@ export default {
   },
   message: 
   {
-    title: "訊息"
+    title: "讯息"
   },
   moderation:
   {
-    title: "管理機制"
+    title: "管理机制"
   },
   push:
   {
@@ -37,11 +37,11 @@ export default {
   },
   config:
   {
-    title: "系統設定"
+    title: "系统设定"
   },
   monitoring:
   {
-    title: "監控"
+    title: "监控"
   },
   webhook:
   {

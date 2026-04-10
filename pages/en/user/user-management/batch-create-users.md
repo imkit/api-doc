@@ -1,16 +1,16 @@
-# 批次建立用戶
+# Batch Create Users
 
-## 概述
+## Overview
 
-此端點允許您一次建立或更新多位用戶。適用於系統遷移、大量匯入用戶等場景。此 API 僅供伺服器端使用，需要適當的身份驗證。
+This endpoint allows you to create or update multiple users at once. It is suitable for scenarios such as system migration and bulk user import. This API is for server-side use only and requires proper authentication.
 
 ------
 
-## API 端點
+## API Endpoint
 
-### 批次建立或更新用戶
+### Batch Create or Update Users
 
-一次建立或更新多位用戶端。
+Create or update multiple users at once.
 
 ```http
 POST /admin/clients/list
@@ -18,26 +18,26 @@ POST /admin/clients/list
 
 #### Headers
 
-| 參數 | 類型 | 必填 | 說明 |
+| Parameter | Type | Required | Description |
 | ---- | ---- | ---- | ---- |
-| `IM-API-KEY` | string | ✅ | 您的平台 API 金鑰 |
+| `IM-API-KEY` | string | ✅ | Your platform API key |
 | `Content-Type` | string | ✅ | `application/json; charset=utf-8` |
 
-#### Post Body
+#### Request Body
 
-| 參數 | 類型 | 必填 | 說明 |
+| Parameter | Type | Required | Description |
 | ---- | ---- | ---- | ---- |
-| `data` | array[object] | ✅ | 用戶資訊陣列 |
+| `data` | array[object] | ✅ | Array of user information objects |
 
-**用戶資訊物件**
+**User Information Object**
 
-| 參數 | 類型 | 必填 | 說明 |
+| Parameter | Type | Required | Description |
 | ---- | ---- | ---- | ---- |
-| `_id` | string | ✅ | 用戶唯一識別碼 |
-| `nickname` | string | ❌ | 用戶顯示名稱 |
-| `avatarUrl` | string | ❌ | 用戶頭像圖片 URL |
+| `_id` | string | ✅ | Unique user identifier |
+| `nickname` | string | ❌ | User display name |
+| `avatarUrl` | string | ❌ | User avatar image URL |
 
-#### 範例請求
+#### Example Request
 
 ```javascript
 const response = await axios.post(
@@ -70,7 +70,7 @@ const response = await axios.post(
 );
 ```
 
-##### cURL 範例
+##### cURL Example
 
 ```bash
 curl -X "POST" "https://your-app.imkit.io/admin/clients/list" \
@@ -86,15 +86,15 @@ curl -X "POST" "https://your-app.imkit.io/admin/clients/list" \
 
 #### Response
 
-**成功回應（200 OK）**
+**Success Response (200 OK)**
 
-| 參數 | 類型 | 說明 |
+| Parameter | Type | Description |
 | ---- | ---- | ---- |
-| `RC` | number | 回應代碼（0 表示成功） |
-| `RM` | string | 回應訊息 |
-| `result.count` | number | 成功建立或更新的用戶數量 |
+| `RC` | number | Response code (0 indicates success) |
+| `RM` | string | Response message |
+| `result.count` | number | Number of users successfully created or updated |
 
-#### 範例回應
+#### Example Response
 
 ```json
 {
@@ -106,32 +106,32 @@ curl -X "POST" "https://your-app.imkit.io/admin/clients/list" \
 }
 ```
 
-#### 錯誤回應
+#### Error Response
 
-當請求失敗時，您會收到包含錯誤詳細資訊的錯誤回應。常見的錯誤情況包括：
+When a request fails, you will receive an error response containing error details. Common error scenarios include:
 
-- **無效的 API 金鑰** — 提供的 `IM-API-KEY` 無效或已過期
-- **資料格式錯誤** — `data` 陣列格式不正確
-- **缺少必填欄位** — 用戶資訊中缺少 `_id`
-- **伺服器內部錯誤** — 伺服器端發生未預期的錯誤
-
-------
-
-## 使用場景
-
-### 系統遷移
-- **用戶匯入**：從現有系統遷移用戶資料到 IMKIT
-- **批次初始化**：應用程式啟動時批次建立所有用戶
-
-### 資料同步
-- **定期同步**：定期從主系統同步用戶資料（暱稱、頭像等）
-- **更新資訊**：批次更新多位用戶的顯示名稱或頭像
+- **Invalid API Key** — The provided `IM-API-KEY` is invalid or expired
+- **Invalid Data Format** — The `data` array format is incorrect
+- **Missing Required Fields** — The user information is missing the `_id` field
+- **Internal Server Error** — An unexpected error occurred on the server side
 
 ------
 
-## 注意事項
+## Use Cases
 
-- **僅供伺服器端使用**：此端點必須在後端呼叫
-- **不產生 Token**：此 API 不會為用戶產生存取權杖，如需 Token 請使用「建立用戶」API 並設定 `issueAccessToken: true`
-- **冪等性**：若 `_id` 已存在，會更新該用戶的資料而非建立新用戶
-- **效能考量**：建議每次批次不超過 100 筆，避免請求超時
+### System Migration
+- **User Import**: Migrate user data from an existing system to IMKIT
+- **Batch Initialization**: Batch create all users when an application is launched
+
+### Data Synchronization
+- **Periodic Sync**: Periodically synchronize user data (nickname, avatar, etc.) from the primary system
+- **Update Information**: Batch update the display names or avatars of multiple users
+
+------
+
+## Notes
+
+- **Server-Side Only**: This endpoint must be called from the backend
+- **No Token Generation**: This API does not generate access tokens for users. If tokens are needed, use the "Create a User" API with `issueAccessToken: true`
+- **Idempotency**: If the `_id` already exists, the user's data will be updated rather than creating a new user
+- **Performance Considerations**: It is recommended to keep each batch under 100 records to avoid request timeouts

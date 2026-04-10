@@ -1,11 +1,11 @@
 export default {
   "get-config": {
-    title: "取得系統設定"
+    title: "取得系统设定"
   },
   "update-config": {
-    title: "更新系統設定"
+    title: "更新系统设定"
   },
   "delete-config": {
-    title: "刪除系統設定"
+    title: "删除系统设定"
   }
 }

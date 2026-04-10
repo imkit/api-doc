@@ -1,9 +1,9 @@
 export default {
   "mute-a-member": {
-    title: "替用戶靜音聊天室"
+    title: "替用户静音聊天室"
   },
   "unmute-a-member": {
-    title: "替用戶取消靜音"
+    title: "替用户取消静音"
   }
 }
 

@@ -1,21 +1,21 @@
-# 核發 Token
+# Issue Token
 
-## 概述
+## Overview
 
-使用者資料由您的伺服器建立，但授權 token 由 IMKIT Chat Server 核發與控管。此模式適合希望快速整合且不需要自行管理 token 生命週期的應用程式。
+User data is created by your server, but the authorization token is issued and managed by the IMKIT Chat Server. This mode is suitable for applications that want to integrate quickly without needing to manage the token lifecycle on their own.
 
-實作流程：
-1. 使用 `/admin/clients` API 建立 Client，並設定 `issueAccessToken: true`
-2. Chat Server 將核發 access token，可用於後續 API 呼叫
-3. 使用回傳的 token 進行用戶端認證
+Implementation flow:
+1. Use the `/admin/clients` API to create a Client with `issueAccessToken: true`
+2. The Chat Server will issue an access token that can be used for subsequent API calls
+3. Use the returned token for client-side authentication
 
 ------
 
-## API 端點
+## API Endpoint
 
-### 建立用戶並核發 Token
+### Create a User and Issue a Token
 
-建立新用戶並由 Chat Server 自動核發 access token。
+Create a new user and have the Chat Server automatically issue an access token.
 
 ```http
 POST /admin/clients
@@ -23,23 +23,23 @@ POST /admin/clients
 
 #### Headers
 
-| 參數 | 類型 | 必填 | 說明 |
+| Parameter | Type | Required | Description |
 | ---- | ---- | ---- | ---- |
-| `IM-API-KEY` | string | ✅ | 您的 API 金鑰 |
+| `IM-API-KEY` | string | ✅ | Your API key |
 | `Content-Type` | string | ✅ | `application/json` |
 
 #### Request Body
 
-| 參數 | 類型 | 必填 | 說明 |
+| Parameter | Type | Required | Description |
 | ---- | ---- | ---- | ---- |
-| `_id` | string | ✅ | 用戶唯一識別碼 |
-| `nickname` | string | ❌ | 用戶顯示名稱 |
-| `avatarUrl` | string | ❌ | 用戶頭像 URL |
-| `issueAccessToken` | boolean | ✅ | 設為 `true` 以啟用此授權模式 |
+| `_id` | string | ✅ | Unique user identifier |
+| `nickname` | string | ❌ | User display name |
+| `avatarUrl` | string | ❌ | User avatar URL |
+| `issueAccessToken` | boolean | ✅ | Set to `true` to enable this authorization mode |
 
-#### 範例請求
+#### Example Request
 
-**JavaScript 範例：**
+**JavaScript Example:**
 
 ```javascript
 const response = await axios.post(
@@ -59,7 +59,7 @@ const response = await axios.post(
 );
 ```
 
-**cURL 範例：**
+**cURL Example:**
 
 ```bash
 curl -X "POST" "https://your-app.imkit.io/admin/clients" \
@@ -75,18 +75,18 @@ curl -X "POST" "https://your-app.imkit.io/admin/clients" \
 
 #### Response
 
-**成功回應（200 OK）**
+**Success Response (200 OK)**
 
-| 參數 | 類型 | 說明 |
+| Parameter | Type | Description |
 | ---- | ---- | ---- |
-| `_id` | string | 用戶唯一識別碼 |
-| `nickname` | string | 用戶顯示名稱 |
-| `avatarUrl` | string | 用戶頭像 URL |
-| `issueAccessToken` | boolean | Token issue 模式 |
-| `token` | string | 由 Chat Server 核發的 access token |
-| `expirationDate` | string | Token 過期時間（ISO 8601 格式） |
+| `_id` | string | Unique user identifier |
+| `nickname` | string | User display name |
+| `avatarUrl` | string | User avatar URL |
+| `issueAccessToken` | boolean | Token issue mode |
+| `token` | string | Access token issued by the Chat Server |
+| `expirationDate` | string | Token expiration time (ISO 8601 format) |
 
-#### 範例回應
+#### Example Response
 
 ```json
 {
@@ -99,9 +99,9 @@ curl -X "POST" "https://your-app.imkit.io/admin/clients" \
 }
 ```
 
-#### 錯誤回應
+#### Error Response
 
-**400 Bad Request** — 請求參數錯誤
+**400 Bad Request** — Invalid request parameters
 
 ```json
 {
@@ -110,7 +110,7 @@ curl -X "POST" "https://your-app.imkit.io/admin/clients" \
 }
 ```
 
-**401 Unauthorized** — API 金鑰無效
+**401 Unauthorized** — Invalid API key
 
 ```json
 {
@@ -119,7 +119,7 @@ curl -X "POST" "https://your-app.imkit.io/admin/clients" \
 }
 ```
 
-**409 Conflict** — 用戶已存在
+**409 Conflict** — User already exists
 
 ```json
 {
@@ -130,22 +130,22 @@ curl -X "POST" "https://your-app.imkit.io/admin/clients" \
 
 ------
 
-## 使用場景
+## Use Cases
 
-### 快速整合
-- **簡易開發**：讓系統自動產生 token，無需自行管理 token 生成邏輯
-- **快速驗證**：適合開發和測試階段快速取得有效的存取權杖
+### Rapid Integration
+- **Simple Development**: Let the system automatically generate tokens without needing to manage token generation logic yourself
+- **Quick Validation**: Suitable for quickly obtaining valid access tokens during development and testing
 
-### 用戶開通
-- **新用戶註冊**：用戶註冊時同時建立 IMKIT 用戶並取得 token，一步到位
-- **自動化流程**：在後端服務中自動為新用戶建立帳號並取得存取權杖
+### User Provisioning
+- **New User Registration**: Create an IMKIT user and obtain a token at the same time during user registration, all in one step
+- **Automated Workflow**: Automatically create accounts and obtain access tokens for new users in backend services
 
 ------
 
-## 注意事項
+## Notes
 
-- **Token 有效期限**：由 Chat Server 管理，請留意 `expirationDate` 欄位
-- **Token 過期**：過期後可再次呼叫同一端點（`POST /admin/clients` 搭配 `issueAccessToken: true`）重新取得 token，不需要刪除用戶
-- **無法自訂**：此模式下無法自訂 token 內容或過期時間
-- **快取建議**：建議在應用程式中快取 token 以避免重複請求
-- **使用 Token**：取得 token 後，在後續的 API 呼叫中透過 `IM-Authorization` header 傳遞
+- **Token Validity Period**: Managed by the Chat Server; pay attention to the `expirationDate` field
+- **Token Expiration**: After expiration, you can call the same endpoint (`POST /admin/clients` with `issueAccessToken: true`) again to obtain a new token without needing to delete the user
+- **No Customization**: In this mode, the token content and expiration time cannot be customized
+- **Caching Recommendation**: It is recommended to cache the token in your application to avoid redundant requests
+- **Using the Token**: After obtaining the token, pass it via the `IM-Authorization` header in subsequent API calls

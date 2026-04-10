@@ -1,54 +1,54 @@
-# 搜尋成員
+# Search a Member
 
-## 概述
+## Overview
 
-搜尋聊天室成員功能透過前端實作，先取得完整的成員列表，然後在客戶端進行搜尋和過濾。
+The search room members feature is implemented on the frontend by first retrieving the complete member list, then performing search and filtering on the client side.
 
-> **注意**：此頁面描述的是前端實作方式，不是獨立的 API 端點。成員資料來自[取得聊天室](/zh-TW/room/room-management/get-a-room) API 的回傳結果。
+> **Note**: This page describes a frontend implementation approach, not a standalone API endpoint. Member data comes from the response of the [Get a Room](/en/room/room-management/get-a-room) API.
 
 ------
 
-## 實作方式
+## Implementation
 
-### 資料來源
+### Data Source
 
-使用 **取得聊天室詳細資訊** API 來獲取完整成員列表：
+Use the **Get Room Details** API to retrieve the complete member list:
 
 ```http
 GET /rooms/{id}
 ```
 
-詳細的 API 使用方式請參考：[列出成員](/zh-TW/room/room-members/list-members)
+For detailed API usage, please refer to: [List Members](/en/room/room-members/list-members)
 
-### 可搜尋欄位
+### Searchable Fields
 
-從 API 回應中的 `members` 陣列，每個成員物件包含以下可搜尋的欄位：
+From the `members` array in the API response, each member object contains the following searchable fields:
 
-| 欄位                | 類型    | 說明                          | 搜尋用途                |
-| ------------------ | ------- | ----------------------------- | ---------------------- |
-| `_id`              | string  | 成員唯一識別碼                | 精確搜尋特定成員        |
-| `nickname`         | string  | 成員暱稱                      | 模糊搜尋暱稱           |
-| `avatarUrl`        | string  | 成員頭像 URL                  | 過濾有/無頭像的成員     |
-| `lastLoginTime`    | string  | 最後登入時間（ISO 格式）      | 按登入時間範圍過濾      |
-| `lastActiveTime`   | string  | 最後活躍時間                  | 按活躍時間過濾         |
-| `isSocketConnected`| boolean | 是否目前線上                  | 過濾線上/離線成員       |
-| `description`      | string  | 成員描述                      | 搜尋描述內容           |
-| `city`             | string  | 城市                          | 按地理位置過濾         |
-| `country`          | string  | 國家                          | 按國家過濾             |
-| `clientType`       | string  | 客戶端類型                    | 按客戶端類型分類       |
-| `members`          | array   | 子成員列表（群組客戶端）      | 搜尋群組內的子成員     |
-| `chatStatus`       | string  | 聊天狀態                      | 按聊天狀態過濾         |
+| Field              | Type    | Description                       | Search Use Case            |
+| ------------------ | ------- | --------------------------------- | -------------------------- |
+| `_id`              | string  | Member unique identifier          | Exact search for a specific member |
+| `nickname`         | string  | Member nickname                   | Fuzzy search by nickname   |
+| `avatarUrl`        | string  | Member avatar URL                 | Filter members with/without avatars |
+| `lastLoginTime`    | string  | Last login time (ISO format)      | Filter by login time range |
+| `lastActiveTime`   | string  | Last active time                  | Filter by active time      |
+| `isSocketConnected`| boolean | Whether currently online          | Filter online/offline members |
+| `description`      | string  | Member description                | Search description content |
+| `city`             | string  | City                              | Filter by geographic location |
+| `country`          | string  | Country                           | Filter by country          |
+| `clientType`       | string  | Client type                       | Categorize by client type  |
+| `members`          | array   | Sub-member list (group clients)   | Search sub-members within groups |
+| `chatStatus`       | string  | Chat status                       | Filter by chat status      |
 
 ------
 
-## 前端實作範例
+## Frontend Implementation Examples
 
-### JavaScript 實作
+### JavaScript Implementation
 
-**基本搜尋功能**
+**Basic Search Function**
 
 ```javascript
-// 取得成員列表
+// Get member list
 async function getRoomMembers(roomId) {
   const response = await fetch(`/rooms/${roomId}`, {
     headers: {
@@ -60,7 +60,7 @@ async function getRoomMembers(roomId) {
   return data.result.members;
 }
 
-// 搜尋成員函數
+// Search members function
 function searchMembers(members, searchTerm, searchField = 'nickname') {
   if (!searchTerm) return members;
   
@@ -73,40 +73,40 @@ function searchMembers(members, searchTerm, searchField = 'nickname') {
   });
 }
 
-// 使用範例
+// Usage example
 const members = await getRoomMembers('room123');
 const searchResults = searchMembers(members, '張三', 'nickname');
 ```
 
-**進階過濾功能**
+**Advanced Filtering Function**
 
 ```javascript
-// 多條件搜尋
+// Multi-criteria search
 function advancedSearchMembers(members, filters) {
   return members.filter(member => {
-    // 暱稱搜尋
+    // Nickname search
     if (filters.nickname && 
         !member.nickname?.toLowerCase().includes(filters.nickname.toLowerCase())) {
       return false;
     }
     
-    // 線上狀態過濾
+    // Online status filter
     if (filters.isOnline !== undefined && 
         member.isSocketConnected !== filters.isOnline) {
       return false;
     }
     
-    // 地區過濾
+    // Region filter
     if (filters.country && member.country !== filters.country) {
       return false;
     }
     
-    // 客戶端類型過濾
+    // Client type filter
     if (filters.clientType && member.clientType !== filters.clientType) {
       return false;
     }
     
-    // 最後登入時間範圍過濾
+    // Last login time range filter
     if (filters.lastLoginAfter) {
       const lastLogin = new Date(member.lastLoginTime);
       const filterDate = new Date(filters.lastLoginAfter);
@@ -117,7 +117,7 @@ function advancedSearchMembers(members, filters) {
   });
 }
 
-// 使用範例
+// Usage example
 const filteredMembers = advancedSearchMembers(members, {
   nickname: '張',
   isOnline: true,
@@ -127,20 +127,20 @@ const filteredMembers = advancedSearchMembers(members, {
 });
 ```
 
-**群組成員搜尋**
+**Group Member Search**
 
 ```javascript
-// 搜尋包含群組內成員
+// Search including group sub-members
 function searchAllMembers(members, searchTerm) {
   const results = [];
   
   members.forEach(member => {
-    // 搜尋主要成員
+    // Search primary members
     if (member.nickname?.toLowerCase().includes(searchTerm.toLowerCase())) {
       results.push(member);
     }
     
-    // 如果是群組客戶端，搜尋群組內成員
+    // If it's a group client, search within group members
     if (member.members && Array.isArray(member.members)) {
       const groupMembers = searchMembers(member.members, searchTerm);
       results.push(...groupMembers.map(subMember => ({
@@ -154,7 +154,7 @@ function searchAllMembers(members, searchTerm) {
 }
 ```
 
-### React 實作範例
+### React Implementation Example
 
 ```jsx
 import { useState, useEffect, useMemo } from 'react';
@@ -168,7 +168,7 @@ function MemberSearch({ roomId }) {
     country: ''
   });
 
-  // 取得成員列表
+  // Get member list
   useEffect(() => {
     async function fetchMembers() {
       const memberList = await getRoomMembers(roomId);
@@ -177,7 +177,7 @@ function MemberSearch({ roomId }) {
     fetchMembers();
   }, [roomId]);
 
-  // 即時搜尋結果
+  // Real-time search results
   const searchResults = useMemo(() => {
     return advancedSearchMembers(members, {
       nickname: searchTerm,
@@ -187,31 +187,31 @@ function MemberSearch({ roomId }) {
 
   return (
     <div>
-      {/* 搜尋輸入框 */}
+      {/* Search input */}
       <input
         type="text"
-        placeholder="搜尋成員暱稱..."
+        placeholder="Search member nickname..."
         value={searchTerm}
         onChange={(e) => setSearchTerm(e.target.value)}
       />
       
-      {/* 過濾選項 */}
+      {/* Filter options */}
       <select 
         value={filters.isOnline ?? ''} 
         onChange={(e) => setFilters({...filters, isOnline: e.target.value === '' ? null : e.target.value === 'true'})}
       >
-        <option value="">全部狀態</option>
-        <option value="true">線上</option>
-        <option value="false">離線</option>
+        <option value="">All statuses</option>
+        <option value="true">Online</option>
+        <option value="false">Offline</option>
       </select>
       
-      {/* 搜尋結果 */}
+      {/* Search results */}
       <div>
         {searchResults.map(member => (
           <div key={member._id}>
             <img src={member.avatarUrl} alt={member.nickname} />
             <span>{member.nickname}</span>
-            <span>{member.isSocketConnected ? '線上' : '離線'}</span>
+            <span>{member.isSocketConnected ? 'Online' : 'Offline'}</span>
           </div>
         ))}
       </div>
@@ -222,49 +222,49 @@ function MemberSearch({ roomId }) {
 
 ------
 
-## 使用場景
+## Use Cases
 
-### 成員管理
-- **快速查找**：透過暱稱快速找到特定成員
-- **狀態篩選**：過濾線上/離線成員
-- **批量操作**：選擇符合條件的成員進行批量管理
+### Member Management
+- **Quick lookup**: Quickly find a specific member by nickname
+- **Status filtering**: Filter online/offline members
+- **Batch operations**: Select members matching certain criteria for batch management
 
-### 用戶體驗
-- **即時搜尋**：不需要等待網路請求的即時搜尋結果
-- **多條件過濾**：支援多種條件的組合搜尋
-- **群組支援**：支援搜尋群組客戶端內的子成員
+### User Experience
+- **Instant search**: Real-time search results without waiting for network requests
+- **Multi-criteria filtering**: Support for combined search with multiple conditions
+- **Group support**: Support searching sub-members within group clients
 
-### 管理功能
-- **活躍度分析**：按最後登入時間篩選活躍成員
-- **地區統計**：按地理位置分析成員分布
-- **設備分析**：按客戶端類型了解用戶使用習慣
-
-------
-
-## 最佳實作建議
-
-### 效能優化
-- **資料快取**：快取成員列表資料，避免重複請求
-- **防抖搜尋**：使用 debounce 避免過於頻繁的搜尋操作
-- **虛擬滾動**：大量成員時使用虛擬滾動提升渲染效能
-
-### 用戶體驗
-- **搜尋高亮**：在結果中高亮顯示搜尋關鍵字
-- **空狀態處理**：提供友好的無結果提示
-- **載入狀態**：顯示資料載入進度
-
-### 資料處理
-- **容錯處理**：處理缺失欄位或異常資料
-- **大小寫不敏感**：搜尋時忽略大小寫差異
-- **特殊字元處理**：正確處理特殊字元和 Unicode
+### Administrative Features
+- **Activity analysis**: Filter active members by last login time
+- **Regional statistics**: Analyze member distribution by geographic location
+- **Device analysis**: Understand user habits by client type
 
 ------
 
-## 注意事項
+## Best Practices
 
-- **資料來源**：搜尋資料來自聊天室詳細資訊 API，確保先取得完整成員列表
-- **群組處理**：注意 `members` 欄位可能包含子成員，需要遞迴搜尋
-- **即時性**：前端搜尋無法反映即時的線上狀態變化，需定期更新資料
-- **權限控制**：確保只有聊天室成員才能搜尋其他成員
-- **效能考量**：大型聊天室建議使用後端搜尋或分頁載入
-- **隱私保護**：注意不要暴露敏感的成員資訊
+### Performance Optimization
+- **Data caching**: Cache the member list data to avoid redundant requests
+- **Debounced search**: Use debounce to prevent excessively frequent search operations
+- **Virtual scrolling**: Use virtual scrolling for large member lists to improve rendering performance
+
+### User Experience
+- **Search highlighting**: Highlight search keywords in the results
+- **Empty state handling**: Provide a friendly no-results message
+- **Loading state**: Display data loading progress
+
+### Data Processing
+- **Error tolerance**: Handle missing fields or abnormal data gracefully
+- **Case insensitivity**: Ignore case differences when searching
+- **Special character handling**: Properly handle special characters and Unicode
+
+------
+
+## Notes
+
+- **Data source**: Search data comes from the room details API; ensure the complete member list is retrieved first
+- **Group handling**: Note that the `members` field may contain sub-members, requiring recursive search
+- **Real-time updates**: Frontend search cannot reflect real-time online status changes; data needs to be refreshed periodically
+- **Access control**: Ensure only room members can search for other members
+- **Performance considerations**: For large rooms, consider using backend search or paginated loading
+- **Privacy protection**: Be careful not to expose sensitive member information

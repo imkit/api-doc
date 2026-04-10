@@ -1,5 +1,3 @@
 export default {
-  "key": {
-    title: "金鑰"
-  }
+  "key": { title: "Keys" }
 }
