@@ -69,6 +69,31 @@ GET /admin/clients?limit=20&skip=0
 GET /admin/clients?q=%7B%22nickname%22:%7B%22%24regex%22:%22.*AB.*%22%7D%7D&limit=10
 ```
 
+**JavaScript 範例：**
+
+```javascript
+const response = await axios.get(
+  `https://your-app.imkit.io/admin/clients`,
+  {
+    params: {
+      q: JSON.stringify({ nickname: { $regex: ".*AB.*" } }),
+      limit: 20,
+      skip: 0,
+    },
+    headers: {
+      "IM-API-KEY": process.env.IM_API_KEY,
+    },
+  }
+);
+```
+
+**cURL 範例：**
+
+```bash
+curl -X "GET" "https://your-app.imkit.io/admin/clients?q=%7B%22nickname%22%3A%7B%22%24regex%22%3A%22.*AB.*%22%7D%7D&limit=20&skip=0" \
+     -H 'IM-API-KEY: {您的_API_KEY}'
+```
+
 #### Response
 
 **成功回應（200 OK）**

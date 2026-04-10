@@ -1,16 +1,16 @@
-# 搜索消息
+# 搜尋訊息
 
 ## 概述
 
-通过关键字搜索消息内容。此 API 使用通用搜索功能，可以根据消息内容进行全文搜索，支持跨聊天室搜索或限定特定聊天室范围，适用于快速定位特定消息内容。
+透過關鍵字搜尋訊息內容。此 API 使用通用搜尋功能，可以根據訊息內容進行全文搜尋，支援跨聊天室搜尋或限定特定聊天室範圍，適用於快速定位特定訊息內容。
 
 ------
 
-## API 端点
+## API 端點
 
-### 搜索消息内容
+### 搜尋訊息內容
 
-使用关键字在消息内容中进行搜索。
+使用關鍵字在訊息內容中進行搜尋。
 
 ```http
 POST /search
@@ -18,31 +18,31 @@ POST /search
 
 #### Headers
 
-| 参数               | 类型   | 必填 | 说明           |
+| 參數               | 類型   | 必填 | 說明           |
 | ------------------ | ------ | ---- | -------------- |
 | `IM-CLIENT-KEY`    | string | ✅    | Client Key     |
 | `IM-Authorization` | string | ✅    | Client Token   |
 
 #### Post Body
 
-| 参数       | 类型     | 必填 | 说明                                      |
+| 參數       | 類型     | 必填 | 說明                                      |
 | ---------- | -------- | ---- | ----------------------------------------- |
-| `type`     | array    | ✅    | 搜索类型，设置为 ["messages"]             |
-| `keyword`  | string   | ✅    | 搜索关键字（在消息内容中搜索）            |
-| `room`     | string   | ❌    | 限制在特定聊天室内搜索                    |
-| `roomTags` | array    | ❌    | 限制在拥有指定标签的聊天室内搜索          |
-| `limit`    | number   | ❌    | 最大搜索结果数量                          |
+| `type`     | array    | ✅    | 搜尋類型，設定為 ["messages"]             |
+| `keyword`  | string   | ✅    | 搜尋關鍵字（在訊息內容中搜尋）            |
+| `room`     | string   | ❌    | 限制在特定聊天室內搜尋                    |
+| `roomTags` | array    | ❌    | 限制在擁有指定標籤的聊天室內搜尋          |
+| `limit`    | number   | ❌    | 最大搜尋結果數量                          |
 
-#### 范例请求
+#### 範例請求
 
-**在所有聊天室中搜索消息**
+**在所有聊天室中搜尋訊息**
 
 ```http
 POST /search HTTP/1.1
 IM-Authorization: {TOKEN}
 IM-CLIENT-KEY: {IM-CLIENT-KEY}
 Content-Type: application/json; charset=utf-8
-Host: localhost:3100
+Host: your-app.imkit.io
 Connection: close
 
 {
@@ -52,14 +52,14 @@ Connection: close
 }
 ```
 
-**在特定聊天室中搜索消息**
+**在特定聊天室中搜尋訊息**
 
 ```http
 POST /search HTTP/1.1
 IM-Authorization: {TOKEN}
 IM-CLIENT-KEY: {IM-CLIENT-KEY}
 Content-Type: application/json; charset=utf-8
-Host: localhost:3100
+Host: your-app.imkit.io
 Connection: close
 
 {
@@ -69,14 +69,14 @@ Connection: close
 }
 ```
 
-**在特定标签的聊天室中搜索**
+**在特定標籤的聊天室中搜尋**
 
 ```http
 POST /search HTTP/1.1
 IM-Authorization: {TOKEN}
 IM-CLIENT-KEY: {IM-CLIENT-KEY}
 Content-Type: application/json; charset=utf-8
-Host: localhost:3100
+Host: your-app.imkit.io
 Connection: close
 
 {
@@ -86,40 +86,70 @@ Connection: close
 }
 ```
 
+**JavaScript 範例：**
+
+```javascript
+const response = await axios.post(
+  `https://your-app.imkit.io/search`,
+  {
+    type: ["messages"],
+    keyword: "hello",
+    limit: 20,
+  },
+  {
+    headers: {
+      "IM-CLIENT-KEY": IM_CLIENT_KEY,
+      "IM-Authorization": TOKEN,
+      "Content-Type": "application/json",
+    },
+  }
+);
+```
+
+**cURL 範例：**
+
+```bash
+curl -X "POST" "https://your-app.imkit.io/search" \
+     -H 'IM-CLIENT-KEY: {您的_CLIENT_KEY}' \
+     -H 'IM-Authorization: {您的_TOKEN}' \
+     -H 'Content-Type: application/json' \
+     -d '{"type": ["messages"], "keyword": "hello", "limit": 20}'
+```
+
 #### Response
 
-**成功回应（200 OK）**
+**成功回應（200 OK）**
 
-| 参数     | 类型   | 说明                   |
+| 參數     | 類型   | 說明                   |
 | -------- | ------ | ---------------------- |
-| `RC`     | number | 回应代码（0 表示成功） |
-| `RM`     | string | 回应消息               |
-| `result` | object | 搜索结果               |
+| `RC`     | number | 回應代碼（0 表示成功） |
+| `RM`     | string | 回應訊息               |
+| `result` | object | 搜尋結果               |
 
-**搜索结果结构**
+**搜尋結果結構**
 
-| 参数       | 类型   | 说明                              |
+| 參數       | 類型   | 說明                              |
 | ---------- | ------ | --------------------------------- |
-| `messages` | array  | 搜索到的消息群组，按聊天室分组    |
+| `messages` | array  | 搜尋到的訊息群組，按聊天室分組    |
 
-**消息群组对象结构**
+**訊息群組物件結構**
 
-| 参数       | 类型   | 说明                      |
+| 參數       | 類型   | 說明                      |
 | ---------- | ------ | ------------------------- |
-| `room`     | object | 聊天室信息                |
-| `messages` | array  | 该聊天室中符合的消息 ID   |
+| `room`     | object | 聊天室資訊                |
+| `messages` | array  | 該聊天室中符合的訊息 ID   |
 
-**聊天室信息对象结构**
+**聊天室資訊物件結構**
 
-| 参数            | 类型    | 说明                      |
+| 參數            | 類型    | 說明                      |
 | --------------- | ------- | ------------------------- |
-| `_id`           | string  | 聊天室唯一识别码          |
-| `name`          | string  | 聊天室名称                |
-| `cover`         | string  | 聊天室封面图片 URL        |
+| `_id`           | string  | 聊天室唯一識別碼          |
+| `name`          | string  | 聊天室名稱                |
+| `cover`         | string  | 聊天室封面圖片 URL        |
 | `description`   | string  | 聊天室描述                |
-| `roomTags`      | array   | 聊天室标签列表            |
+| `roomTags`      | array   | 聊天室標籤列表            |
 
-#### 范例回应
+#### 範例回應
 
 ```json
 {
@@ -158,9 +188,9 @@ Connection: close
 }
 ```
 
-#### 错误回应
+#### 錯誤回應
 
-**401 Unauthorized** - 认证失败
+**401 Unauthorized** - 認證失敗
 
 ```json
 {
@@ -173,7 +203,7 @@ Connection: close
 }
 ```
 
-**400 Bad Request** - 搜索参数无效
+**400 Bad Request** - 搜尋參數無效
 
 ```json
 {
@@ -188,30 +218,30 @@ Connection: close
 
 ------
 
-## 使用场景
+## 使用場景
 
-### 消息搜索
-- **关键字查找**：快速找到包含特定关键字的历史消息
-- **内容回溯**：在大量消息中找到相关的对话内容
-- **信息检索**：搜索特定主题或项目相关的讨论
+### 訊息搜尋
+- **關鍵字查找**：快速找到包含特定關鍵字的歷史訊息
+- **內容回溯**：在大量訊息中找到相關的對話內容
+- **資訊檢索**：搜尋特定主題或專案相關的討論
 
 ### 聊天室管理
-- **内容审核**：搜索包含特定词汇的消息进行审核
-- **数据分析**：分析聊天室中讨论的热门话题
-- **合规检查**：搜索可能违规的消息内容
+- **內容審核**：搜尋包含特定詞彙的訊息進行審核
+- **資料分析**：分析聊天室中討論的熱門話題
+- **合規檢查**：搜尋可能違規的訊息內容
 
-### 用户体验
-- **智能搜索**：提供用户快速搜索历史对话的功能
-- **关联显示**：显示与搜索关键字相关的所有消息
-- **跨室搜索**：在多个聊天室中同时搜索相关内容
+### 用戶體驗
+- **智能搜尋**：提供用戶快速搜尋歷史對話的功能
+- **關聯顯示**：顯示與搜尋關鍵字相關的所有訊息
+- **跨室搜尋**：在多個聊天室中同時搜尋相關內容
 
 ------
 
-## 注意事项
+## 注意事項
 
-- **搜索范围**：只会搜索当前用户有权限访问的聊天室和消息
-- **关键字匹配**：支持全文搜索，匹配消息内容中的关键字
-- **结果分组**：搜索结果按聊天室分组，便于理解消息来源
-- **权限控制**：搜索结果会根据用户的聊天室权限进行过滤
-- **性能考量**：大范围搜索可能需要较长时间，建议设置合理的 limit 值
-- **消息 ID**：返回的是消息 ID 数组，需要额外 API 调用来获取完整消息内容
+- **搜尋範圍**：只會搜尋當前用戶有權限訪問的聊天室和訊息
+- **關鍵字匹配**：支援全文搜尋，匹配訊息內容中的關鍵字
+- **結果分組**：搜尋結果按聊天室分組，便於理解訊息來源
+- **權限控制**：搜尋結果會根據用戶的聊天室權限進行過濾
+- **效能考量**：大範圍搜尋可能需要較長時間，建議設定合理的 limit 值
+- **訊息 ID**：返回的是訊息 ID 陣列，需要額外 API 調用來獲取完整訊息內容

@@ -1,15 +1,15 @@
-# Update User
+# 更新用戶
 
-## Overview
+## 概述
 
-This endpoint allows you to update existing user information in the system. This API is for server-side use only and requires proper authentication.
+此端點允許您更新系統中現有的用戶資訊。此 API 僅供伺服器端使用，需要適當的身份驗證。
 
 ------
 
-## API Endpoint
+## API 端點
 
-### Update User
-Update existing client information in the system.
+### 更新用戶
+更新系統中現有的用戶端資訊。
 
 ```http
 POST /admin/clients
@@ -17,38 +17,38 @@ POST /admin/clients
 
 #### Headers
 
-| Parameter | Type | Required | Description |
-| --------- | ---- | -------- | ----------- |
-| `IM-API-KEY` | string | ✅ | Your platform API key |
+| 參數 | 類型 | 必填 | 說明 |
+| ---- | ---- | ---- | ---- |
+| `IM-API-KEY` | string | ✅ | 您的平台 API 金鑰 |
 | `Content-Type` | string | ✅ | `application/json; charset=utf-8` |
 
 #### Post Body
 
-The request body should contain user update information in JSON format.
+請求內容應包含 JSON 格式的用戶端更新資訊。
 
-| Parameter | Type | Required | Description |
-| --------- | ---- | -------- | ----------- |
-| `_id` | string | ✅ | Unique ID of the client to update |
-| `nickname` | string | ❌ | Client display name |
-| `avatarUrl` | string | ❌ | Client avatar image URL |
-| `issueAccessToken` | boolean | ❌ | Set to `true` to regenerate access token; set to `false` or omit to use custom token |
-| `token` | string | ❌ | New token to bind (used when `issueAccessToken` is `false` or omitted) |
-| `expirationDate` | string | ❌ | Token expiration time (ISO format, set when using custom token) |
+| 參數 | 類型 | 必填 | 說明 |
+| ---- | ---- | ---- | ---- |
+| `_id` | string | ✅ | 要更新的用戶端唯一識別碼 |
+| `nickname` | string | ❌ | 用戶端顯示名稱 |
+| `avatarUrl` | string | ❌ | 用戶端頭像圖片 URL |
+| `issueAccessToken` | boolean | ❌ | 設為 `true` 以重新產生存取權杖；設為 `false` 或省略以使用自訂 token |
+| `token` | string | ❌ | 要綁定的新 token（當 `issueAccessToken` 為 `false` 或省略時使用） |
+| `expirationDate` | string | ❌ | Token 過期時間（ISO 格式，當使用自訂 token 時設定） |
 
-#### Example Request
+#### 範例請求
 
-##### Option 1: Reissue Access Token
+##### 選項一：重新發行存取 Token
 
-Use this option to regenerate a new access token for the existing user.
+使用此選項為現有用戶重新產生新的存取權杖。
 
 ```javascript
 const response = await axios.post(
-  "https://imkit-dev.funtek.io/admin/clients",
+  "https://your-app.imkit.io/admin/clients",
   {
     _id: "user123",
-    nickname: "John Wang", // Update display name
-    avatarUrl: "https://example.com/new-avatar.jpg", // Update avatar
-    issueAccessToken: true, // Reissue token
+    nickname: "王小華", // 更新顯示名稱
+    avatarUrl: "https://example.com/new-avatar.jpg", // 更新頭像
+    issueAccessToken: true, // 重新發行 token
   },
   {
     headers: {
@@ -59,35 +59,35 @@ const response = await axios.post(
 );
 ```
 
-##### Option 2: Bind Specific Token
+##### 選項二：綁定指定 Token
 
-Use this option to bind a new custom token to the existing client.
+使用此選項將新的自訂 token 綁定到現有用戶端。
 
 ```http
 POST /admin/clients HTTP/1.1
-IM-API-KEY: {Your_API_Key}
+IM-API-KEY: {您的_API_金鑰}
 Content-Type: application/json; charset=utf-8
-Host: imkit-dev.funtek.io
+Host: your-app.imkit.io
 
 {
   "_id": "user123",
-  "nickname": "John Wang",
+  "nickname": "王小華",
   "avatarUrl": "https://example.com/new-avatar.jpg",
   "token": "a1b2c3d4-5e6f-7g8h-9i0j-k1l2m3n4o5p6",
   "expirationDate": "2025-12-31T23:59:59.999Z"
 }
 ```
 
-##### Option 3: Update Basic Information Only
+##### 選項三：僅更新基本資訊
 
-If you only need to update the client's basic information (such as nickname, avatar), you can omit all token-related parameters.
+如果只需要更新用戶端的基本資訊（如暱稱、頭像），可以省略所有 token 相關參數。
 
 ```javascript
 const response = await axios.post(
-  "https://imkit-dev.funtek.io/admin/clients",
+  "https://your-app.imkit.io/admin/clients",
   {
     _id: "user123",
-    nickname: "John Wang",
+    nickname: "王小華",
     avatarUrl: "https://example.com/new-avatar.jpg"
   },
   {
@@ -101,29 +101,29 @@ const response = await axios.post(
 
 #### Response
 
-**Success Response (200 OK)**
+**成功回應（200 OK）**
 
-When the request is successful, the API returns the updated client information:
+當請求成功時，API 會回傳更新後的用戶端資訊：
 
-| Parameter | Type | Description |
-| --------- | ---- | ----------- |
-| `RC` | number | Response code (0 means success) |
-| `RM` | string | Response message |
-| `result` | object | Updated client information |
+| 參數 | 類型 | 說明 |
+| ---- | ---- | ---- |
+| `RC` | number | 回應代碼（0 表示成功） |
+| `RM` | string | 回應訊息 |
+| `result` | object | 更新後的用戶端資訊 |
 
-**Client Object Fields**
+**用戶端物件欄位**
 
-| Parameter | Type | Description |
-| --------- | ---- | ----------- |
-| `_id` | string | User unique identifier |
-| `nickname` | string | Updated user display name |
-| `avatarUrl` | string | Updated user avatar image URL |
-| `token` | string | Access token (only appears when reissuing or binding new token) |
-| `expirationDate` | string | Token expiration time (only appears when token operation occurs) |
-| `updatedAt` | string | Last update timestamp (ISO format) |
-| `lastLoginTimeMS` | number | Last login timestamp (milliseconds) |
+| 參數 | 類型 | 說明 |
+| ---- | ---- | ---- |
+| `_id` | string | 用戶唯一識別碼 |
+| `nickname` | string | 更新後的用戶顯示名稱 |
+| `avatarUrl` | string | 更新後的用戶頭像圖片 URL |
+| `token` | string | 存取權杖（僅在重新發行或綁定新 token 時出現） |
+| `expirationDate` | string | Token 過期時間（僅在有 token 操作時出現） |
+| `updatedAt` | string | 最後更新時間戳（ISO 格式） |
+| `lastLoginTimeMS` | number | 最後登入時間戳（毫秒） |
 
-#### Example Response
+#### 範例回應
 
 ```json
 {
@@ -133,8 +133,8 @@ When the request is successful, the API returns the updated client information:
     "_id": "user123",
     "__v": 0,
     "appID": "SampleApp",
-    "nickname": "John Wang",
-    "description": "User description",
+    "nickname": "王小華",
+    "description": "使用者描述",
     "avatarUrl": "https://example.com/new-avatar.jpg",
     "address": {
       "port": 56004,
@@ -154,36 +154,36 @@ When the request is successful, the API returns the updated client information:
 }
 ```
 
-#### Error Response
+#### 錯誤回應
 
-When the request fails, you will receive an error response containing detailed error information. Common error scenarios include:
+當請求失敗時，您會收到包含錯誤詳細資訊的錯誤回應。常見的錯誤情況包括：
 
-- **Invalid API key** - The provided `IM-API-KEY` is invalid or expired
-- **Client does not exist** - The specified `_id` was not found
-- **Invalid token format** - The custom token format is incorrect
-- **Parameter format error** - The provided parameters do not meet the required format
-- **Internal server error** - An unexpected error occurred on the server side
-
-------
-
-## Use Cases
-
-### User Information Maintenance
-- **Update display name and avatar**: When a user modifies their profile, only update basic information like `nickname` and `avatarUrl`
-- **Reissue access token**: When a user's token is about to expire or needs to be refreshed, set `issueAccessToken: true` to regenerate
-
-### Token Management
-- **Bind custom token**: When integrating with an external authentication system, bind a custom token to an existing client
-- **Token rotation**: Periodically replace user tokens to improve security
+- **無效的 API 金鑰** - 提供的 `IM-API-KEY` 無效或已過期
+- **用戶端不存在** - 指定的 `_id` 找不到對應的用戶端
+- **無效的 token 格式** - 自訂 token 格式不正確
+- **參數格式錯誤** - 提供的參數格式不符合要求
+- **伺服器內部錯誤** - 伺服器端發生未預期的錯誤
 
 ------
 
-## Notes
+## 使用場景
 
-- **User must exist**: Must provide a valid `_id` to identify the client to be updated; if the client does not exist, the request will fail
-- **Partial update**: Only provided fields will be updated, unspecified fields retain their original values
-- **Token invalidation**: Reissuing tokens will invalidate the old token
-- **Token replacement**: Binding a new token will replace the existing token
-- **Timestamp format**: All timestamps are in UTC format
-- **Avatar image**: Avatar image file size should be kept within reasonable limits
-- **Server-side only**: This endpoint is specifically for updating existing client information
+### 用戶資訊維護
+- **更新顯示名稱與頭像**：當用戶修改個人資料時，僅更新 `nickname` 和 `avatarUrl` 等基本資訊
+- **重新發行存取權杖**：當用戶的 token 即將過期或需要刷新時，設定 `issueAccessToken: true` 重新產生
+
+### Token 管理
+- **綁定自訂 Token**：當整合外部身份驗證系統時，將自訂的 token 綁定到現有用戶端
+- **Token 輪換**：定期更換用戶的 token 以提升安全性
+
+------
+
+## 注意事項
+
+- **用戶必須存在**：必須提供有效的 `_id` 來識別要更新的用戶端，如果用戶端不存在，請求將會失敗
+- **部分更新**：只有提供的欄位會被更新，未提供的欄位保持原值
+- **Token 失效**：重新發行 token 會使舊的 token 失效
+- **Token 替換**：綁定新 token 會替換原有的 token
+- **時間戳格式**：所有時間戳均為 UTC 格式
+- **頭像圖片**：頭像圖片的檔案大小應控制在合理範圍內
+- **伺服器端專用**：此端點專用於更新現有用戶端的資訊

@@ -29,7 +29,7 @@ GET /config
 
 ```javascript
 const response = await axios.get(
-  "https://imkit-dev.funtek.io/config",
+  "https://your-app.imkit.io/config",
   {
     headers: {
       "IM-CLIENT-KEY": process.env.IM_CLIENT_KEY,
@@ -42,7 +42,7 @@ const response = await axios.get(
 **cURL**
 
 ```bash
-curl -X GET "https://imkit-dev.funtek.io/config" \
+curl -X GET "https://your-app.imkit.io/config" \
   -H "IM-CLIENT-KEY: your_client_key" \
   -H "IM-Authorization: Bearer user_access_token"
 ```

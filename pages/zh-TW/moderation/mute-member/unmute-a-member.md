@@ -36,9 +36,29 @@ DELETE /admin/clients/{uid}/mute/{room}
 ```http
 DELETE /admin/clients/aaa/mute/demo?limit=10&skip=100 HTTP/1.1
 IM-API-KEY: fangho_imkit_0412_2018_001_apikey
-Host: localhost:3100
+Host: your-app.imkit.io
 Connection: close
 User-Agent: Paw/3.1.10 (Macintosh; OS X/10.15.7) GCDHTTPRequest
+```
+
+**JavaScript 範例：**
+
+```javascript
+const response = await axios.delete(
+  `https://your-app.imkit.io/admin/clients/${uid}/mute/${room}`,
+  {
+    headers: {
+      "IM-API-KEY": process.env.IM_API_KEY,
+    },
+  }
+);
+```
+
+**cURL 範例：**
+
+```bash
+curl -X "DELETE" "https://your-app.imkit.io/admin/clients/{uid}/mute/{room}" \
+     -H 'IM-API-KEY: {您的_API_KEY}'
 ```
 
 #### Response

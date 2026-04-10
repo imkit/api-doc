@@ -1,16 +1,16 @@
-# List Messages
+# 列出訊息
 
-## Overview
+## 概述
 
-Query message records of specified room, supports time range, pagination and multiple sorting methods. This API uses message update time for sorting, providing more accurate message order. Suitable for message record queries, message search and room message browsing.
+查詢指定聊天室的訊息記錄，支援時間範圍、分頁和多種排序方式。此 API 使用訊息的更新時間進行排序，提供更準確的訊息順序。適用於訊息記錄查詢、訊息搜尋和聊天室訊息瀏覽。
 
 ------
 
-## API Endpoint
+## API 端點
 
-### Get Room Message List (V3)
+### 取得聊天室訊息列表 (V3)
 
-Query message records of specified room, sorted by update time.
+查詢指定聊天室的訊息記錄，按更新時間排序。
 
 ```http
 GET /rooms/{id}/messages/v3
@@ -18,106 +18,132 @@ GET /rooms/{id}/messages/v3
 
 #### Headers
 
-| Parameter          | Type   | Required | Description  |
-| ------------------ | ------ | -------- | ------------ |
-| `IM-CLIENT-KEY`    | string | ✅        | Client Key   |
-| `IM-Authorization` | string | ✅        | Client Token |
+| 參數               | 類型   | 必填 | 說明           |
+| ------------------ | ------ | ---- | -------------- |
+| `IM-CLIENT-KEY`    | string | ✅    | Client Key     |
+| `IM-Authorization` | string | ✅    | Client Token   |
 
 #### Path Parameters
 
-| Parameter | Type   | Required | Description |
-| --------- | ------ | -------- | ----------- |
-| `id`      | string | ✅        | Room ID     |
+| 參數   | 類型   | 必填 | 說明        |
+| ------ | ------ | ---- | ----------- |
+| `id`   | string | ✅    | 聊天室 ID   |
 
 #### Query Parameters
 
-| Parameter        | Type   | Required | Description                                                                           |
-| ---------------- | ------ | -------- | ------------------------------------------------------------------------------------- |
-| `beforeMessage`  | string | ❌        | Query messages before specified message ID                                            |
-| `afterMessage`   | string | ❌        | Query messages after specified message ID                                             |
-| `limit`          | number | ❌        | Response message limit, default value 20                                              |
-| `afterTime`      | string | ❌        | Query messages after specified time (ISO-8601 format or millisecond timestamp)      |
-| `timeRangeField` | string | ❌        | Time field used for range query (updatedAt/createdAt/messageTime), default updatedAt |
+| 參數             | 類型   | 必填 | 說明                                                         |
+| ---------------- | ------ | ---- | ------------------------------------------------------------ |
+| `beforeMessage`  | string | ❌    | 查詢指定訊息 ID 之前的訊息                                   |
+| `afterMessage`   | string | ❌    | 查詢指定訊息 ID 之後的訊息                                   |
+| `limit`          | number | ❌    | 回應訊息數量上限，預設值 20                                  |
+| `afterTime`      | string | ❌    | 查詢指定時間之後的訊息（ISO-8601 格式或毫秒時間戳）          |
+| `timeRangeField` | string | ❌    | 時間範圍查詢使用的時間欄位（updatedAt/createdAt/messageTime），預設 updatedAt |
 
-#### Sample Request
+#### 範例請求
 
-**Basic Query**
+**基本查詢**
 
 ```http
 GET /rooms/58871b877390be11d5f1ab30/messages/v3?limit=10&afterTime=2020-10-15T03:50:04Z HTTP/1.1
 IM-CLIENT-KEY: {IM-CLIENT-KEY}
 IM-Authorization: {TOKEN}
-Host: 104.199.197.188:3100
+Host: your-app.imkit.io
 Connection: close
 User-Agent: Paw/3.1.1 (Macintosh; OS X/10.12.5) GCDHTTPRequest
 ```
 
-**Pagination Query**
+**分頁查詢**
 
 ```http
 GET /rooms/58871b877390be11d5f1ab30/messages/v3?limit=20&beforeMessage=5f890cf37d980e06f6aaf349 HTTP/1.1
 IM-CLIENT-KEY: {IM-CLIENT-KEY}
 IM-Authorization: {TOKEN}
-Host: 104.199.197.188:3100
+Host: your-app.imkit.io
 Connection: close
 ```
 
-**Time Range Query**
+**時間範圍查詢**
 
 ```http
 GET /rooms/58871b877390be11d5f1ab30/messages/v3?afterTime=1602817267000&timeRangeField=messageTime&limit=50 HTTP/1.1
 IM-CLIENT-KEY: {IM-CLIENT-KEY}
 IM-Authorization: {TOKEN}
-Host: 104.199.197.188:3100
+Host: your-app.imkit.io
 Connection: close
+```
+
+**JavaScript 範例：**
+
+```javascript
+const response = await axios.get(
+  `https://your-app.imkit.io/rooms/58871b877390be11d5f1ab30/messages/v3`,
+  {
+    params: {
+      limit: 10,
+      afterTime: "2020-10-15T03:50:04Z",
+    },
+    headers: {
+      "IM-CLIENT-KEY": IM_CLIENT_KEY,
+      "IM-Authorization": TOKEN,
+    },
+  }
+);
+```
+
+**cURL 範例：**
+
+```bash
+curl -X "GET" "https://your-app.imkit.io/rooms/58871b877390be11d5f1ab30/messages/v3?limit=10&afterTime=2020-10-15T03:50:04Z" \
+     -H 'IM-CLIENT-KEY: {您的_CLIENT_KEY}' \
+     -H 'IM-Authorization: {您的_TOKEN}'
 ```
 
 #### Response
 
-**Success Response (200 OK)**
+**成功回應（200 OK）**
 
-| Parameter | Type   | Description                      |
-| --------- | ------ | -------------------------------- |
-| `RC`      | number | Response code (0 means success) |
-| `RM`      | string | Response message                 |
-| `result`  | object | Query result                     |
+| 參數              | 類型   | 說明                                            |
+| ----------------- | ------ | ----------------------------------------------- |
+| `RC`              | number | 回應代碼（0 表示成功）                          |
+| `RM`              | string | 回應訊息                                        |
+| `result`          | object | 查詢結果                                        |
 
-**Query Result Object Structure**
+**查詢結果物件結構**
 
-| Parameter        | Type   | Description                                              |
-| ---------------- | ------ | -------------------------------------------------------- |
-| `totalCount`     | number | Total message count in room                              |
-| `data`           | array  | Array of qualifying messages                             |
-| `userDeletedIDs` | array  | Array of message IDs deleted by current user (UI should hide these messages) |
-| `inspect`        | object | Diagnostic information                                   |
+| 參數              | 類型   | 說明                                            |
+| ----------------- | ------ | ----------------------------------------------- |
+| `totalCount`      | number | 聊天室內總訊息數量                              |
+| `data`            | array  | 符合條件的訊息陣列                              |
+| `userDeletedIDs`  | array  | 當前用戶已刪除的訊息 ID 陣列（UI 應隱藏這些訊息）|
+| `inspect`         | object | 診斷資訊                                        |
 
-**Message Object Structure**
+**訊息物件結構**
 
-| Parameter       | Type   | Description                                   |
-| --------------- | ------ | --------------------------------------------- |
-| `_id`           | string | Message unique identifier                     |
-| `message`       | any    | Message content                               |
-| `room`          | string | Room ID                                       |
-| `sender`        | object | Sender information                            |
-| `messageType`   | string | Message type                                  |
-| `messageTimeMS` | number | Message send time (millisecond timestamp)    |
-| `updatedAtMS`   | number | Message update time (millisecond timestamp)  |
-| `createdAtMS`   | number | Message creation time (millisecond timestamp) |
-| `reactions`     | array  | Message reaction array                        |
-| `reactionCount` | number | Total reaction count                          |
-| `isDeleted`     | bool   | Whether deleted                               |
+| 參數             | 類型   | 說明                          |
+| ---------------- | ------ | ----------------------------- |
+| `_id`            | string | 訊息唯一識別碼                |
+| `message`        | any    | 訊息內容                      |
+| `room`           | string | 所屬聊天室 ID                 |
+| `sender`         | object | 發送者資訊                    |
+| `messageType`    | string | 訊息類型                      |
+| `messageTimeMS`  | number | 訊息發送時間（毫秒時間戳）    |
+| `updatedAtMS`    | number | 訊息更新時間（毫秒時間戳）    |
+| `createdAtMS`    | number | 訊息建立時間（毫秒時間戳）    |
+| `reactions`      | array  | 訊息反應陣列                  |
+| `reactionCount`  | number | 反應總數                      |
+| `isDeleted`      | bool   | 是否已刪除                    |
 
-**Sender Object Structure**
+**發送者物件結構**
 
-| Parameter         | Type   | Description                                   |
-| ----------------- | ------ | --------------------------------------------- |
-| `_id`             | string | User unique identifier                        |
-| `nickname`        | string | User nickname                                 |
-| `description`     | string | User description                              |
-| `avatarUrl`       | string | User avatar URL                               |
-| `lastLoginTimeMS` | number | Last login time (millisecond timestamp)      |
+| 參數              | 類型   | 說明                          |
+| ----------------- | ------ | ----------------------------- |
+| `_id`             | string | 用戶唯一識別碼                |
+| `nickname`        | string | 用戶暱稱                      |
+| `description`     | string | 用戶描述                      |
+| `avatarUrl`       | string | 用戶頭像 URL                  |
+| `lastLoginTimeMS` | number | 最後登入時間（毫秒時間戳）    |
 
-#### Sample Response
+#### 範例回應
 
 ```json
 {
@@ -165,9 +191,9 @@ Connection: close
 }
 ```
 
-#### Error Response
+#### 錯誤回應
 
-**401 Unauthorized** - Authentication failed
+**401 Unauthorized** - 認證失敗
 
 ```json
 {
@@ -180,7 +206,7 @@ Connection: close
 }
 ```
 
-**403 Forbidden** - Insufficient permissions or room does not exist
+**403 Forbidden** - 權限不足或聊天室不存在
 
 ```json
 {
@@ -193,7 +219,7 @@ Connection: close
 }
 ```
 
-**404 Not Found** - Room does not exist
+**404 Not Found** - 聊天室不存在
 
 ```json
 {
@@ -208,31 +234,31 @@ Connection: close
 
 ------
 
-## Use Cases
+## 使用場景
 
-### Message Browsing
-- **Chat History**: Display historical messages of room
-- **Message Search**: Find specific messages based on time range
-- **Pagination Loading**: Implement pagination functionality for message list
+### 訊息瀏覽
+- **聊天記錄**：顯示聊天室的歷史訊息
+- **訊息搜尋**：根據時間範圍查找特定訊息
+- **分頁載入**：實現訊息列表的分頁功能
 
-### Sync and Backup
-- **Message Sync**: Sync latest message updates
-- **Offline Backup**: Backup room message data
-- **Data Analysis**: Analyze room activity and interaction
+### 同步與備份
+- **訊息同步**：同步最新的訊息更新
+- **離線備份**：備份聊天室訊息資料
+- **資料分析**：分析聊天室活動和互動情況
 
-### Application Integration
-- **Message Export**: Export chat records to other systems
-- **Content Moderation**: Review and manage room content
-- **Statistical Analysis**: Calculate message count and user activity
+### 應用整合
+- **訊息匯出**：將聊天記錄匯出到其他系統
+- **內容審核**：檢視和管理聊天室內容
+- **統計分析**：計算訊息數量和用戶活躍度
 
 ------
 
-## Notes
+## 注意事項
 
-- **Sorting Method**: V3 version uses updatedAt time sorting, more accurate than message ID sorting
-- **Time Format**: Supports ISO-8601 format or millisecond timestamp
-- **Pagination Query**: Use beforeMessage or afterMessage for pagination
-- **User Permissions**: Only room members can query messages
-- **Deleted Messages**: Messages in userDeletedIDs should be hidden in UI
-- **Diagnostic Information**: inspect object provides diagnostic information about query performance and conditions
-- **Default Limit**: Returns 20 messages by default when limit is not specified
+- **排序方式**：V3 版本使用 updatedAt 時間排序，比訊息 ID 排序更準確
+- **時間格式**：支援 ISO-8601 格式或毫秒時間戳
+- **分頁查詢**：使用 beforeMessage 或 afterMessage 進行分頁
+- **用戶權限**：只有聊天室成員才能查詢訊息
+- **已刪除訊息**：userDeletedIDs 中的訊息 UI 應隱藏顯示
+- **診斷資訊**：inspect 物件提供查詢效能和條件的診斷資訊
+- **預設限制**：未指定 limit 時預設回應 20 筆訊息

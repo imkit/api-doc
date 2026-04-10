@@ -1,16 +1,16 @@
-# 静音成员
+# 靜音成員
 
 ## 概述
 
-静音指定聊天室功能让用户可以暂时停止接收特定聊天室的通知，但不会影响用户在该聊天室的参与权限。此功能适用于临时减少干扰或过滤不重要的聊天室通知。
+靜音指定聊天室功能讓用戶可以暫時停止接收特定聊天室的通知，但不會影響用戶在該聊天室的參與權限。此功能適用於臨時減少干擾或過濾不重要的聊天室通知。
 
 ------
 
-## API 端点
+## API 端點
 
-### 静音指定聊天室
+### 靜音指定聊天室
 
-为指定客户端设置聊天室静音状态。
+為指定客戶端設定聊天室靜音狀態。
 
 ```http
 POST /admin/clients/{uid}/mute/{room}
@@ -18,58 +18,79 @@ POST /admin/clients/{uid}/mute/{room}
 
 #### Headers
 
-| 参数         | 类型   | 必填 | 说明        |
+| 參數         | 類型   | 必填 | 說明        |
 | ------------ | ------ | ---- | ----------- |
 | `IM-API-KEY` | string | ✅    | API Key     |
 
 #### Path Parameters
 
-| 参数   | 类型   | 必填 | 说明         |
+| 參數   | 類型   | 必填 | 說明         |
 | ------ | ------ | ---- | ------------ |
-| `uid`  | string | ✅    | 客户端 ID    |
+| `uid`  | string | ✅    | 客戶端 ID    |
 | `room` | string | ✅    | 聊天室 ID    |
 
-#### 范例请求
+#### 範例請求
 
-**静音特定聊天室**
+**靜音特定聊天室**
 
 ```http
 POST /admin/clients/aaa/mute/demo?limit=10&skip=100 HTTP/1.1
 IM-API-KEY: {IM-API-KEY}
-Host: localhost:3100
+Host: your-app.imkit.io
 Connection: close
 User-Agent: Paw/3.1.10 (Macintosh; OS X/10.15.7) GCDHTTPRequest
 Content-Length: 0
 ```
 
+**JavaScript 範例：**
+
+```javascript
+const response = await axios.post(
+  `https://your-app.imkit.io/admin/clients/${uid}/mute/${room}`,
+  {},
+  {
+    headers: {
+      "IM-API-KEY": process.env.IM_API_KEY,
+    },
+  }
+);
+```
+
+**cURL 範例：**
+
+```bash
+curl -X "POST" "https://your-app.imkit.io/admin/clients/{uid}/mute/{room}" \
+     -H 'IM-API-KEY: {您的_API_KEY}'
+```
+
 #### Response
 
-**成功响应（200 OK）**
+**成功回應（200 OK）**
 
-| 参数     | 类型   | 说明                       |
+| 參數     | 類型   | 說明                       |
 | -------- | ------ | -------------------------- |
-| `RC`     | number | 响应代码（0 表示成功）     |
-| `RM`     | string | 响应消息                   |
-| `result` | object | 更新后的客户端数据         |
+| `RC`     | number | 回應代碼（0 表示成功）     |
+| `RM`     | string | 回應訊息                   |
+| `result` | object | 更新後的客戶端資料         |
 
-**客户端数据对象结构**
+**客戶端資料物件結構**
 
-| 参数              | 类型   | 说明                          |
+| 參數              | 類型   | 說明                          |
 | ----------------- | ------ | ----------------------------- |
-| `mute`            | array  | 静音的聊天室 ID 列表          |
-| `isRobot`         | bool   | 是否为机器人                  |
-| `_id`             | string | 客户端唯一识别码              |
-| `appID`           | string | 应用程序识别码                |
-| `description`     | string | 客户端描述                    |
-| `avatarUrl`       | string | 头像 URL                      |
-| `nickname`        | string | 昵称                          |
-| `email`           | string | 电子信箱                      |
-| `address`         | object | 连接地址信息                  |
-| `userAgent`       | string | 用户代理字符串                |
-| `updatedAt`       | string | 最后更新时间                  |
-| `lastLoginTimeMS` | number | 最后登录时间（毫秒时间戳）    |
+| `mute`            | array  | 靜音的聊天室 ID 列表          |
+| `isRobot`         | bool   | 是否為機器人                  |
+| `_id`             | string | 客戶端唯一識別碼              |
+| `appID`           | string | 應用程式識別碼                |
+| `description`     | string | 客戶端描述                    |
+| `avatarUrl`       | string | 頭像 URL                      |
+| `nickname`        | string | 暱稱                          |
+| `email`           | string | 電子信箱                      |
+| `address`         | object | 連線地址資訊                  |
+| `userAgent`       | string | 使用者代理字串                |
+| `updatedAt`       | string | 最後更新時間                  |
+| `lastLoginTimeMS` | number | 最後登入時間（毫秒時間戳）    |
 
-#### 范例响应
+#### 範例回應
 
 ```json
 {
@@ -98,9 +119,9 @@ Content-Length: 0
 }
 ```
 
-#### 错误响应
+#### 錯誤回應
 
-**401 Unauthorized** - 认证失败
+**401 Unauthorized** - 認證失敗
 
 ```json
 {
@@ -113,7 +134,7 @@ Content-Length: 0
 }
 ```
 
-**404 Not Found** - 客户端不存在
+**404 Not Found** - 客戶端不存在
 
 ```json
 {
@@ -141,30 +162,30 @@ Content-Length: 0
 
 ------
 
-## 使用场景
+## 使用場景
 
 ### 通知管理
-- **减少干扰**：暂时停止接收特定聊天室的通知
-- **专注工作**：在重要工作时段静音不重要的聊天室
-- **夜间模式**：夜间时段自动静音所有聊天室
+- **減少干擾**：暫時停止接收特定聊天室的通知
+- **專注工作**：在重要工作時段靜音不重要的聊天室
+- **夜間模式**：夜間時段自動靜音所有聊天室
 
-### 用户体验优化
-- **个人偏好**：根据个人喜好调整通知设置
-- **情境切换**：在不同使用情境下快速调整通知状态
-- **批量管理**：统一管理多个聊天室的通知设置
+### 用戶體驗優化
+- **個人偏好**：根據個人喜好調整通知設定
+- **情境切換**：在不同使用情境下快速調整通知狀態
+- **批量管理**：統一管理多個聊天室的通知設定
 
 ### 管理功能
-- **后台控制**：管理员可为特定用户设置聊天室静音
-- **用户支持**：协助用户解决通知相关问题
-- **系统维护**：在系统维护期间暂时静音通知
+- **後台控制**：管理員可為特定用戶設定聊天室靜音
+- **用戶支援**：協助用戶解決通知相關問題
+- **系統維護**：在系統維護期間暫時靜音通知
 
 ------
 
-## 注意事项
+## 注意事項
 
-- **仅影响通知**：静音只会停止通知推送，不影响聊天室内的正常互动
-- **管理员权限**：此 API 需要管理员权限和 API Key
-- **持久化设置**：静音设置会永久保存，直到手动取消
-- **数组更新**：每次静音会将新的聊天室 ID 加入 mute 数组
-- **查询参数**：API 支持 limit 和 skip 参数，但不影响静音功能本身
-- **即时生效**：静音设置会立即生效，无需重新登录
+- **僅影響通知**：靜音只會停止通知推送，不影響聊天室內的正常互動
+- **管理員權限**：此 API 需要管理員權限和 API Key
+- **持久化設定**：靜音設定會永久保存，直到手動取消
+- **陣列更新**：每次靜音會將新的聊天室 ID 加入 mute 陣列
+- **查詢參數**：API 支援 limit 和 skip 參數，但不影響靜音功能本身
+- **即時生效**：靜音設定會立即生效，無需重新登入

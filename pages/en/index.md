@@ -1,39 +1,39 @@
-# Introduction
+# 基本介紹
 
-The IMKIT Platform API is the core API service of the IMKIT Chat Server, developed by [FUNTEK](https://funtek.co/), specifically designed for developers integrating the IMKIT SDK. It allows you to quickly build real-time messaging services for various scenarios. Whether it's 1-on-1 private conversations or multi-user group chats, the IMKIT Platform API can meet your scenario requirements.
+IMKIT Platform API 是 IMKIT Chat Server 的核心 API 服務，由 [FUNTEK 樂堤科技](https://funtek.co/) 開發，專為導入 IMKIT SDK 的開發者所設計，讓您能夠快速建立各種場景的即時通訊服務。無論是 1-on-1 私人對談或多人群組聊天，IMKIT Platform API 都能滿足您的場景需求。
 
-You can also visit our [official website](https://imkit.io/) to learn more about IMKIT's product information.
+你也可以訪問我們的 [官方網站](https://imkit.io/) 以了解更多關於 IMKIT 的產品資訊。
 
-## Advantages of IMKIT Platform API
+## IMKIT Platform API 的優勢
 
-### Quick Integration
+### 快速整合
 
-Compared to traditional chat functionality development approaches, the IMKIT Platform API allows you to complete a full real-time messaging backend service within hours, without spending extensive time building chat servers, focusing your time and energy on core product development.
+對比傳統的聊天功能開發方式，IMKIT Platform API 可以讓你在幾小時內完成完整的即時通訊後端服務，而不需要花費長時間時間建置聊天伺服器，把時間精力專注於核心產品的開發。
 
-- Ready-to-use chat API service upon registration
-- Complete API support from users and chat rooms to real-time messaging
-- Flexible scenario support capabilities
-- Automatic message routing and storage handling
+- 註冊即用的聊天 API 服務
+- 從用戶、聊天室到即時通訊完整的 API 支援
+- 彈性的場景支援能力
+- 自動處理訊息路由與儲存
 
-### Complete API Functionality
+### 完整的 API 功能
 
-The IMKIT Platform API provides the API functionality needed to build most chat applications.
+IMKIT Platform API 提供了建構大多數聊天應用所需的 API 功能。
 
-- **User Management API** - Create and update user data
-- **Chat Room Management API** - Create groups and one-on-one chat rooms
-- **Message Sending API** - Support for text, images, files, and other multimedia messages
-- **Moderation API** - Sensitive word filtering, chat room member management, user blocking
+- **用戶管理 API** - 建立、更新用戶資料
+- **聊天室管理 API** - 建立群組、一對一聊天室
+- **訊息傳送 API** - 支援文字、圖片、檔案等多媒體訊息
+- **管理機制 API** - 敏感字詞、聊天室成員管理、用戶封鎖
 
-### Enterprise-Grade Reliability
+### 企業級可靠性
 
-Based on FUNTEK's years of experience serving large-scale projects and cloud infrastructure, we provide highly available API services that support large-scale concurrent request processing.
+基於 FUNTEK 樂堤科技多年的大型專案服務經驗與雲端基礎設施，提供高可用性的 API 服務，支援大規模並發請求處理。
 
-### Security Assurance
+### 安全性保障
 
-- Dual authentication with API Key and JWT Token
-- End-to-end message encryption
-- Complete API call logging and tracking
+- API Key 和 JWT Token 雙重認證
+- 端對端訊息加密
+- 完整的 API 呼叫日誌追蹤
 
 ------
 
-Start using the IMKIT Platform API to give your application professional real-time messaging backend services!
+開始使用 IMKIT Platform API，讓你的應用程式擁有專業的即時通訊後端服務！

@@ -1,16 +1,16 @@
-# 置顶消息
+# 釘選訊息
 
 ## 概述
 
-此端点允许聊天室拥有者或管理员将指定消息置顶至聊天室顶部，方便成员快速查阅重要消息。
+此端點允許聊天室擁有者或管理員將指定訊息釘選至聊天室頂部，方便成員快速查閱重要訊息。每個聊天室同一時間只能有一則釘選訊息。
 
 ------
 
-## API 端点
+## API 端點
 
-### 置顶消息
+### 釘選訊息
 
-将指定消息置顶至聊天室顶部。
+將指定訊息釘選至聊天室頂部。
 
 ```http
 POST /messages/:id/pin
@@ -18,34 +18,34 @@ POST /messages/:id/pin
 
 #### Headers
 
-| 参数               | 类型   | 必填 | 说明         |
+| 參數               | 類型   | 必填 | 說明         |
 | ------------------ | ------ | ---- | ------------ |
-| `IM-CLIENT-KEY`    | string | ✅   | 客户端密钥   |
-| `IM-Authorization` | string | ✅   | 客户端令牌   |
+| `IM-CLIENT-KEY`    | string | ✅   | 用戶端金鑰   |
+| `IM-Authorization` | string | ✅   | 用戶端權杖   |
 
 #### Path Parameters
 
-| 参数  | 类型   | 必填 | 说明             |
+| 參數  | 類型   | 必填 | 說明             |
 | ----- | ------ | ---- | ---------------- |
-| `:id` | string | ✅   | 消息唯一标识符   |
+| `:id` | string | ✅   | 訊息唯一識別碼   |
 
-此 API 无需请求内容（Request Body）。
+此 API 無需請求內容（Request Body）。
 
-#### 示例请求
+#### 範例請求
 
-**cURL 示例：**
+**cURL 範例：**
 
 ```bash
-curl -X "POST" "http://localhost:3100/messages/5f890cf37d980e06f6aaf349/pin" \
+curl -X "POST" "https://your-app.imkit.io/messages/5f890cf37d980e06f6aaf349/pin" \
      -H 'IM-CLIENT-KEY: {您的_CLIENT_KEY}' \
      -H 'IM-Authorization: {您的_TOKEN}'
 ```
 
-**JavaScript 示例：**
+**JavaScript 範例：**
 
 ```javascript
 const response = await axios.post(
-  `http://localhost:3100/messages/${messageID}/pin`,
+  `https://your-app.imkit.io/messages/${messageID}/pin`,
   null,
   {
     headers: {
@@ -58,22 +58,22 @@ const response = await axios.post(
 
 #### Response
 
-**成功响应（200 OK）**
+**成功回應（200 OK）**
 
-| 参数                  | 类型    | 说明                               |
+| 參數                  | 類型    | 說明                               |
 | --------------------- | ------- | ---------------------------------- |
-| `RC`                  | number  | 响应码（0 表示成功）               |
-| `RM`                  | string  | 响应消息                           |
-| `result._id`          | string  | 消息唯一标识符                     |
-| `result.message`      | string  | 消息内容                           |
-| `result.room`         | string  | 所属聊天室 ID                      |
-| `result.sender`       | object  | 消息发送者信息                     |
-| `result.messageType`  | string  | 消息类型                           |
-| `result.pinned`       | boolean | 是否已置顶（置顶后为 `true`）      |
-| `result.messageTimeMS`| number  | 消息发送时间戳（毫秒）             |
-| `result.updatedAtMS`  | number  | 最后更新时间戳（毫秒）             |
+| `RC`                  | number  | 回應代碼（0 表示成功）             |
+| `RM`                  | string  | 回應訊息                           |
+| `result._id`          | string  | 訊息唯一識別碼                     |
+| `result.message`      | string  | 訊息內容                           |
+| `result.room`         | string  | 所屬聊天室 ID                      |
+| `result.sender`       | object  | 訊息發送者資訊                     |
+| `result.messageType`  | string  | 訊息類型                           |
+| `result.pinned`       | boolean | 是否已釘選（釘選後為 `true`）      |
+| `result.messageTimeMS`| number  | 訊息發送時間戳（毫秒）             |
+| `result.updatedAtMS`  | number  | 最後更新時間戳（毫秒）             |
 
-#### 示例响应
+#### 範例回應
 
 ```json
 {
@@ -81,7 +81,7 @@ const response = await axios.post(
   "RM": "OK",
   "result": {
     "_id": "5f890cf37d980e06f6aaf349",
-    "message": "重要公告：明天下午两点开会",
+    "message": "重要公告：明天下午兩點開會",
     "room": "demo-room",
     "sender": {
       "_id": "aaa",
@@ -102,27 +102,27 @@ const response = await axios.post(
 }
 ```
 
-#### 错误响应
+#### 錯誤回應
 
-当请求失败时，您会收到包含错误详细信息的错误响应。常见的错误情况包括：
+當請求失敗時，您會收到包含錯誤詳細資訊的錯誤回應。常見的錯誤情況包括：
 
-- 无效的客户端密钥或授权令牌
-- 指定的消息不存在
-- 当前用户不是聊天室拥有者或管理员
-- 服务器内部错误
-
-------
-
-## 使用场景
-
-### 重要消息管理
-
-- **公告置顶**：将重要公告置顶至聊天室顶部，确保所有成员都能看到
-- **快速查阅**：让成员无需翻阅历史消息即可找到关键信息
+- 無效的用戶端金鑰或授權權杖
+- 指定的訊息不存在
+- 當前用戶不是聊天室擁有者或管理員
+- 伺服器內部錯誤
 
 ------
 
-## 注意事项
+## 使用場景
 
-- **权限限制**：仅聊天室**拥有者（owner）**或**管理员（admin）**可以执行置顶操作
-- 若要取消置顶，请使用[取消置顶消息](./unpin-a-message) API
+### 重要訊息管理
+
+- **公告置頂**：將重要公告釘選至聊天室頂部，確保所有成員都能看到
+- **快速查閱**：讓成員無需翻閱歷史訊息即可找到關鍵資訊
+
+------
+
+## 注意事項
+
+- **權限限制**：僅聊天室**擁有者（owner）**或**管理員（admin）**可以執行釘選操作
+- 若要取消釘選，請使用[取消釘選訊息](./unpin-a-message) API

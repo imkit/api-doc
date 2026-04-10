@@ -1,16 +1,16 @@
-# 封锁用户
+# 封鎖用戶
 
 ## 概述
 
-封锁指定用户，阻止其与当前用户进行直接聊天。封锁后，被封锁的用户将无法发送私人消息给封锁者，但不会影响在群组聊天室中的互动。此功能适用于防止骚扰和管理个人隐私。
+封鎖指定用戶，阻止其與當前用戶進行直接聊天。封鎖後，被封鎖的用戶將無法發送私人訊息給封鎖者，但不會影響在群組聊天室中的互動。此功能適用於防止騷擾和管理個人隱私。
 
 ------
 
-## API 端点
+## API 端點
 
-### 封锁指定用户
+### 封鎖指定用戶
 
-将指定用户加入封锁清单，阻止其进行直接聊天。
+將指定用戶加入封鎖清單，阻止其進行直接聊天。
 
 ```http
 POST /blockStatus/my/{blockee}
@@ -18,70 +18,93 @@ POST /blockStatus/my/{blockee}
 
 #### Headers
 
-| 参数               | 类型   | 必填 | 说明           |
+| 參數               | 類型   | 必填 | 說明           |
 | ------------------ | ------ | ---- | -------------- |
 | `IM-CLIENT-KEY`    | string | ✅    | Client Key     |
 | `IM-Authorization` | string | ✅    | Client Token   |
 
 #### Path Parameters
 
-| 参数      | 类型   | 必填 | 说明              |
+| 參數      | 類型   | 必填 | 說明              |
 | --------- | ------ | ---- | ----------------- |
-| `blockee` | string | ✅    | 要封锁的用户 ID   |
+| `blockee` | string | ✅    | 要封鎖的用戶 ID   |
 
-#### 范例请求
+#### 範例請求
 
-**封锁特定用户**
+**封鎖特定用戶**
 
 ```http
 POST /blockStatus/my/ccc HTTP/1.1
 IM-CLIENT-KEY: {IM-CLIENT-KEY}
 IM-Authorization: {TOKEN}
-Host: localhost:3100
+Host: your-app.imkit.io
 Connection: close
 ```
 
-**封锁其他用户**
+**封鎖其他用戶**
 
 ```http
 POST /blockStatus/my/user123 HTTP/1.1
 IM-CLIENT-KEY: {IM-CLIENT-KEY}
 IM-Authorization: {TOKEN}
-Host: localhost:3100
+Host: your-app.imkit.io
 Connection: close
+```
+
+**JavaScript 範例：**
+
+```javascript
+const response = await axios.post(
+  `https://your-app.imkit.io/blockStatus/my/${blockee}`,
+  {},
+  {
+    headers: {
+      "IM-CLIENT-KEY": IM_CLIENT_KEY,
+      "IM-Authorization": TOKEN,
+    },
+  }
+);
+```
+
+**cURL 範例：**
+
+```bash
+curl -X "POST" "https://your-app.imkit.io/blockStatus/my/{blockee}" \
+     -H 'IM-CLIENT-KEY: {您的_CLIENT_KEY}' \
+     -H 'IM-Authorization: {您的_TOKEN}'
 ```
 
 #### Response
 
-**成功响应（200 OK）**
+**成功回應（200 OK）**
 
-| 参数     | 类型   | 说明                   |
+| 參數     | 類型   | 說明                   |
 | -------- | ------ | ---------------------- |
-| `RC`     | number | 响应代码（0 表示成功） |
-| `RM`     | string | 响应消息               |
-| `result` | object | 封锁状态信息           |
+| `RC`     | number | 回應代碼（0 表示成功） |
+| `RM`     | string | 回應訊息               |
+| `result` | object | 封鎖狀態資訊           |
 
-**封锁状态对象结构**
+**封鎖狀態物件結構**
 
-| 参数        | 类型   | 说明                          |
+| 參數        | 類型   | 說明                          |
 | ----------- | ------ | ----------------------------- |
-| `appID`     | string | 应用程序识别码                |
-| `blockee`   | object | 被封锁用户的详细信息          |
-| `blocker`   | string | 执行封锁的用户 ID             |
-| `room`      | string | 关联的聊天室 ID               |
-| `createdAt` | string | 封锁创建时间                  |
-| `updatedAt` | string | 封锁更新时间                  |
+| `appID`     | string | 應用程式識別碼                |
+| `blockee`   | object | 被封鎖用戶的詳細資訊          |
+| `blocker`   | string | 執行封鎖的用戶 ID             |
+| `room`      | string | 關聯的聊天室 ID               |
+| `createdAt` | string | 封鎖創建時間                  |
+| `updatedAt` | string | 封鎖更新時間                  |
 
-**被封锁用户对象结构**
+**被封鎖用戶物件結構**
 
-| 参数              | 类型   | 说明                          |
+| 參數              | 類型   | 說明                          |
 | ----------------- | ------ | ----------------------------- |
-| `_id`             | string | 用户唯一识别码                |
-| `nickname`        | string | 用户昵称                      |
-| `avatarUrl`       | string | 用户头像 URL                  |
-| `lastLoginTimeMS` | number | 最后登录时间（毫秒时间戳）    |
+| `_id`             | string | 用戶唯一識別碼                |
+| `nickname`        | string | 用戶暱稱                      |
+| `avatarUrl`       | string | 用戶頭像 URL                  |
+| `lastLoginTimeMS` | number | 最後登入時間（毫秒時間戳）    |
 
-#### 范例响应
+#### 範例回應
 
 ```json
 {
@@ -104,9 +127,9 @@ Connection: close
 }
 ```
 
-#### 错误响应
+#### 錯誤回應
 
-**401 Unauthorized** - 认证失败
+**401 Unauthorized** - 認證失敗
 
 ```json
 {
@@ -119,7 +142,7 @@ Connection: close
 }
 ```
 
-**404 Not Found** - 用户不存在
+**404 Not Found** - 用戶不存在
 
 ```json
 {
@@ -132,7 +155,7 @@ Connection: close
 }
 ```
 
-**400 Bad Request** - 不能封锁自己
+**400 Bad Request** - 不能封鎖自己
 
 ```json
 {
@@ -145,7 +168,7 @@ Connection: close
 }
 ```
 
-**409 Conflict** - 用户已被封锁
+**409 Conflict** - 用戶已被封鎖
 
 ```json
 {
@@ -160,30 +183,30 @@ Connection: close
 
 ------
 
-## 使用场景
+## 使用場景
 
-### 个人隐私保护
-- **防止骚扰**：阻止不当用户发送私人消息
-- **隐私管理**：控制谁能与自己进行直接联系
-- **安全防护**：防范恶意用户的持续骚扰行为
+### 個人隱私保護
+- **防止騷擾**：阻止不當用戶發送私人訊息
+- **隱私管理**：控制誰能與自己進行直接聯絡
+- **安全防護**：防範惡意用戶的持續騷擾行為
 
-### 用户体验改善
-- **内容过滤**：避免接收不想要的消息内容
-- **环境净化**：创造更舒适的聊天环境
-- **专注工作**：减少非必要的打扰和干扰
+### 用戶體驗改善
+- **內容過濾**：避免接收不想要的訊息內容
+- **環境淨化**：創造更舒適的聊天環境
+- **專注工作**：減少非必要的打擾和干擾
 
 ### 社群管理
-- **行为规范**：对违规用户采取个人层级的防护措施
-- **冲突处理**：处理用户间的个人冲突
-- **自主管理**：让用户自行管理个人的社交圈
+- **行為規範**：對違規用戶採取個人層級的防護措施
+- **衝突處理**：處理用戶間的個人衝突
+- **自主管理**：讓用戶自行管理個人的社交圈
 
 ------
 
-## 注意事项
+## 注意事項
 
-- **仅限直接聊天**：封锁只影响私人聊天，不影响群组聊天室中的互动
-- **双向效果**：封锁生效后，双方都无法发送私人消息
-- **自动创建聊天室**：封锁会关联到相应的直接聊天室
-- **不能自封**：无法封锁自己的账号
-- **重复封锁**：对已封锁的用户执行封锁会返回冲突错误
-- **状态持久**：封锁状态会持续存在，直到手动解除封锁
+- **僅限直接聊天**：封鎖只影響私人聊天，不影響群組聊天室中的互動
+- **雙向效果**：封鎖生效後，雙方都無法發送私人訊息
+- **自動創建聊天室**：封鎖會關聯到相應的直接聊天室
+- **不能自封**：無法封鎖自己的帳號
+- **重複封鎖**：對已封鎖的用戶執行封鎖會返回衝突錯誤
+- **狀態持久**：封鎖狀態會持續存在，直到手動解除封鎖

@@ -37,7 +37,7 @@ POST /config
 
 ```javascript
 const response = await axios.post(
-  "https://imkit-dev.funtek.io/config",
+  "https://your-app.imkit.io/config",
   {
     announcement: {
       text: "系統將於 2026/04/15 02:00 進行例行維護，預計維護時間 2 小時。",
@@ -57,7 +57,7 @@ const response = await axios.post(
 
 ```javascript
 const response = await axios.post(
-  "https://imkit-dev.funtek.io/config",
+  "https://your-app.imkit.io/config",
   {
     censorship: {
       keywords: ["廣告", "垃圾訊息", "詐騙"]
@@ -75,7 +75,7 @@ const response = await axios.post(
 **cURL - 設定多項組態**
 
 ```bash
-curl -X POST "https://imkit-dev.funtek.io/config" \
+curl -X POST "https://your-app.imkit.io/config" \
   -H "IM-API-KEY: your_api_key" \
   -H "Content-Type: application/json; charset=utf-8" \
   -d '{

@@ -45,6 +45,33 @@ PUT /admin/clients/{client_id}/token
 }
 ```
 
+**JavaScript 範例：**
+
+```javascript
+const response = await axios.put(
+  `https://your-app.imkit.io/admin/clients/${clientId}/token`,
+  {
+    token: "new-token-001",
+    expirationDate: "2026-01-01T00:00:00Z",
+  },
+  {
+    headers: {
+      "IM-API-KEY": process.env.IM_API_KEY,
+      "Content-Type": "application/json",
+    },
+  }
+);
+```
+
+**cURL 範例：**
+
+```bash
+curl -X "PUT" "https://your-app.imkit.io/admin/clients/{client_id}/token" \
+     -H 'IM-API-KEY: {您的_API_KEY}' \
+     -H 'Content-Type: application/json' \
+     -d '{"token": "new-token-001", "expirationDate": "2026-01-01T00:00:00Z"}'
+```
+
 #### Response
 
 **成功回應（200 OK）**

@@ -1,16 +1,16 @@
-# 更新成员属性
+# 更新成員屬性
 
 ## 概述
 
-此端点允许您更新聊天室中特定成员的自定义属性，例如角色（role）、位置、分数、等级或任何自定义字段。此 API 仅供服务端使用，需要适当的身份验证。
+此端點允許您更新聊天室中特定成員的自訂屬性，例如角色（role）、位置、分數、等級或任何自訂欄位。此 API 僅供伺服器端使用，需要適當的身份驗證。
 
 ------
 
-## API 端点
+## API 端點
 
-### 更新成员属性
+### 更新成員屬性
 
-更新聊天室中特定成员的自定义属性。
+更新聊天室中特定成員的自訂屬性。
 
 ```http
 PUT /rooms/:id/member/:client
@@ -18,44 +18,44 @@ PUT /rooms/:id/member/:client
 
 #### Headers
 
-| 参数 | 类型 | 必填 | 说明 |
+| 參數 | 類型 | 必填 | 說明 |
 | --- | --- | --- | --- |
-| `IM-CLIENT-KEY` | string | ✅ | 客户端密钥 |
-| `IM-Authorization` | string | ✅ | 客户端令牌 |
+| `IM-CLIENT-KEY` | string | ✅ | 用戶端金鑰 |
+| `IM-Authorization` | string | ✅ | 用戶端權杖 |
 
 #### Path Parameters
 
-| 参数 | 类型 | 必填 | 说明 |
+| 參數 | 類型 | 必填 | 說明 |
 | --- | --- | --- | --- |
-| `:id` | string | ✅ | 聊天室唯一标识符 |
-| `:client` | string | ✅ | 成员的客户端 ID |
+| `:id` | string | ✅ | 聊天室唯一識別碼 |
+| `:client` | string | ✅ | 成員的用戶端 ID |
 
 #### Post Body
 
-| 参数 | 类型 | 必填 | 说明 |
+| 參數 | 類型 | 必填 | 說明 |
 | --- | --- | --- | --- |
-| `property` | string | ✅ | 要更新的成员属性字段名称 |
-| `value` | mixed | ✅ | 属性的新值 |
+| `property` | string | ✅ | 要更新的成員屬性欄位名稱 |
+| `value` | mixed | ✅ | 屬性的新值 |
 
-#### 示例请求
+#### 範例請求
 
-**示例一：将成员设为管理员**
+**範例一：將成員設為管理員**
 
-**cURL 示例：**
+**cURL 範例：**
 
 ```bash
-curl -X "PUT" "http://localhost:3100/rooms/demo-room/member/user-001" \
+curl -X "PUT" "https://your-app.imkit.io/rooms/demo-room/member/user-001" \
      -H 'IM-CLIENT-KEY: {您的_CLIENT_KEY}' \
      -H 'IM-Authorization: {您的_TOKEN}' \
      -H 'Content-Type: application/json; charset=utf-8' \
      -d '{"property": "role", "value": "admin"}'
 ```
 
-**JavaScript 示例：**
+**JavaScript 範例：**
 
 ```javascript
 const response = await axios.put(
-  `http://localhost:3100/rooms/${roomID}/member/${clientID}`,
+  `https://your-app.imkit.io/rooms/${roomID}/member/${clientID}`,
   {
     property: "role",
     value: "admin",
@@ -70,13 +70,13 @@ const response = await axios.put(
 );
 ```
 
-**示例二：更新自定义属性**
+**範例二：更新自訂屬性**
 
-**JavaScript 示例：**
+**JavaScript 範例：**
 
 ```javascript
 const response = await axios.put(
-  `http://localhost:3100/rooms/${roomID}/member/${clientID}`,
+  `https://your-app.imkit.io/rooms/${roomID}/member/${clientID}`,
   {
     property: "score",
     value: 100,
@@ -93,15 +93,15 @@ const response = await axios.put(
 
 #### Response
 
-**成功响应（200 OK）**
+**成功回應（200 OK）**
 
-| 参数 | 类型 | 说明 |
+| 參數 | 類型 | 說明 |
 | --- | --- | --- |
-| `RC` | number | 响应码（0 表示成功） |
-| `RM` | string | 响应消息 |
-| `result` | object | 更新后的聊天室完整信息 |
+| `RC` | number | 回應代碼（0 表示成功） |
+| `RM` | string | 回應訊息 |
+| `result` | object | 更新後的聊天室完整資訊 |
 
-#### 示例响应
+#### 範例回應
 
 ```json
 {
@@ -127,30 +127,30 @@ const response = await axios.put(
 }
 ```
 
-#### 错误响应
+#### 錯誤回應
 
-当请求失败时，您会收到包含错误详细信息的错误响应。常见的错误情况包括：
+當請求失敗時，您會收到包含錯誤詳細資訊的錯誤回應。常見的錯誤情況包括：
 
-- 无效的客户端密钥或授权令牌
-- 指定的聊天室或成员不存在
-- 服务器内部错误
+- 無效的用戶端金鑰或授權權杖
+- 指定的聊天室或成員不存在
+- 伺服器內部錯誤
 
 ------
 
-## 使用场景
+## 使用場景
 
 ### 角色管理
-- **指派管理员**：将 `property` 设为 `"role"`、`value` 设为 `"admin"` 来指派管理员角色
+- **指派管理員**：將 `property` 設為 `"role"`、`value` 設為 `"admin"` 來指派管理員角色
 
-### 自定义属性
-- **设置分数**：将 `property` 设为 `"score"` 来追踪成员在聊天室中的分数
-- **设置等级**：将 `property` 设为 `"level"` 来管理成员等级
-- **设置位置**：将 `property` 设为 `"location"` 来记录成员位置信息
+### 自訂屬性
+- **設定分數**：將 `property` 設為 `"score"` 來追蹤成員在聊天室中的分數
+- **設定等級**：將 `property` 設為 `"level"` 來管理成員等級
+- **設定位置**：將 `property` 設為 `"location"` 來記錄成員位置資訊
 
 ------
 
-## 注意事项
+## 注意事項
 
-- **角色设置**：当 `property` 设为 `"role"` 且 `value` 设为 `"admin"` 时，系统会自动在聊天室内生成 `assignAdmin` 系统消息
-- **自定义属性**：除了 `role` 之外，可设置任意自定义属性，例如位置（`location`）、分数（`score`）、等级（`level`）等
-- `property` 字段直接对应成员属性对象中的字段名称，`value` 的类型应与字段定义相符
+- **角色設定**：當 `property` 設為 `"role"` 且 `value` 設為 `"admin"` 時，系統會自動在聊天室內產生 `assignAdmin` 系統訊息
+- **自訂屬性**：除了 `role` 之外，可設定任意自訂屬性，例如位置（`location`）、分數（`score`）、等級（`level`）等
+- `property` 欄位直接對應到成員屬性物件中的欄位名稱，`value` 的型別應與欄位定義相符

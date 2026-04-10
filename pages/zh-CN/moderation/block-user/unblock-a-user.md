@@ -1,16 +1,16 @@
-# 解除封锁用户
+# 解除封鎖用戶
 
 ## 概述
 
-解除对指定用户的封锁状态，恢复其与当前用户进行直接聊天的能力。解除封锁后，双方可以重新发送私人消息，但不会影响群组聊天室中的互动状态。此功能适用于修复误操作或重新建立联系关系。
+解除對指定用戶的封鎖狀態，恢復其與當前用戶進行直接聊天的能力。解除封鎖後，雙方可以重新發送私人訊息，但不會影響群組聊天室中的互動狀態。此功能適用於修復誤操作或重新建立聯絡關係。
 
 ------
 
-## API 端点
+## API 端點
 
-### 解除封锁指定用户
+### 解除封鎖指定用戶
 
-将指定用户从封锁清单中移除，恢复直接聊天功能。
+將指定用戶從封鎖清單中移除，恢復直接聊天功能。
 
 ```http
 DELETE /blockStatus/my/{blockee}
@@ -18,71 +18,93 @@ DELETE /blockStatus/my/{blockee}
 
 #### Headers
 
-| 参数               | 类型   | 必填 | 说明           |
+| 參數               | 類型   | 必填 | 說明           |
 | ------------------ | ------ | ---- | -------------- |
 | `IM-CLIENT-KEY`    | string | ✅    | Client Key     |
 | `IM-Authorization` | string | ✅    | Client Token   |
 
 #### Path Parameters
 
-| 参数      | 类型   | 必填 | 说明                  |
+| 參數      | 類型   | 必填 | 說明                  |
 | --------- | ------ | ---- | --------------------- |
-| `blockee` | string | ✅    | 要解除封锁的用户 ID   |
+| `blockee` | string | ✅    | 要解除封鎖的用戶 ID   |
 
-#### 范例请求
+#### 範例請求
 
-**解除封锁特定用户**
+**解除封鎖特定用戶**
 
 ```http
 DELETE /blockStatus/my/ddd HTTP/1.1
 IM-CLIENT-KEY: {IM-CLIENT-KEY}
 IM-Authorization: {TOKEN}
-Host: localhost:3100
+Host: your-app.imkit.io
 Connection: close
 ```
 
-**解除封锁其他用户**
+**解除封鎖其他用戶**
 
 ```http
 DELETE /blockStatus/my/user123 HTTP/1.1
 IM-CLIENT-KEY: {IM-CLIENT-KEY}
 IM-Authorization: {TOKEN}
-Host: localhost:3100
+Host: your-app.imkit.io
 Connection: close
+```
+
+**JavaScript 範例：**
+
+```javascript
+const response = await axios.delete(
+  `https://your-app.imkit.io/blockStatus/my/${blockee}`,
+  {
+    headers: {
+      "IM-CLIENT-KEY": IM_CLIENT_KEY,
+      "IM-Authorization": TOKEN,
+    },
+  }
+);
+```
+
+**cURL 範例：**
+
+```bash
+curl -X "DELETE" "https://your-app.imkit.io/blockStatus/my/{blockee}" \
+     -H 'IM-CLIENT-KEY: {您的_CLIENT_KEY}' \
+     -H 'IM-Authorization: {您的_TOKEN}'
 ```
 
 #### Response
 
-**成功响应（200 OK）**
+**成功回應（200 OK）**
 
-| 参数     | 类型   | 说明                   |
+| 參數     | 類型   | 說明                   |
 | -------- | ------ | ---------------------- |
-| `RC`     | number | 响应代码（0 表示成功） |
-| `RM`     | string | 响应消息               |
-| `result` | object | 解除封锁状态信息       |
+| `RC`     | number | 回應代碼（0 表示成功） |
+| `RM`     | string | 回應訊息               |
+| `result` | object | 解除封鎖狀態資訊       |
 
-**解除封锁状态对象结构**
+**解除封鎖狀態物件結構**
 
-| 参数        | 类型   | 说明                          |
+| 參數        | 類型   | 說明                          |
 | ----------- | ------ | ----------------------------- |
-| `appID`     | string | 应用程序识别码                |
-| `blockee`   | object | 被解除封锁用户的详细信息      |
-| `blocker`   | string | 执行解除封锁的用户 ID         |
-| `room`      | string | 关联的聊天室 ID               |
-| `createdAt` | string | 原封锁创建时间                |
-| `updatedAt` | string | 解除封锁时间                  |
+| `appID`     | string | 應用程式識別碼                |
+| `blockee`   | object | 被解除封鎖用戶的詳細資訊      |
+| `blocker`   | string | 執行解除封鎖的用戶 ID         |
+| `room`      | string | 關聯的聊天室 ID               |
+| `createdAt` | string | 原封鎖創建時間                |
+| `updatedAt` | string | 解除封鎖時間                  |
 
-**被解除封锁用户对象结构**
+**被解除封鎖用戶物件結構**
 
-| 参数              | 类型   | 说明                          |
+| 參數              | 類型   | 說明                          |
 | ----------------- | ------ | ----------------------------- |
-| `_id`             | string | 用户唯一识别码                |
-| `nickname`        | string | 用户昵称                      |
-| `avatarUrl`       | string | 用户头像 URL                  |
-| `id`              | string | 用户 ID                       |
-| `lastLoginTimeMS` | number | 最后登录时间（毫秒时间戳）    |
+| `_id`             | string | 用戶唯一識別碼                |
+| `nickname`        | string | 用戶暱稱                      |
+| `avatarUrl`       | string | 用戶頭像 URL                  |
+| `id`              | string | 用戶 ID                       |
+| `lastLoginTimeMS` | number | 最後登入時間（毫秒時間戳）    |
 
-#### 范例响应
+#### 範例回應
 
 ```json
 {
@@ -105,9 +127,9 @@ Connection: close
 }
 ```
 
-#### 错误响应
+#### 錯誤回應
 
-**401 Unauthorized** - 认证失败
+**401 Unauthorized** - 認證失敗
 
 ```json
 {
@@ -120,7 +142,7 @@ Connection: close
 }
 ```
 
-**404 Not Found** - 封锁关系不存在
+**404 Not Found** - 封鎖關係不存在
 
 ```json
 {
@@ -133,7 +155,7 @@ Connection: close
 }
 ```
 
-**400 Bad Request** - 参数无效
+**400 Bad Request** - 參數無效
 
 ```json
 {
@@ -148,30 +170,30 @@ Connection: close
 
 ------
 
-## 使用场景
+## 使用場景
 
-### 关系修复
-- **误操作修正**：解除因误操作而封锁的用户
-- **关系改善**：重新与曾经冲突的用户建立联系
-- **二次机会**：给予被封锁用户重新开始的机会
+### 關係修復
+- **誤操作修正**：解除因誤操作而封鎖的用戶
+- **關係改善**：重新與曾經衝突的用戶建立聯絡
+- **二次機會**：給予被封鎖用戶重新開始的機會
 
-### 管理弹性
-- **动态管理**：根据情况变化调整封锁状态
-- **临时封锁**：短期封锁后恢复正常联系
-- **测试用途**：开发和测试阶段的封锁功能验证
+### 管理彈性
+- **動態管理**：根據情況變化調整封鎖狀態
+- **臨時封鎖**：短期封鎖後恢復正常聯絡
+- **測試用途**：開發和測試階段的封鎖功能驗證
 
-### 用户体验最佳化
-- **便捷操作**：提供简单的解除封锁方式
-- **即时生效**：解除封锁后立即恢复聊天功能
-- **状态同步**：确保封锁状态在各平台同步更新
+### 用戶體驗最佳化
+- **便捷操作**：提供簡單的解除封鎖方式
+- **即時生效**：解除封鎖後立即恢復聊天功能
+- **狀態同步**：確保封鎖狀態在各平台同步更新
 
 ------
 
-## 注意事项
+## 注意事項
 
-- **双向解除**：解除封锁后，双方都可以重新发送私人消息
-- **不存在处理**：尝试解除不存在的封锁关系会返回 404 错误
-- **即时生效**：解除封锁操作会立即生效，无需等待
-- **聊天室关联**：解除封锁不会影响相关聊天室的存在状态
-- **历史记录**：解除封锁不会删除之前的聊天记录
-- **群组不影响**：解除封锁不会影响群组聊天中的互动状态
+- **雙向解除**：解除封鎖後，雙方都可以重新發送私人訊息
+- **不存在處理**：嘗試解除不存在的封鎖關係會返回 404 錯誤
+- **即時生效**：解除封鎖操作會立即生效，無需等待
+- **聊天室關聯**：解除封鎖不會影響相關聊天室的存在狀態
+- **歷史記錄**：解除封鎖不會刪除之前的聊天記錄
+- **群組不影響**：解除封鎖不會影響群組聊天中的互動狀態

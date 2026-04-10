@@ -1,16 +1,16 @@
-# Update Sensitive Words
+# 更新敏感詞設定
 
-## Overview
+## 概述
 
-Update or create the system's sensitive word censorship configuration. Manage blocked word lists through the runtime configuration system to filter inappropriate content in real-time and maintain the quality of the chat environment. This feature is suitable for content censorship, sensitive word management, and platform governance.
+更新或建立系統的敏感詞彙審查配置。透過運行時配置系統管理封鎖用詞列表，可以即時過濾不當內容，維護聊天環境的品質。此功能適用於內容審查、敏感詞管理和平台治理。
 
 ------
 
-## API Endpoint
+## API 端點
 
-### Update Sensitive Word Configuration
+### 更新敏感詞配置
 
-Create or update runtime configuration variables, including sensitive word list settings.
+建立或更新運行時配置變數，包含敏感詞彙列表設定。
 
 ```http
 POST /config
@@ -18,32 +18,32 @@ POST /config
 
 #### Headers
 
-| Parameter | Type | Required | Description |
-| ---- | ---- | ---- | ---- |
-| `IM-API-KEY` | string | ✅ | API Key |
+| 參數         | 類型   | 必填 | 說明        |
+| ------------ | ------ | ---- | ----------- |
+| `IM-API-KEY` | string | ✅    | API Key     |
 
 #### Post Body
 
-| Parameter | Type | Required | Description |
-| ---- | ---- | ---- | ---- |
-| `censorship` | object | ❌ | Content censorship configuration object |
-| `announcement` | object | ❌ | Announcement configuration object (optional) |
+| 參數           | 類型   | 必填 | 說明                    |
+| -------------- | ------ | ---- | ----------------------- |
+| `censorship`   | object | ❌    | 內容審查配置物件        |
+| `announcement` | object | ❌    | 公告配置物件（可選）    |
 
-**Censorship Configuration Object Structure**
+**審查配置物件結構**
 
-| Parameter | Type | Required | Description |
-| ---- | ---- | ---- | ---- |
-| `keywords` | array | ✅ | Array of sensitive words to block |
+| 參數       | 類型  | 必填 | 說明                    |
+| ---------- | ----- | ---- | ----------------------- |
+| `keywords` | array | ✅    | 要封鎖的敏感詞彙陣列    |
 
-#### Example Request
+#### 範例請求
 
-**Set sensitive word list**
+**設定敏感詞列表**
 
 ```http
 POST /config HTTP/1.1
 IM-API-KEY: {API-KEY}
 Content-Type: application/json; charset=utf-8
-Host: localhost:3100
+Host: your-app.imkit.io
 Connection: close
 
 {
@@ -60,13 +60,13 @@ Connection: close
 }
 ```
 
-**Update sensitive word list only**
+**僅更新敏感詞列表**
 
 ```http
 POST /config HTTP/1.1
 IM-API-KEY: {API-KEY}
 Content-Type: application/json; charset=utf-8
-Host: localhost:3100
+Host: your-app.imkit.io
 Connection: close
 
 {
@@ -80,13 +80,13 @@ Connection: close
 }
 ```
 
-**Add sensitive words to existing list**
+**新增敏感詞到現有列表**
 
 ```http
 POST /config HTTP/1.1
 IM-API-KEY: {API-KEY}
 Content-Type: application/json; charset=utf-8
-Host: localhost:3100
+Host: your-app.imkit.io
 Connection: close
 
 {
@@ -101,17 +101,45 @@ Connection: close
 }
 ```
 
+**JavaScript 範例：**
+
+```javascript
+const response = await axios.post(
+  `https://your-app.imkit.io/config`,
+  {
+    censorship: {
+      keywords: ["foo", "bar"],
+    },
+  },
+  {
+    headers: {
+      "IM-API-KEY": process.env.IM_API_KEY,
+      "Content-Type": "application/json",
+    },
+  }
+);
+```
+
+**cURL 範例：**
+
+```bash
+curl -X "POST" "https://your-app.imkit.io/config" \
+     -H 'IM-API-KEY: {您的_API_KEY}' \
+     -H 'Content-Type: application/json' \
+     -d '{"censorship": {"keywords": ["foo", "bar"]}}'
+```
+
 #### Response
 
-**Success Response (200 OK)**
+**成功回應（200 OK）**
 
-| Parameter | Type | Description |
-| ---- | ---- | ---- |
-| `RC` | number | Response code (0 indicates success) |
-| `RM` | string | Response message |
-| `result` | object | Updated configuration data |
+| 參數     | 類型   | 說明                   |
+| -------- | ------ | ---------------------- |
+| `RC`     | number | 回應代碼（0 表示成功） |
+| `RM`     | string | 回應訊息               |
+| `result` | object | 更新後的配置資料       |
 
-#### Example Response
+#### 範例回應
 
 ```json
 {
@@ -132,9 +160,9 @@ Connection: close
 }
 ```
 
-#### Error Response
+#### 錯誤回應
 
-**401 Unauthorized** - Authentication failed
+**401 Unauthorized** - 認證失敗
 
 ```json
 {
@@ -147,7 +175,7 @@ Connection: close
 }
 ```
 
-**403 Forbidden** - Insufficient permissions
+**403 Forbidden** - 權限不足
 
 ```json
 {
@@ -160,7 +188,7 @@ Connection: close
 }
 ```
 
-**400 Bad Request** - Invalid request format
+**400 Bad Request** - 請求格式錯誤
 
 ```json
 {
@@ -175,31 +203,31 @@ Connection: close
 
 ------
 
-## Use Cases
+## 使用場景
 
-### Sensitive Word Management
-- **Add sensitive words**: Add new sensitive words to the filter list
-- **Update list**: Modify existing sensitive word list
-- **Batch settings**: Set multiple sensitive words at once
+### 敏感詞管理
+- **新增敏感詞**：添加新的敏感詞彙到過濾列表
+- **更新列表**：修改現有的敏感詞彙列表
+- **批量設定**：一次性設定多個敏感詞彙
 
-### Content Censorship
-- **Dynamic adjustment**: Adjust filtering rules in real-time based on content trends
-- **Emergency response**: Quickly add sensitive content that needs filtering
-- **Rule optimization**: Optimize filtering rules based on usage patterns
+### 內容審查
+- **動態調整**：根據內容趨勢即時調整過濾規則
+- **緊急應對**：快速新增需要過濾的敏感內容
+- **規則優化**：根據使用情況優化過濾規則
 
-### Platform Governance
-- **Policy enforcement**: Update content filtering rules according to platform policies
-- **Regional adaptation**: Adjust sensitive words according to different regional regulations
-- **Compliance requirements**: Meet legal and regulatory content censorship requirements
+### 平台治理
+- **政策執行**：根據平台政策更新內容過濾規則
+- **地區適應**：根據不同地區的法規調整敏感詞
+- **合規要求**：滿足法律法規的內容審查要求
 
 ------
 
-## Important Notes
+## 注意事項
 
-- **Platform administrator only**: This feature is limited to platform administrators and requires API Key
-- **Immediate effect**: Configuration updates take effect immediately, affecting all chat content
-- **Configuration override**: POST requests will override existing configurations, ensure complete data is included
-- **Backup recommendation**: Recommend querying current configuration as backup before updates
-- **Keyword format**: Sensitive words are stored as string arrays, case-sensitive
-- **Runtime configuration**: Uses runtime configuration system, effective without service restart
-- **Complete update**: Recommend including all configuration items that need to be preserved to avoid losing other settings
+- **平台管理員專用**：此功能僅限平台管理員使用，需要 API Key
+- **即時生效**：配置更新會立即生效，影響所有聊天內容
+- **配置覆蓋**：POST 請求會覆蓋現有配置，請確保包含完整資料
+- **備份建議**：更新前建議先查詢當前配置作為備份
+- **關鍵詞格式**：敏感詞以字串陣列形式儲存，區分大小寫
+- **運行時配置**：使用運行時配置系統，無需重啟服務即可生效
+- **完整更新**：建議包含所有需要保留的配置項目，避免遺失其他設定

@@ -37,7 +37,7 @@ DELETE /blockStatus/my/{blockee}
 DELETE /blockStatus/my/ddd HTTP/1.1
 IM-CLIENT-KEY: {IM-CLIENT-KEY}
 IM-Authorization: {TOKEN}
-Host: localhost:3100
+Host: your-app.imkit.io
 Connection: close
 ```
 
@@ -47,8 +47,30 @@ Connection: close
 DELETE /blockStatus/my/user123 HTTP/1.1
 IM-CLIENT-KEY: {IM-CLIENT-KEY}
 IM-Authorization: {TOKEN}
-Host: localhost:3100
+Host: your-app.imkit.io
 Connection: close
+```
+
+**JavaScript 範例：**
+
+```javascript
+const response = await axios.delete(
+  `https://your-app.imkit.io/blockStatus/my/${blockee}`,
+  {
+    headers: {
+      "IM-CLIENT-KEY": IM_CLIENT_KEY,
+      "IM-Authorization": TOKEN,
+    },
+  }
+);
+```
+
+**cURL 範例：**
+
+```bash
+curl -X "DELETE" "https://your-app.imkit.io/blockStatus/my/{blockee}" \
+     -H 'IM-CLIENT-KEY: {您的_CLIENT_KEY}' \
+     -H 'IM-Authorization: {您的_TOKEN}'
 ```
 
 #### Response

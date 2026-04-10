@@ -34,7 +34,7 @@ DELETE /rooms/:id
 **cURL 範例:**
 
 ```bash
-curl -X "DELETE" "http://localhost:3100/rooms/test-room-123" \
+curl -X "DELETE" "https://your-app.imkit.io/rooms/test-room-123" \
      -H 'IM-CLIENT-KEY: {您的_CLIENT_KEY}' \
      -H 'IM-Authorization: {您的_TOKEN}' \
      -H 'Content-Type: application/json; charset=utf-8'
@@ -44,7 +44,7 @@ curl -X "DELETE" "http://localhost:3100/rooms/test-room-123" \
 
 ```javascript
 const response = await axios.delete(
-  "http://localhost:3100/rooms/test-room-123",
+  "https://your-app.imkit.io/rooms/test-room-123",
   {
     headers: {
       "IM-CLIENT-KEY": `${IM_CLIENT_KEY}`,

@@ -1,16 +1,16 @@
-# Get Sensitive Words
+# 取得敏感詞設定
 
-## Overview
+## 概述
 
-Retrieve the current system's sensitive word censorship configuration. Query the blocked word list through the runtime configuration system to understand the current filtering rules set by the system. This feature is suitable for configuration viewing, system monitoring, and administrative maintenance.
+取得當前系統的敏感詞彙審查配置。透過運行時配置系統查詢封鎖用詞列表，可以了解系統目前設定的過濾規則。此功能適用於配置檢視、系統監控和管理維護。
 
 ------
 
-## API Endpoint
+## API 端點
 
-### Query Sensitive Word Configuration
+### 查詢敏感詞配置
 
-Retrieve the current runtime configuration, including the sensitive word list.
+取得當前的運行時配置，包含敏感詞彙列表。
 
 ```http
 GET /config
@@ -18,45 +18,67 @@ GET /config
 
 #### Headers
 
-| Parameter | Type | Required | Description |
-| ---- | ---- | ---- | ---- |
-| `IM-CLIENT-KEY` | string | ✅ | Client Key |
-| `IM-Authorization` | string | ✅ | Client Token |
+| 參數               | 類型   | 必填 | 說明           |
+| ------------------ | ------ | ---- | -------------- |
+| `IM-CLIENT-KEY`    | string | ✅    | Client Key     |
+| `IM-Authorization` | string | ✅    | Client Token   |
 
-#### Example Request
+#### 範例請求
 
 ```http
 GET /config HTTP/1.1
 IM-CLIENT-KEY: {CLIENT_KEY}
 IM-Authorization: {CLIENT_TOKEN}
-Host: localhost:3100
+Host: your-app.imkit.io
 Connection: close
+```
+
+**JavaScript 範例：**
+
+```javascript
+const response = await axios.get(
+  `https://your-app.imkit.io/config`,
+  {
+    headers: {
+      "IM-CLIENT-KEY": IM_CLIENT_KEY,
+      "IM-Authorization": TOKEN,
+    },
+  }
+);
+```
+
+**cURL 範例：**
+
+```bash
+curl -X "GET" "https://your-app.imkit.io/config" \
+     -H 'IM-CLIENT-KEY: {您的_CLIENT_KEY}' \
+     -H 'IM-Authorization: {您的_TOKEN}'
 ```
 
 #### Response
 
-**Success Response (200 OK)**
+**成功回應（200 OK）**
 
-| Parameter | Type | Description |
-| ---- | ---- | ---- |
-| `RC` | number | Response code (0 indicates success) |
-| `RM` | string | Response message |
-| `result` | object | Runtime configuration data |
+| 參數     | 類型   | 說明                   |
+| -------- | ------ | ---------------------- |
+| `RC`     | number | 回應代碼（0 表示成功） |
+| `RM`     | string | 回應訊息               |
+| `result` | object | 運行時配置資料         |
 
-**Configuration Object Structure**
+**配置物件結構**
 
-| Parameter | Type | Description |
-| ---- | ---- | ---- |
-| `announcement` | object | Announcement configuration |
-| `censorship` | object | Content censorship configuration |
+| 參數           | 類型   | 說明                          |
+| -------------- | ------ | ----------------------------- |
+| `announcement` | object | 公告配置                      |
+| `censorship`   | object | 內容審查配置                  |
 
-**Censorship Configuration Object Structure**
+**審查配置物件結構**
 
-| Parameter | Type | Description |
-| ---- | ---- | ---- |
-| `keywords` | array | Sensitive word array |
+| 參數       | 類型  | 說明                |
+| ---------- | ----- | ------------------- |
+| `keywords` | array | 敏感詞彙陣列        |
 
-#### Example Response
+#### 範例回應
 
 ```json
 {
@@ -77,9 +99,9 @@ Connection: close
 }
 ```
 
-#### Error Response
+#### 錯誤回應
 
-**401 Unauthorized** - Authentication failed
+**401 Unauthorized** - 認證失敗
 
 ```json
 {
@@ -92,7 +114,7 @@ Connection: close
 }
 ```
 
-**403 Forbidden** - Insufficient permissions
+**403 Forbidden** - 權限不足
 
 ```json
 {
@@ -107,30 +129,30 @@ Connection: close
 
 ------
 
-## Use Cases
+## 使用場景
 
-### Configuration Viewing
-- **Configuration viewing**: View the current system's sensitive word list
-- **Rule understanding**: Understand the current content filtering rules
-- **Setting verification**: Verify if sensitive word configuration is correctly effective
+### 配置檢視
+- **配置查看**：檢視當前系統設定的敏感詞列表
+- **規則了解**：了解系統目前的內容過濾規則
+- **設定驗證**：驗證敏感詞配置是否正確生效
 
-### System Monitoring
-- **Configuration monitoring**: Regularly check sensitive word configuration status
-- **Anomaly detection**: Monitor for abnormal or missing configurations
-- **Compliance checking**: Ensure configuration complies with regulatory requirements
+### 系統監控
+- **配置監控**：定期檢查敏感詞配置狀態
+- **異常偵測**：監控配置是否異常或遺失
+- **合規檢查**：確認配置符合法規要求
 
-### Administrative Maintenance
-- **Backup preparation**: Backup current configuration before modifications
-- **Problem diagnosis**: Troubleshoot content filtering related issues
-- **Version control**: Track configuration change history
+### 管理維護
+- **備份準備**：在修改前備份當前配置
+- **問題診斷**：排查內容過濾相關問題
+- **版本控制**：追蹤配置變更歷史
 
 ------
 
-## Important Notes
+## 注意事項
 
-- **Authentication required**: Valid client authentication is required to view configuration
-- **Runtime configuration**: Displays currently effective runtime configuration, not file configuration
-- **Complete configuration**: Response includes all runtime configuration items, not limited to sensitive words
-- **Real-time status**: Displays current real-time configuration status
-- **Sensitive information**: Configuration content may include sensitive information, please handle with care
-- **Caching mechanism**: Configuration may be cached, changes require waiting for cache updates
+- **認證要求**：需要有效的客戶端認證才能查看配置
+- **運行時配置**：顯示當前生效的運行時配置，而非檔案配置
+- **完整配置**：回應包含所有運行時配置項目，不僅限於敏感詞
+- **即時狀態**：顯示系統當前的即時配置狀態
+- **敏感資訊**：配置內容可能包含敏感資訊，請妥善保管
+- **快取機制**：配置可能有快取，變更後需等待快取更新

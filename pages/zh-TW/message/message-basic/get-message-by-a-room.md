@@ -47,7 +47,7 @@ GET /rooms/{id}/messages/v3
 GET /rooms/demo-room/messages/v3?limit=50 HTTP/1.1
 IM-CLIENT-KEY: {IM-CLIENT-KEY}
 IM-Authorization: {TOKEN}
-Host: localhost:3100
+Host: your-app.imkit.io
 Connection: close
 ```
 
@@ -57,7 +57,7 @@ Connection: close
 GET /rooms/demo-room/messages/v3?limit=50&beforeMessage=5f890cf37d980e06f6aaf349 HTTP/1.1
 IM-CLIENT-KEY: {IM-CLIENT-KEY}
 IM-Authorization: {TOKEN}
-Host: localhost:3100
+Host: your-app.imkit.io
 Connection: close
 ```
 
@@ -67,8 +67,33 @@ Connection: close
 GET /rooms/demo-room/messages/v3?afterTime=2024-01-01T00:00:00Z&limit=100 HTTP/1.1
 IM-CLIENT-KEY: {IM-CLIENT-KEY}
 IM-Authorization: {TOKEN}
-Host: localhost:3100
+Host: your-app.imkit.io
 Connection: close
+```
+
+**JavaScript 範例：**
+
+```javascript
+const response = await axios.get(
+  `https://your-app.imkit.io/rooms/demo-room/messages/v3`,
+  {
+    params: {
+      limit: 50,
+    },
+    headers: {
+      "IM-CLIENT-KEY": IM_CLIENT_KEY,
+      "IM-Authorization": TOKEN,
+    },
+  }
+);
+```
+
+**cURL 範例：**
+
+```bash
+curl -X "GET" "https://your-app.imkit.io/rooms/demo-room/messages/v3?limit=50" \
+     -H 'IM-CLIENT-KEY: {您的_CLIENT_KEY}' \
+     -H 'IM-Authorization: {您的_TOKEN}'
 ```
 
 #### Response

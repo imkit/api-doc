@@ -43,7 +43,7 @@ POST /config
 POST /config HTTP/1.1
 IM-API-KEY: {API-KEY}
 Content-Type: application/json; charset=utf-8
-Host: localhost:3100
+Host: your-app.imkit.io
 Connection: close
 
 {
@@ -66,7 +66,7 @@ Connection: close
 POST /config HTTP/1.1
 IM-API-KEY: {API-KEY}
 Content-Type: application/json; charset=utf-8
-Host: localhost:3100
+Host: your-app.imkit.io
 Connection: close
 
 {
@@ -86,7 +86,7 @@ Connection: close
 POST /config HTTP/1.1
 IM-API-KEY: {API-KEY}
 Content-Type: application/json; charset=utf-8
-Host: localhost:3100
+Host: your-app.imkit.io
 Connection: close
 
 {
@@ -99,6 +99,34 @@ Connection: close
     ]
   }
 }
+```
+
+**JavaScript 範例：**
+
+```javascript
+const response = await axios.post(
+  `https://your-app.imkit.io/config`,
+  {
+    censorship: {
+      keywords: ["foo", "bar"],
+    },
+  },
+  {
+    headers: {
+      "IM-API-KEY": process.env.IM_API_KEY,
+      "Content-Type": "application/json",
+    },
+  }
+);
+```
+
+**cURL 範例：**
+
+```bash
+curl -X "POST" "https://your-app.imkit.io/config" \
+     -H 'IM-API-KEY: {您的_API_KEY}' \
+     -H 'Content-Type: application/json' \
+     -d '{"censorship": {"keywords": ["foo", "bar"]}}'
 ```
 
 #### Response

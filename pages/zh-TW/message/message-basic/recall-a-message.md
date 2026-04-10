@@ -53,7 +53,7 @@ POST /rooms/:roomId/message
 **cURL 範例：**
 
 ```bash
-curl -X "POST" "http://localhost:3100/rooms/demo-room/message" \
+curl -X "POST" "https://your-app.imkit.io/rooms/demo-room/message" \
      -H 'IM-CLIENT-KEY: {您的_CLIENT_KEY}' \
      -H 'IM-Authorization: {您的_TOKEN}' \
      -H 'Content-Type: application/json; charset=utf-8' \
@@ -64,7 +64,7 @@ curl -X "POST" "http://localhost:3100/rooms/demo-room/message" \
 
 ```javascript
 const response = await axios.post(
-  `http://localhost:3100/rooms/${roomID}/message`,
+  `https://your-app.imkit.io/rooms/${roomID}/message`,
   {
     _id: "5ce3d80bd594874e495895a4",
     messageType: "recall",
@@ -85,7 +85,7 @@ const response = await axios.post(
 
 ```javascript
 const response = await axios.post(
-  `http://localhost:3100/rooms/${roomID}/message`,
+  `https://your-app.imkit.io/rooms/${roomID}/message`,
   {
     _id: "5ce3d80bd594874e495895a4",
     messageType: "recall",

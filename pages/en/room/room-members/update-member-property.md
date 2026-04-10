@@ -1,16 +1,16 @@
-# Update Member Property
+# 更新成員屬性
 
-## Overview
+## 概述
 
-This endpoint allows you to update a custom property for a specific member in a room, such as role, location, score, level, or any other custom field. This API is for server-side use only and requires proper authentication.
+此端點允許您更新聊天室中特定成員的自訂屬性，例如角色（role）、位置、分數、等級或任何自訂欄位。此 API 僅供伺服器端使用，需要適當的身份驗證。
 
 ------
 
-## API Endpoint
+## API 端點
 
-### Update Member Property
+### 更新成員屬性
 
-Update a custom property for a specific member in a room.
+更新聊天室中特定成員的自訂屬性。
 
 ```http
 PUT /rooms/:id/member/:client
@@ -18,44 +18,44 @@ PUT /rooms/:id/member/:client
 
 #### Headers
 
-| Parameter | Type | Required | Description |
+| 參數 | 類型 | 必填 | 說明 |
 | --- | --- | --- | --- |
-| `IM-CLIENT-KEY` | string | ✅ | Client Key |
-| `IM-Authorization` | string | ✅ | Client Token |
+| `IM-CLIENT-KEY` | string | ✅ | 用戶端金鑰 |
+| `IM-Authorization` | string | ✅ | 用戶端權杖 |
 
 #### Path Parameters
 
-| Parameter | Type | Required | Description |
+| 參數 | 類型 | 必填 | 說明 |
 | --- | --- | --- | --- |
-| `:id` | string | ✅ | Unique room ID |
-| `:client` | string | ✅ | Member client ID |
+| `:id` | string | ✅ | 聊天室唯一識別碼 |
+| `:client` | string | ✅ | 成員的用戶端 ID |
 
 #### Post Body
 
-| Parameter | Type | Required | Description |
+| 參數 | 類型 | 必填 | 說明 |
 | --- | --- | --- | --- |
-| `property` | string | ✅ | Name of the member property to update |
-| `value` | mixed | ✅ | New value for the property |
+| `property` | string | ✅ | 要更新的成員屬性欄位名稱 |
+| `value` | mixed | ✅ | 屬性的新值 |
 
-#### Example Request
+#### 範例請求
 
-**Example 1: Assign Admin Role**
+**範例一：將成員設為管理員**
 
-**cURL:**
+**cURL 範例：**
 
 ```bash
-curl -X "PUT" "http://localhost:3100/rooms/demo-room/member/user-001" \
-     -H 'IM-CLIENT-KEY: {YOUR_CLIENT_KEY}' \
-     -H 'IM-Authorization: {YOUR_TOKEN}' \
+curl -X "PUT" "https://your-app.imkit.io/rooms/demo-room/member/user-001" \
+     -H 'IM-CLIENT-KEY: {您的_CLIENT_KEY}' \
+     -H 'IM-Authorization: {您的_TOKEN}' \
      -H 'Content-Type: application/json; charset=utf-8' \
      -d '{"property": "role", "value": "admin"}'
 ```
 
-**JavaScript:**
+**JavaScript 範例：**
 
 ```javascript
 const response = await axios.put(
-  `http://localhost:3100/rooms/${roomID}/member/${clientID}`,
+  `https://your-app.imkit.io/rooms/${roomID}/member/${clientID}`,
   {
     property: "role",
     value: "admin",
@@ -70,13 +70,13 @@ const response = await axios.put(
 );
 ```
 
-**Example 2: Update a Custom Property**
+**範例二：更新自訂屬性**
 
-**JavaScript:**
+**JavaScript 範例：**
 
 ```javascript
 const response = await axios.put(
-  `http://localhost:3100/rooms/${roomID}/member/${clientID}`,
+  `https://your-app.imkit.io/rooms/${roomID}/member/${clientID}`,
   {
     property: "score",
     value: 100,
@@ -93,15 +93,15 @@ const response = await axios.put(
 
 #### Response
 
-**Success Response (200 OK)**
+**成功回應（200 OK）**
 
-| Parameter | Type | Description |
+| 參數 | 類型 | 說明 |
 | --- | --- | --- |
-| `RC` | number | Response code (0 means success) |
-| `RM` | string | Response message |
-| `result` | object | Updated room data with full details |
+| `RC` | number | 回應代碼（0 表示成功） |
+| `RM` | string | 回應訊息 |
+| `result` | object | 更新後的聊天室完整資訊 |
 
-#### Example Response
+#### 範例回應
 
 ```json
 {
@@ -127,30 +127,30 @@ const response = await axios.put(
 }
 ```
 
-#### Error Response
+#### 錯誤回應
 
-When the request fails, you will receive an error response with details. Common error cases include:
+當請求失敗時，您會收到包含錯誤詳細資訊的錯誤回應。常見的錯誤情況包括：
 
-- Invalid client key or authorization token
-- The specified room or member does not exist
-- Internal server error
-
-------
-
-## Use Cases
-
-### Role Management
-- **Assign admin**: Set `property` to `"role"` and `value` to `"admin"` to assign the admin role
-
-### Custom Properties
-- **Set score**: Set `property` to `"score"` to track a member's score in the room
-- **Set level**: Set `property` to `"level"` to manage member levels
-- **Set location**: Set `property` to `"location"` to record member location information
+- 無效的用戶端金鑰或授權權杖
+- 指定的聊天室或成員不存在
+- 伺服器內部錯誤
 
 ------
 
-## Notes
+## 使用場景
 
-- **Role assignment**: When `property` is `"role"` and `value` is `"admin"`, the system automatically sends an `assignAdmin` system message to the room.
-- **Custom properties**: Beyond `role`, you can set any custom property such as `location`, `score`, `level`, etc.
-- The `property` field maps directly to a field name on the member property object. Ensure `value` matches the expected type for that field.
+### 角色管理
+- **指派管理員**：將 `property` 設為 `"role"`、`value` 設為 `"admin"` 來指派管理員角色
+
+### 自訂屬性
+- **設定分數**：將 `property` 設為 `"score"` 來追蹤成員在聊天室中的分數
+- **設定等級**：將 `property` 設為 `"level"` 來管理成員等級
+- **設定位置**：將 `property` 設為 `"location"` 來記錄成員位置資訊
+
+------
+
+## 注意事項
+
+- **角色設定**：當 `property` 設為 `"role"` 且 `value` 設為 `"admin"` 時，系統會自動在聊天室內產生 `assignAdmin` 系統訊息
+- **自訂屬性**：除了 `role` 之外，可設定任意自訂屬性，例如位置（`location`）、分數（`score`）、等級（`level`）等
+- `property` 欄位直接對應到成員屬性物件中的欄位名稱，`value` 的型別應與欄位定義相符

@@ -1,16 +1,16 @@
-# 解除静音成员
+# 解除靜音成員
 
 ## 概述
 
-解除静音成员功能让管理员可以移除特定客户端对指定聊天室的静音状态，恢复该客户端对聊天室的通知接收。此功能与静音成员功能相对应，适用于恢复通知、重新启用提醒和聊天室管理。
+解除靜音成員功能讓管理員可以移除特定客戶端對指定聊天室的靜音狀態，恢復該客戶端對聊天室的通知接收。此功能與靜音成員功能相對應，適用於恢復通知、重新啟用提醒和聊天室管理。
 
 ------
 
-## API 端点
+## API 端點
 
-### 解除指定客户端的聊天室静音
+### 解除指定客戶端的聊天室靜音
 
-移除指定客户端对特定聊天室的静音状态。
+移除指定客戶端對特定聊天室的靜音狀態。
 
 ```http
 DELETE /admin/clients/{uid}/mute/{room}
@@ -18,57 +18,77 @@ DELETE /admin/clients/{uid}/mute/{room}
 
 #### Headers
 
-| 参数         | 类型   | 必填 | 说明        |
+| 參數         | 類型   | 必填 | 說明        |
 | ------------ | ------ | ---- | ----------- |
 | `IM-API-KEY` | string | ✅    | API Key     |
 
 #### Path Parameters
 
-| 参数   | 类型   | 必填 | 说明         |
+| 參數   | 類型   | 必填 | 說明         |
 | ------ | ------ | ---- | ------------ |
-| `uid`  | string | ✅    | 客户端 ID    |
+| `uid`  | string | ✅    | 客戶端 ID    |
 | `room` | string | ✅    | 聊天室 ID    |
 
-#### 范例请求
+#### 範例請求
 
-**解除特定聊天室静音**
+**解除特定聊天室靜音**
 
 ```http
 DELETE /admin/clients/aaa/mute/demo?limit=10&skip=100 HTTP/1.1
 IM-API-KEY: fangho_imkit_0412_2018_001_apikey
-Host: localhost:3100
+Host: your-app.imkit.io
 Connection: close
 User-Agent: Paw/3.1.10 (Macintosh; OS X/10.15.7) GCDHTTPRequest
 ```
 
+**JavaScript 範例：**
+
+```javascript
+const response = await axios.delete(
+  `https://your-app.imkit.io/admin/clients/${uid}/mute/${room}`,
+  {
+    headers: {
+      "IM-API-KEY": process.env.IM_API_KEY,
+    },
+  }
+);
+```
+
+**cURL 範例：**
+
+```bash
+curl -X "DELETE" "https://your-app.imkit.io/admin/clients/{uid}/mute/{room}" \
+     -H 'IM-API-KEY: {您的_API_KEY}'
+```
+
 #### Response
 
-**成功响应（200 OK）**
+**成功回應（200 OK）**
 
-| 参数     | 类型   | 说明                       |
+| 參數     | 類型   | 說明                       |
 | -------- | ------ | -------------------------- |
-| `RC`     | number | 响应代码（0 表示成功）     |
-| `RM`     | string | 响应消息                   |
-| `result` | object | 更新后的客户端数据         |
+| `RC`     | number | 回應代碼（0 表示成功）     |
+| `RM`     | string | 回應訊息                   |
+| `result` | object | 更新後的客戶端資料         |
 
-**客户端数据对象结构**
+**客戶端資料物件結構**
 
-| 参数              | 类型   | 说明                          |
+| 參數              | 類型   | 說明                          |
 | ----------------- | ------ | ----------------------------- |
-| `mute`            | array  | 静音的聊天室 ID 列表          |
-| `isRobot`         | bool   | 是否为机器人                  |
-| `_id`             | string | 客户端唯一识别码              |
-| `appID`           | string | 应用程序识别码                |
-| `description`     | string | 客户端描述                    |
-| `avatarUrl`       | string | 头像 URL                      |
-| `nickname`        | string | 昵称                          |
-| `email`           | string | 电子信箱                      |
-| `address`         | object | 连接地址信息                  |
-| `userAgent`       | string | 用户代理字符串                |
-| `updatedAt`       | string | 最后更新时间                  |
-| `lastLoginTimeMS` | number | 最后登录时间（毫秒时间戳）    |
+| `mute`            | array  | 靜音的聊天室 ID 列表          |
+| `isRobot`         | bool   | 是否為機器人                  |
+| `_id`             | string | 客戶端唯一識別碼              |
+| `appID`           | string | 應用程式識別碼                |
+| `description`     | string | 客戶端描述                    |
+| `avatarUrl`       | string | 頭像 URL                      |
+| `nickname`        | string | 暱稱                          |
+| `email`           | string | 電子信箱                      |
+| `address`         | object | 連線地址資訊                  |
+| `userAgent`       | string | 使用者代理字串                |
+| `updatedAt`       | string | 最後更新時間                  |
+| `lastLoginTimeMS` | number | 最後登入時間（毫秒時間戳）    |
 
-#### 范例响应
+#### 範例回應
 
 ```json
 {
@@ -97,9 +117,9 @@ User-Agent: Paw/3.1.10 (Macintosh; OS X/10.15.7) GCDHTTPRequest
 }
 ```
 
-#### 错误响应
+#### 錯誤回應
 
-**401 Unauthorized** - 认证失败
+**401 Unauthorized** - 認證失敗
 
 ```json
 {
@@ -112,7 +132,7 @@ User-Agent: Paw/3.1.10 (Macintosh; OS X/10.15.7) GCDHTTPRequest
 }
 ```
 
-**404 Not Found** - 客户端不存在
+**404 Not Found** - 客戶端不存在
 
 ```json
 {
@@ -138,7 +158,7 @@ User-Agent: Paw/3.1.10 (Macintosh; OS X/10.15.7) GCDHTTPRequest
 }
 ```
 
-**400 Bad Request** - 聊天室未被静音
+**400 Bad Request** - 聊天室未被靜音
 
 ```json
 {
@@ -153,31 +173,31 @@ User-Agent: Paw/3.1.10 (Macintosh; OS X/10.15.7) GCDHTTPRequest
 
 ------
 
-## 使用场景
+## 使用場景
 
-### 通知恢复
-- **重新启用提醒**：恢复特定聊天室的通知推送
-- **工作时间调整**：在工作时间恢复重要聊天室的通知
-- **情境切换**：根据不同使用情境恢复通知设置
+### 通知恢復
+- **重新啟用提醒**：恢復特定聊天室的通知推送
+- **工作時間調整**：在工作時間恢復重要聊天室的通知
+- **情境切換**：根據不同使用情境恢復通知設定
 
-### 用户体验管理
-- **个人偏好调整**：根据用户需求调整通知设置
-- **临时静音解除**：解除临时设置的静音状态
-- **批量管理**：统一恢复多个聊天室的通知设置
+### 用戶體驗管理
+- **個人偏好調整**：根據用戶需求調整通知設定
+- **臨時靜音解除**：解除臨時設定的靜音狀態
+- **批量管理**：統一恢復多個聊天室的通知設定
 
 ### 管理功能
-- **后台控制**：管理员协助用户恢复聊天室通知
-- **用户支持**：解决用户通知相关问题
-- **系统维护**：系统维护完成后恢复通知功能
+- **後台控制**：管理員協助用戶恢復聊天室通知
+- **用戶支援**：解決用戶通知相關問題
+- **系統維護**：系統維護完成後恢復通知功能
 
 ------
 
-## 注意事项
+## 注意事項
 
-- **管理员权限**：此 API 需要管理员权限和 API Key
-- **状态移除**：解除静音会将聊天室 ID 从 mute 数组中移除
-- **即时生效**：解除静音会立即生效，用户将开始接收通知
-- **空数组**：成功解除所有静音后，mute 数组会变为空数组
-- **查询参数**：API 支持 limit 和 skip 参数，但不影响解除静音功能
-- **持久化设置**：解除静音的状态会永久保存
-- **通知恢复**：解除静音后用户将重新接收该聊天室的通知
+- **管理員權限**：此 API 需要管理員權限和 API Key
+- **狀態移除**：解除靜音會將聊天室 ID 從 mute 陣列中移除
+- **即時生效**：解除靜音會立即生效，用戶將開始接收通知
+- **空陣列**：成功解除所有靜音後，mute 陣列會變為空陣列
+- **查詢參數**：API 支援 limit 和 skip 參數，但不影響解除靜音功能
+- **持久化設定**：解除靜音的狀態會永久保存
+- **通知恢復**：解除靜音後用戶將重新接收該聊天室的通知

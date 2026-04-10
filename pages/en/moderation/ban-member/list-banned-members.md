@@ -1,16 +1,16 @@
-# List Banned Members
+# 列出禁止成員
 
-## Overview
+## 概述
 
-Retrieve the ban list of a specified chatroom, displaying detailed information of all banned users in that chatroom. Only chatroom owners have the permission to view the ban list (limited to group chatrooms with owners). This feature is suitable for chatroom owners to view and manage the ban status of their chatrooms.
+取得指定聊天室的禁止清單，顯示該聊天室中所有被禁止的用戶詳細資訊。只有聊天室擁有者具備查看禁止清單的權限（限群組聊天室且設有擁有者）。此功能適用於聊天室擁有者檢視和管理聊天室的禁止狀態。
 
 ------
 
-## API Endpoint
+## API 端點
 
-### Get Chatroom Ban List
+### 取得聊天室禁止清單
 
-Obtain detailed information of all banned users in a specified chatroom.
+獲取指定聊天室中所有被禁止用戶的詳細資訊。
 
 ```http
 GET /blockStatus/room/{roomID}
@@ -18,85 +18,107 @@ GET /blockStatus/room/{roomID}
 
 #### Headers
 
-| Parameter | Type | Required | Description |
-| ---- | ---- | ---- | ---- |
-| `IM-CLIENT-KEY` | string | ✅ | Client Key |
-| `IM-Authorization` | string | ✅ | Client Token |
+| 參數               | 類型   | 必填 | 說明           |
+| ------------------ | ------ | ---- | -------------- |
+| `IM-CLIENT-KEY`    | string | ✅    | Client Key     |
+| `IM-Authorization` | string | ✅    | Client Token   |
 
 #### Path Parameters
 
-| Parameter | Type | Required | Description |
-| ---- | ---- | ---- | ---- |
-| `roomID` | string | ✅ | Chatroom ID |
+| 參數     | 類型   | 必填 | 說明        |
+| -------- | ------ | ---- | ----------- |
+| `roomID` | string | ✅    | 聊天室 ID   |
 
-#### Example Request
+#### 範例請求
 
-**Get chatroom ban list**
+**取得聊天室禁止清單**
 
 ```http
 GET /blockStatus/room/demo-room HTTP/1.1
 IM-CLIENT-KEY: {IM-CLIENT-KEY}
 IM-Authorization: {TOKEN}
-Host: localhost:3100
+Host: your-app.imkit.io
 Connection: close
+```
+
+**JavaScript 範例：**
+
+```javascript
+const response = await axios.get(
+  `https://your-app.imkit.io/blockStatus/room/${roomID}`,
+  {
+    headers: {
+      "IM-CLIENT-KEY": IM_CLIENT_KEY,
+      "IM-Authorization": TOKEN,
+    },
+  }
+);
+```
+
+**cURL 範例：**
+
+```bash
+curl -X "GET" "https://your-app.imkit.io/blockStatus/room/{roomID}" \
+     -H 'IM-CLIENT-KEY: {您的_CLIENT_KEY}' \
+     -H 'IM-Authorization: {您的_TOKEN}'
 ```
 
 #### Response
 
-**Success Response (200 OK)**
+**成功回應（200 OK）**
 
-| Parameter | Type | Description |
-| ---- | ---- | ---- |
-| `RC` | number | Response code (0 indicates success) |
-| `RM` | string | Response message |
-| `result` | object | Ban list data |
+| 參數     | 類型   | 說明                   |
+| -------- | ------ | ---------------------- |
+| `RC`     | number | 回應代碼（0 表示成功） |
+| `RM`     | string | 回應訊息               |
+| `result` | object | 禁止清單資料           |
 
-**Result Object Structure**
+**結果物件結構**
 
-| Parameter | Type | Description |
-| ---- | ---- | ---- |
-| `data` | array | Ban record list array |
+| 參數   | 類型  | 說明             |
+| ------ | ----- | ---------------- |
+| `data` | array | 禁止記錄清單陣列 |
 
-**Ban Record Object Structure**
+**禁止記錄物件結構**
 
-| Parameter | Type | Description |
-| ---- | ---- | ---- |
-| `blockee` | object | Detailed information of the banned user |
-| `blocker` | object | Detailed information of the user who performed the ban |
-| `room` | object | Chatroom detailed information |
-| `createdAt` | string | Ban creation time |
-| `updatedAt` | string | Ban update time |
+| 參數        | 類型   | 說明                        |
+| ----------- | ------ | --------------------------- |
+| `blockee`   | object | 被禁止用戶的詳細資訊        |
+| `blocker`   | object | 執行禁止用戶的詳細資訊      |
+| `room`      | object | 聊天室詳細資訊              |
+| `createdAt` | string | 禁止創建時間                |
+| `updatedAt` | string | 禁止更新時間                |
 
-**Banned User Object Structure**
+**被禁止用戶物件結構**
 
-| Parameter | Type | Description |
-| ---- | ---- | ---- |
-| `_id` | string | User unique identifier |
-| `nickname` | string | User nickname |
-| `avatarUrl` | string | User avatar URL |
-| `id` | string | User ID |
-| `lastLoginTimeMS` | number | Last login time (millisecond timestamp) |
+| 參數              | 類型   | 說明                          |
+| ----------------- | ------ | ----------------------------- |
+| `_id`             | string | 用戶唯一識別碼                |
+| `nickname`        | string | 用戶暱稱                      |
+| `avatarUrl`       | string | 用戶頭像 URL                  |
+| `id`              | string | 用戶 ID                       |
+| `lastLoginTimeMS` | number | 最後登入時間（毫秒時間戳）    |
 
-**Banning User Object Structure**
+**執行禁止用戶物件結構**
 
-| Parameter | Type | Description |
-| ---- | ---- | ---- |
-| `_id` | string | User unique identifier |
-| `nickname` | string | User nickname |
-| `avatarUrl` | string | User avatar URL |
-| `id` | string | User ID |
-| `lastLoginTimeMS` | number | Last login time (millisecond timestamp) |
+| 參數              | 類型   | 說明                          |
+| ----------------- | ------ | ----------------------------- |
+| `_id`             | string | 用戶唯一識別碼                |
+| `nickname`        | string | 用戶暱稱                      |
+| `avatarUrl`       | string | 用戶頭像 URL                  |
+| `id`              | string | 用戶 ID                       |
+| `lastLoginTimeMS` | number | 最後登入時間（毫秒時間戳）    |
 
-**Chatroom Object Structure**
+**聊天室物件結構**
 
-| Parameter | Type | Description |
-| ---- | ---- | ---- |
-| `_id` | string | Chatroom unique identifier |
-| `roomType` | string | Chatroom type (group, etc.) |
-| `id` | string | Chatroom ID |
-| `createdTimeMS` | number | Chatroom creation time (millisecond timestamp) |
+| 參數            | 類型   | 說明                          |
+| --------------- | ------ | ----------------------------- |
+| `_id`           | string | 聊天室唯一識別碼              |
+| `roomType`      | string | 聊天室類型（group等）         |
+| `id`            | string | 聊天室 ID                     |
+| `createdTimeMS` | number | 聊天室創建時間（毫秒時間戳）  |
 
-#### Example Response
+#### 範例回應
 
 ```json
 {
@@ -133,9 +155,9 @@ Connection: close
 }
 ```
 
-#### Error Response
+#### 錯誤回應
 
-**401 Unauthorized** - Authentication failed
+**401 Unauthorized** - 認證失敗
 
 ```json
 {
@@ -148,7 +170,7 @@ Connection: close
 }
 ```
 
-**403 Forbidden** - Insufficient permissions
+**403 Forbidden** - 權限不足
 
 ```json
 {
@@ -161,7 +183,7 @@ Connection: close
 }
 ```
 
-**404 Not Found** - Chatroom does not exist
+**404 Not Found** - 聊天室不存在
 
 ```json
 {
@@ -176,30 +198,30 @@ Connection: close
 
 ------
 
-## Use Cases
+## 使用場景
 
-### Chatroom Management
-- **Ban status viewing**: Chatroom owners view the current ban list
-- **Member management**: View detailed information of banned users and ban records
-- **Management decisions**: Make subsequent management decisions based on the ban list
+### 聊天室管理
+- **禁止狀態檢視**：聊天室擁有者查看當前禁止清單
+- **成員管理**：檢視被禁止用戶的詳細資訊和禁止記錄
+- **管理決策**：基於禁止清單進行後續管理決策
 
-### Permission Management
-- **Owner exclusive**: Only chatroom owners can view the ban list
-- **Privacy protection**: Protect ban information from being viewed by unauthorized users
-- **Permission verification**: Ensure viewing permissions comply with chatroom settings
+### 權限管理
+- **擁有者專屬**：只有聊天室擁有者可以查看禁止清單
+- **隱私保護**：保護禁止資訊不被未授權用戶查看
+- **權限驗證**：確保查看權限符合聊天室設定
 
-### Record Tracking
-- **Ban history**: View time records of ban operations
-- **User information**: Obtain detailed information of banned users and users who performed bans
-- **Chatroom status**: Understand the ban management status of chatrooms
+### 記錄追蹤
+- **禁止歷史**：查看禁止操作的時間記錄
+- **用戶資訊**：獲取被禁止用戶和執行禁止用戶的詳細資訊
+- **聊天室狀態**：了解聊天室的禁止管理狀況
 
 ------
 
-## Important Notes
+## 注意事項
 
-- **Permission restrictions**: Only chatroom owners can view the ban list (limited to group chatrooms with owners)
-- **Chatroom type**: This feature mainly targets group chatrooms, and the chatroom must have an owner
-- **Complete information**: Returns complete information of banned users, executing users, and chatrooms
-- **Time records**: Contains timestamps for ban creation and updates
-- **Data structure**: Returns array format, supports multiple ban records
-- **Empty list handling**: If no users are banned in the chatroom, returns an empty array
+- **權限限制**：只有聊天室擁有者可以查看禁止清單（限群組聊天室且設有擁有者）
+- **聊天室類型**：此功能主要針對群組聊天室，且該聊天室必須設有擁有者
+- **完整資訊**：返回被禁止用戶、執行用戶和聊天室的完整資訊
+- **時間記錄**：包含禁止創建和更新的時間戳記
+- **資料結構**：返回陣列格式，支援多個禁止記錄
+- **空清單處理**：如果聊天室沒有禁止任何用戶，則返回空陣列

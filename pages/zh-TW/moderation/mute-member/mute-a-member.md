@@ -36,10 +36,31 @@ POST /admin/clients/{uid}/mute/{room}
 ```http
 POST /admin/clients/aaa/mute/demo?limit=10&skip=100 HTTP/1.1
 IM-API-KEY: {IM-API-KEY}
-Host: localhost:3100
+Host: your-app.imkit.io
 Connection: close
 User-Agent: Paw/3.1.10 (Macintosh; OS X/10.15.7) GCDHTTPRequest
 Content-Length: 0
+```
+
+**JavaScript 範例：**
+
+```javascript
+const response = await axios.post(
+  `https://your-app.imkit.io/admin/clients/${uid}/mute/${room}`,
+  {},
+  {
+    headers: {
+      "IM-API-KEY": process.env.IM_API_KEY,
+    },
+  }
+);
+```
+
+**cURL 範例：**
+
+```bash
+curl -X "POST" "https://your-app.imkit.io/admin/clients/{uid}/mute/{room}" \
+     -H 'IM-API-KEY: {您的_API_KEY}'
 ```
 
 #### Response

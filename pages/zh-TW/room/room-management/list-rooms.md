@@ -56,7 +56,7 @@ createdTime
 cURL 範例：
 
 ```bash
-curl "http://localhost:3100/rooms?skip=0&limit=20&sort=-lastMessage&updatedAfter=2020-10-15T03:28:54Z" \
+curl "https://your-app.imkit.io/rooms?skip=0&limit=20&sort=-lastMessage&updatedAfter=2020-10-15T03:28:54Z" \
      -H 'IM-CLIENT-KEY: {您的_CLIENT_KEY}' \
      -H 'IM-CLIENT-ID: {您的_CLIENT_ID}' \
      -H 'IM-Authorization: {您的_TOKEN}'
@@ -66,7 +66,7 @@ JavaScript 範例：
 
 ```javascript
 const response = await axios.get(
-  "http://localhost:3100/rooms",
+  "https://your-app.imkit.io/rooms",
   {
     params: {
       skip: 0,
@@ -87,7 +87,7 @@ const response = await axios.get(
 
 ```javascript
 const response = await axios.get(
-  "http://localhost:3100/rooms",
+  "https://your-app.imkit.io/rooms",
   {
     params: {
       pref: JSON.stringify({ tags: "some-tag" }),

@@ -42,7 +42,7 @@ POST /search HTTP/1.1
 IM-Authorization: {TOKEN}
 IM-CLIENT-KEY: {IM-CLIENT-KEY}
 Content-Type: application/json; charset=utf-8
-Host: localhost:3100
+Host: your-app.imkit.io
 Connection: close
 
 {
@@ -59,7 +59,7 @@ POST /search HTTP/1.1
 IM-Authorization: {TOKEN}
 IM-CLIENT-KEY: {IM-CLIENT-KEY}
 Content-Type: application/json; charset=utf-8
-Host: localhost:3100
+Host: your-app.imkit.io
 Connection: close
 
 {
@@ -76,7 +76,7 @@ POST /search HTTP/1.1
 IM-Authorization: {TOKEN}
 IM-CLIENT-KEY: {IM-CLIENT-KEY}
 Content-Type: application/json; charset=utf-8
-Host: localhost:3100
+Host: your-app.imkit.io
 Connection: close
 
 {
@@ -84,6 +84,36 @@ Connection: close
   "keyword": "meeting",
   "roomTags": ["work", "team"]
 }
+```
+
+**JavaScript 範例：**
+
+```javascript
+const response = await axios.post(
+  `https://your-app.imkit.io/search`,
+  {
+    type: ["messages"],
+    keyword: "hello",
+    limit: 20,
+  },
+  {
+    headers: {
+      "IM-CLIENT-KEY": IM_CLIENT_KEY,
+      "IM-Authorization": TOKEN,
+      "Content-Type": "application/json",
+    },
+  }
+);
+```
+
+**cURL 範例：**
+
+```bash
+curl -X "POST" "https://your-app.imkit.io/search" \
+     -H 'IM-CLIENT-KEY: {您的_CLIENT_KEY}' \
+     -H 'IM-Authorization: {您的_TOKEN}' \
+     -H 'Content-Type: application/json' \
+     -d '{"type": ["messages"], "keyword": "hello", "limit": 20}'
 ```
 
 #### Response

@@ -58,7 +58,7 @@ POST /push/push2clients
 
 ```javascript
 const response = await axios.post(
-  "https://imkit-dev.funtek.io/push/push2clients",
+  "https://your-app.imkit.io/push/push2clients",
   {
     clients: ["user001", "user002", "user003"],
     payload: {
@@ -86,7 +86,7 @@ const response = await axios.post(
 
 ```javascript
 const response = await axios.post(
-  "https://imkit-dev.funtek.io/push/push2clients",
+  "https://your-app.imkit.io/push/push2clients",
   {
     clients: ["user001"],
     payload: {
@@ -112,7 +112,7 @@ const response = await axios.post(
 **cURL**
 
 ```bash
-curl -X POST "https://imkit-dev.funtek.io/push/push2clients" \
+curl -X POST "https://your-app.imkit.io/push/push2clients" \
   -H "IM-API-KEY: your_api_key" \
   -H "Content-Type: application/json; charset=utf-8" \
   -d '{
@@ -131,7 +131,17 @@ curl -X POST "https://imkit-dev.funtek.io/push/push2clients" \
 
 #### Response
 
-此 API 無特定回應內容文件記載。請求成功時，伺服器會將推播通知分別發送至 APNs（iOS）與 FCM（Android）。
+**成功回應（200 OK）**
+
+```json
+{
+  "RC": 0,
+  "RM": "OK",
+  "result": {}
+}
+```
+
+請求成功時，伺服器會將推播通知分別發送至 APNs（iOS）與 FCM（Android）。
 
 #### 錯誤回應
 

@@ -35,9 +35,31 @@ GET /rooms/{id}
 GET /rooms/58871b877390be11d5f1ab30 HTTP/1.1
 IM-CLIENT-KEY: 9FSk26d4AIbZh0k44F5+DzbetgAJA9WjC7WP36Khm6c=
 IM-Authorization: fVy7YhqBZqEzNO9LhMmcyA==
-Host: localhost:3100
+Host: your-app.imkit.io
 Connection: close
 User-Agent: Paw/3.0.14 (Macintosh; OS X/10.11.6) GCDHTTPRequest
+```
+
+**JavaScript 範例：**
+
+```javascript
+const response = await axios.get(
+  `https://your-app.imkit.io/rooms/58871b877390be11d5f1ab30`,
+  {
+    headers: {
+      "IM-CLIENT-KEY": IM_CLIENT_KEY,
+      "IM-Authorization": TOKEN,
+    },
+  }
+);
+```
+
+**cURL 範例：**
+
+```bash
+curl -X "GET" "https://your-app.imkit.io/rooms/58871b877390be11d5f1ab30" \
+     -H 'IM-CLIENT-KEY: {您的_CLIENT_KEY}' \
+     -H 'IM-Authorization: {您的_TOKEN}'
 ```
 
 #### Response

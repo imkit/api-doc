@@ -44,7 +44,7 @@ POST /rooms/:id/members
 **cURL 範例：**
 
 ```bash
-curl -X "POST" "http://localhost:3100/rooms/demo-room/members" \
+curl -X "POST" "https://your-app.imkit.io/rooms/demo-room/members" \
      -H 'IM-CLIENT-KEY: {您的_CLIENT_KEY}' \
      -H 'IM-Authorization: {您的_TOKEN}' \
      -H 'Content-Type: application/json; charset=utf-8' \
@@ -55,7 +55,7 @@ curl -X "POST" "http://localhost:3100/rooms/demo-room/members" \
 
 ```javascript
 const response = await axios.post(
-  `http://localhost:3100/rooms/${roomID}/members`,
+  `https://your-app.imkit.io/rooms/${roomID}/members`,
   {
     invitees: ["ccc", "bbb"],
     invitationRequired: true,
@@ -77,7 +77,7 @@ const response = await axios.post(
 
 ```javascript
 const response = await axios.post(
-  `http://localhost:3100/rooms/${roomID}/members`,
+  `https://your-app.imkit.io/rooms/${roomID}/members`,
   {
     invitees: ["ccc", "bbb"],
     invitationRequired: false,

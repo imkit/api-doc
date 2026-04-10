@@ -1,16 +1,16 @@
-# 添加成员
+# 新增成員
 
 ## 概述
 
-此端点允许您将一位或多位用户添加到指定聊天室。支持邀请确认机制，并可选择是否自动生成系统消息通知。此 API 仅供服务端使用，需要适当的身份验证。
+此端點允許您將一位或多位用戶加入指定聊天室。支援邀請確認機制，並可選擇是否自動產生系統訊息通知。此 API 僅供伺服器端使用，需要適當的身份驗證。
 
 ------
 
-## API 端点
+## API 端點
 
-### 添加成员
+### 新增成員
 
-将一位或多位用户添加到指定聊天室。
+將一位或多位用戶加入指定聊天室。
 
 ```http
 POST /rooms/:id/members
@@ -18,44 +18,44 @@ POST /rooms/:id/members
 
 #### Headers
 
-| 参数 | 类型 | 必填 | 说明 |
+| 參數 | 類型 | 必填 | 說明 |
 | --- | --- | --- | --- |
-| `IM-CLIENT-KEY` | string | ✅ | 客户端密钥 |
-| `IM-Authorization` | string | ✅ | 客户端令牌 |
+| `IM-CLIENT-KEY` | string | ✅ | 用戶端金鑰 |
+| `IM-Authorization` | string | ✅ | 用戶端權杖 |
 
 #### Path Parameters
 
-| 参数 | 类型 | 必填 | 说明 |
+| 參數 | 類型 | 必填 | 說明 |
 | --- | --- | --- | --- |
-| `:id` | string | ✅ | 聊天室唯一标识符 |
+| `:id` | string | ✅ | 聊天室唯一識別碼 |
 
 #### Post Body
 
-| 参数 | 类型 | 必填 | 说明 |
+| 參數 | 類型 | 必填 | 說明 |
 | --- | --- | --- | --- |
-| `invitees` | array[string] | ✅ | 要添加的成员客户端 ID 数组 |
-| `systemMessage` | boolean | ❌ | 是否自动生成添加成员的系统消息，默认为 `false` |
-| `invitationRequired` | boolean | ❌ | 被邀请者是否需要接受邀请才能加入，默认为 `false`。仅适用于**群组**聊天室 |
+| `invitees` | array[string] | ✅ | 要加入的成員用戶端 ID 陣列 |
+| `systemMessage` | boolean | ❌ | 是否自動產生加入成員的系統訊息，預設為 `false` |
+| `invitationRequired` | boolean | ❌ | 受邀者是否需要接受邀請才能加入，預設為 `false`。僅適用於**群組**聊天室 |
 
-#### 示例请求
+#### 範例請求
 
-**示例一：邀请多位成员（需接受邀请）**
+**範例一：邀請多位成員（需接受邀請）**
 
-**cURL 示例：**
+**cURL 範例：**
 
 ```bash
-curl -X "POST" "http://localhost:3100/rooms/demo-room/members" \
+curl -X "POST" "https://your-app.imkit.io/rooms/demo-room/members" \
      -H 'IM-CLIENT-KEY: {您的_CLIENT_KEY}' \
      -H 'IM-Authorization: {您的_TOKEN}' \
      -H 'Content-Type: application/json; charset=utf-8' \
      -d '{"invitees": ["ccc", "bbb"], "invitationRequired": true, "systemMessage": true}'
 ```
 
-**JavaScript 示例：**
+**JavaScript 範例：**
 
 ```javascript
 const response = await axios.post(
-  `http://localhost:3100/rooms/${roomID}/members`,
+  `https://your-app.imkit.io/rooms/${roomID}/members`,
   {
     invitees: ["ccc", "bbb"],
     invitationRequired: true,
@@ -71,13 +71,13 @@ const response = await axios.post(
 );
 ```
 
-**示例二：直接添加成员（无需邀请确认）**
+**範例二：直接加入成員（無需邀請確認）**
 
-**JavaScript 示例：**
+**JavaScript 範例：**
 
 ```javascript
 const response = await axios.post(
-  `http://localhost:3100/rooms/${roomID}/members`,
+  `https://your-app.imkit.io/rooms/${roomID}/members`,
   {
     invitees: ["ccc", "bbb"],
     invitationRequired: false,
@@ -95,15 +95,15 @@ const response = await axios.post(
 
 #### Response
 
-**成功响应（200 OK）**
+**成功回應（200 OK）**
 
-| 参数 | 类型 | 说明 |
+| 參數 | 類型 | 說明 |
 | --- | --- | --- |
-| `RC` | number | 响应码（0 表示成功） |
-| `RM` | string | 响应消息 |
-| `result` | object | 更新后的聊天室完整信息 |
+| `RC` | number | 回應代碼（0 表示成功） |
+| `RM` | string | 回應訊息 |
+| `result` | object | 更新後的聊天室完整資訊 |
 
-#### 示例响应
+#### 範例回應
 
 ```json
 {
@@ -179,31 +179,31 @@ const response = await axios.post(
 }
 ```
 
-#### 错误响应
+#### 錯誤回應
 
-当请求失败时，您会收到包含错误详细信息的错误响应。常见的错误情况包括：
+當請求失敗時，您會收到包含錯誤詳細資訊的錯誤回應。常見的錯誤情況包括：
 
-- 无效的客户端密钥或授权令牌
+- 無效的用戶端金鑰或授權權杖
 - 指定的聊天室不存在
-- `invitees` 中包含不存在的用户 ID
-- 服务器内部错误
+- `invitees` 中包含不存在的用戶 ID
+- 伺服器內部錯誤
 
 ------
 
-## 使用场景
+## 使用場景
 
-### 邀请加入
-- **邀请多位成员**：通过设置 `invitationRequired: true`，被邀请者需主动接受邀请才会加入聊天室
-- **直接加入**：设置 `invitationRequired: false`，被邀请者会直接加入聊天室，无需确认
+### 邀請加入
+- **邀請多位成員**：透過設定 `invitationRequired: true`，受邀者需主動接受邀請才會加入聊天室
+- **直接加入**：設定 `invitationRequired: false`，受邀者會直接加入聊天室，無需確認
 
-### 系统通知
-- **自动通知**：设置 `systemMessage: true` 时，系统会自动在聊天室内生成"添加成员"通知消息
+### 系統通知
+- **自動通知**：設定 `systemMessage: true` 時，系統會自動在聊天室內產生「加入成員」的通知訊息
 
 ------
 
-## 注意事项
+## 注意事項
 
-- **`invitationRequired`**：设为 `true` 时，被邀请者需主动接受邀请才会加入聊天室；设为 `false` 时，被邀请者会直接加入
-- **系统消息**：设置 `systemMessage: true` 时，系统会自动在聊天室内生成"添加成员"通知消息
-- **单聊聊天室**：`invitationRequired` 对单聊（`direct`）聊天室无效，系统会自动设为 `false`
-- 成功添加后，响应会包含更新后的完整聊天室信息，包含最新的成员列表
+- **`invitationRequired`**：設為 `true` 時，受邀者需主動接受邀請才會加入聊天室；設為 `false` 時，受邀者會直接加入
+- **系統訊息**：設定 `systemMessage: true` 時，系統會自動在聊天室內產生「加入成員」的通知訊息
+- **一對一聊天室**：`invitationRequired` 對一對一（`direct`）聊天室無效，系統會自動設為 `false`
+- 成功加入後，回應會包含更新後的完整聊天室資訊，包含最新的成員列表

@@ -36,7 +36,7 @@ POST /messages/:id/pin
 **cURL 範例：**
 
 ```bash
-curl -X "POST" "http://localhost:3100/messages/5f890cf37d980e06f6aaf349/pin" \
+curl -X "POST" "https://your-app.imkit.io/messages/5f890cf37d980e06f6aaf349/pin" \
      -H 'IM-CLIENT-KEY: {您的_CLIENT_KEY}' \
      -H 'IM-Authorization: {您的_TOKEN}'
 ```
@@ -45,7 +45,7 @@ curl -X "POST" "http://localhost:3100/messages/5f890cf37d980e06f6aaf349/pin" \
 
 ```javascript
 const response = await axios.post(
-  `http://localhost:3100/messages/${messageID}/pin`,
+  `https://your-app.imkit.io/messages/${messageID}/pin`,
   null,
   {
     headers: {

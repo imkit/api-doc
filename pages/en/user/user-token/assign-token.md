@@ -56,6 +56,37 @@ POST /admin/clients
 }
 ```
 
+**JavaScript 範例：**
+
+```javascript
+const response = await axios.post(
+  `https://your-app.imkit.io/admin/clients`,
+  {
+    _id: "user002",
+    nickname: "John",
+    avatarUrl: "https://example.com/avatar.jpg",
+    issueAccessToken: false,
+    token: "my-custom-token-xyz",
+    expirationDate: "2025-06-30T12:00:00Z",
+  },
+  {
+    headers: {
+      "IM-API-KEY": process.env.IM_API_KEY,
+      "Content-Type": "application/json",
+    },
+  }
+);
+```
+
+**cURL 範例：**
+
+```bash
+curl -X "POST" "https://your-app.imkit.io/admin/clients" \
+     -H 'IM-API-KEY: {您的_API_KEY}' \
+     -H 'Content-Type: application/json' \
+     -d '{"_id": "user002", "nickname": "John", "avatarUrl": "https://example.com/avatar.jpg", "issueAccessToken": false, "token": "my-custom-token-xyz", "expirationDate": "2025-06-30T12:00:00Z"}'
+```
+
 #### Response
 
 **成功回應（200 OK）**
@@ -149,6 +180,18 @@ DELETE /admin/clients/{user_id}/token
 ```http
 IM-Authorization: Bearer my-custom-token-xyz
 ```
+
+## 使用場景
+
+### 外部身份整合
+- **SSO 整合**：將外部身份驗證系統的 token 綁定到 IMKIT 用戶
+- **自訂過期時間**：根據業務需求設定 token 的有效期限
+
+### Token 管理
+- **Token 輪換**：定期更新用戶的存取權杖以確保安全性
+- **多系統同步**：將其他系統核發的 token 同步至 IMKIT
+
+------
 
 ## 注意事項
 

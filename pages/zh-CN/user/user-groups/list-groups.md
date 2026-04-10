@@ -34,7 +34,7 @@ GET /admin/groups
 
 ```javascript
 const response = await axios.get(
-  "https://imkit-dev.funtek.io/admin/groups",
+  "https://your-app.imkit.io/admin/groups",
   {
     params: {
       limit: 50
@@ -49,7 +49,7 @@ const response = await axios.get(
 **cURL**
 
 ```bash
-curl -X GET "https://imkit-dev.funtek.io/admin/groups?limit=50" \
+curl -X GET "https://your-app.imkit.io/admin/groups?limit=50" \
   -H "IM-API-KEY: your_api_key"
 ```
 

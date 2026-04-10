@@ -35,7 +35,7 @@ DELETE /config/{key}
 ```http
 DELETE /config/censorship HTTP/1.1
 IM-API-KEY: {API-KEY}
-Host: localhost:3100
+Host: your-app.imkit.io
 Connection: close
 ```
 
@@ -44,7 +44,7 @@ Connection: close
 ```http
 DELETE /config/announcement HTTP/1.1
 IM-API-KEY: {API-KEY}
-Host: localhost:3100
+Host: your-app.imkit.io
 Connection: close
 ```
 
@@ -53,8 +53,28 @@ Connection: close
 ```http
 DELETE /config/push HTTP/1.1
 IM-API-KEY: {API-KEY}
-Host: localhost:3100
+Host: your-app.imkit.io
 Connection: close
+```
+
+**JavaScript 範例：**
+
+```javascript
+const response = await axios.delete(
+  `https://your-app.imkit.io/config/censorship`,
+  {
+    headers: {
+      "IM-API-KEY": process.env.IM_API_KEY,
+    },
+  }
+);
+```
+
+**cURL 範例：**
+
+```bash
+curl -X "DELETE" "https://your-app.imkit.io/config/censorship" \
+     -H 'IM-API-KEY: {您的_API_KEY}'
 ```
 
 #### Response

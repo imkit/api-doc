@@ -1,16 +1,16 @@
-# Unban Member
+# 解除禁止成員
 
-## Overview
+## 概述
 
-Remove the ban status for a specified user in a chatroom, restoring their normal activity permissions in that chatroom. Only chatroom owners have the permission to unban (limited to group chatrooms with owners). After unbanning, the user can interact and send messages in the chatroom again.
+在聊天室中解除對指定用戶的禁止狀態，恢復其在該聊天室中的正常活動權限。只有聊天室擁有者具備解除禁止的權限（限群組聊天室且設有擁有者）。解除禁止後，該用戶可以重新在聊天室中進行互動和發送訊息。
 
 ------
 
-## API Endpoint
+## API 端點
 
-### Unban a Specified User in a Chatroom
+### 在聊天室中解除禁止指定用戶
 
-Remove a specified user from the chatroom's ban list, restoring their activity permissions in that chatroom.
+將指定用戶從聊天室的禁止清單中移除，恢復其在該聊天室的活動權限。
 
 ```http
 DELETE /blockStatus/room/{roomID}/{blockee}
@@ -18,62 +18,84 @@ DELETE /blockStatus/room/{roomID}/{blockee}
 
 #### Headers
 
-| Parameter | Type | Required | Description |
-| ---- | ---- | ---- | ---- |
-| `IM-CLIENT-KEY` | string | ✅ | Client Key |
-| `IM-Authorization` | string | ✅ | Client Token |
+| 參數               | 類型   | 必填 | 說明           |
+| ------------------ | ------ | ---- | -------------- |
+| `IM-CLIENT-KEY`    | string | ✅    | Client Key     |
+| `IM-Authorization` | string | ✅    | Client Token   |
 
 #### Path Parameters
 
-| Parameter | Type | Required | Description |
-| ---- | ---- | ---- | ---- |
-| `roomID` | string | ✅ | Chatroom ID |
-| `blockee` | string | ✅ | User ID to unban |
+| 參數      | 類型   | 必填 | 說明                  |
+| --------- | ------ | ---- | --------------------- |
+| `roomID`  | string | ✅    | 聊天室 ID             |
+| `blockee` | string | ✅    | 要解除禁止的用戶 ID   |
 
-#### Example Request
+#### 範例請求
 
-**Unban a specific user**
+**解除禁止特定用戶**
 
 ```http
 DELETE /blockStatus/room/demo-room/ccc HTTP/1.1
 IM-CLIENT-KEY: {IM-CLIENT-KEY}
 IM-Authorization: {TOKEN}
-Host: localhost:3100
+Host: your-app.imkit.io
 Connection: close
+```
+
+**JavaScript 範例：**
+
+```javascript
+const response = await axios.delete(
+  `https://your-app.imkit.io/blockStatus/room/${roomID}/${blockee}`,
+  {
+    headers: {
+      "IM-CLIENT-KEY": IM_CLIENT_KEY,
+      "IM-Authorization": TOKEN,
+    },
+  }
+);
+```
+
+**cURL 範例：**
+
+```bash
+curl -X "DELETE" "https://your-app.imkit.io/blockStatus/room/{roomID}/{blockee}" \
+     -H 'IM-CLIENT-KEY: {您的_CLIENT_KEY}' \
+     -H 'IM-Authorization: {您的_TOKEN}'
 ```
 
 #### Response
 
-**Success Response (200 OK)**
+**成功回應（200 OK）**
 
-| Parameter | Type | Description |
-| ---- | ---- | ---- |
-| `RC` | number | Response code (0 indicates success) |
-| `RM` | string | Response message |
-| `result` | object | Unban status information |
+| 參數     | 類型   | 說明                   |
+| -------- | ------ | ---------------------- |
+| `RC`     | number | 回應代碼（0 表示成功） |
+| `RM`     | string | 回應訊息               |
+| `result` | object | 解除禁止狀態資訊       |
 
-**Unban Status Object Structure**
+**解除禁止狀態物件結構**
 
-| Parameter | Type | Description |
-| ---- | ---- | ---- |
-| `appID` | string | Application identifier |
-| `blockee` | object | Detailed information of the unbanned user |
-| `blocker` | string | User ID who performed the ban |
-| `room` | string | Chatroom ID |
-| `createdAt` | string | Original ban creation time |
-| `updatedAt` | string | Unban time |
+| 參數        | 類型   | 說明                      |
+| ----------- | ------ | ------------------------- |
+| `appID`     | string | 應用程式識別碼            |
+| `blockee`   | object | 被解除禁止用戶的詳細資訊  |
+| `blocker`   | string | 執行禁止的用戶 ID         |
+| `room`      | string | 聊天室 ID                 |
+| `createdAt` | string | 原禁止創建時間            |
+| `updatedAt` | string | 解除禁止時間              |
 
-**Unbanned User Object Structure**
+**被解除禁止用戶物件結構**
 
-| Parameter | Type | Description |
-| ---- | ---- | ---- |
-| `_id` | string | User unique identifier |
-| `nickname` | string | User nickname |
-| `avatarUrl` | string | User avatar URL |
-| `id` | string | User ID |
-| `lastLoginTimeMS` | number | Last login time (millisecond timestamp) |
+| 參數              | 類型   | 說明                          |
+| ----------------- | ------ | ----------------------------- |
+| `_id`             | string | 用戶唯一識別碼                |
+| `nickname`        | string | 用戶暱稱                      |
+| `avatarUrl`       | string | 用戶頭像 URL                  |
+| `id`              | string | 用戶 ID                       |
+| `lastLoginTimeMS` | number | 最後登入時間（毫秒時間戳）    |
 
-#### Example Response
+#### 範例回應
 
 ```json
 {
@@ -96,9 +118,9 @@ Connection: close
 }
 ```
 
-#### Error Response
+#### 錯誤回應
 
-**401 Unauthorized** - Authentication failed
+**401 Unauthorized** - 認證失敗
 
 ```json
 {
@@ -111,7 +133,7 @@ Connection: close
 }
 ```
 
-**403 Forbidden** - Insufficient permissions
+**403 Forbidden** - 權限不足
 
 ```json
 {
@@ -124,7 +146,7 @@ Connection: close
 }
 ```
 
-**404 Not Found** - Ban relationship does not exist
+**404 Not Found** - 禁止關係不存在
 
 ```json
 {
@@ -137,7 +159,7 @@ Connection: close
 }
 ```
 
-**400 Bad Request** - Invalid parameters
+**400 Bad Request** - 參數無效
 
 ```json
 {
@@ -152,30 +174,30 @@ Connection: close
 
 ------
 
-## Use Cases
+## 使用場景
 
-### Chatroom Management
-- **Remove ban**: Chatroom owners remove ban status from users
-- **Management decisions**: Adjust ban policies based on changing situations
-- **Member restoration**: Restore users' normal participation permissions in chatrooms
+### 聊天室管理
+- **禁止解除**：聊天室擁有者解除對用戶的禁止狀態
+- **管理決策**：基於情況變化調整禁止政策
+- **成員恢復**：恢復用戶在聊天室中的正常參與權限
 
-### Permission Management
-- **Owner exclusive**: Only chatroom owners can remove bans
-- **Permission restoration**: Restore users' full activity permissions in the chatroom
-- **Management flexibility**: Provide flexible ban management mechanisms
+### 權限管理
+- **擁有者專屬**：只有聊天室擁有者可以解除禁止
+- **權限恢復**：恢復用戶在該聊天室的完整活動權限
+- **管理彈性**：提供靈活的禁止管理機制
 
-### Relationship Repair
-- **Correct misjudgments**: Remove bans that were imposed due to misjudgments
-- **Situation improvement**: Restore permissions after user behavior improvement
-- **Reconciliation mechanism**: Provide pathways for repairing relationships between chatroom members
+### 關係修復
+- **誤判糾正**：解除因誤判而禁止的用戶
+- **情況改善**：用戶行為改善後的權限恢復
+- **和解機制**：提供聊天室成員關係修復的途徑
 
 ------
 
-## Important Notes
+## 注意事項
 
-- **Permission restrictions**: Only chatroom owners can perform unban operations (limited to group chatrooms with owners)
-- **Chatroom type**: This feature mainly targets group chatrooms, and the chatroom must have an owner
-- **Immediate effect**: Unban status takes effect immediately, users can participate in chatrooms immediately
-- **Ban scope**: Unbanning is limited to the specified chatroom and does not affect ban status in other chatrooms
-- **Non-existent handling**: Attempting to remove a non-existent ban relationship will return a 404 error
-- **Record keeping**: Unban operations update the timestamp of ban records
+- **權限限制**：只有聊天室擁有者可以執行解除禁止操作（限群組聊天室且設有擁有者）
+- **聊天室類型**：此功能主要針對群組聊天室，且該聊天室必須設有擁有者
+- **即時生效**：解除禁止狀態會立即生效，用戶可立即在聊天室中活動
+- **禁止範圍**：解除禁止僅限於指定的聊天室，不影響其他聊天室的禁止狀態
+- **不存在處理**：嘗試解除不存在的禁止關係會返回 404 錯誤
+- **記錄保存**：解除禁止操作會更新禁止記錄的時間戳記

@@ -52,7 +52,7 @@ PUT /rooms/58871b877390be11d5f1ab30 HTTP/1.1
 IM-CLIENT-KEY: 9FSk26d4AIbZh0k44F5+DzbetgAJA9WjC7WP36Khm6c=
 IM-Authorization: fVy7YhqBZqEzNO9LhMmcyA==
 Content-Type: application/json; charset=utf-8
-Host: localhost:3100
+Host: your-app.imkit.io
 Connection: close
 
 {
@@ -60,6 +60,36 @@ Connection: close
   "name": "Martena",
   "cover": "http://loremflickr.com/240/240/style?Kelly"
 }
+```
+
+**JavaScript 範例：**
+
+```javascript
+const response = await axios.put(
+  `https://your-app.imkit.io/rooms/58871b877390be11d5f1ab30`,
+  {
+    description: "Description La La",
+    name: "Martena",
+    cover: "http://loremflickr.com/240/240/style?Kelly",
+  },
+  {
+    headers: {
+      "IM-CLIENT-KEY": IM_CLIENT_KEY,
+      "IM-Authorization": TOKEN,
+      "Content-Type": "application/json",
+    },
+  }
+);
+```
+
+**cURL 範例：**
+
+```bash
+curl -X "PUT" "https://your-app.imkit.io/rooms/58871b877390be11d5f1ab30" \
+     -H 'IM-CLIENT-KEY: {您的_CLIENT_KEY}' \
+     -H 'IM-Authorization: {您的_TOKEN}' \
+     -H 'Content-Type: application/json' \
+     -d '{"description": "Description La La", "name": "Martena", "cover": "http://loremflickr.com/240/240/style?Kelly"}'
 ```
 
 #### Response

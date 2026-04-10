@@ -1,16 +1,16 @@
-# 撤销 Token
+# 撤銷 Token
 
 ## 概述
 
-撤销指定用户的 access token，使其无法继续使用聊天服务。您可以选择撤销特定的 token，或移除该用户的所有 token。
+撤銷指定用戶的 access token，使其無法繼續使用聊天服務。您可以選擇撤銷特定的 token，或移除該用戶的所有 token。
 
 ------
 
-## API 端点
+## API 端點
 
-### 撤销用户 Token
+### 撤銷用戶 Token
 
-撤销指定用户的 access token。
+撤銷指定用戶的 access token。
 
 ```http
 DELETE /admin/clients/{client_id}/token
@@ -18,26 +18,26 @@ DELETE /admin/clients/{client_id}/token
 
 #### Headers
 
-| 参数           | 类型   | 必填 | 说明               |
+| 參數           | 類型   | 必填 | 說明               |
 | -------------- | ------ | ---- | ------------------ |
-| `IM-API-KEY`   | string | ✅    | 您的 API 密钥      |
+| `IM-API-KEY`   | string | ✅    | 您的 API 金鑰      |
 | `Content-Type` | string | ✅    | `application/json` |
 
 #### Path Parameters
 
-| 参数        | 类型   | 必填 | 说明           |
+| 參數        | 類型   | 必填 | 說明           |
 | ----------- | ------ | ---- | -------------- |
-| `client_id` | string | ✅    | 用户唯一识别码 |
+| `client_id` | string | ✅    | 用戶唯一識別碼 |
 
 #### Request Body
 
-| 参数    | 类型   | 必填 | 说明                                               |
+| 參數    | 類型   | 必填 | 說明                                               |
 | ------- | ------ | ---- | -------------------------------------------------- |
-| `token` | string | ❌    | 要撤销的特定 token，若不提供则移除该用户所有 token |
+| `token` | string | ❌    | 要撤銷的特定 token，若不提供則移除該用戶所有 token |
 
-#### 示例请求
+#### 範例請求
 
-**撤销特定 Token**
+**撤銷特定 Token**
 
 ```json
 {
@@ -45,25 +45,51 @@ DELETE /admin/clients/{client_id}/token
 }
 ```
 
-**撤销所有 Token**
+**撤銷所有 Token**
 
 ```json
 {}
 ```
 
+**JavaScript 範例：**
+
+```javascript
+const response = await axios.delete(
+  `https://your-app.imkit.io/admin/clients/${clientId}/token`,
+  {
+    headers: {
+      "IM-API-KEY": process.env.IM_API_KEY,
+      "Content-Type": "application/json",
+    },
+    data: {
+      token: "old-token-xyz",
+    },
+  }
+);
+```
+
+**cURL 範例：**
+
+```bash
+curl -X "DELETE" "https://your-app.imkit.io/admin/clients/{client_id}/token" \
+     -H 'IM-API-KEY: {您的_API_KEY}' \
+     -H 'Content-Type: application/json' \
+     -d '{"token": "old-token-xyz"}'
+```
+
 #### Response
 
-**成功响应（200 OK）**
+**成功回應（200 OK）**
 
-| 参数            | 类型    | 说明                |
+| 參數            | 類型    | 說明                |
 | --------------- | ------- | ------------------- |
 | `success`       | boolean | 操作是否成功        |
-| `message`       | string  | 操作结果消息        |
-| `revokedTokens` | number  | 被撤销的 token 数量 |
+| `message`       | string  | 操作結果訊息        |
+| `revokedTokens` | number  | 被撤銷的 token 數量 |
 
-#### 示例响应
+#### 範例回應
 
-**撤销特定 Token**
+**撤銷特定 Token**
 
 ```json
 {
@@ -73,7 +99,7 @@ DELETE /admin/clients/{client_id}/token
 }
 ```
 
-**撤销所有 Token**
+**撤銷所有 Token**
 
 ```json
 {
@@ -83,9 +109,9 @@ DELETE /admin/clients/{client_id}/token
 }
 ```
 
-#### 错误响应
+#### 錯誤回應
 
-**400 Bad Request** - 请求参数错误
+**400 Bad Request** - 請求參數錯誤
 
 ```json
 {
@@ -94,7 +120,7 @@ DELETE /admin/clients/{client_id}/token
 }
 ```
 
-**401 Unauthorized** - API 密钥无效
+**401 Unauthorized** - API 金鑰無效
 
 ```json
 {
@@ -103,7 +129,7 @@ DELETE /admin/clients/{client_id}/token
 }
 ```
 
-**404 Not Found** - 用户不存在
+**404 Not Found** - 用戶不存在
 
 ```json
 {
@@ -112,7 +138,7 @@ DELETE /admin/clients/{client_id}/token
 }
 ```
 
-**404 Not Found** - Token 不存在（当指定特定 token 时）
+**404 Not Found** - Token 不存在（當指定特定 token 時）
 
 ```json
 {
@@ -123,30 +149,30 @@ DELETE /admin/clients/{client_id}/token
 
 ------
 
-## 使用场景
+## 使用場景
 
 ### 安全性考量
 
-- **帐号被盗用**：立即撤销所有 token 以确保安全
-- **设备遗失**：撤销特定设备的 token
-- **员工离职**：撤销企业用户的所有 token
+- **帳號被盜用**：立即撤銷所有 token 以確保安全
+- **設備遺失**：撤銷特定設備的 token
+- **員工離職**：撤銷企業用戶的所有 token
 
-### 系统管理
+### 系統管理
 
-- **强制登出**：撤销 token 强制用户重新登录
-- **Token 轮换**：定期撤销旧 token 提升安全性
-- **权限变更**：撤销 token 以重新分配权限
+- **強制登出**：撤銷 token 強制用戶重新登入
+- **Token 輪換**：定期撤銷舊 token 提升安全性
+- **權限變更**：撤銷 token 以重新分配權限
 
-## 注意事项
+## 注意事項
 
-- **即时生效**：Token 撤销后立即生效，用户将无法继续使用聊天功能
-- **不可恢复**：撤销的 token 无法恢复，需要重新 issue 或指派新 token
-- **批次操作**：不提供 `token` 参数可一次撤销用户的所有 token
-- **审计日志**：建议记录 token 撤销操作以供后续审计
+- **即時生效**：Token 撤銷後立即生效，用戶將無法繼續使用聊天功能
+- **不可復原**：撤銷的 token 無法恢復，需要重新 issue 或指派新 token
+- **批次操作**：不提供 `token` 參數可一次撤銷用戶的所有 token
+- **審計日誌**：建議記錄 token 撤銷操作以供後續審計
 
-## 最佳实践
+## 最佳實務
 
-1. **渐进式撤销**：优先撤销特定 token，避免影响用户其他设备
-2. **通知机制**：撤销 token 前通知用户，提供良好的用户体验
-3. **监控机制**：监控撤销操作，防止误操作或恶意攻击
-4. **备份策略**：在撤销前备份重要的用户会话数据
+1. **漸進式撤銷**：優先撤銷特定 token，避免影響用戶其他設備
+2. **通知機制**：撤銷 token 前通知用戶，提供良好的用戶體驗
+3. **監控機制**：監控撤銷操作，防止誤操作或惡意攻擊
+4. **備份策略**：在撤銷前備份重要的用戶會話資料

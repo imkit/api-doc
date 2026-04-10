@@ -51,6 +51,35 @@ POST /admin/clients
 }
 ```
 
+**JavaScript 範例：**
+
+```javascript
+const response = await axios.post(
+  `https://your-app.imkit.io/admin/clients`,
+  {
+    _id: "user001",
+    nickname: "Amy",
+    avatarUrl: "https://example.com/avatar.jpg",
+    issueAccessToken: true,
+  },
+  {
+    headers: {
+      "IM-API-KEY": process.env.IM_API_KEY,
+      "Content-Type": "application/json",
+    },
+  }
+);
+```
+
+**cURL 範例：**
+
+```bash
+curl -X "POST" "https://your-app.imkit.io/admin/clients" \
+     -H 'IM-API-KEY: {您的_API_KEY}' \
+     -H 'Content-Type: application/json' \
+     -d '{"_id": "user001", "nickname": "Amy", "avatarUrl": "https://example.com/avatar.jpg", "issueAccessToken": true}'
+```
+
 #### Response
 
 **成功回應（200 OK）**
@@ -115,6 +144,18 @@ POST /admin/clients
 ```http
 IM-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
 ```
+
+## 使用場景
+
+### 快速整合
+- **簡易開發**：讓系統自動產生 token，無需自行管理 token 生成邏輯
+- **快速驗證**：適合開發和測試階段快速取得有效的存取權杖
+
+### 用戶開通
+- **新用戶註冊**：用戶註冊時同時建立 IMKIT 用戶並取得 token，一步到位
+- **自動化流程**：在後端服務中自動為新用戶建立帳號並取得存取權杖
+
+------
 
 ## 注意事項
 

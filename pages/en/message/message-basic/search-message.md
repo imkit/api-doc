@@ -1,16 +1,16 @@
-# Search Messages
+# 搜尋訊息
 
-## Overview
+## 概述
 
-Search message content using keywords. This API uses a general search function that performs full-text search based on message content, supporting cross-room search or limiting to specific room scope, suitable for quickly locating specific message content.
+透過關鍵字搜尋訊息內容。此 API 使用通用搜尋功能，可以根據訊息內容進行全文搜尋，支援跨聊天室搜尋或限定特定聊天室範圍，適用於快速定位特定訊息內容。
 
 ------
 
-## API Endpoint
+## API 端點
 
-### Search Message Content
+### 搜尋訊息內容
 
-Search message content using keywords.
+使用關鍵字在訊息內容中進行搜尋。
 
 ```http
 POST /search
@@ -18,31 +18,31 @@ POST /search
 
 #### Headers
 
-| Parameter          | Type   | Required | Description  |
-| ------------------ | ------ | -------- | ------------ |
-| `IM-CLIENT-KEY`    | string | ✅        | Client Key   |
-| `IM-Authorization` | string | ✅        | Client Token |
+| 參數               | 類型   | 必填 | 說明           |
+| ------------------ | ------ | ---- | -------------- |
+| `IM-CLIENT-KEY`    | string | ✅    | Client Key     |
+| `IM-Authorization` | string | ✅    | Client Token   |
 
 #### Post Body
 
-| Parameter  | Type   | Required | Description                                        |
-| ---------- | ------ | -------- | -------------------------------------------------- |
-| `type`     | array  | ✅        | Search type, set to ["messages"]                  |
-| `keyword`  | string | ✅        | Search keyword (search within message content)    |
-| `room`     | string | ❌        | Limit search to specific room                      |
-| `roomTags` | array  | ❌        | Limit search to rooms with specified tags         |
-| `limit`    | number | ❌        | Maximum number of search results                   |
+| 參數       | 類型     | 必填 | 說明                                      |
+| ---------- | -------- | ---- | ----------------------------------------- |
+| `type`     | array    | ✅    | 搜尋類型，設定為 ["messages"]             |
+| `keyword`  | string   | ✅    | 搜尋關鍵字（在訊息內容中搜尋）            |
+| `room`     | string   | ❌    | 限制在特定聊天室內搜尋                    |
+| `roomTags` | array    | ❌    | 限制在擁有指定標籤的聊天室內搜尋          |
+| `limit`    | number   | ❌    | 最大搜尋結果數量                          |
 
-#### Sample Request
+#### 範例請求
 
-**Search messages in all rooms**
+**在所有聊天室中搜尋訊息**
 
 ```http
 POST /search HTTP/1.1
 IM-Authorization: {TOKEN}
 IM-CLIENT-KEY: {IM-CLIENT-KEY}
 Content-Type: application/json; charset=utf-8
-Host: localhost:3100
+Host: your-app.imkit.io
 Connection: close
 
 {
@@ -52,14 +52,14 @@ Connection: close
 }
 ```
 
-**Search messages in specific room**
+**在特定聊天室中搜尋訊息**
 
 ```http
 POST /search HTTP/1.1
 IM-Authorization: {TOKEN}
 IM-CLIENT-KEY: {IM-CLIENT-KEY}
 Content-Type: application/json; charset=utf-8
-Host: localhost:3100
+Host: your-app.imkit.io
 Connection: close
 
 {
@@ -69,14 +69,14 @@ Connection: close
 }
 ```
 
-**Search in rooms with specific tags**
+**在特定標籤的聊天室中搜尋**
 
 ```http
 POST /search HTTP/1.1
 IM-Authorization: {TOKEN}
 IM-CLIENT-KEY: {IM-CLIENT-KEY}
 Content-Type: application/json; charset=utf-8
-Host: localhost:3100
+Host: your-app.imkit.io
 Connection: close
 
 {
@@ -86,40 +86,70 @@ Connection: close
 }
 ```
 
+**JavaScript 範例：**
+
+```javascript
+const response = await axios.post(
+  `https://your-app.imkit.io/search`,
+  {
+    type: ["messages"],
+    keyword: "hello",
+    limit: 20,
+  },
+  {
+    headers: {
+      "IM-CLIENT-KEY": IM_CLIENT_KEY,
+      "IM-Authorization": TOKEN,
+      "Content-Type": "application/json",
+    },
+  }
+);
+```
+
+**cURL 範例：**
+
+```bash
+curl -X "POST" "https://your-app.imkit.io/search" \
+     -H 'IM-CLIENT-KEY: {您的_CLIENT_KEY}' \
+     -H 'IM-Authorization: {您的_TOKEN}' \
+     -H 'Content-Type: application/json' \
+     -d '{"type": ["messages"], "keyword": "hello", "limit": 20}'
+```
+
 #### Response
 
-**Success Response (200 OK)**
+**成功回應（200 OK）**
 
-| Parameter | Type   | Description                      |
-| --------- | ------ | -------------------------------- |
-| `RC`      | number | Response code (0 means success) |
-| `RM`      | string | Response message                 |
-| `result`  | object | Search results                   |
+| 參數     | 類型   | 說明                   |
+| -------- | ------ | ---------------------- |
+| `RC`     | number | 回應代碼（0 表示成功） |
+| `RM`     | string | 回應訊息               |
+| `result` | object | 搜尋結果               |
 
-**Search Result Structure**
+**搜尋結果結構**
 
-| Parameter  | Type  | Description                                  |
-| ---------- | ----- | -------------------------------------------- |
-| `messages` | array | Found message groups, grouped by room       |
+| 參數       | 類型   | 說明                              |
+| ---------- | ------ | --------------------------------- |
+| `messages` | array  | 搜尋到的訊息群組，按聊天室分組    |
 
-**Message Group Object Structure**
+**訊息群組物件結構**
 
-| Parameter  | Type   | Description                           |
-| ---------- | ------ | ------------------------------------- |
-| `room`     | object | Room information                      |
-| `messages` | array  | Matching message IDs in this room     |
+| 參數       | 類型   | 說明                      |
+| ---------- | ------ | ------------------------- |
+| `room`     | object | 聊天室資訊                |
+| `messages` | array  | 該聊天室中符合的訊息 ID   |
 
-**Room Information Object Structure**
+**聊天室資訊物件結構**
 
-| Parameter     | Type   | Description              |
-| ------------- | ------ | ------------------------ |
-| `_id`         | string | Room unique identifier   |
-| `name`        | string | Room name                |
-| `cover`       | string | Room cover image URL     |
-| `description` | string | Room description         |
-| `roomTags`    | array  | Room tags list           |
+| 參數            | 類型    | 說明                      |
+| --------------- | ------- | ------------------------- |
+| `_id`           | string  | 聊天室唯一識別碼          |
+| `name`          | string  | 聊天室名稱                |
+| `cover`         | string  | 聊天室封面圖片 URL        |
+| `description`   | string  | 聊天室描述                |
+| `roomTags`      | array   | 聊天室標籤列表            |
 
-#### Sample Response
+#### 範例回應
 
 ```json
 {
@@ -158,9 +188,9 @@ Connection: close
 }
 ```
 
-#### Error Response
+#### 錯誤回應
 
-**401 Unauthorized** - Authentication failed
+**401 Unauthorized** - 認證失敗
 
 ```json
 {
@@ -173,7 +203,7 @@ Connection: close
 }
 ```
 
-**400 Bad Request** - Invalid search parameters
+**400 Bad Request** - 搜尋參數無效
 
 ```json
 {
@@ -188,30 +218,30 @@ Connection: close
 
 ------
 
-## Use Cases
+## 使用場景
 
-### Message Search
-- **Keyword Lookup**: Quickly find historical messages containing specific keywords
-- **Content Backtracking**: Find relevant conversation content among large volumes of messages
-- **Information Retrieval**: Search for discussions related to specific topics or projects
+### 訊息搜尋
+- **關鍵字查找**：快速找到包含特定關鍵字的歷史訊息
+- **內容回溯**：在大量訊息中找到相關的對話內容
+- **資訊檢索**：搜尋特定主題或專案相關的討論
 
-### Room Management
-- **Content Moderation**: Search for messages containing specific terms for review
-- **Data Analysis**: Analyze popular topics discussed in rooms
-- **Compliance Checking**: Search for potentially violating message content
+### 聊天室管理
+- **內容審核**：搜尋包含特定詞彙的訊息進行審核
+- **資料分析**：分析聊天室中討論的熱門話題
+- **合規檢查**：搜尋可能違規的訊息內容
 
-### User Experience
-- **Smart Search**: Provide users with quick historical conversation search functionality
-- **Related Display**: Show all messages related to search keywords
-- **Cross-room Search**: Search for related content across multiple rooms simultaneously
+### 用戶體驗
+- **智能搜尋**：提供用戶快速搜尋歷史對話的功能
+- **關聯顯示**：顯示與搜尋關鍵字相關的所有訊息
+- **跨室搜尋**：在多個聊天室中同時搜尋相關內容
 
 ------
 
-## Notes
+## 注意事項
 
-- **Search Scope**: Only searches rooms and messages that the current user has permission to access
-- **Keyword Matching**: Supports full-text search, matching keywords in message content
-- **Result Grouping**: Search results are grouped by room for better understanding of message sources
-- **Permission Control**: Search results are filtered based on user's room permissions
-- **Performance Considerations**: Large-scale searches may take longer, recommend setting reasonable limit values
-- **Message IDs**: Returns message ID arrays, additional API calls needed to get complete message content
+- **搜尋範圍**：只會搜尋當前用戶有權限訪問的聊天室和訊息
+- **關鍵字匹配**：支援全文搜尋，匹配訊息內容中的關鍵字
+- **結果分組**：搜尋結果按聊天室分組，便於理解訊息來源
+- **權限控制**：搜尋結果會根據用戶的聊天室權限進行過濾
+- **效能考量**：大範圍搜尋可能需要較長時間，建議設定合理的 limit 值
+- **訊息 ID**：返回的是訊息 ID 陣列，需要額外 API 調用來獲取完整訊息內容

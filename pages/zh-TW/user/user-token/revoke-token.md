@@ -51,6 +51,32 @@ DELETE /admin/clients/{client_id}/token
 {}
 ```
 
+**JavaScript 範例：**
+
+```javascript
+const response = await axios.delete(
+  `https://your-app.imkit.io/admin/clients/${clientId}/token`,
+  {
+    headers: {
+      "IM-API-KEY": process.env.IM_API_KEY,
+      "Content-Type": "application/json",
+    },
+    data: {
+      token: "old-token-xyz",
+    },
+  }
+);
+```
+
+**cURL 範例：**
+
+```bash
+curl -X "DELETE" "https://your-app.imkit.io/admin/clients/{client_id}/token" \
+     -H 'IM-API-KEY: {您的_API_KEY}' \
+     -H 'Content-Type: application/json' \
+     -d '{"token": "old-token-xyz"}'
+```
+
 #### Response
 
 **成功回應（200 OK）**

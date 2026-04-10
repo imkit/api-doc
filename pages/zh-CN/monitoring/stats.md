@@ -28,7 +28,7 @@ GET /admin/stats
 
 ```javascript
 const response = await axios.get(
-  "https://imkit-dev.funtek.io/admin/stats",
+  "https://your-app.imkit.io/admin/stats",
   {
     headers: {
       "IM-API-KEY": process.env.IM_API_KEY
@@ -40,7 +40,7 @@ const response = await axios.get(
 **cURL**
 
 ```bash
-curl -X GET "https://imkit-dev.funtek.io/admin/stats" \
+curl -X GET "https://your-app.imkit.io/admin/stats" \
   -H "IM-API-KEY: your_api_key"
 ```
 

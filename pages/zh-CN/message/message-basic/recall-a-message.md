@@ -1,16 +1,16 @@
-# 撤回消息
+# 撤回訊息
 
 ## 概述
 
-此端点允许用户撤回聊天室中的指定消息。撤回后，原消息内容会被清空，消息类型变更为 `recall`，聊天室中的所有成员都能看到该消息已被撤回。支持客户端和平台 API 两种验证方式。
+此端點允許用戶撤回聊天室中的指定訊息。撤回後，原訊息內容會被清空，訊息類型變更為 `recall`，聊天室中的所有成員都能看到該訊息已被撤回。支援用戶端和平台 API 兩種驗證方式。
 
 ------
 
-## API 端点
+## API 端點
 
-### 撤回消息
+### 撤回訊息
 
-撤回聊天室中的指定消息。
+撤回聊天室中的指定訊息。
 
 ```http
 POST /rooms/:roomId/message
@@ -18,53 +18,53 @@ POST /rooms/:roomId/message
 
 #### Headers
 
-此 API 支持两种验证方式，择一使用：
+此 API 支援兩種驗證方式，擇一使用：
 
-**客户端验证**
+**用戶端驗證**
 
-| 参数               | 类型   | 必填 | 说明         |
+| 參數               | 類型   | 必填 | 說明         |
 | ------------------ | ------ | ---- | ------------ |
-| `IM-CLIENT-KEY`    | string | ✅   | 客户端密钥   |
-| `IM-Authorization` | string | ✅   | 客户端令牌   |
+| `IM-CLIENT-KEY`    | string | ✅   | 用戶端金鑰   |
+| `IM-Authorization` | string | ✅   | 用戶端權杖   |
 
-**平台 API 验证**
+**平台 API 驗證**
 
-| 参数         | 类型   | 必填 | 说明             |
+| 參數         | 類型   | 必填 | 說明             |
 | ------------ | ------ | ---- | ---------------- |
-| `IM-API-KEY` | string | ✅   | 平台 API 密钥    |
+| `IM-API-KEY` | string | ✅   | 平台 API 金鑰    |
 
 #### Path Parameters
 
-| 参数      | 类型   | 必填 | 说明             |
-| --------- | ------ | ---- | ---------------- |
-| `:roomId` | string | ✅   | 聊天室唯一标识符 |
+| 參數       | 類型   | 必填 | 說明             |
+| ---------- | ------ | ---- | ---------------- |
+| `:roomId`  | string | ✅   | 聊天室唯一識別碼 |
 
 #### Post Body
 
-| 参数          | 类型   | 必填 | 说明                      |
-| ------------- | ------ | ---- | ------------------------- |
-| `messageType` | string | ✅   | 固定填入 `"recall"`       |
-| `_id`         | string | ✅   | 要撤回的消息唯一标识符    |
+| 參數          | 類型   | 必填 | 說明                            |
+| ------------- | ------ | ---- | ------------------------------- |
+| `messageType` | string | ✅   | 固定填入 `"recall"`             |
+| `_id`         | string | ✅   | 要撤回的訊息唯一識別碼          |
 
-#### 示例请求
+#### 範例請求
 
-**示例一：客户端验证撤回消息**
+**範例一：用戶端驗證撤回訊息**
 
-**cURL 示例：**
+**cURL 範例：**
 
 ```bash
-curl -X "POST" "http://localhost:3100/rooms/demo-room/message" \
+curl -X "POST" "https://your-app.imkit.io/rooms/demo-room/message" \
      -H 'IM-CLIENT-KEY: {您的_CLIENT_KEY}' \
      -H 'IM-Authorization: {您的_TOKEN}' \
      -H 'Content-Type: application/json; charset=utf-8' \
      -d '{"_id": "5ce3d80bd594874e495895a4", "messageType": "recall"}'
 ```
 
-**JavaScript 示例：**
+**JavaScript 範例：**
 
 ```javascript
 const response = await axios.post(
-  `http://localhost:3100/rooms/${roomID}/message`,
+  `https://your-app.imkit.io/rooms/${roomID}/message`,
   {
     _id: "5ce3d80bd594874e495895a4",
     messageType: "recall",
@@ -79,13 +79,13 @@ const response = await axios.post(
 );
 ```
 
-**示例二：平台 API 验证撤回消息**
+**範例二：平台 API 驗證撤回訊息**
 
-**JavaScript 示例：**
+**JavaScript 範例：**
 
 ```javascript
 const response = await axios.post(
-  `http://localhost:3100/rooms/${roomID}/message`,
+  `https://your-app.imkit.io/rooms/${roomID}/message`,
   {
     _id: "5ce3d80bd594874e495895a4",
     messageType: "recall",
@@ -101,21 +101,21 @@ const response = await axios.post(
 
 #### Response
 
-**成功响应（200 OK）**
+**成功回應（200 OK）**
 
-| 参数                  | 类型   | 说明                               |
+| 參數                  | 類型   | 說明                               |
 | --------------------- | ------ | ---------------------------------- |
-| `RC`                  | number | 响应码（0 表示成功）               |
-| `RM`                  | string | 响应消息                           |
-| `result._id`          | string | 消息唯一标识符                     |
-| `result.message`      | string | 消息内容（撤回后为空字符串）       |
-| `result.room`         | string | 所属聊天室 ID                      |
-| `result.sender`       | object | 撤回操作的发送者信息               |
-| `result.messageType`  | string | 消息类型（撤回后为 `"recall"`）    |
-| `result.messageTimeMS`| number | 消息发送时间戳（毫秒）             |
-| `result.updatedAtMS`  | number | 最后更新时间戳（毫秒）             |
+| `RC`                  | number | 回應代碼（0 表示成功）             |
+| `RM`                  | string | 回應訊息                           |
+| `result._id`          | string | 訊息唯一識別碼                     |
+| `result.message`      | string | 訊息內容（撤回後為空字串）         |
+| `result.room`         | string | 所屬聊天室 ID                      |
+| `result.sender`       | object | 撤回操作的發送者資訊               |
+| `result.messageType`  | string | 訊息類型（撤回後為 `"recall"`）    |
+| `result.messageTimeMS`| number | 訊息發送時間戳（毫秒）             |
+| `result.updatedAtMS`  | number | 最後更新時間戳（毫秒）             |
 
-#### 示例响应
+#### 範例回應
 
 ```json
 {
@@ -143,29 +143,29 @@ const response = await axios.post(
 }
 ```
 
-#### 错误响应
+#### 錯誤回應
 
-当请求失败时，您会收到包含错误详细信息的错误响应。常见的错误情况包括：
+當請求失敗時，您會收到包含錯誤詳細資訊的錯誤回應。常見的錯誤情況包括：
 
-- 无效的验证密钥或令牌
-- 指定的消息或聊天室不存在
-- 无权限撤回该消息
-- 服务器内部错误
-
-------
-
-## 使用场景
-
-### 消息管理
-
-- **误发消息修正**：用户发送错误消息后可立即撤回
-- **敏感信息移除**：撤回包含敏感或不当内容的消息
-- **后台管理**：管理员通过平台 API 撤回违规消息
+- 無效的驗證金鑰或權杖
+- 指定的訊息或聊天室不存在
+- 無權限撤回該訊息
+- 伺服器內部錯誤
 
 ------
 
-## 注意事项
+## 使用場景
 
-- **撤回效果**：撤回后，消息的 `message` 字段会变为空字符串，`messageType` 变为 `"recall"`，聊天室所有成员均可看到撤回状态
-- **`_id`**：请求 Body 中的 `_id` 为要撤回的**消息** ID，而非聊天室 ID
-- **两种验证**：客户端验证（`IM-CLIENT-KEY` + `IM-Authorization`）适用于普通用户操作；平台 API 验证（`IM-API-KEY`）适用于后台管理操作
+### 訊息管理
+
+- **誤發訊息修正**：用戶發送錯誤訊息後可立即撤回
+- **敏感資訊移除**：撤回包含敏感或不當內容的訊息
+- **後台管理**：管理員透過平台 API 撤回違規訊息
+
+------
+
+## 注意事項
+
+- **撤回效果**：撤回後，訊息的 `message` 欄位會變為空字串，`messageType` 變為 `"recall"`，聊天室所有成員均可看到撤回狀態
+- **`_id`**：請求 Body 中的 `_id` 為要撤回的**訊息** ID，非聊天室 ID
+- **兩種驗證**：用戶端驗證（`IM-CLIENT-KEY` + `IM-Authorization`）適用於一般用戶操作；平台 API 驗證（`IM-API-KEY`）適用於後台管理操作

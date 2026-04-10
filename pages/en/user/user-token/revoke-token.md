@@ -1,16 +1,16 @@
-# Revoke Token
+# 撤銷 Token
 
-## Overview
+## 概述
 
-Revoke the access token of a specified user, making them unable to continue using the chat service. You can choose to revoke a specific token or remove all tokens for that user.
+撤銷指定用戶的 access token，使其無法繼續使用聊天服務。您可以選擇撤銷特定的 token，或移除該用戶的所有 token。
 
 ------
 
-## API Endpoint
+## API 端點
 
-### Revoke User Token
+### 撤銷用戶 Token
 
-Revoke the access token of a specified user.
+撤銷指定用戶的 access token。
 
 ```http
 DELETE /admin/clients/{client_id}/token
@@ -18,26 +18,26 @@ DELETE /admin/clients/{client_id}/token
 
 #### Headers
 
-| Parameter      | Type   | Required | Description        |
-| -------------- | ------ | -------- | ------------------ |
-| `IM-API-KEY`   | string | ✅       | Your API key       |
-| `Content-Type` | string | ✅       | `application/json` |
+| 參數           | 類型   | 必填 | 說明               |
+| -------------- | ------ | ---- | ------------------ |
+| `IM-API-KEY`   | string | ✅    | 您的 API 金鑰      |
+| `Content-Type` | string | ✅    | `application/json` |
 
 #### Path Parameters
 
-| Parameter   | Type   | Required | Description         |
-| ----------- | ------ | -------- | ------------------- |
-| `client_id` | string | ✅       | User unique identifier |
+| 參數        | 類型   | 必填 | 說明           |
+| ----------- | ------ | ---- | -------------- |
+| `client_id` | string | ✅    | 用戶唯一識別碼 |
 
 #### Request Body
 
-| Parameter | Type   | Required | Description                                                      |
-| --------- | ------ | -------- | ---------------------------------------------------------------- |
-| `token`   | string | ❌       | Specific token to revoke, if not provided, removes all user tokens |
+| 參數    | 類型   | 必填 | 說明                                               |
+| ------- | ------ | ---- | -------------------------------------------------- |
+| `token` | string | ❌    | 要撤銷的特定 token，若不提供則移除該用戶所有 token |
 
-#### Example Request
+#### 範例請求
 
-**Revoke Specific Token**
+**撤銷特定 Token**
 
 ```json
 {
@@ -45,25 +45,51 @@ DELETE /admin/clients/{client_id}/token
 }
 ```
 
-**Revoke All Tokens**
+**撤銷所有 Token**
 
 ```json
 {}
 ```
 
+**JavaScript 範例：**
+
+```javascript
+const response = await axios.delete(
+  `https://your-app.imkit.io/admin/clients/${clientId}/token`,
+  {
+    headers: {
+      "IM-API-KEY": process.env.IM_API_KEY,
+      "Content-Type": "application/json",
+    },
+    data: {
+      token: "old-token-xyz",
+    },
+  }
+);
+```
+
+**cURL 範例：**
+
+```bash
+curl -X "DELETE" "https://your-app.imkit.io/admin/clients/{client_id}/token" \
+     -H 'IM-API-KEY: {您的_API_KEY}' \
+     -H 'Content-Type: application/json' \
+     -d '{"token": "old-token-xyz"}'
+```
+
 #### Response
 
-**Success Response (200 OK)**
+**成功回應（200 OK）**
 
-| Parameter      | Type    | Description               |
-| -------------- | ------- | ------------------------- |
-| `success`      | boolean | Whether operation succeeded |
-| `message`      | string  | Operation result message  |
-| `revokedTokens`| number  | Number of tokens revoked  |
+| 參數            | 類型    | 說明                |
+| --------------- | ------- | ------------------- |
+| `success`       | boolean | 操作是否成功        |
+| `message`       | string  | 操作結果訊息        |
+| `revokedTokens` | number  | 被撤銷的 token 數量 |
 
-#### Example Response
+#### 範例回應
 
-**Revoke Specific Token**
+**撤銷特定 Token**
 
 ```json
 {
@@ -73,7 +99,7 @@ DELETE /admin/clients/{client_id}/token
 }
 ```
 
-**Revoke All Tokens**
+**撤銷所有 Token**
 
 ```json
 {
@@ -83,9 +109,9 @@ DELETE /admin/clients/{client_id}/token
 }
 ```
 
-#### Error Response
+#### 錯誤回應
 
-**400 Bad Request** - Request parameter error
+**400 Bad Request** - 請求參數錯誤
 
 ```json
 {
@@ -94,7 +120,7 @@ DELETE /admin/clients/{client_id}/token
 }
 ```
 
-**401 Unauthorized** - Invalid API key
+**401 Unauthorized** - API 金鑰無效
 
 ```json
 {
@@ -103,7 +129,7 @@ DELETE /admin/clients/{client_id}/token
 }
 ```
 
-**404 Not Found** - User does not exist
+**404 Not Found** - 用戶不存在
 
 ```json
 {
@@ -112,7 +138,7 @@ DELETE /admin/clients/{client_id}/token
 }
 ```
 
-**404 Not Found** - Token does not exist (when specifying a specific token)
+**404 Not Found** - Token 不存在（當指定特定 token 時）
 
 ```json
 {
@@ -123,30 +149,30 @@ DELETE /admin/clients/{client_id}/token
 
 ------
 
-## Use Cases
+## 使用場景
 
-### Security Considerations
+### 安全性考量
 
-- **Account Compromise**: Immediately revoke all tokens to ensure security
-- **Device Loss**: Revoke specific device tokens
-- **Employee Departure**: Revoke all tokens for enterprise users
+- **帳號被盜用**：立即撤銷所有 token 以確保安全
+- **設備遺失**：撤銷特定設備的 token
+- **員工離職**：撤銷企業用戶的所有 token
 
-### System Management
+### 系統管理
 
-- **Force Logout**: Revoke tokens to force user re-authentication
-- **Token Rotation**: Regularly revoke old tokens to improve security
-- **Permission Changes**: Revoke tokens to reassign permissions
+- **強制登出**：撤銷 token 強制用戶重新登入
+- **Token 輪換**：定期撤銷舊 token 提升安全性
+- **權限變更**：撤銷 token 以重新分配權限
 
-## Notes
+## 注意事項
 
-- **Immediate Effect**: Token revocation takes effect immediately, users will be unable to continue using chat functions
-- **Irreversible**: Revoked tokens cannot be restored, need to reissue or assign new tokens
-- **Batch Operation**: Not providing `token` parameter revokes all tokens for the user at once
-- **Audit Logs**: Recommend logging token revocation operations for future auditing
+- **即時生效**：Token 撤銷後立即生效，用戶將無法繼續使用聊天功能
+- **不可復原**：撤銷的 token 無法恢復，需要重新 issue 或指派新 token
+- **批次操作**：不提供 `token` 參數可一次撤銷用戶的所有 token
+- **審計日誌**：建議記錄 token 撤銷操作以供後續審計
 
-## Best Practices
+## 最佳實務
 
-1. **Progressive Revocation**: Prioritize revoking specific tokens to avoid affecting user's other devices
-2. **Notification System**: Notify users before revoking tokens to provide good user experience
-3. **Monitoring System**: Monitor revocation operations to prevent accidental operations or malicious attacks
-4. **Backup Strategy**: Back up important user session data before revocation
+1. **漸進式撤銷**：優先撤銷特定 token，避免影響用戶其他設備
+2. **通知機制**：撤銷 token 前通知用戶，提供良好的用戶體驗
+3. **監控機制**：監控撤銷操作，防止誤操作或惡意攻擊
+4. **備份策略**：在撤銷前備份重要的用戶會話資料

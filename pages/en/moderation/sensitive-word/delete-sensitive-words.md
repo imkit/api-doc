@@ -1,16 +1,16 @@
-# Delete Sensitive Words
+# 刪除敏感詞設定
 
-## Overview
+## 概述
 
-Delete the system's sensitive word censorship configuration. By removing censorship settings from the runtime configuration, you can disable sensitive word filtering functionality or clear specific configuration items. This feature is suitable for configuration cleanup, feature disabling, and system maintenance.
+刪除系統的敏感詞彙審查配置。透過移除運行時配置中的審查設定，可以停用敏感詞過濾功能或清除特定的配置項目。此功能適用於配置清理、功能停用和系統維護。
 
 ------
 
-## API Endpoint
+## API 端點
 
-### Delete Configuration Item
+### 刪除配置項目
 
-Delete a specified runtime configuration item.
+刪除指定的運行時配置項目。
 
 ```http
 DELETE /config/{key}
@@ -18,56 +18,76 @@ DELETE /config/{key}
 
 #### Headers
 
-| Parameter | Type | Required | Description |
-| ---- | ---- | ---- | ---- |
-| `IM-API-KEY` | string | ✅ | Platform administrator API Key |
+| 參數         | 類型   | 必填 | 說明              |
+| ------------ | ------ | ---- | ----------------- |
+| `IM-API-KEY` | string | ✅    | 平台管理員 API Key |
 
 #### Path Parameters
 
-| Parameter | Type | Required | Description |
-| ---- | ---- | ---- | ---- |
-| `key` | string | ✅ | Runtime configuration key |
+| 參數  | 類型   | 必填 | 說明           |
+| ----- | ------ | ---- | -------------- |
+| `key` | string | ✅    | 運行時配置鍵值 |
 
-#### Example Request
+#### 範例請求
 
-**Delete sensitive word configuration**
+**刪除敏感詞配置**
 
 ```http
 DELETE /config/censorship HTTP/1.1
 IM-API-KEY: {API-KEY}
-Host: localhost:3100
+Host: your-app.imkit.io
 Connection: close
 ```
 
-**Delete announcement configuration**
+**刪除公告配置**
 
 ```http
 DELETE /config/announcement HTTP/1.1
 IM-API-KEY: {API-KEY}
-Host: localhost:3100
+Host: your-app.imkit.io
 Connection: close
 ```
 
-**Delete other configuration**
+**刪除其他配置**
 
 ```http
 DELETE /config/push HTTP/1.1
 IM-API-KEY: {API-KEY}
-Host: localhost:3100
+Host: your-app.imkit.io
 Connection: close
+```
+
+**JavaScript 範例：**
+
+```javascript
+const response = await axios.delete(
+  `https://your-app.imkit.io/config/censorship`,
+  {
+    headers: {
+      "IM-API-KEY": process.env.IM_API_KEY,
+    },
+  }
+);
+```
+
+**cURL 範例：**
+
+```bash
+curl -X "DELETE" "https://your-app.imkit.io/config/censorship" \
+     -H 'IM-API-KEY: {您的_API_KEY}'
 ```
 
 #### Response
 
-**Success Response (200 OK)**
+**成功回應（200 OK）**
 
-| Parameter | Type | Description |
-| ---- | ---- | ---- |
-| `RC` | number | Response code (0 indicates success) |
-| `RM` | string | Response message |
-| `result` | object | Empty object |
+| 參數     | 類型   | 說明                   |
+| -------- | ------ | ---------------------- |
+| `RC`     | number | 回應代碼（0 表示成功） |
+| `RM`     | string | 回應訊息               |
+| `result` | object | 空物件                 |
 
-#### Example Response
+#### 範例回應
 
 ```json
 {
@@ -77,9 +97,9 @@ Connection: close
 }
 ```
 
-#### Error Response
+#### 錯誤回應
 
-**401 Unauthorized** - Authentication failed
+**401 Unauthorized** - 認證失敗
 
 ```json
 {
@@ -92,7 +112,7 @@ Connection: close
 }
 ```
 
-**403 Forbidden** - Insufficient permissions
+**403 Forbidden** - 權限不足
 
 ```json
 {
@@ -105,7 +125,7 @@ Connection: close
 }
 ```
 
-**404 Not Found** - Configuration item does not exist
+**404 Not Found** - 配置項目不存在
 
 ```json
 {
@@ -120,31 +140,31 @@ Connection: close
 
 ------
 
-## Use Cases
+## 使用場景
 
-### Feature Disabling
-- **Disable filtering**: Completely disable sensitive word filtering functionality
-- **Temporary shutdown**: Temporarily disable certain configuration features
-- **Test environment**: Remove production configurations in test environments
+### 功能停用
+- **停用過濾**：完全停用敏感詞過濾功能
+- **臨時關閉**：暫時關閉某些配置功能
+- **測試環境**：在測試環境中移除生產配置
 
-### Configuration Cleanup
-- **Expired configurations**: Clean up configuration items that are no longer used
-- **Reset settings**: Clear old configurations to prepare for new settings
-- **System reset**: Reset configuration to default state
+### 配置清理
+- **過期配置**：清理不再使用的配置項目
+- **重新設定**：清除舊配置準備重新設定
+- **系統重置**：重置配置到預設狀態
 
-### Maintenance Operations
-- **Emergency handling**: Urgently remove problematic configurations
-- **Version updates**: Clean old configurations during system updates
-- **Error fixing**: Remove configuration items causing issues
+### 維護操作
+- **緊急處理**：緊急移除有問題的配置
+- **版本更新**：在系統更新時清理舊配置
+- **錯誤修復**：移除導致問題的配置項目
 
 ------
 
-## Important Notes
+## 注意事項
 
-- **Platform administrator only**: This feature is limited to platform administrators and requires API Key
-- **Immediate effect**: Configuration deletion takes effect immediately, related functions will be disabled immediately
-- **Irreversible**: Delete operations cannot be undone, recommend backing up configuration beforehand
-- **Function impact**: Deleting censorship configuration will completely disable sensitive word filtering
-- **Runtime configuration only**: Only affects runtime configuration, does not modify file configurations
-- **Dependency check**: Ensure no other functions depend on this configuration before deletion
-- **Monitoring recommendation**: Monitor system functions for normal operation after deletion
+- **平台管理員專用**：此功能僅限平台管理員使用，需要 API Key
+- **即時生效**：配置刪除會立即生效，相關功能會立即停用
+- **不可恢復**：刪除操作無法復原，建議事先備份配置
+- **功能影響**：刪除 censorship 配置會完全停用敏感詞過濾
+- **運行時配置**：只影響運行時配置，不會修改檔案配置
+- **依賴檢查**：刪除前請確認沒有其他功能依賴此配置
+- **監控建議**：刪除後請監控系統功能是否正常運作

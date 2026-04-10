@@ -2,15 +2,15 @@
 
 ## 概述
 
-此端点允许您获取当前用户已加入的聊天室列表，支持分页、排序及条件筛选。适用于聊天室列表展示、增量同步等场景。
+此端點允許您取得目前用戶所加入的聊天室清單，支援分頁、排序及條件篩選。適用於聊天室列表顯示、增量同步等場景。
 
 ------
 
-## API 端点
+## API 端點
 
-### 获取聊天室列表
+### 取得聊天室列表
 
-获取当前用户已加入的聊天室列表，支持分页、排序及条件筛选。
+取得目前用戶已加入的聊天室清單，支援分頁、排序及條件篩選。
 
 ```http
 GET /rooms
@@ -18,55 +18,55 @@ GET /rooms
 
 #### Headers
 
-| 参数 | 类型 | 必填 | 说明 |
+| 參數 | 類型 | 必填 | 說明 |
 | --- | --- | --- | --- |
-| `IM-CLIENT-KEY` | string | ✅ | 客户端密钥 |
-| `IM-CLIENT-ID` | string | ✅ | 当前用户的客户端 ID |
-| `IM-Authorization` | string | ✅ | 客户端令牌 |
+| `IM-CLIENT-KEY` | string | ✅ | 用戶端金鑰 |
+| `IM-CLIENT-ID` | string | ✅ | 當前用戶的用戶端 ID |
+| `IM-Authorization` | string | ✅ | 用戶端權杖 |
 
 #### Query Parameters
 
-| 参数 | 类型 | 必填 | 说明 |
+| 參數 | 類型 | 必填 | 說明 |
 | --- | --- | --- | --- |
-| `sort` | string | ❌ | 排序条件，可组合多个字段，以空格分隔；前缀 `-` 表示降序排列 |
-| `skip` | integer | ❌ | 分页偏移量，默认为 `0` |
-| `limit` | integer | ❌ | 返回聊天室数量上限，默认为 `0`（不限制） |
-| `updatedAfter` | string 或 integer | ❌ | 筛选在指定时间戳后有最新消息或创建的聊天室，格式支持 ISO-8601 字符串或毫秒 Epoch 整数 |
-| `pref` | JSON | ❌ | 按用户的聊天室偏好设置筛选，例如 `{"tags": "some-tag"}` |
-| `sortUnreadFirst` | integer | ❌ | 非零值时，优先排列有未读消息的聊天室 |
+| `sort` | string | ❌ | 排序條件，可組合多個欄位，以空格分隔；前綴 `-` 表示遞減排序 |
+| `skip` | integer | ❌ | 分頁偏移量，預設為 `0` |
+| `limit` | integer | ❌ | 回傳聊天室數量上限，預設為 `0`（不限制） |
+| `updatedAfter` | string 或 integer | ❌ | 篩選在指定時間戳後有最新訊息或建立的聊天室，格式支援 ISO-8601 字串或毫秒 Epoch 整數 |
+| `pref` | JSON | ❌ | 依用戶的聊天室偏好設定篩選，例如 `{"tags": "some-tag"}` |
+| `sortUnreadFirst` | integer | ❌ | 非零值時，優先排序有未讀訊息的聊天室 |
 
-**sort 参数示例**
+**sort 參數範例**
 
-按最新消息和创建时间降序排列：
+依最新訊息和建立時間遞減排序：
 
 ```
 -lastMessage -createdTime
 ```
 
-按创建时间升序排列：
+依建立時間遞增排序：
 
 ```
 createdTime
 ```
 
-#### 示例请求
+#### 範例請求
 
-**示例一：获取聊天室列表（分页 + 时间筛选）**
+**範例一：取得聊天室列表（分頁 + 時間篩選）**
 
-cURL 示例：
+cURL 範例：
 
 ```bash
-curl "http://localhost:3100/rooms?skip=0&limit=20&sort=-lastMessage&updatedAfter=2020-10-15T03:28:54Z" \
+curl "https://your-app.imkit.io/rooms?skip=0&limit=20&sort=-lastMessage&updatedAfter=2020-10-15T03:28:54Z" \
      -H 'IM-CLIENT-KEY: {您的_CLIENT_KEY}' \
      -H 'IM-CLIENT-ID: {您的_CLIENT_ID}' \
      -H 'IM-Authorization: {您的_TOKEN}'
 ```
 
-JavaScript 示例：
+JavaScript 範例：
 
 ```javascript
 const response = await axios.get(
-  "http://localhost:3100/rooms",
+  "https://your-app.imkit.io/rooms",
   {
     params: {
       skip: 0,
@@ -83,11 +83,11 @@ const response = await axios.get(
 );
 ```
 
-**示例二：按标签筛选并优先显示未读聊天室**
+**範例二：依標籤篩選聊天室並優先顯示未讀**
 
 ```javascript
 const response = await axios.get(
-  "http://localhost:3100/rooms",
+  "https://your-app.imkit.io/rooms",
   {
     params: {
       pref: JSON.stringify({ tags: "some-tag" }),
@@ -104,51 +104,51 @@ const response = await axios.get(
 
 #### Response
 
-**成功响应（200 OK）**
+**成功回應（200 OK）**
 
-| 参数 | 类型 | 说明 |
+| 參數 | 類型 | 說明 |
 | --- | --- | --- |
-| `RC` | number | 响应码（0 表示成功） |
-| `RM` | string | 响应消息 |
-| `result.totalCount` | number | 符合条件的聊天室总数 |
-| `result.data` | array | 聊天室对象数组 |
-| `result.inspect` | object | 诊断信息（查询条件与耗时） |
+| `RC` | number | 回應代碼（0 表示成功） |
+| `RM` | string | 回應訊息 |
+| `result.totalCount` | number | 符合條件的聊天室總數 |
+| `result.data` | array | 聊天室物件陣列 |
+| `result.inspect` | object | 診斷資訊（查詢條件與耗時） |
 
-**聊天室对象字段**
+**聊天室物件欄位**
 
-| 参数 | 类型 | 说明 |
+| 參數 | 類型 | 說明 |
 | --- | --- | --- |
-| `_id` | string | 聊天室唯一标识符 |
-| `name` | string | 聊天室名称 |
-| `cover` | string | 聊天室封面图片 URL |
+| `_id` | string | 聊天室唯一識別碼 |
+| `name` | string | 聊天室名稱 |
+| `cover` | string | 聊天室封面圖片 URL |
 | `description` | string | 聊天室描述 |
-| `roomType` | string | 聊天室类型（`"direct"` 或 `"group"`） |
-| `webhook` | string | Webhook 密钥或 URL |
-| `botState` | string | 机器人状态 |
-| `botMode` | boolean | 是否启用机器人模式 |
+| `roomType` | string | 聊天室類型（`"direct"` 或 `"group"`） |
+| `webhook` | string | Webhook 金鑰或 URL |
+| `botState` | string | 機器人狀態 |
+| `botMode` | boolean | 是否啟用機器人模式 |
 | `encrypted` | boolean | 是否加密 |
-| `serviceStatus` | number | 服务状态 |
-| `roomTags` | array[string] | 聊天室标签数组 |
-| `status` | number | 聊天室状态（`1` 表示正常） |
-| `unread` | number | 当前用户的未读消息数量 |
-| `muted` | boolean | 当前用户是否已静音此聊天室 |
-| `lastMessage` | object | 最新一条消息对象 |
-| `members` | array[object] | 聊天室成员数组 |
-| `pref` | object | 当前用户对此聊天室的个人偏好设置 |
-| `createdTimeMS` | number | 聊天室创建时间戳（毫秒） |
+| `serviceStatus` | number | 服務狀態 |
+| `roomTags` | array[string] | 聊天室標籤陣列 |
+| `status` | number | 聊天室狀態（`1` 表示正常） |
+| `unread` | number | 目前用戶的未讀訊息數量 |
+| `muted` | boolean | 目前用戶是否靜音此聊天室 |
+| `lastMessage` | object | 最新一則訊息物件 |
+| `members` | array[object] | 聊天室成員陣列 |
+| `pref` | object | 目前用戶對此聊天室的個人偏好設定 |
+| `createdTimeMS` | number | 聊天室建立時間戳（毫秒） |
 
-**偏好设置对象字段（`pref`）**
+**偏好設定物件欄位（`pref`）**
 
-| 参数 | 类型 | 说明 |
+| 參數 | 類型 | 說明 |
 | --- | --- | --- |
-| `tags` | array[string] | 用户为此聊天室自定义的标签 |
-| `tagColors` | object | 各标签对应的颜色（十六进制色码） |
-| `hidden` | boolean | 是否隐藏此聊天室 |
-| `sticky` | boolean | 是否置顶此聊天室 |
-| `muted` | boolean | 是否静音此聊天室的通知 |
-| `folder` | string | 所属文件夹名称 |
+| `tags` | array[string] | 用戶為此聊天室自訂的標籤 |
+| `tagColors` | object | 各標籤對應的顏色（十六進位色碼） |
+| `hidden` | boolean | 是否隱藏此聊天室 |
+| `sticky` | boolean | 是否置頂此聊天室 |
+| `muted` | boolean | 是否靜音此聊天室的通知 |
+| `folder` | string | 所屬資料夾名稱 |
 
-#### 示例响应
+#### 範例回應
 
 ```json
 {
@@ -233,32 +233,32 @@ const response = await axios.get(
 }
 ```
 
-#### 错误响应
+#### 錯誤回應
 
-当请求失败时，您会收到包含错误详细信息的错误响应。常见的错误情况包括：
+當請求失敗時，您會收到包含錯誤詳細資訊的錯誤回應。常見的錯誤情況包括：
 
-- 无效的客户端密钥或授权令牌
-- `updatedAfter` 时间格式不正确
-- `pref` 参数的 JSON 格式无效
-- 服务器内部错误
+- 無效的用戶端金鑰或授權權杖
+- `updatedAfter` 時間格式不正確
+- `pref` 參數的 JSON 格式無效
+- 伺服器內部錯誤
 
 ------
 
-## 使用场景
+## 使用場景
 
-### 聊天室列表展示
-- **首页聊天室列表**：使用分页和排序获取用户的聊天室列表
-- **标签筛选**：通过 `pref` 参数按标签筛选特定聊天室
+### 聊天室列表顯示
+- **首頁聊天室列表**：使用分頁和排序取得使用者的聊天室清單
+- **標籤篩選**：透過 `pref` 參數依標籤篩選特定聊天室
 
 ### 增量同步
-- **高效同步**：使用 `updatedAfter` 搭配上次请求的时间戳，仅拉取有更新的聊天室
+- **高效同步**：使用 `updatedAfter` 搭配上次請求的時間戳，僅拉取有更新的聊天室
 
 ------
 
-## 注意事项
+## 注意事項
 
-- **增量同步**：使用 `updatedAfter` 搭配上次请求的时间戳，可实现高效的增量同步，避免每次拉取全量数据
-- **分页建议**：建议搭配 `limit` 和 `skip` 进行分页，避免一次返回过多数据影响性能
-- **排序**：`sort` 字段以空格分隔多个条件，前缀 `-` 代表降序排列
-- **`pref` 筛选**：`pref` 参数为 JSON 格式，需进行 URL 编码后传递
-- **`inspect` 字段**：仅供调试使用，包含实际查询条件与执行耗时，正式环境可忽略
+- **增量同步**：使用 `updatedAfter` 搭配上次請求的時間戳，可實現高效的增量同步，避免每次拉取全量資料
+- **分頁建議**：建議搭配 `limit` 和 `skip` 進行分頁，避免一次回傳過多資料影響效能
+- **排序**：`sort` 欄位以空格分隔多個條件，前綴 `-` 代表遞減排序
+- **`pref` 篩選**：`pref` 參數為 JSON 格式，需進行 URL 編碼後傳遞
+- **`inspect` 欄位**：僅供除錯使用，包含實際查詢條件與執行耗時，正式環境可忽略

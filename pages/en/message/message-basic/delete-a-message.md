@@ -1,16 +1,16 @@
-# Delete Message
+# 刪除訊息
 
-## Overview
+## 概述
 
-Administrator-only message deletion feature that allows platform administrators, room owners and room managers to delete specified messages or clear all messages in an entire room. This function is suitable for content management, violation content cleanup and room maintenance.
+管理員權限專用的訊息刪除功能，允許平台管理員、聊天室擁有者和聊天室管理員刪除指定的訊息或清空整個聊天室的所有訊息。此功能適用於內容管理、違規內容清理和聊天室維護。
 
 ------
 
-## API Endpoint
+## API 端點
 
-### Delete Room Messages
+### 刪除聊天室訊息
 
-Delete specific messages or all messages in a room, restricted to users with administrative permissions.
+刪除聊天室中的特定訊息或所有訊息，僅限具備管理權限的用戶使用。
 
 ```http
 DELETE /rooms/{roomID}/messages/{messageID}
@@ -18,21 +18,21 @@ DELETE /rooms/{roomID}/messages/{messageID}
 
 #### Headers
 
-| Parameter          | Type   | Required | Description  |
-| ------------------ | ------ | -------- | ------------ |
-| `IM-CLIENT-KEY`    | string | ✅        | Client Key   |
-| `IM-Authorization` | string | ✅        | Client Token |
+| 參數               | 類型   | 必填 | 說明           |
+| ------------------ | ------ | ---- | -------------- |
+| `IM-CLIENT-KEY`    | string | ✅    | Client Key     |
+| `IM-Authorization` | string | ✅    | Client Token   |
 
 #### Path Parameters
 
-| Parameter   | Type   | Required | Description                                                    |
-| ----------- | ------ | -------- | -------------------------------------------------------------- |
-| `roomID`    | string | ✅        | Room ID                                                        |
-| `messageID` | string | ✅        | Message ID to delete, or use `_all` to delete all messages in room |
+| 參數        | 類型   | 必填 | 說明                                                |
+| ----------- | ------ | ---- | --------------------------------------------------- |
+| `roomID`    | string | ✅    | 聊天室 ID                                           |
+| `messageID` | string | ✅    | 要刪除的訊息 ID，或使用 `_all` 刪除聊天室內所有訊息 |
 
-#### Sample Request
+#### 範例請求
 
-**Delete Specific Message**
+**刪除特定訊息**
 
 ```http
 DELETE /rooms/test-room-123/messages/5f890cf37d980e06f6aaf349 HTTP/1.1
@@ -42,7 +42,7 @@ Content-Type: application/json; charset=utf-8
 Connection: close
 ```
 
-**Delete All Messages in Room**
+**刪除聊天室所有訊息**
 
 ```http
 DELETE /rooms/test-room-123/messages/_all HTTP/1.1
@@ -54,27 +54,27 @@ Connection: close
 
 #### Response
 
-**Success Response (200 OK)**
+**成功回應（200 OK）**
 
-| Parameter | Type   | Description                      |
-| --------- | ------ | -------------------------------- |
-| `RC`      | number | Response code (0 means success) |
-| `RM`      | string | Response message                 |
-| `result`  | object | Deletion operation result        |
+| 參數     | 類型   | 說明                   |
+| -------- | ------ | ---------------------- |
+| `RC`     | number | 回應代碼（0 表示成功） |
+| `RM`     | string | 回應訊息               |
+| `result` | object | 刪除操作結果           |
 
-**Deletion Result Object Structure**
+**刪除結果物件結構**
 
-| Parameter      | Type   | Description                           |
-| -------------- | ------ | ------------------------------------- |
-| `deletedCount` | number | Number of deleted messages            |
-| `roomID`       | string | Room ID                               |
-| `messageID`    | string | Deleted message ID (or "_all")        |
-| `deletedBy`    | string | User ID who performed deletion        |
-| `deletedAt`    | string | Deletion time                         |
+| 參數           | 類型   | 說明                          |
+| -------------- | ------ | ----------------------------- |
+| `deletedCount` | number | 已刪除的訊息數量              |
+| `roomID`       | string | 聊天室 ID                     |
+| `messageID`    | string | 被刪除的訊息 ID（或 "_all"）  |
+| `deletedBy`    | string | 執行刪除操作的用戶 ID         |
+| `deletedAt`    | string | 刪除時間                      |
 
-#### Sample Response
+#### 範例回應
 
-**Delete Single Message**
+**刪除單一訊息**
 
 ```json
 {
@@ -90,7 +90,7 @@ Connection: close
 }
 ```
 
-**Delete All Messages**
+**刪除所有訊息**
 
 ```json
 {
@@ -106,9 +106,9 @@ Connection: close
 }
 ```
 
-#### Error Response
+#### 錯誤回應
 
-**401 Unauthorized** - Authentication failed
+**401 Unauthorized** - 認證失敗
 
 ```json
 {
@@ -121,7 +121,7 @@ Connection: close
 }
 ```
 
-**403 Forbidden** - Insufficient permissions
+**403 Forbidden** - 權限不足
 
 ```json
 {
@@ -134,7 +134,7 @@ Connection: close
 }
 ```
 
-**404 Not Found** - Message or room does not exist
+**404 Not Found** - 訊息或聊天室不存在
 
 ```json
 {
@@ -147,7 +147,7 @@ Connection: close
 }
 ```
 
-**404 Not Found** - Room does not exist
+**404 Not Found** - 聊天室不存在
 
 ```json
 {
@@ -162,31 +162,31 @@ Connection: close
 
 ------
 
-## Use Cases
+## 使用場景
 
-### Content Management
-- **Violation Handling**: Delete inappropriate messages that violate community guidelines
-- **Spam Messages**: Clean up advertisement or spam content
-- **Sensitive Content**: Remove messages containing sensitive information
+### 內容管理
+- **違規處理**：刪除違反社群規範的不當訊息
+- **垃圾訊息**：清理廣告訊息或垃圾內容
+- **敏感內容**：移除包含敏感資訊的訊息
 
-### Room Maintenance
-- **Room Reset**: Clear room to restart conversation
-- **Test Cleanup**: Clean up test messages in testing environment
-- **Regular Maintenance**: Periodically clean up outdated message content
+### 聊天室維護
+- **聊天室重置**：清空聊天室重新開始對話
+- **測試清理**：清理測試環境的測試訊息
+- **定期維護**：定期清理過舊的訊息內容
 
-### Administrative Operations
-- **Emergency Handling**: Quickly handle content that needs immediate removal
-- **Bulk Cleanup**: Delete all messages in room at once
-- **Permission Control**: Ensure only authorized users can perform deletion operations
+### 管理操作
+- **緊急處理**：快速處理需要立即移除的內容
+- **批量清理**：一次性刪除聊天室內所有訊息
+- **權限控制**：確保只有授權用戶能執行刪除操作
 
 ------
 
-## Notes
+## 注意事項
 
-- **Permission Restrictions**: Limited to platform administrators, room owners and room managers
-- **Permanent Deletion**: Messages cannot be recovered once deleted, use with caution
-- **Bulk Deletion**: Using `_all` parameter will delete all messages in the room
-- **Operation Records**: All deletion operations record the executor and time
-- **Immediate Effect**: Deletion operations take effect immediately, all users will see messages disappear
-- **Notification Mechanism**: Deletion operations may trigger related notifications or events
-- **Different from Recall**: This is forced deletion, different from user-initiated recall functionality
+- **權限限制**：僅限平台管理員、聊天室擁有者和聊天室管理員使用
+- **永久刪除**：訊息刪除後無法復原，請謹慎使用
+- **批量刪除**：使用 `_all` 參數會刪除聊天室內所有訊息
+- **操作記錄**：所有刪除操作都會記錄執行者和時間
+- **即時生效**：刪除操作會立即生效，所有用戶都會看到訊息消失
+- **通知機制**：刪除操作可能會觸發相關的通知或事件
+- **與撤回區別**：此功能為強制刪除，與用戶自主撤回功能不同

@@ -37,7 +37,7 @@ GET /me/badge
 GET /me/badge HTTP/1.1
 IM-Authorization: {TOKEN}
 IM-CLIENT-KEY: {IM-CLIENT-KEY}
-Host: localhost:3100
+Host: your-app.imkit.io
 Connection: close
 ```
 
@@ -47,7 +47,7 @@ Connection: close
 GET /me/badge?roomTags=demo&roomTags=foo HTTP/1.1
 IM-Authorization: {TOKEN}
 IM-CLIENT-KEY: {IM-CLIENT-KEY}
-Host: localhost:3100
+Host: your-app.imkit.io
 Connection: close
 ```
 
@@ -57,8 +57,30 @@ Connection: close
 GET /me/badge?roomTags=work&roomTags=project&roomTags=meeting HTTP/1.1
 IM-Authorization: {TOKEN}
 IM-CLIENT-KEY: {IM-CLIENT-KEY}
-Host: localhost:3100
+Host: your-app.imkit.io
 Connection: close
+```
+
+**JavaScript 範例：**
+
+```javascript
+const response = await axios.get(
+  `https://your-app.imkit.io/me/badge`,
+  {
+    headers: {
+      "IM-CLIENT-KEY": IM_CLIENT_KEY,
+      "IM-Authorization": TOKEN,
+    },
+  }
+);
+```
+
+**cURL 範例：**
+
+```bash
+curl -X "GET" "https://your-app.imkit.io/me/badge" \
+     -H 'IM-CLIENT-KEY: {您的_CLIENT_KEY}' \
+     -H 'IM-Authorization: {您的_TOKEN}'
 ```
 
 #### Response

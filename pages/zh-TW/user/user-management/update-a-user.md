@@ -43,7 +43,7 @@ POST /admin/clients
 
 ```javascript
 const response = await axios.post(
-  "https://imkit-dev.funtek.io/admin/clients",
+  "https://your-app.imkit.io/admin/clients",
   {
     _id: "user123",
     nickname: "王小華", // 更新顯示名稱
@@ -67,7 +67,7 @@ const response = await axios.post(
 POST /admin/clients HTTP/1.1
 IM-API-KEY: {您的_API_金鑰}
 Content-Type: application/json; charset=utf-8
-Host: imkit-dev.funtek.io
+Host: your-app.imkit.io
 
 {
   "_id": "user123",
@@ -84,7 +84,7 @@ Host: imkit-dev.funtek.io
 
 ```javascript
 const response = await axios.post(
-  "https://imkit-dev.funtek.io/admin/clients",
+  "https://your-app.imkit.io/admin/clients",
   {
     _id: "user123",
     nickname: "王小華",

@@ -1,16 +1,16 @@
-# List Blocked Users
+# 列出封鎖用戶
 
-## Overview
+## 概述
 
-Retrieve the complete block list of the current user, displaying detailed information of all blocked users. This API provides users with the functionality to manage their personal block list, including viewing basic information of blocked users, block times, and related chatroom information, suitable for users to view and manage their own privacy settings.
+取得當前用戶的完整封鎖清單，顯示所有被封鎖的用戶詳細資訊。此 API 提供用戶管理個人封鎖清單的功能，包括檢視被封鎖用戶的基本資訊、封鎖時間以及相關聊天室資訊，適用於用戶檢視和管理自己的隱私設定。
 
 ------
 
-## API Endpoint
+## API 端點
 
-### Get Block List
+### 取得封鎖清單
 
-Obtain detailed information of all block relationships created by the current user.
+獲取當前用戶建立的所有封鎖關係詳細資訊。
 
 ```http
 GET /blockStatus/my
@@ -18,69 +18,91 @@ GET /blockStatus/my
 
 #### Headers
 
-| Parameter | Type | Required | Description |
-| ---- | ---- | ---- | ---- |
-| `IM-CLIENT-KEY` | string | ✅ | Client Key |
-| `IM-Authorization` | string | ✅ | Client Token |
+| 參數               | 類型   | 必填 | 說明           |
+| ------------------ | ------ | ---- | -------------- |
+| `IM-CLIENT-KEY`    | string | ✅    | Client Key     |
+| `IM-Authorization` | string | ✅    | Client Token   |
 
-#### Example Request
+#### 範例請求
 
-**Get complete block list**
+**取得完整封鎖清單**
 
 ```http
 GET /blockStatus/my HTTP/1.1
 IM-CLIENT-KEY: {IM-CLIENT-KEY}
 IM-Authorization: {TOKEN}
-Host: localhost:3100
+Host: your-app.imkit.io
 Connection: close
+```
+
+**JavaScript 範例：**
+
+```javascript
+const response = await axios.get(
+  `https://your-app.imkit.io/blockStatus/my`,
+  {
+    headers: {
+      "IM-CLIENT-KEY": IM_CLIENT_KEY,
+      "IM-Authorization": TOKEN,
+    },
+  }
+);
+```
+
+**cURL 範例：**
+
+```bash
+curl -X "GET" "https://your-app.imkit.io/blockStatus/my" \
+     -H 'IM-CLIENT-KEY: {您的_CLIENT_KEY}' \
+     -H 'IM-Authorization: {您的_TOKEN}'
 ```
 
 #### Response
 
-**Success Response (200 OK)**
+**成功回應（200 OK）**
 
-| Parameter | Type | Description |
-| ---- | ---- | ---- |
-| `RC` | number | Response code (0 indicates success) |
-| `RM` | string | Response message |
-| `result` | object | Block list data |
+| 參數     | 類型   | 說明                   |
+| -------- | ------ | ---------------------- |
+| `RC`     | number | 回應代碼（0 表示成功） |
+| `RM`     | string | 回應訊息               |
+| `result` | object | 封鎖清單資料           |
 
-**Result Object Structure**
+**結果物件結構**
 
-| Parameter | Type | Description |
-| ---- | ---- | ---- |
-| `data` | array | Block relationship list array |
+| 參數   | 類型  | 說明               |
+| ------ | ----- | ------------------ |
+| `data` | array | 封鎖關係清單陣列   |
 
-**Block Relationship Object Structure**
+**封鎖關係物件結構**
 
-| Parameter | Type | Description |
-| ---- | ---- | ---- |
-| `blockee` | object | Detailed information of the blocked user |
-| `blocker` | string | User ID who performed the block |
-| `room` | object | Detailed information of the associated chatroom |
-| `createdAt` | string | Block creation time |
-| `updatedAt` | string | Block update time |
+| 參數        | 類型   | 說明                          |
+| ----------- | ------ | ----------------------------- |
+| `blockee`   | object | 被封鎖用戶的詳細資訊          |
+| `blocker`   | string | 執行封鎖的用戶 ID             |
+| `room`      | object | 關聯聊天室的詳細資訊          |
+| `createdAt` | string | 封鎖創建時間                  |
+| `updatedAt` | string | 封鎖更新時間                  |
 
-**Blocked User Object Structure**
+**被封鎖用戶物件結構**
 
-| Parameter | Type | Description |
-| ---- | ---- | ---- |
-| `_id` | string | User unique identifier |
-| `nickname` | string | User nickname |
-| `avatarUrl` | string | User avatar URL |
-| `id` | string | User ID |
-| `lastLoginTimeMS` | number | Last login time (millisecond timestamp) |
+| 參數              | 類型   | 說明                          |
+| ----------------- | ------ | ----------------------------- |
+| `_id`             | string | 用戶唯一識別碼                |
+| `nickname`        | string | 用戶暱稱                      |
+| `avatarUrl`       | string | 用戶頭像 URL                  |
+| `id`              | string | 用戶 ID                       |
+| `lastLoginTimeMS` | number | 最後登入時間（毫秒時間戳）    |
 
-**Chatroom Object Structure**
+**聊天室物件結構**
 
-| Parameter | Type | Description |
-| ---- | ---- | ---- |
-| `_id` | string | Chatroom unique identifier |
-| `roomType` | string | Chatroom type (direct/group) |
-| `id` | string | Chatroom ID |
-| `createdTimeMS` | number | Chatroom creation time (millisecond timestamp) |
+| 參數            | 類型   | 說明                              |
+| --------------- | ------ | --------------------------------- |
+| `_id`           | string | 聊天室唯一識別碼                  |
+| `roomType`      | string | 聊天室類型（direct/group）        |
+| `id`            | string | 聊天室 ID                         |
+| `createdTimeMS` | number | 聊天室創建時間（毫秒時間戳）      |
 
-#### Example Response
+#### 範例回應
 
 ```json
 {
@@ -129,9 +151,9 @@ Connection: close
 }
 ```
 
-#### Error Response
+#### 錯誤回應
 
-**401 Unauthorized** - Authentication failed
+**401 Unauthorized** - 認證失敗
 
 ```json
 {
@@ -144,7 +166,7 @@ Connection: close
 }
 ```
 
-**403 Forbidden** - Insufficient permissions
+**403 Forbidden** - 權限不足
 
 ```json
 {
@@ -159,30 +181,30 @@ Connection: close
 
 ------
 
-## Use Cases
+## 使用場景
 
-### Personal Privacy Management
-- **Block list viewing**: View all currently blocked users
-- **Privacy settings management**: Unified viewing and management of personal privacy status
-- **Relationship status confirmation**: Confirm the block status of specific users
+### 個人隱私管理
+- **封鎖清單檢視**：查看當前封鎖的所有用戶
+- **隱私設定管理**：統一檢視和管理個人隱私狀態
+- **關係狀態確認**：確認特定用戶的封鎖狀態
 
-### User Experience Optimization
-- **List management interface**: Provide complete blocked user management functionality
-- **Quick unblocking**: Quickly select users to unblock from the list
-- **Status synchronization**: Ensure consistency of block lists across all platforms
+### 用戶體驗最佳化
+- **清單管理界面**：提供完整的封鎖用戶管理功能
+- **快速解封**：在清單中快速選擇要解除封鎖的用戶
+- **狀態同步**：確保各平台封鎖清單的一致性
 
-### System Administration
-- **Behavior tracking**: Understand user blocking behavior patterns
-- **Relationship analysis**: Analyze interaction relationships between users
-- **Data statistics**: Gather statistics on block feature usage
+### 系統管理
+- **行為追蹤**：了解用戶的封鎖行為模式
+- **關係分析**：分析用戶間的互動關係
+- **數據統計**：統計封鎖功能的使用情況
 
 ------
 
-## Important Notes
+## 注意事項
 
-- **Own list only**: Can only view block relationships created by the currently authenticated user
-- **Complete information provided**: Contains detailed information of blocked users and related chatrooms
-- **Time sorting**: Usually displayed sorted by block time
-- **Chatroom types**: Supports block relationships for both direct chat (direct) and group chat (group)
-- **Real-time**: Returns the current latest block list status
-- **Empty list handling**: If no users are blocked, returns an empty array
+- **僅顯示自己的清單**：只能查看當前認證用戶建立的封鎖關係
+- **完整資訊提供**：包含被封鎖用戶和相關聊天室的詳細資訊
+- **時間排序**：通常按封鎖時間進行排序顯示
+- **聊天室類型**：支援直接聊天（direct）和群組聊天（group）的封鎖關係
+- **即時性**：返回當前最新的封鎖清單狀態
+- **空清單處理**：如果沒有封鎖任何用戶，則返回空陣列

@@ -44,7 +44,7 @@ PUT /rooms/:id/member/:client
 **cURL 範例：**
 
 ```bash
-curl -X "PUT" "http://localhost:3100/rooms/demo-room/member/user-001" \
+curl -X "PUT" "https://your-app.imkit.io/rooms/demo-room/member/user-001" \
      -H 'IM-CLIENT-KEY: {您的_CLIENT_KEY}' \
      -H 'IM-Authorization: {您的_TOKEN}' \
      -H 'Content-Type: application/json; charset=utf-8' \
@@ -55,7 +55,7 @@ curl -X "PUT" "http://localhost:3100/rooms/demo-room/member/user-001" \
 
 ```javascript
 const response = await axios.put(
-  `http://localhost:3100/rooms/${roomID}/member/${clientID}`,
+  `https://your-app.imkit.io/rooms/${roomID}/member/${clientID}`,
   {
     property: "role",
     value: "admin",
@@ -76,7 +76,7 @@ const response = await axios.put(
 
 ```javascript
 const response = await axios.put(
-  `http://localhost:3100/rooms/${roomID}/member/${clientID}`,
+  `https://your-app.imkit.io/rooms/${roomID}/member/${clientID}`,
   {
     property: "score",
     value: 100,

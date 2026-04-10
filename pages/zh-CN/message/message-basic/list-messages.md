@@ -1,16 +1,16 @@
-# 列出消息
+# 列出訊息
 
 ## 概述
 
-查询指定聊天室的消息记录，支持时间范围、分页和多种排序方式。此 API 使用消息的更新时间进行排序，提供更准确的消息顺序。适用于消息记录查询、消息搜索和聊天室消息浏览。
+查詢指定聊天室的訊息記錄，支援時間範圍、分頁和多種排序方式。此 API 使用訊息的更新時間進行排序，提供更準確的訊息順序。適用於訊息記錄查詢、訊息搜尋和聊天室訊息瀏覽。
 
 ------
 
-## API 端点
+## API 端點
 
-### 取得聊天室消息列表 (V3)
+### 取得聊天室訊息列表 (V3)
 
-查询指定聊天室的消息记录，按更新时间排序。
+查詢指定聊天室的訊息記錄，按更新時間排序。
 
 ```http
 GET /rooms/{id}/messages/v3
@@ -18,106 +18,132 @@ GET /rooms/{id}/messages/v3
 
 #### Headers
 
-| 参数               | 类型   | 必填 | 说明           |
+| 參數               | 類型   | 必填 | 說明           |
 | ------------------ | ------ | ---- | -------------- |
 | `IM-CLIENT-KEY`    | string | ✅    | Client Key     |
 | `IM-Authorization` | string | ✅    | Client Token   |
 
 #### Path Parameters
 
-| 参数   | 类型   | 必填 | 说明        |
+| 參數   | 類型   | 必填 | 說明        |
 | ------ | ------ | ---- | ----------- |
 | `id`   | string | ✅    | 聊天室 ID   |
 
 #### Query Parameters
 
-| 参数             | 类型   | 必填 | 说明                                                         |
+| 參數             | 類型   | 必填 | 說明                                                         |
 | ---------------- | ------ | ---- | ------------------------------------------------------------ |
-| `beforeMessage`  | string | ❌    | 查询指定消息 ID 之前的消息                                   |
-| `afterMessage`   | string | ❌    | 查询指定消息 ID 之后的消息                                   |
-| `limit`          | number | ❌    | 回应消息数量上限，默认值 20                                  |
-| `afterTime`      | string | ❌    | 查询指定时间之后的消息（ISO-8601 格式或毫秒时间戳）          |
-| `timeRangeField` | string | ❌    | 时间范围查询使用的时间字段（updatedAt/createdAt/messageTime），默认 updatedAt |
+| `beforeMessage`  | string | ❌    | 查詢指定訊息 ID 之前的訊息                                   |
+| `afterMessage`   | string | ❌    | 查詢指定訊息 ID 之後的訊息                                   |
+| `limit`          | number | ❌    | 回應訊息數量上限，預設值 20                                  |
+| `afterTime`      | string | ❌    | 查詢指定時間之後的訊息（ISO-8601 格式或毫秒時間戳）          |
+| `timeRangeField` | string | ❌    | 時間範圍查詢使用的時間欄位（updatedAt/createdAt/messageTime），預設 updatedAt |
 
-#### 范例请求
+#### 範例請求
 
-**基本查询**
+**基本查詢**
 
 ```http
 GET /rooms/58871b877390be11d5f1ab30/messages/v3?limit=10&afterTime=2020-10-15T03:50:04Z HTTP/1.1
 IM-CLIENT-KEY: {IM-CLIENT-KEY}
 IM-Authorization: {TOKEN}
-Host: 104.199.197.188:3100
+Host: your-app.imkit.io
 Connection: close
 User-Agent: Paw/3.1.1 (Macintosh; OS X/10.12.5) GCDHTTPRequest
 ```
 
-**分页查询**
+**分頁查詢**
 
 ```http
 GET /rooms/58871b877390be11d5f1ab30/messages/v3?limit=20&beforeMessage=5f890cf37d980e06f6aaf349 HTTP/1.1
 IM-CLIENT-KEY: {IM-CLIENT-KEY}
 IM-Authorization: {TOKEN}
-Host: 104.199.197.188:3100
+Host: your-app.imkit.io
 Connection: close
 ```
 
-**时间范围查询**
+**時間範圍查詢**
 
 ```http
 GET /rooms/58871b877390be11d5f1ab30/messages/v3?afterTime=1602817267000&timeRangeField=messageTime&limit=50 HTTP/1.1
 IM-CLIENT-KEY: {IM-CLIENT-KEY}
 IM-Authorization: {TOKEN}
-Host: 104.199.197.188:3100
+Host: your-app.imkit.io
 Connection: close
+```
+
+**JavaScript 範例：**
+
+```javascript
+const response = await axios.get(
+  `https://your-app.imkit.io/rooms/58871b877390be11d5f1ab30/messages/v3`,
+  {
+    params: {
+      limit: 10,
+      afterTime: "2020-10-15T03:50:04Z",
+    },
+    headers: {
+      "IM-CLIENT-KEY": IM_CLIENT_KEY,
+      "IM-Authorization": TOKEN,
+    },
+  }
+);
+```
+
+**cURL 範例：**
+
+```bash
+curl -X "GET" "https://your-app.imkit.io/rooms/58871b877390be11d5f1ab30/messages/v3?limit=10&afterTime=2020-10-15T03:50:04Z" \
+     -H 'IM-CLIENT-KEY: {您的_CLIENT_KEY}' \
+     -H 'IM-Authorization: {您的_TOKEN}'
 ```
 
 #### Response
 
-**成功回应（200 OK）**
+**成功回應（200 OK）**
 
-| 参数              | 类型   | 说明                                            |
+| 參數              | 類型   | 說明                                            |
 | ----------------- | ------ | ----------------------------------------------- |
-| `RC`              | number | 回应代码（0 表示成功）                          |
-| `RM`              | string | 回应消息                                        |
-| `result`          | object | 查询结果                                        |
+| `RC`              | number | 回應代碼（0 表示成功）                          |
+| `RM`              | string | 回應訊息                                        |
+| `result`          | object | 查詢結果                                        |
 
-**查询结果对象结构**
+**查詢結果物件結構**
 
-| 参数              | 类型   | 说明                                            |
+| 參數              | 類型   | 說明                                            |
 | ----------------- | ------ | ----------------------------------------------- |
-| `totalCount`      | number | 聊天室内总消息数量                              |
-| `data`            | array  | 符合条件的消息数组                              |
-| `userDeletedIDs`  | array  | 当前用户已删除的消息 ID 数组（UI 应隐藏这些消息）|
-| `inspect`         | object | 诊断信息                                        |
+| `totalCount`      | number | 聊天室內總訊息數量                              |
+| `data`            | array  | 符合條件的訊息陣列                              |
+| `userDeletedIDs`  | array  | 當前用戶已刪除的訊息 ID 陣列（UI 應隱藏這些訊息）|
+| `inspect`         | object | 診斷資訊                                        |
 
-**消息对象结构**
+**訊息物件結構**
 
-| 参数             | 类型   | 说明                          |
+| 參數             | 類型   | 說明                          |
 | ---------------- | ------ | ----------------------------- |
-| `_id`            | string | 消息唯一识别码                |
-| `message`        | any    | 消息内容                      |
-| `room`           | string | 所属聊天室 ID                 |
-| `sender`         | object | 发送者信息                    |
-| `messageType`    | string | 消息类型                      |
-| `messageTimeMS`  | number | 消息发送时间（毫秒时间戳）    |
-| `updatedAtMS`    | number | 消息更新时间（毫秒时间戳）    |
-| `createdAtMS`    | number | 消息建立时间（毫秒时间戳）    |
-| `reactions`      | array  | 消息反应数组                  |
-| `reactionCount`  | number | 反应总数                      |
-| `isDeleted`      | bool   | 是否已删除                    |
+| `_id`            | string | 訊息唯一識別碼                |
+| `message`        | any    | 訊息內容                      |
+| `room`           | string | 所屬聊天室 ID                 |
+| `sender`         | object | 發送者資訊                    |
+| `messageType`    | string | 訊息類型                      |
+| `messageTimeMS`  | number | 訊息發送時間（毫秒時間戳）    |
+| `updatedAtMS`    | number | 訊息更新時間（毫秒時間戳）    |
+| `createdAtMS`    | number | 訊息建立時間（毫秒時間戳）    |
+| `reactions`      | array  | 訊息反應陣列                  |
+| `reactionCount`  | number | 反應總數                      |
+| `isDeleted`      | bool   | 是否已刪除                    |
 
-**发送者对象结构**
+**發送者物件結構**
 
-| 参数              | 类型   | 说明                          |
+| 參數              | 類型   | 說明                          |
 | ----------------- | ------ | ----------------------------- |
-| `_id`             | string | 用户唯一识别码                |
-| `nickname`        | string | 用户昵称                      |
-| `description`     | string | 用户描述                      |
-| `avatarUrl`       | string | 用户头像 URL                  |
-| `lastLoginTimeMS` | number | 最后登录时间（毫秒时间戳）    |
+| `_id`             | string | 用戶唯一識別碼                |
+| `nickname`        | string | 用戶暱稱                      |
+| `description`     | string | 用戶描述                      |
+| `avatarUrl`       | string | 用戶頭像 URL                  |
+| `lastLoginTimeMS` | number | 最後登入時間（毫秒時間戳）    |
 
-#### 范例回应
+#### 範例回應
 
 ```json
 {
@@ -165,9 +191,9 @@ Connection: close
 }
 ```
 
-#### 错误回应
+#### 錯誤回應
 
-**401 Unauthorized** - 认证失败
+**401 Unauthorized** - 認證失敗
 
 ```json
 {
@@ -180,7 +206,7 @@ Connection: close
 }
 ```
 
-**403 Forbidden** - 权限不足或聊天室不存在
+**403 Forbidden** - 權限不足或聊天室不存在
 
 ```json
 {
@@ -208,31 +234,31 @@ Connection: close
 
 ------
 
-## 使用场景
+## 使用場景
 
-### 消息浏览
-- **聊天记录**：显示聊天室的历史消息
-- **消息搜索**：根据时间范围查找特定消息
-- **分页载入**：实现消息列表的分页功能
+### 訊息瀏覽
+- **聊天記錄**：顯示聊天室的歷史訊息
+- **訊息搜尋**：根據時間範圍查找特定訊息
+- **分頁載入**：實現訊息列表的分頁功能
 
-### 同步与备份
-- **消息同步**：同步最新的消息更新
-- **离线备份**：备份聊天室消息数据
-- **数据分析**：分析聊天室活动和互动情况
+### 同步與備份
+- **訊息同步**：同步最新的訊息更新
+- **離線備份**：備份聊天室訊息資料
+- **資料分析**：分析聊天室活動和互動情況
 
-### 应用整合
-- **消息导出**：将聊天记录导出到其他系统
-- **内容审核**：检视和管理聊天室内容
-- **统计分析**：计算消息数量和用户活跃度
+### 應用整合
+- **訊息匯出**：將聊天記錄匯出到其他系統
+- **內容審核**：檢視和管理聊天室內容
+- **統計分析**：計算訊息數量和用戶活躍度
 
 ------
 
-## 注意事项
+## 注意事項
 
-- **排序方式**：V3 版本使用 updatedAt 时间排序，比消息 ID 排序更准确
-- **时间格式**：支持 ISO-8601 格式或毫秒时间戳
-- **分页查询**：使用 beforeMessage 或 afterMessage 进行分页
-- **用户权限**：只有聊天室成员才能查询消息
-- **已删除消息**：userDeletedIDs 中的消息 UI 应隐藏显示
-- **诊断信息**：inspect 对象提供查询性能和条件的诊断信息
-- **默认限制**：未指定 limit 时默认回应 20 笔消息
+- **排序方式**：V3 版本使用 updatedAt 時間排序，比訊息 ID 排序更準確
+- **時間格式**：支援 ISO-8601 格式或毫秒時間戳
+- **分頁查詢**：使用 beforeMessage 或 afterMessage 進行分頁
+- **用戶權限**：只有聊天室成員才能查詢訊息
+- **已刪除訊息**：userDeletedIDs 中的訊息 UI 應隱藏顯示
+- **診斷資訊**：inspect 物件提供查詢效能和條件的診斷資訊
+- **預設限制**：未指定 limit 時預設回應 20 筆訊息

@@ -1,16 +1,16 @@
-# Room List
+# 聊天室列表
 
-## Overview
+## 概述
 
-This endpoint retrieves a list of rooms that the current user has joined. It supports pagination, sorting, and conditional filtering. Suitable for room list display and incremental sync scenarios.
+此端點允許您取得目前用戶所加入的聊天室清單，支援分頁、排序及條件篩選。適用於聊天室列表顯示、增量同步等場景。
 
 ------
 
-## API Endpoint
+## API 端點
 
-### Query Room List
+### 取得聊天室列表
 
-Get the list of rooms the current user has joined, with pagination, sorting, and filtering support.
+取得目前用戶已加入的聊天室清單，支援分頁、排序及條件篩選。
 
 ```http
 GET /rooms
@@ -18,55 +18,55 @@ GET /rooms
 
 #### Headers
 
-| Parameter | Type | Required | Description |
+| 參數 | 類型 | 必填 | 說明 |
 | --- | --- | --- | --- |
-| `IM-CLIENT-KEY` | string | ✅ | Client Key |
-| `IM-CLIENT-ID` | string | ✅ | Client ID of current user |
-| `IM-Authorization` | string | ✅ | Client Token |
+| `IM-CLIENT-KEY` | string | ✅ | 用戶端金鑰 |
+| `IM-CLIENT-ID` | string | ✅ | 當前用戶的用戶端 ID |
+| `IM-Authorization` | string | ✅ | 用戶端權杖 |
 
 #### Query Parameters
 
-| Parameter | Type | Required | Description |
+| 參數 | 類型 | 必填 | 說明 |
 | --- | --- | --- | --- |
-| `sort` | string | ❌ | Sorting criteria. Combine multiple fields separated by spaces. Prefix `-` for descending order. |
-| `skip` | integer | ❌ | Pagination offset. Default: `0` |
-| `limit` | integer | ❌ | Maximum number of rooms to return. Default: `0` (unlimited) |
-| `updatedAfter` | string or integer | ❌ | Filter rooms that have a last message or were created after the specified timestamp. Accepts ISO-8601 or millisecond Epoch |
-| `pref` | JSON | ❌ | Filter by user's room preferences. e.g. `{"tags": "some-tag"}` |
-| `sortUnreadFirst` | integer | ❌ | Set to a non-zero value to sort rooms with unread messages first |
+| `sort` | string | ❌ | 排序條件，可組合多個欄位，以空格分隔；前綴 `-` 表示遞減排序 |
+| `skip` | integer | ❌ | 分頁偏移量，預設為 `0` |
+| `limit` | integer | ❌ | 回傳聊天室數量上限，預設為 `0`（不限制） |
+| `updatedAfter` | string 或 integer | ❌ | 篩選在指定時間戳後有最新訊息或建立的聊天室，格式支援 ISO-8601 字串或毫秒 Epoch 整數 |
+| `pref` | JSON | ❌ | 依用戶的聊天室偏好設定篩選，例如 `{"tags": "some-tag"}` |
+| `sortUnreadFirst` | integer | ❌ | 非零值時，優先排序有未讀訊息的聊天室 |
 
-**sort Parameter Examples**
+**sort 參數範例**
 
-Sort by last message and created time in descending order:
+依最新訊息和建立時間遞減排序：
 
 ```
 -lastMessage -createdTime
 ```
 
-Sort by created time in ascending order:
+依建立時間遞增排序：
 
 ```
 createdTime
 ```
 
-#### Example Request
+#### 範例請求
 
-**Example 1: List Rooms with Pagination and Time Filter**
+**範例一：取得聊天室列表（分頁 + 時間篩選）**
 
-cURL:
+cURL 範例：
 
 ```bash
-curl "http://localhost:3100/rooms?skip=0&limit=20&sort=-lastMessage&updatedAfter=2020-10-15T03:28:54Z" \
-     -H 'IM-CLIENT-KEY: {YOUR_CLIENT_KEY}' \
-     -H 'IM-CLIENT-ID: {YOUR_CLIENT_ID}' \
-     -H 'IM-Authorization: {YOUR_TOKEN}'
+curl "https://your-app.imkit.io/rooms?skip=0&limit=20&sort=-lastMessage&updatedAfter=2020-10-15T03:28:54Z" \
+     -H 'IM-CLIENT-KEY: {您的_CLIENT_KEY}' \
+     -H 'IM-CLIENT-ID: {您的_CLIENT_ID}' \
+     -H 'IM-Authorization: {您的_TOKEN}'
 ```
 
-JavaScript:
+JavaScript 範例：
 
 ```javascript
 const response = await axios.get(
-  "http://localhost:3100/rooms",
+  "https://your-app.imkit.io/rooms",
   {
     params: {
       skip: 0,
@@ -83,11 +83,11 @@ const response = await axios.get(
 );
 ```
 
-**Example 2: Filter by Tag and Prioritize Unread Rooms**
+**範例二：依標籤篩選聊天室並優先顯示未讀**
 
 ```javascript
 const response = await axios.get(
-  "http://localhost:3100/rooms",
+  "https://your-app.imkit.io/rooms",
   {
     params: {
       pref: JSON.stringify({ tags: "some-tag" }),
@@ -104,51 +104,51 @@ const response = await axios.get(
 
 #### Response
 
-**Success Response (200 OK)**
+**成功回應（200 OK）**
 
-| Parameter | Type | Description |
+| 參數 | 類型 | 說明 |
 | --- | --- | --- |
-| `RC` | number | Response code (0 means success) |
-| `RM` | string | Response message |
-| `result.totalCount` | number | Total number of matching rooms |
-| `result.data` | array | Array of room objects |
-| `result.inspect` | object | Diagnostic info (query conditions and timing) |
+| `RC` | number | 回應代碼（0 表示成功） |
+| `RM` | string | 回應訊息 |
+| `result.totalCount` | number | 符合條件的聊天室總數 |
+| `result.data` | array | 聊天室物件陣列 |
+| `result.inspect` | object | 診斷資訊（查詢條件與耗時） |
 
-**Room Object Fields**
+**聊天室物件欄位**
 
-| Parameter | Type | Description |
+| 參數 | 類型 | 說明 |
 | --- | --- | --- |
-| `_id` | string | Unique room ID |
-| `name` | string | Room name |
-| `cover` | string | Room cover image URL |
-| `description` | string | Room description |
-| `roomType` | string | Room type (`"direct"` or `"group"`) |
-| `webhook` | string | Webhook key or URL |
-| `botState` | string | Bot state |
-| `botMode` | boolean | Whether bot mode is enabled |
-| `encrypted` | boolean | Whether the room is encrypted |
-| `serviceStatus` | number | Service status |
-| `roomTags` | array[string] | Room tag array |
-| `status` | number | Room status (`1` means active) |
-| `unread` | number | Unread message count for the current user |
-| `muted` | boolean | Whether the current user has muted this room |
-| `lastMessage` | object | Most recent message object |
-| `members` | array[object] | Array of member objects |
-| `pref` | object | Current user's personal preferences for this room |
-| `createdTimeMS` | number | Room creation timestamp (milliseconds) |
+| `_id` | string | 聊天室唯一識別碼 |
+| `name` | string | 聊天室名稱 |
+| `cover` | string | 聊天室封面圖片 URL |
+| `description` | string | 聊天室描述 |
+| `roomType` | string | 聊天室類型（`"direct"` 或 `"group"`） |
+| `webhook` | string | Webhook 金鑰或 URL |
+| `botState` | string | 機器人狀態 |
+| `botMode` | boolean | 是否啟用機器人模式 |
+| `encrypted` | boolean | 是否加密 |
+| `serviceStatus` | number | 服務狀態 |
+| `roomTags` | array[string] | 聊天室標籤陣列 |
+| `status` | number | 聊天室狀態（`1` 表示正常） |
+| `unread` | number | 目前用戶的未讀訊息數量 |
+| `muted` | boolean | 目前用戶是否靜音此聊天室 |
+| `lastMessage` | object | 最新一則訊息物件 |
+| `members` | array[object] | 聊天室成員陣列 |
+| `pref` | object | 目前用戶對此聊天室的個人偏好設定 |
+| `createdTimeMS` | number | 聊天室建立時間戳（毫秒） |
 
-**Preference Object Fields (`pref`)**
+**偏好設定物件欄位（`pref`）**
 
-| Parameter | Type | Description |
+| 參數 | 類型 | 說明 |
 | --- | --- | --- |
-| `tags` | array[string] | Custom tags the user has applied to the room |
-| `tagColors` | object | Color (hex) mapped to each tag |
-| `hidden` | boolean | Whether the room is hidden |
-| `sticky` | boolean | Whether the room is pinned to the top |
-| `muted` | boolean | Whether notifications are muted |
-| `folder` | string | Folder name the room belongs to |
+| `tags` | array[string] | 用戶為此聊天室自訂的標籤 |
+| `tagColors` | object | 各標籤對應的顏色（十六進位色碼） |
+| `hidden` | boolean | 是否隱藏此聊天室 |
+| `sticky` | boolean | 是否置頂此聊天室 |
+| `muted` | boolean | 是否靜音此聊天室的通知 |
+| `folder` | string | 所屬資料夾名稱 |
 
-#### Example Response
+#### 範例回應
 
 ```json
 {
@@ -233,32 +233,32 @@ const response = await axios.get(
 }
 ```
 
-#### Error Response
+#### 錯誤回應
 
-When the request fails, you will receive an error response with details. Common error cases include:
+當請求失敗時，您會收到包含錯誤詳細資訊的錯誤回應。常見的錯誤情況包括：
 
-- Invalid client key or authorization token
-- Invalid `updatedAfter` timestamp format
-- Invalid JSON format for `pref` parameter
-- Internal server error
-
-------
-
-## Use Cases
-
-### Room List Display
-- **Home page room list**: Use pagination and sorting to display the user's rooms
-- **Tag filtering**: Use the `pref` parameter to filter rooms by tags
-
-### Incremental Sync
-- **Efficient sync**: Use `updatedAfter` with the timestamp from the previous request to only fetch updated rooms
+- 無效的用戶端金鑰或授權權杖
+- `updatedAfter` 時間格式不正確
+- `pref` 參數的 JSON 格式無效
+- 伺服器內部錯誤
 
 ------
 
-## Notes
+## 使用場景
 
-- **Incremental sync**: Use `updatedAfter` with the timestamp from the previous request to efficiently sync only new or updated rooms, avoiding a full data pull each time.
-- **Pagination**: Use `limit` and `skip` together to paginate results and avoid performance issues with large datasets.
-- **Sorting**: Multiple sort fields are separated by spaces. Prefix `-` indicates descending order.
-- **`pref` filtering**: The `pref` parameter must be valid JSON and URL-encoded before sending.
-- **`inspect` field**: For debugging purposes only -- contains the actual query conditions and execution time. Can be ignored in production.
+### 聊天室列表顯示
+- **首頁聊天室列表**：使用分頁和排序取得使用者的聊天室清單
+- **標籤篩選**：透過 `pref` 參數依標籤篩選特定聊天室
+
+### 增量同步
+- **高效同步**：使用 `updatedAfter` 搭配上次請求的時間戳，僅拉取有更新的聊天室
+
+------
+
+## 注意事項
+
+- **增量同步**：使用 `updatedAfter` 搭配上次請求的時間戳，可實現高效的增量同步，避免每次拉取全量資料
+- **分頁建議**：建議搭配 `limit` 和 `skip` 進行分頁，避免一次回傳過多資料影響效能
+- **排序**：`sort` 欄位以空格分隔多個條件，前綴 `-` 代表遞減排序
+- **`pref` 篩選**：`pref` 參數為 JSON 格式，需進行 URL 編碼後傳遞
+- **`inspect` 欄位**：僅供除錯使用，包含實際查詢條件與執行耗時，正式環境可忽略

@@ -16,7 +16,7 @@
 GET /rooms/{id}
 ```
 
-詳細的 API 使用方式請參考：[列出成員](/room/room-members/list-members)
+詳細的 API 使用方式請參考：[列出成員](/zh-TW/room/room-members/list-members)
 
 ### 可搜尋欄位
 

@@ -1,16 +1,16 @@
-# 用户列表
+# 用戶列表
 
 ## 概述
 
-查询和搜索应用程序中的用户列表。支持条件筛选、分页查询，以及使用 MongoDB 查询语法进行复杂搜索。适用于用户管理、数据分析和系统监控等场景。
+查詢和搜尋應用程式中的用戶列表。支援條件篩選、分頁查詢，以及使用 MongoDB 查詢語法進行複雜搜尋。適用於用戶管理、數據分析和系統監控等場景。
 
 ------
 
-## API 端点
+## API 端點
 
-### 查询用户列表
+### 查詢用戶列表
 
-取得应用程序中的用户列表，支持筛选和分页功能。
+取得應用程式中的用戶列表，支援篩選和分頁功能。
 
 ```http
 GET /admin/clients
@@ -18,82 +18,107 @@ GET /admin/clients
 
 #### Headers
 
-| 参数         | 类型   | 必填 | 说明          |
+| 參數         | 類型   | 必填 | 說明          |
 | ------------ | ------ | ---- | ------------- |
-| `IM-API-KEY` | string | ✅    | 您的 API 密钥 |
+| `IM-API-KEY` | string | ✅    | 您的 API 金鑰 |
 
 #### Query Parameters
 
-| 参数    | 类型   | 必填 | 说明                                          |
+| 參數    | 類型   | 必填 | 說明                                          |
 | ------- | ------ | ---- | --------------------------------------------- |
-| `q`     | string | ❌    | MongoDB 查询语法，用于条件筛选                |
-| `limit` | number | ❌    | 每页返回的最大用户数量（预设：50，最大：100） |
-| `skip`  | number | ❌    | 跳过的用户数量，用于分页（预设：0）           |
+| `q`     | string | ❌    | MongoDB 查詢語法，用於條件篩選                |
+| `limit` | number | ❌    | 每頁回傳的最大用戶數量（預設：50，最大：100） |
+| `skip`  | number | ❌    | 跳過的用戶數量，用於分頁（預設：0）           |
 
-#### 查询语法示例
+#### 查詢語法範例
 
-**基本筛选**
+**基本篩選**
 
 ```javascript
-// 查询昵称包含 "AB" 的用户
+// 查詢暱稱包含 "AB" 的用戶
 q={"nickname": {"$regex": ".*AB.*"}}
 
-// 查询特定 email 的用户
+// 查詢特定 email 的用戶
 q={"email": "user@example.com"}
 
-// 查询最近登录的用户（7天内）
+// 查詢最近登入的用戶（7天內）
 q={"lastLoginTimeMS": {"$gte": 1640995200000}}
 ```
 
-**复合条件**
+**複合條件**
 
 ```javascript
-// 查询昵称包含 "admin" 且有 email 的用户
+// 查詢暱稱包含 "admin" 且有 email 的用戶
 q={"nickname": {"$regex": ".*admin.*"}, "email": {"$exists": true}}
 
-// 查询特定时间范围内注册的用户
+// 查詢特定時間範圍內註冊的用戶
 q={"createdAt": {"$gte": "2025-01-01T00:00:00Z", "$lt": "2025-02-01T00:00:00Z"}}
 ```
 
-#### 示例请求
+#### 範例請求
 
-**获取所有用户**
+**獲取所有用戶**
 
 ```http
 GET /admin/clients?limit=20&skip=0
 ```
 
-**搜索特定用户**
+**搜尋特定用戶**
 
 ```http
 GET /admin/clients?q=%7B%22nickname%22:%7B%22%24regex%22:%22.*AB.*%22%7D%7D&limit=10
 ```
 
+**JavaScript 範例：**
+
+```javascript
+const response = await axios.get(
+  `https://your-app.imkit.io/admin/clients`,
+  {
+    params: {
+      q: JSON.stringify({ nickname: { $regex: ".*AB.*" } }),
+      limit: 20,
+      skip: 0,
+    },
+    headers: {
+      "IM-API-KEY": process.env.IM_API_KEY,
+    },
+  }
+);
+```
+
+**cURL 範例：**
+
+```bash
+curl -X "GET" "https://your-app.imkit.io/admin/clients?q=%7B%22nickname%22%3A%7B%22%24regex%22%3A%22.*AB.*%22%7D%7D&limit=20&skip=0" \
+     -H 'IM-API-KEY: {您的_API_KEY}'
+```
+
 #### Response
 
-**成功响应（200 OK）**
+**成功回應（200 OK）**
 
-| 参数                | 类型   | 说明                   |
+| 參數                | 類型   | 說明                   |
 | ------------------- | ------ | ---------------------- |
-| `RC`                | number | 响应代码（0 表示成功） |
-| `RM`                | string | 响应消息               |
-| `result`            | object | 查询结果               |
-| `result.totalCount` | number | 符合条件的用户总数     |
-| `result.data`       | array  | 用户数据数组           |
+| `RC`                | number | 回應代碼（0 表示成功） |
+| `RM`                | string | 回應訊息               |
+| `result`            | object | 查詢結果               |
+| `result.totalCount` | number | 符合條件的用戶總數     |
+| `result.data`       | array  | 用戶資料陣列           |
 
-**用户对象结构**
+**用戶物件結構**
 
-| 参数              | 类型   | 说明                          |
+| 參數              | 類型   | 說明                          |
 | ----------------- | ------ | ----------------------------- |
-| `_id`             | string | 用户唯一识别码                |
-| `nickname`        | string | 用户显示名称                  |
-| `email`           | string | 用户电子邮件（如果有提供）    |
-| `avatarUrl`       | string | 用户头像 URL                  |
-| `address`         | object | 最后连接的网络地址信息        |
-| `userAgent`       | string | 最后使用的浏览器/应用程序信息 |
-| `lastLoginTimeMS` | number | 最后登录时间（毫秒时间戳）    |
+| `_id`             | string | 用戶唯一識別碼                |
+| `nickname`        | string | 用戶顯示名稱                  |
+| `email`           | string | 用戶電子郵件（如果有提供）    |
+| `avatarUrl`       | string | 用戶頭像 URL                  |
+| `address`         | object | 最後連線的網路地址資訊        |
+| `userAgent`       | string | 最後使用的瀏覽器/應用程式資訊 |
+| `lastLoginTimeMS` | number | 最後登入時間（毫秒時間戳）    |
 
-#### 示例响应
+#### 範例回應
 
 ```json
 {
@@ -120,9 +145,9 @@ GET /admin/clients?q=%7B%22nickname%22:%7B%22%24regex%22:%22.*AB.*%22%7D%7D&limi
 }
 ```
 
-#### 错误响应
+#### 錯誤回應
 
-**400 Bad Request** - 查询语法错误
+**400 Bad Request** - 查詢語法錯誤
 
 ```json
 {
@@ -135,7 +160,7 @@ GET /admin/clients?q=%7B%22nickname%22:%7B%22%24regex%22:%22.*AB.*%22%7D%7D&limi
 }
 ```
 
-**401 Unauthorized** - API 密钥无效
+**401 Unauthorized** - API 金鑰無效
 
 ```json
 {
@@ -148,7 +173,7 @@ GET /admin/clients?q=%7B%22nickname%22:%7B%22%24regex%22:%22.*AB.*%22%7D%7D&limi
 }
 ```
 
-**413 Payload Too Large** - 查询结果过大
+**413 Payload Too Large** - 查詢結果過大
 
 ```json
 {
@@ -163,90 +188,90 @@ GET /admin/clients?q=%7B%22nickname%22:%7B%22%24regex%22:%22.*AB.*%22%7D%7D&limi
 
 ------
 
-## 使用场景
+## 使用場景
 
-### 用户管理
+### 用戶管理
 
-- **用户列表展示**：在管理后台显示所有用户
-- **用户搜索**：根据昵称、email 等条件搜索特定用户
-- **批次操作**：选取多个用户进行批次管理
+- **用戶列表展示**：在管理後台顯示所有用戶
+- **用戶搜尋**：根據暱稱、email 等條件搜尋特定用戶
+- **批次操作**：選取多個用戶進行批次管理
 
-### 数据分析
+### 數據分析
 
-- **活跃度分析**：查询最近登录的用户统计
-- **用户分布**：分析用户的地理分布和设备使用情况
-- **成长追踪**：追踪特定时间段的用户成长
+- **活躍度分析**：查詢最近登入的用戶統計
+- **用戶分佈**：分析用戶的地理分佈和設備使用情況
+- **成長追蹤**：追蹤特定時間段的用戶成長
 
-### 系统监控
+### 系統監控
 
-- **异常检测**：查询异常登录行为的用户
-- **容量规划**：了解用户总数和增长趋势
-- **合规审查**：根据需要查询特定用户数据
+- **異常偵測**：查詢異常登入行為的用戶
+- **容量規劃**：了解用戶總數和增長趨勢
+- **合規審查**：根據需要查詢特定用戶資料
 
 ------
 
-## MongoDB 查询语法指南
+## MongoDB 查詢語法指南
 
 ### 基本操作符
 
-| 操作符 | 说明     | 示例                                          |
+| 操作符 | 說明     | 範例                                          |
 | ------ | -------- | --------------------------------------------- |
-| `$eq`  | 等于     | `{"nickname": {"$eq": "Alice"}}`              |
-| `$ne`  | 不等于   | `{"nickname": {"$ne": "Admin"}}`              |
-| `$gt`  | 大于     | `{"lastLoginTimeMS": {"$gt": 1640995200000}}` |
-| `$gte` | 大于等于 | `{"createdAt": {"$gte": "2025-01-01"}}`       |
-| `$lt`  | 小于     | `{"lastLoginTimeMS": {"$lt": 1640995200000}}` |
-| `$lte` | 小于等于 | `{"createdAt": {"$lte": "2025-12-31"}}`       |
+| `$eq`  | 等於     | `{"nickname": {"$eq": "Alice"}}`              |
+| `$ne`  | 不等於   | `{"nickname": {"$ne": "Admin"}}`              |
+| `$gt`  | 大於     | `{"lastLoginTimeMS": {"$gt": 1640995200000}}` |
+| `$gte` | 大於等於 | `{"createdAt": {"$gte": "2025-01-01"}}`       |
+| `$lt`  | 小於     | `{"lastLoginTimeMS": {"$lt": 1640995200000}}` |
+| `$lte` | 小於等於 | `{"createdAt": {"$lte": "2025-12-31"}}`       |
 
-### 字符串操作
+### 字串操作
 
-| 操作符   | 说明         | 示例                                                     |
+| 操作符   | 說明         | 範例                                                     |
 | -------- | ------------ | -------------------------------------------------------- |
-| `$regex` | 正则表达式   | `{"nickname": {"$regex": ".*admin.*", "$options": "i"}}` |
-| `$in`    | 包含于列表   | `{"_id": {"$in": ["user1", "user2", "user3"]}}`          |
-| `$nin`   | 不包含于列表 | `{"nickname": {"$nin": ["admin", "test"]}}`              |
+| `$regex` | 正規表達式   | `{"nickname": {"$regex": ".*admin.*", "$options": "i"}}` |
+| `$in`    | 包含於列表   | `{"_id": {"$in": ["user1", "user2", "user3"]}}`          |
+| `$nin`   | 不包含於列表 | `{"nickname": {"$nin": ["admin", "test"]}}`              |
 
-### 存在性检查
+### 存在性檢查
 
-| 操作符    | 说明     | 示例                                       |
+| 操作符    | 說明     | 範例                                       |
 | --------- | -------- | ------------------------------------------ |
-| `$exists` | 字段存在 | `{"email": {"$exists": true}}`             |
-| `$type`   | 数据类型 | `{"lastLoginTimeMS": {"$type": "number"}}` |
+| `$exists` | 欄位存在 | `{"email": {"$exists": true}}`             |
+| `$type`   | 資料型別 | `{"lastLoginTimeMS": {"$type": "number"}}` |
 
 ------
 
-## 分页最佳实践
+## 分頁最佳實務
 
-### 基本分页
+### 基本分頁
 
 ```javascript
-// 第一页（每页 20 笔）
+// 第一頁（每頁 20 筆）
 GET /admin/clients?limit=20&skip=0
 
-// 第二页
+// 第二頁
 GET /admin/clients?limit=20&skip=20
 
-// 第三页
+// 第三頁
 GET /admin/clients?limit=20&skip=40
 ```
 
-### 大数据集处理
+### 大數據集處理
 
 ```javascript
-// 对于大量数据，建议使用更具体的查询条件
+// 對於大量數據，建議使用更具體的查詢條件
 GET /admin/clients?q={"lastLoginTimeMS":{"$gte":1640995200000}}&limit=50
 ```
 
-## 性能考量
+## 效能考量
 
-- **索引使用**：常用的查询字段（如 nickname、email）已建立索引
-- **查询优化**：避免使用过于复杂的正则表达式
-- **分页限制**：单次查询最多返回 100 笔数据
-- **缓存建议**：对于不常变动的查询结果建议实现缓存机制
+- **索引使用**：常用的查詢欄位（如 nickname、email）已建立索引
+- **查詢最佳化**：避免使用過於複雜的正規表達式
+- **分頁限制**：單次查詢最多回傳 100 筆資料
+- **快取建議**：對於不常變動的查詢結果建議實作快取機制
 
-## 注意事项
+## 注意事項
 
-- **查询语法**：必须使用有效的 MongoDB 查询语法
-- **URL 编码**：查询参数需要进行 URL 编码
-- **敏感信息**：响应不包含用户的 token 等敏感信息
-- **权限控制**：仅管理员权限可以调用此 API
+- **查詢語法**：必須使用有效的 MongoDB 查詢語法
+- **URL 編碼**：查詢參數需要進行 URL 編碼
+- **敏感資訊**：回應不包含用戶的 token 等敏感資訊
+- **權限控制**：僅管理員權限可以呼叫此 API

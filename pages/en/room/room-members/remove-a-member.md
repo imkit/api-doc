@@ -1,16 +1,16 @@
-# Remove a Member
+# 移除成員
 
-## Overview
+## 概述
 
-This endpoint allows you to remove one or more members from a specified room. If the current user's own ID is included in the `members` array, it means the current user is leaving the room voluntarily. This API is for server-side use only and requires proper authentication.
+此端點允許您將一位或多位成員從指定聊天室中移除。若在 `members` 中傳入當前用戶自身的 ID，則代表該用戶主動離開聊天室。此 API 僅供伺服器端使用，需要適當的身份驗證。
 
 ------
 
-## API Endpoint
+## API 端點
 
-### Remove a Member
+### 移除成員
 
-Remove one or more members from a specified room.
+將一位或多位成員從指定聊天室中移除。
 
 ```http
 POST /rooms/:id/delete/members
@@ -18,43 +18,43 @@ POST /rooms/:id/delete/members
 
 #### Headers
 
-| Parameter | Type | Required | Description |
+| 參數 | 類型 | 必填 | 說明 |
 | --- | --- | --- | --- |
-| `IM-CLIENT-KEY` | string | ✅ | Client Key |
-| `IM-Authorization` | string | ✅ | Client Token |
+| `IM-CLIENT-KEY` | string | ✅ | 用戶端金鑰 |
+| `IM-Authorization` | string | ✅ | 用戶端權杖 |
 
 #### Path Parameters
 
-| Parameter | Type | Required | Description |
+| 參數 | 類型 | 必填 | 說明 |
 | --- | --- | --- | --- |
-| `:id` | string | ✅ | Unique room ID |
+| `:id` | string | ✅ | 聊天室唯一識別碼 |
 
 #### Post Body
 
-| Parameter | Type | Required | Description |
+| 參數 | 類型 | 必填 | 說明 |
 | --- | --- | --- | --- |
-| `members` | array[string] | ✅ | Array of member IDs to remove. If the current user's own ID is included, they will leave the room voluntarily. |
-| `systemMessage` | boolean | ❌ | Whether to generate a `leaveRoom` or `deleteMember` system message. Default: `false` |
+| `members` | array[string] | ✅ | 要移除的成員 ID 陣列；若包含當前用戶自身 ID，代表主動離開聊天室 |
+| `systemMessage` | boolean | ❌ | 是否自動產生離開或移除成員的系統訊息（`leaveRoom` 或 `deleteMember`），預設為 `false` |
 
-#### Example Request
+#### 範例請求
 
-**Example 1: Remove Specific Members**
+**範例一：移除指定成員**
 
-**cURL:**
+**cURL 範例：**
 
 ```bash
-curl -X "POST" "http://localhost:3100/rooms/demo-room/delete/members" \
-     -H 'IM-CLIENT-KEY: {YOUR_CLIENT_KEY}' \
-     -H 'IM-Authorization: {YOUR_TOKEN}' \
+curl -X "POST" "https://your-app.imkit.io/rooms/demo-room/delete/members" \
+     -H 'IM-CLIENT-KEY: {您的_CLIENT_KEY}' \
+     -H 'IM-Authorization: {您的_TOKEN}' \
      -H 'Content-Type: application/json; charset=utf-8' \
      -d '{"members": ["ccc", "bbb"], "systemMessage": true}'
 ```
 
-**JavaScript:**
+**JavaScript 範例：**
 
 ```javascript
 const response = await axios.post(
-  `http://localhost:3100/rooms/${roomID}/delete/members`,
+  `https://your-app.imkit.io/rooms/${roomID}/delete/members`,
   {
     members: ["ccc", "bbb"],
     systemMessage: true,
@@ -69,13 +69,13 @@ const response = await axios.post(
 );
 ```
 
-**Example 2: Current User Leaves the Room**
+**範例二：當前用戶主動離開聊天室**
 
-**JavaScript:**
+**JavaScript 範例：**
 
 ```javascript
 const response = await axios.post(
-  `http://localhost:3100/rooms/${roomID}/delete/members`,
+  `https://your-app.imkit.io/rooms/${roomID}/delete/members`,
   {
     members: [`${MY_CLIENT_ID}`],
     systemMessage: true,
@@ -92,15 +92,15 @@ const response = await axios.post(
 
 #### Response
 
-**Success Response (200 OK)**
+**成功回應（200 OK）**
 
-| Parameter | Type | Description |
+| 參數 | 類型 | 說明 |
 | --- | --- | --- |
-| `RC` | number | Response code (0 means success) |
-| `RM` | string | Response message |
-| `result` | object | Updated room data with full details |
+| `RC` | number | 回應代碼（0 表示成功） |
+| `RM` | string | 回應訊息 |
+| `result` | object | 更新後的聊天室完整資訊 |
 
-#### Example Response
+#### 範例回應
 
 ```json
 {
@@ -143,30 +143,30 @@ const response = await axios.post(
 }
 ```
 
-#### Error Response
+#### 錯誤回應
 
-When the request fails, you will receive an error response with details. Common error cases include:
+當請求失敗時，您會收到包含錯誤詳細資訊的錯誤回應。常見的錯誤情況包括：
 
-- Invalid client key or authorization token
-- The specified room does not exist
-- One or more IDs in `members` are not in the room
-- Internal server error
-
-------
-
-## Use Cases
-
-### Member Management
-- **Remove members**: Administrators can remove one or more members from a room
-- **Leave voluntarily**: Users can leave a room by including their own ID in the request
-
-### System Notifications
-- **Automatic notifications**: When `systemMessage: true`, the system generates a `leaveRoom` or `deleteMember` system message depending on the context
+- 無效的用戶端金鑰或授權權杖
+- 指定的聊天室不存在
+- `members` 中包含不在聊天室內的用戶 ID
+- 伺服器內部錯誤
 
 ------
 
-## Notes
+## 使用場景
 
-- **Leaving voluntarily**: Including the current user's own ID in `members` is treated as voluntarily leaving the room.
-- **System message type**: When `systemMessage: true`, the type is `leaveRoom` if the member left voluntarily, or `deleteMember` if they were removed by another user.
-- Once removed, a member will no longer be able to access the room or its message history.
+### 成員管理
+- **移除成員**：管理員可從聊天室中移除一位或多位成員
+- **主動離開**：用戶可透過傳入自身 ID 主動離開聊天室
+
+### 系統通知
+- **自動通知**：設定 `systemMessage: true` 時，系統會根據情境自動產生 `leaveRoom` 或 `deleteMember` 類型的系統訊息
+
+------
+
+## 注意事項
+
+- **主動離開**：在 `members` 陣列中傳入當前用戶自身的 ID，即代表該用戶主動離開聊天室
+- **系統訊息**：設定 `systemMessage: true` 時，若成員為主動離開，系統訊息類型為 `leaveRoom`；若為被移除，則為 `deleteMember`
+- 成員被移除後，將無法再存取該聊天室的任何訊息記錄

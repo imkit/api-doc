@@ -1,15 +1,15 @@
-# 静音聊天室通知
+# 靜音聊天室通知
 
 ## 概述
 
-此端点允许当前用户将指定聊天室设为静音，静音后该聊天室的新消息将不会触发推送通知。此设置为个人偏好，仅影响当前用户，不影响其他成员。
+此端點允許當前用戶將指定聊天室設為靜音，靜音後該聊天室的新訊息將不會觸發推播通知。此設定為個人偏好，僅影響當前用戶，不影響其他成員。
 
 ------
 
-## API 端点
+## API 端點
 
-### 静音聊天室通知
-将指定聊天室设为静音，停止接收推送通知。
+### 靜音聊天室通知
+將指定聊天室設為靜音，停止接收推播通知。
 
 ```http
 POST /me/mute/:room
@@ -17,34 +17,34 @@ POST /me/mute/:room
 
 #### Headers
 
-| 参数 | 类型 | 必填 | 说明 |
+| 參數 | 類型 | 必填 | 說明 |
 | --- | --- | --- | --- |
-| `IM-CLIENT-KEY` | string | ✅ | 客户端密钥 |
-| `IM-Authorization` | string | ✅ | 客户端令牌 |
+| `IM-CLIENT-KEY` | string | ✅ | 用戶端金鑰 |
+| `IM-Authorization` | string | ✅ | 用戶端權杖 |
 
 #### Path Parameters
 
-| 参数 | 类型 | 必填 | 说明 |
+| 參數 | 類型 | 必填 | 說明 |
 | --- | --- | --- | --- |
-| `:room` | string | ✅ | 聊天室唯一标识符 |
+| `:room` | string | ✅ | 聊天室唯一識別碼 |
 
-此 API 无需请求内容（Request Body）。
+此 API 無需請求內容（Request Body）。
 
-#### 示例请求
+#### 範例請求
 
-**cURL 示例：**
+**cURL 範例：**
 
 ```bash
-curl -X "POST" "http://localhost:3100/me/mute/demo-room" \
+curl -X "POST" "https://your-app.imkit.io/me/mute/demo-room" \
      -H 'IM-CLIENT-KEY: {您的_CLIENT_KEY}' \
      -H 'IM-Authorization: {您的_TOKEN}'
 ```
 
-**JavaScript 示例：**
+**JavaScript 範例：**
 
 ```javascript
 const response = await axios.post(
-  `http://localhost:3100/me/mute/${roomID}`,
+  `https://your-app.imkit.io/me/mute/${roomID}`,
   null,
   {
     headers: {
@@ -57,19 +57,19 @@ const response = await axios.post(
 
 #### Response
 
-**成功响应（200 OK）**
+**成功回應（200 OK）**
 
-| 参数 | 类型 | 说明 |
+| 參數 | 類型 | 說明 |
 | --- | --- | --- |
-| `RC` | number | 响应码（0 表示成功） |
-| `RM` | string | 响应消息 |
-| `result` | object | 更新后的当前用户信息 |
-| `result._id` | string | 用户唯一标识符 |
-| `result.nickname` | string | 用户显示名称 |
-| `result.email` | string | 用户电子邮件 |
-| `result.mute` | array[string] | 已静音的聊天室 ID 数组（静音后新增） |
+| `RC` | number | 回應代碼（0 表示成功） |
+| `RM` | string | 回應訊息 |
+| `result` | object | 更新後的當前用戶資訊 |
+| `result._id` | string | 用戶唯一識別碼 |
+| `result.nickname` | string | 用戶顯示名稱 |
+| `result.email` | string | 用戶電子郵件 |
+| `result.mute` | array[string] | 已靜音的聊天室 ID 陣列（靜音後新增） |
 
-#### 示例响应
+#### 範例回應
 
 ```json
 {
@@ -93,24 +93,24 @@ const response = await axios.post(
 }
 ```
 
-#### 错误响应
+#### 錯誤回應
 
-当请求失败时，您会收到包含错误详细信息的错误响应。常见的错误情况包括：
+當請求失敗時，您會收到包含錯誤詳細資訊的錯誤回應。常見的錯誤情況包括：
 
-- 无效的客户端密钥或授权令牌
+- 無效的用戶端金鑰或授權權杖
 - 指定的聊天室不存在
-- 服务器内部错误
+- 伺服器內部錯誤
 
 ------
 
-## 使用场景
+## 使用場景
 
-- **停止特定聊天室通知**：当用户不想被某个聊天室的消息打扰时，可将其静音
-- **取消静音**：若要取消静音，请使用[取消静音聊天室通知](./unmute-room-notification) API
+- **停止特定聊天室通知**：當用戶不想被某個聊天室的訊息打擾時，可將其靜音
+- **取消靜音**：若要取消靜音，請使用[取消靜音聊天室通知](./unmute-room-notification) API
 
 ------
 
-## 注意事项
+## 注意事項
 
-- **个人偏好**：静音设置仅影响当前用户，其他成员的通知不受影响
-- **静音状态**：成功后，该聊天室 ID 会加入响应中 `mute` 数组，代表用户目前静音的所有聊天室
+- **個人偏好**：靜音設定僅影響當前用戶，其他成員的通知不受影響
+- **靜音狀態**：成功後，該聊天室 ID 會加入回應中 `mute` 陣列，代表用戶目前靜音的所有聊天室

@@ -1,15 +1,15 @@
-# Unmute Room Notification
+# 取消靜音聊天室通知
 
-## Overview
+## 概述
 
-This endpoint allows the current user to unmute a previously muted room, restoring push notifications for new messages. This is a personal preference setting that only affects the current user and does not impact other members.
+此端點允許當前用戶取消指定聊天室的靜音設定，恢復接收該聊天室的推播通知。此設定為個人偏好，僅影響當前用戶，不影響其他成員。
 
 ------
 
-## API Endpoint
+## API 端點
 
-### Unmute Room Notification
-Unmute a previously muted room to restore push notifications.
+### 取消靜音聊天室通知
+取消指定聊天室的靜音設定，恢復接收推播通知。
 
 ```http
 DELETE /me/mute/:room
@@ -17,34 +17,34 @@ DELETE /me/mute/:room
 
 #### Headers
 
-| Parameter | Type | Required | Description |
+| 參數 | 類型 | 必填 | 說明 |
 | --- | --- | --- | --- |
-| `IM-CLIENT-KEY` | string | ✅ | Client Key |
-| `IM-Authorization` | string | ✅ | Client Token |
+| `IM-CLIENT-KEY` | string | ✅ | 用戶端金鑰 |
+| `IM-Authorization` | string | ✅ | 用戶端權杖 |
 
 #### Path Parameters
 
-| Parameter | Type | Required | Description |
+| 參數 | 類型 | 必填 | 說明 |
 | --- | --- | --- | --- |
-| `:room` | string | ✅ | Unique room ID |
+| `:room` | string | ✅ | 聊天室唯一識別碼 |
 
-No request body is required for this API.
+此 API 無需請求內容（Request Body）。
 
-#### Example Request
+#### 範例請求
 
-**cURL:**
+**cURL 範例：**
 
 ```bash
-curl -X "DELETE" "http://localhost:3100/me/mute/demo-room" \
-     -H 'IM-CLIENT-KEY: {YOUR_CLIENT_KEY}' \
-     -H 'IM-Authorization: {YOUR_TOKEN}'
+curl -X "DELETE" "https://your-app.imkit.io/me/mute/demo-room" \
+     -H 'IM-CLIENT-KEY: {您的_CLIENT_KEY}' \
+     -H 'IM-Authorization: {您的_TOKEN}'
 ```
 
-**JavaScript:**
+**JavaScript 範例：**
 
 ```javascript
 const response = await axios.delete(
-  `http://localhost:3100/me/mute/${roomID}`,
+  `https://your-app.imkit.io/me/mute/${roomID}`,
   {
     headers: {
       "IM-CLIENT-KEY": `${IM_CLIENT_KEY}`,
@@ -56,19 +56,19 @@ const response = await axios.delete(
 
 #### Response
 
-**Success Response (200 OK)**
+**成功回應（200 OK）**
 
-| Parameter | Type | Description |
+| 參數 | 類型 | 說明 |
 | --- | --- | --- |
-| `RC` | number | Response code (0 means success) |
-| `RM` | string | Response message |
-| `result` | object | Updated current user data |
-| `result._id` | string | User unique ID |
-| `result.nickname` | string | User display name |
-| `result.email` | string | User email |
-| `result.mute` | array[string] | Array of muted room IDs (room removed after unmuting) |
+| `RC` | number | 回應代碼（0 表示成功） |
+| `RM` | string | 回應訊息 |
+| `result` | object | 更新後的當前用戶資訊 |
+| `result._id` | string | 用戶唯一識別碼 |
+| `result.nickname` | string | 用戶顯示名稱 |
+| `result.email` | string | 用戶電子郵件 |
+| `result.mute` | array[string] | 已靜音的聊天室 ID 陣列（取消後移除） |
 
-#### Example Response
+#### 範例回應
 
 ```json
 {
@@ -92,24 +92,24 @@ const response = await axios.delete(
 }
 ```
 
-#### Error Response
+#### 錯誤回應
 
-When the request fails, you will receive an error response with details. Common error cases include:
+當請求失敗時，您會收到包含錯誤詳細資訊的錯誤回應。常見的錯誤情況包括：
 
-- Invalid client key or authorization token
-- The specified room does not exist
-- Internal server error
-
-------
-
-## Use Cases
-
-- **Restore room notifications**: When a user wants to resume receiving push notifications for a room, they can unmute it
-- **Mute a room**: To mute a room, use the [Mute Room Notification](./mute-room-notification) API
+- 無效的用戶端金鑰或授權權杖
+- 指定的聊天室不存在
+- 伺服器內部錯誤
 
 ------
 
-## Notes
+## 使用場景
 
-- **Personal preference**: The unmute setting only affects the current user. Other members' notifications are not impacted.
-- **Mute state**: After a successful request, the room ID is removed from the `mute` array in the response, which represents all rooms currently muted by the user.
+- **恢復聊天室通知**：當用戶希望重新接收某個聊天室的推播通知時，可取消靜音
+- **靜音聊天室**：若要靜音聊天室，請使用[靜音聊天室通知](./mute-room-notification) API
+
+------
+
+## 注意事項
+
+- **個人偏好**：取消靜音設定僅影響當前用戶，其他成員的通知不受影響
+- **靜音狀態**：成功後，該聊天室 ID 會從回應中 `mute` 陣列移除，代表用戶目前靜音的所有聊天室

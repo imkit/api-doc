@@ -35,7 +35,7 @@ POST /me/mute/:room
 **cURL 範例：**
 
 ```bash
-curl -X "POST" "http://localhost:3100/me/mute/demo-room" \
+curl -X "POST" "https://your-app.imkit.io/me/mute/demo-room" \
      -H 'IM-CLIENT-KEY: {您的_CLIENT_KEY}' \
      -H 'IM-Authorization: {您的_TOKEN}'
 ```
@@ -44,7 +44,7 @@ curl -X "POST" "http://localhost:3100/me/mute/demo-room" \
 
 ```javascript
 const response = await axios.post(
-  `http://localhost:3100/me/mute/${roomID}`,
+  `https://your-app.imkit.io/me/mute/${roomID}`,
   null,
   {
     headers: {

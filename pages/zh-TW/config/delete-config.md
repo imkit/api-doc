@@ -34,7 +34,7 @@ DELETE /config/:key
 
 ```javascript
 const response = await axios.delete(
-  "https://imkit-dev.funtek.io/config/announcement",
+  "https://your-app.imkit.io/config/announcement",
   {
     headers: {
       "IM-API-KEY": process.env.IM_API_KEY
@@ -46,7 +46,7 @@ const response = await axios.delete(
 **cURL**
 
 ```bash
-curl -X DELETE "https://imkit-dev.funtek.io/config/announcement" \
+curl -X DELETE "https://your-app.imkit.io/config/announcement" \
   -H "IM-API-KEY: your_api_key"
 ```
 

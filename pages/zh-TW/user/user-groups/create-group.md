@@ -40,7 +40,7 @@ POST /admin/groups
 
 ```javascript
 const response = await axios.post(
-  "https://imkit-dev.funtek.io/admin/groups",
+  "https://your-app.imkit.io/admin/groups",
   {
     _id: "group_customer_service",
     nickname: "客服團隊",
@@ -59,7 +59,7 @@ const response = await axios.post(
 **cURL**
 
 ```bash
-curl -X POST "https://imkit-dev.funtek.io/admin/groups" \
+curl -X POST "https://your-app.imkit.io/admin/groups" \
   -H "IM-API-KEY: your_api_key" \
   -H "Content-Type: application/json; charset=utf-8" \
   -d '{

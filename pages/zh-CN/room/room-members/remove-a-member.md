@@ -1,16 +1,16 @@
-# 移除成员
+# 移除成員
 
 ## 概述
 
-此端点允许您将一位或多位成员从指定聊天室中移除。若在 `members` 中传入当前用户自身的 ID，则代表该用户主动离开聊天室。此 API 仅供服务端使用，需要适当的身份验证。
+此端點允許您將一位或多位成員從指定聊天室中移除。若在 `members` 中傳入當前用戶自身的 ID，則代表該用戶主動離開聊天室。此 API 僅供伺服器端使用，需要適當的身份驗證。
 
 ------
 
-## API 端点
+## API 端點
 
-### 移除成员
+### 移除成員
 
-将一位或多位成员从指定聊天室中移除。
+將一位或多位成員從指定聊天室中移除。
 
 ```http
 POST /rooms/:id/delete/members
@@ -18,43 +18,43 @@ POST /rooms/:id/delete/members
 
 #### Headers
 
-| 参数 | 类型 | 必填 | 说明 |
+| 參數 | 類型 | 必填 | 說明 |
 | --- | --- | --- | --- |
-| `IM-CLIENT-KEY` | string | ✅ | 客户端密钥 |
-| `IM-Authorization` | string | ✅ | 客户端令牌 |
+| `IM-CLIENT-KEY` | string | ✅ | 用戶端金鑰 |
+| `IM-Authorization` | string | ✅ | 用戶端權杖 |
 
 #### Path Parameters
 
-| 参数 | 类型 | 必填 | 说明 |
+| 參數 | 類型 | 必填 | 說明 |
 | --- | --- | --- | --- |
-| `:id` | string | ✅ | 聊天室唯一标识符 |
+| `:id` | string | ✅ | 聊天室唯一識別碼 |
 
 #### Post Body
 
-| 参数 | 类型 | 必填 | 说明 |
+| 參數 | 類型 | 必填 | 說明 |
 | --- | --- | --- | --- |
-| `members` | array[string] | ✅ | 要移除的成员 ID 数组；若包含当前用户自身 ID，代表主动离开聊天室 |
-| `systemMessage` | boolean | ❌ | 是否自动生成离开或移除成员的系统消息（`leaveRoom` 或 `deleteMember`），默认为 `false` |
+| `members` | array[string] | ✅ | 要移除的成員 ID 陣列；若包含當前用戶自身 ID，代表主動離開聊天室 |
+| `systemMessage` | boolean | ❌ | 是否自動產生離開或移除成員的系統訊息（`leaveRoom` 或 `deleteMember`），預設為 `false` |
 
-#### 示例请求
+#### 範例請求
 
-**示例一：移除指定成员**
+**範例一：移除指定成員**
 
-**cURL 示例：**
+**cURL 範例：**
 
 ```bash
-curl -X "POST" "http://localhost:3100/rooms/demo-room/delete/members" \
+curl -X "POST" "https://your-app.imkit.io/rooms/demo-room/delete/members" \
      -H 'IM-CLIENT-KEY: {您的_CLIENT_KEY}' \
      -H 'IM-Authorization: {您的_TOKEN}' \
      -H 'Content-Type: application/json; charset=utf-8' \
      -d '{"members": ["ccc", "bbb"], "systemMessage": true}'
 ```
 
-**JavaScript 示例：**
+**JavaScript 範例：**
 
 ```javascript
 const response = await axios.post(
-  `http://localhost:3100/rooms/${roomID}/delete/members`,
+  `https://your-app.imkit.io/rooms/${roomID}/delete/members`,
   {
     members: ["ccc", "bbb"],
     systemMessage: true,
@@ -69,13 +69,13 @@ const response = await axios.post(
 );
 ```
 
-**示例二：当前用户主动离开聊天室**
+**範例二：當前用戶主動離開聊天室**
 
-**JavaScript 示例：**
+**JavaScript 範例：**
 
 ```javascript
 const response = await axios.post(
-  `http://localhost:3100/rooms/${roomID}/delete/members`,
+  `https://your-app.imkit.io/rooms/${roomID}/delete/members`,
   {
     members: [`${MY_CLIENT_ID}`],
     systemMessage: true,
@@ -92,15 +92,15 @@ const response = await axios.post(
 
 #### Response
 
-**成功响应（200 OK）**
+**成功回應（200 OK）**
 
-| 参数 | 类型 | 说明 |
+| 參數 | 類型 | 說明 |
 | --- | --- | --- |
-| `RC` | number | 响应码（0 表示成功） |
-| `RM` | string | 响应消息 |
-| `result` | object | 更新后的聊天室完整信息 |
+| `RC` | number | 回應代碼（0 表示成功） |
+| `RM` | string | 回應訊息 |
+| `result` | object | 更新後的聊天室完整資訊 |
 
-#### 示例响应
+#### 範例回應
 
 ```json
 {
@@ -143,30 +143,30 @@ const response = await axios.post(
 }
 ```
 
-#### 错误响应
+#### 錯誤回應
 
-当请求失败时，您会收到包含错误详细信息的错误响应。常见的错误情况包括：
+當請求失敗時，您會收到包含錯誤詳細資訊的錯誤回應。常見的錯誤情況包括：
 
-- 无效的客户端密钥或授权令牌
+- 無效的用戶端金鑰或授權權杖
 - 指定的聊天室不存在
-- `members` 中包含不在聊天室内的用户 ID
-- 服务器内部错误
+- `members` 中包含不在聊天室內的用戶 ID
+- 伺服器內部錯誤
 
 ------
 
-## 使用场景
+## 使用場景
 
-### 成员管理
-- **移除成员**：管理员可从聊天室中移除一位或多位成员
-- **主动离开**：用户可通过传入自身 ID 主动离开聊天室
+### 成員管理
+- **移除成員**：管理員可從聊天室中移除一位或多位成員
+- **主動離開**：用戶可透過傳入自身 ID 主動離開聊天室
 
-### 系统通知
-- **自动通知**：设置 `systemMessage: true` 时，系统会根据情况自动生成 `leaveRoom` 或 `deleteMember` 类型的系统消息
+### 系統通知
+- **自動通知**：設定 `systemMessage: true` 時，系統會根據情境自動產生 `leaveRoom` 或 `deleteMember` 類型的系統訊息
 
 ------
 
-## 注意事项
+## 注意事項
 
-- **主动离开**：在 `members` 数组中传入当前用户自身的 ID，即代表该用户主动离开聊天室
-- **系统消息类型**：设置 `systemMessage: true` 时，若成员为主动离开，系统消息类型为 `leaveRoom`；若为被移除，则为 `deleteMember`
-- 成员被移除后，将无法再访问该聊天室的任何消息记录
+- **主動離開**：在 `members` 陣列中傳入當前用戶自身的 ID，即代表該用戶主動離開聊天室
+- **系統訊息**：設定 `systemMessage: true` 時，若成員為主動離開，系統訊息類型為 `leaveRoom`；若為被移除，則為 `deleteMember`
+- 成員被移除後，將無法再存取該聊天室的任何訊息記錄

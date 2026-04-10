@@ -2,15 +2,15 @@
 
 ## 概述
 
-更新指定用户的 access token 和有效期间。适用于 token 轮换、延长有效期或更换认证凭证等场景。
+更新指定用戶的 access token 和有效期間。適用於 token 輪換、延長有效期或更換認證憑證等場景。
 
 ------
 
-## API 端点
+## API 端點
 
-### 更新用户 Token
+### 更新用戶 Token
 
-更新指定用户的 access token 和过期时间。
+更新指定用戶的 access token 和過期時間。
 
 ```http
 PUT /admin/clients/{client_id}/token
@@ -18,25 +18,25 @@ PUT /admin/clients/{client_id}/token
 
 #### Headers
 
-| 参数           | 类型   | 必填 | 说明               |
+| 參數           | 類型   | 必填 | 說明               |
 | -------------- | ------ | ---- | ------------------ |
-| `IM-API-KEY`   | string | ✅    | 您的 API 密钥      |
+| `IM-API-KEY`   | string | ✅    | 您的 API 金鑰      |
 | `Content-Type` | string | ✅    | `application/json` |
 
 #### Path Parameters
 
-| 参数        | 类型   | 必填 | 说明           |
+| 參數        | 類型   | 必填 | 說明           |
 | ----------- | ------ | ---- | -------------- |
-| `client_id` | string | ✅    | 用户唯一识别码 |
+| `client_id` | string | ✅    | 用戶唯一識別碼 |
 
 #### Request Body
 
-| 参数             | 类型   | 必填 | 说明                            |
+| 參數             | 類型   | 必填 | 說明                            |
 | ---------------- | ------ | ---- | ------------------------------- |
 | `token`          | string | ✅    | 新的 access token               |
-| `expirationDate` | string | ✅    | Token 过期时间（ISO 8601 格式） |
+| `expirationDate` | string | ✅    | Token 過期時間（ISO 8601 格式） |
 
-#### 示例请求
+#### 範例請求
 
 ```json
 {
@@ -45,21 +45,48 @@ PUT /admin/clients/{client_id}/token
 }
 ```
 
+**JavaScript 範例：**
+
+```javascript
+const response = await axios.put(
+  `https://your-app.imkit.io/admin/clients/${clientId}/token`,
+  {
+    token: "new-token-001",
+    expirationDate: "2026-01-01T00:00:00Z",
+  },
+  {
+    headers: {
+      "IM-API-KEY": process.env.IM_API_KEY,
+      "Content-Type": "application/json",
+    },
+  }
+);
+```
+
+**cURL 範例：**
+
+```bash
+curl -X "PUT" "https://your-app.imkit.io/admin/clients/{client_id}/token" \
+     -H 'IM-API-KEY: {您的_API_KEY}' \
+     -H 'Content-Type: application/json' \
+     -d '{"token": "new-token-001", "expirationDate": "2026-01-01T00:00:00Z"}'
+```
+
 #### Response
 
-**成功响应（200 OK）**
+**成功回應（200 OK）**
 
-| 参数               | 类型    | 说明                            |
+| 參數               | 類型    | 說明                            |
 | ------------------ | ------- | ------------------------------- |
-| `_id`              | string  | 用户唯一识别码                  |
-| `nickname`         | string  | 用户显示名称                    |
-| `avatarUrl`        | string  | 用户头像 URL                    |
+| `_id`              | string  | 用戶唯一識別碼                  |
+| `nickname`         | string  | 用戶顯示名稱                    |
+| `avatarUrl`        | string  | 用戶頭像 URL                    |
 | `issueAccessToken` | boolean | Token issue 模式                |
-| `token`            | string  | 更新后的 access token           |
-| `expirationDate`   | string  | 更新后的 Token 过期时间         |
-| `updatedAt`        | string  | Token 更新时间（ISO 8601 格式） |
+| `token`            | string  | 更新後的 access token           |
+| `expirationDate`   | string  | 更新後的 Token 過期時間         |
+| `updatedAt`        | string  | Token 更新時間（ISO 8601 格式） |
 
-#### 示例响应
+#### 範例回應
 
 ```json
 {
@@ -73,9 +100,9 @@ PUT /admin/clients/{client_id}/token
 }
 ```
 
-#### 错误响应
+#### 錯誤回應
 
-**400 Bad Request** - 请求参数错误
+**400 Bad Request** - 請求參數錯誤
 
 ```json
 {
@@ -84,7 +111,7 @@ PUT /admin/clients/{client_id}/token
 }
 ```
 
-**400 Bad Request** - Token 格式错误
+**400 Bad Request** - Token 格式錯誤
 
 ```json
 {
@@ -93,7 +120,7 @@ PUT /admin/clients/{client_id}/token
 }
 ```
 
-**401 Unauthorized** - API 密钥无效
+**401 Unauthorized** - API 金鑰無效
 
 ```json
 {
@@ -102,7 +129,7 @@ PUT /admin/clients/{client_id}/token
 }
 ```
 
-**404 Not Found** - 用户不存在
+**404 Not Found** - 用戶不存在
 
 ```json
 {
@@ -111,7 +138,7 @@ PUT /admin/clients/{client_id}/token
 }
 ```
 
-**409 Conflict** - Token 冲突
+**409 Conflict** - Token 衝突
 
 ```json
 {
@@ -122,46 +149,46 @@ PUT /admin/clients/{client_id}/token
 
 ------
 
-## 使用场景
+## 使用場景
 
-### Token 生命周期管理
+### Token 生命週期管理
 
-- **定期轮换**：定期更新 token 提升安全性
-- **延长有效期**：延长即将过期的 token 有效期间
-- **紧急更新**：安全事件发生时紧急更换 token
+- **定期輪換**：定期更新 token 提升安全性
+- **延長有效期**：延長即將過期的 token 有效期間
+- **緊急更新**：安全事件發生時緊急更換 token
 
-### 系统维护
+### 系統維護
 
-- **批次更新**：系统升级时批次更新用户 token
-- **格式迁移**：从旧格式 token 迁移到新格式
-- **权限调整**：调整 token 内容以反映新的权限设置
+- **批次更新**：系統升級時批次更新用戶 token
+- **格式遷移**：從舊格式 token 遷移到新格式
+- **權限調整**：調整 token 內容以反映新的權限設定
 
-## 注意事项
+## 注意事項
 
-- **即时生效**：Token 更新后立即生效，旧 token 将失效
-- **唯一性检查**：系统会检查新 token 是否与其他用户冲突
-- **时间格式**：`expirationDate` 必须使用 ISO 8601 格式
-- **向前兼容**：确保新 token 与现有系统兼容
+- **即時生效**：Token 更新後立即生效，舊 token 將失效
+- **唯一性檢查**：系統會檢查新 token 是否與其他用戶衝突
+- **時間格式**：`expirationDate` 必須使用 ISO 8601 格式
+- **向前兼容**：確保新 token 與現有系統兼容
 
-## 最佳实践
+## 最佳實務
 
 ### 安全性考量
 
-1. **Token 复杂度**：使用足够复杂的 token 格式
-2. **过期时间设置**：合理设置过期时间，平衡安全性与使用便利性
-3. **更新频率**：建立定期 token 更新机制
-4. **审计记录**：记录所有 token 更新操作
+1. **Token 複雜度**：使用足夠複雜的 token 格式
+2. **過期時間設定**：合理設定過期時間，平衡安全性與使用便利性
+3. **更新頻率**：建立定期 token 更新機制
+4. **審計記錄**：記錄所有 token 更新操作
 
-### 操作建议
+### 操作建議
 
-1. **渐进式更新**：分批更新大量用户的 token
-2. **验证机制**：更新前验证新 token 的有效性
-3. **回滚准备**：准备回滚机制以应对更新失败
-4. **监控告警**：监控 token 更新的成功率和异常情况
+1. **漸進式更新**：分批更新大量用戶的 token
+2. **驗證機制**：更新前驗證新 token 的有效性
+3. **回滾準備**：準備回滾機制以應對更新失敗
+4. **監控告警**：監控 token 更新的成功率和異常情況
 
-### 集成建议
+### 整合建議
 
-1. **自动化流程**：建立自动化的 token 更新流程
-2. **同步机制**：确保与您的认证系统同步更新
-3. **通知系统**：更新成功后通知相关系统或用户
-4. **备份策略**：更新前备份旧的 token 信息
+1. **自動化流程**：建立自動化的 token 更新流程
+2. **同步機制**：確保與您的認證系統同步更新
+3. **通知系統**：更新成功後通知相關系統或用戶
+4. **備份策略**：更新前備份舊的 token 資訊
