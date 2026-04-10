@@ -1,4 +1,8 @@
 export default {
+  index:
+  {
+    title: "基本介紹"
+  },
   quick_start:
   {
     title: "快速開始"
