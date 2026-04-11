@@ -12,7 +12,9 @@ const config: DocsThemeConfig = {
   i18n: [
     { locale: 'zh-TW', name: '繁體中文' },
     { locale: 'zh-CN', name: '简体中文' },
-    { locale: 'en', name: 'English' }
+    { locale: 'en', name: 'English' },
+    { locale: 'ja', name: '日本語' },
+    { locale: 'ko', name: '한국어' }
   ],
 
   // SEO 配置
