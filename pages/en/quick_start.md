@@ -51,7 +51,7 @@ Once you have your keys, import our Postman Collection to start testing the Chat
 
 ### Downloads
 
-- [IMKit API Collection](/collections/IMKit-API.postman_collection.json) (51 API requests)
+- [IMKit API Collection](/collections/IMKit-API.postman_collection.json)
 - [IMKit API Environment](/collections/IMKit-API.postman_environment.json) (environment variable template)
 
 ### Import Steps

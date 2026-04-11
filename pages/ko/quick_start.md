@@ -51,7 +51,7 @@ Key를 발급받은 후 Postman Collection을 가져오면 코드 작성 없이 
 
 ### 다운로드
 
-- [IMKit API Collection](/collections/IMKit-API.postman_collection.json) (51개 API request)
+- [IMKit API Collection](/collections/IMKit-API.postman_collection.json)
 - [IMKit API Environment](/collections/IMKit-API.postman_environment.json) (환경 변수 템플릿)
 
 ### 가져오기 단계

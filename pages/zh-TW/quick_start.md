@@ -51,7 +51,7 @@
 
 ### 下載
 
-- [IMKit API Collection](/collections/IMKit-API.postman_collection.json)（51 個 API request）
+- [IMKit API Collection](/collections/IMKit-API.postman_collection.json)
 - [IMKit API Environment](/collections/IMKit-API.postman_environment.json)（環境變數範本）
 
 ### 匯入步驟

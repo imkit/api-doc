@@ -51,7 +51,7 @@ IMKIT Platform API を使用するには、まず [IMKIT Dashboard](https://dash
 
 ### ダウンロード
 
-- [IMKit API Collection](/collections/IMKit-API.postman_collection.json)（51 個の API request）
+- [IMKit API Collection](/collections/IMKit-API.postman_collection.json)
 - [IMKit API Environment](/collections/IMKit-API.postman_environment.json)（環境変数テンプレート）
 
 ### インポート手順

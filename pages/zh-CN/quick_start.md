@@ -51,7 +51,7 @@
 
 ### 下载
 
-- [IMKit API Collection](/collections/IMKit-API.postman_collection.json)（51 个 API request）
+- [IMKit API Collection](/collections/IMKit-API.postman_collection.json)
 - [IMKit API Environment](/collections/IMKit-API.postman_environment.json)（环境变量模板）
 
 ### 导入步骤
