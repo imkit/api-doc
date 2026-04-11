@@ -1,54 +1,54 @@
-# Update Member Role
+# メンバーロールの更新
 
-## Overview
+## 概要
 
-This endpoint allows you to update the role of a specific member in a room. When the role is changed to administrator, the system automatically generates a corresponding system message in the room. This API is for server-side use only and requires proper authentication.
+このエンドポイントを使用すると、チャットルーム内の特定のメンバーのロール（役割）を更新できます。ロールが管理者に変更されると、システムは自動的にチャットルーム内に対応するシステムメッセージを生成します。この API はサーバーサイド専用であり、適切な認証が必要です。
 
 ------
 
-## API Endpoint
+## API エンドポイント
 
-### Update Member Role
+### メンバーロールを更新
 
-Update the role of a specific member in a room.
+チャットルーム内の特定のメンバーのロールを更新します。
 
 ```http
 PUT /rooms/:id/member/:client
 ```
 
-#### Headers
+#### ヘッダー
 
-| Parameter | Type | Required | Description |
+| パラメータ | 型 | 必須 | 説明 |
 | --- | --- | --- | --- |
-| `IM-CLIENT-KEY` | string | ✅ | Client key |
-| `IM-Authorization` | string | ✅ | Client token |
+| `IM-CLIENT-KEY` | string | ✅ | クライアントキー |
+| `IM-Authorization` | string | ✅ | クライアントトークン |
 
-#### Path Parameters
+#### パスパラメータ
 
-| Parameter | Type | Required | Description |
+| パラメータ | 型 | 必須 | 説明 |
 | --- | --- | --- | --- |
-| `:id` | string | ✅ | Room unique identifier |
-| `:client` | string | ✅ | Member's client ID |
+| `:id` | string | ✅ | チャットルームの一意識別子 |
+| `:client` | string | ✅ | メンバーのクライアント ID |
 
-#### Request Body
+#### リクエストボディ (Request Body)
 
-| Parameter | Type | Required | Description |
+| パラメータ | 型 | 必須 | 説明 |
 | --- | --- | --- | --- |
-| `property` | string | ✅ | Must be set to `"role"` |
-| `value` | string | ✅ | Role value, either `"admin"` or `"member"` |
+| `property` | string | ✅ | 固定で `"role"` を入力します |
+| `value` | string | ✅ | ロール値。`"admin"` または `"member"` を指定できます |
 
-**Role Descriptions**
+**ロールの説明**
 
-| Role Value | Description |
+| ロール値 | 説明 |
 | --- | --- |
-| `"admin"` | Administrator, with permissions to manage room members |
-| `"member"` | Regular member |
+| `"admin"` | 管理者。チャットルームメンバーを管理する権限を持ちます |
+| `"member"` | 一般メンバー |
 
-#### Example Request
+#### リクエスト例
 
-**Example 1: Set a member as administrator**
+**例 1：メンバーを管理者に設定**
 
-**cURL Example:**
+**cURL 例：**
 
 ```bash
 curl -X "PUT" "https://your-app.imkit.io/rooms/demo-room/member/user-001" \
@@ -58,7 +58,7 @@ curl -X "PUT" "https://your-app.imkit.io/rooms/demo-room/member/user-001" \
      -d '{"property": "role", "value": "admin"}'
 ```
 
-**JavaScript Example:**
+**JavaScript 例：**
 
 ```javascript
 const response = await axios.put(
@@ -77,9 +77,9 @@ const response = await axios.put(
 );
 ```
 
-**Example 2: Demote an administrator to a regular member**
+**例 2：管理者を一般メンバーに降格**
 
-**JavaScript Example:**
+**JavaScript 例：**
 
 ```javascript
 const response = await axios.put(
@@ -98,17 +98,17 @@ const response = await axios.put(
 );
 ```
 
-#### Response
+#### レスポンス
 
-**Success Response (200 OK)**
+**成功レスポンス (200 OK)**
 
-| Parameter | Type | Description |
+| パラメータ | 型 | 説明 |
 | --- | --- | --- |
-| `RC` | number | Response code (0 indicates success) |
-| `RM` | string | Response message |
-| `result` | object | Complete room information after the update |
+| `RC` | number | レスポンスコード (0 は成功) |
+| `RM` | string | レスポンスメッセージ |
+| `result` | object | 更新後のチャットルームの完全な情報 |
 
-#### Example Response
+#### レスポンス例
 
 ```json
 {
@@ -134,27 +134,27 @@ const response = await axios.put(
 }
 ```
 
-#### Error Response
+#### エラーレスポンス
 
-When a request fails, you will receive an error response containing error details. Common error scenarios include:
+リクエストが失敗した場合、エラーの詳細情報を含むエラーレスポンスが返されます。一般的なエラーシナリオは以下の通りです：
 
-- Invalid client key or authorization token
-- The specified room or member does not exist
-- `value` is not a valid role value
-- Internal server error
-
-------
-
-## Use Cases
-
-### Permission Management
-- **Promote to administrator**: Change a member's role from `"member"` to `"admin"`, granting them permissions to manage room members
-- **Demote to regular member**: Change an administrator's role from `"admin"` to `"member"`, removing their management permissions
+- 無効なクライアントキーまたは認証トークン
+- 指定されたチャットルームまたはメンバーが存在しない
+- `value` が有効なロール値ではない
+- サーバー内部エラー
 
 ------
 
-## Notes
+## ユースケース
 
-- **System message**: When `value` is set to `"admin"`, the system automatically generates an `assignAdmin` system message in the room to notify other members
-- The `property` field must always be set to `"role"`; to update other member properties, please use the [Update Member Property](./update-member-property) API
-- This operation only changes the member's role within that specific room and does not affect their roles in other rooms
+### 権限管理
+- **管理者へのアップグレード**: メンバーのロールを `"member"` から `"admin"` に変更し、チャットルームメンバーを管理する権限を付与します。
+- **一般メンバーへの降格**: 管理者のロールを `"admin"` から `"member"` に変更し、管理権限を削除します。
+
+------
+
+## 注意事項
+
+- **システムメッセージ**: `value` を `"admin"` に設定すると、システムは自動的にチャットルーム内に `assignAdmin` システムメッセージを生成し、他のメンバーに通知します。
+- `property` フィールドには固定で `"role"` を入力する必要があります。他のメンバー属性を更新する場合は、[メンバー属性の更新](./update-member-property) API を使用してください。
+- この操作は、該当するチャットルーム内でのメンバーのロールのみを変更し、他のチャットルームでのロール設定には影響しません。

@@ -1,35 +1,35 @@
-# List Members
+# メンバーのリスト表示
 
-## Overview
+## 概要
 
-Retrieve the member list of a specified room. This API uses the same endpoint `GET /rooms/{id}` as [Get a Room](/en/room/room-management/get-a-room), and the returned room data includes the complete `members` array and `memberProperties` member attributes.
+指定したチャットルームのメンバーリストを取得します。この API は[チャットルームの取得](/ja/room/room-management/get-a-room)と同じエンドポイント `GET /rooms/{id}` を使用し、返されるチャットルームデータには完全な `members`（メンバー配列）と `memberProperties`（メンバー属性）が含まれます。
 
 ------
 
-## API Endpoint
+## API エンドポイント
 
-### Get Room Details (Including Member List)
+### チャットルームの詳細情報を取得（メンバーリストを含む）
 
-Query the complete information of a specified room, including detailed data for all members.
+指定したチャットルームの完全な情報を照会します。これには、すべてのメンバーの詳細データが含まれます。
 
 ```http
 GET /rooms/{id}
 ```
 
-#### Headers
+#### ヘッダー
 
-| Parameter       | Type   | Required | Description    |
+| パラメータ            | 型     | 必須 | 説明            |
 | --------------- | ------ | ---- | -------------- |
 | `IM-CLIENT-KEY` | string | ✅    | Client Key     |
 | `IM-Authorization` | string | ✅    | Client Token   |
 
-#### Path Parameters
+#### パスパラメータ
 
-| Parameter | Type   | Required | Description |
-| ---- | ------ | ---- | ----------- |
-| `id` | string | ✅    | Room ID     |
+| パラメータ | 型     | 必須 | 説明            |
+| ---- | ------ | ---- | -------------- |
+| `id` | string | ✅    | チャットルーム ID |
 
-#### Example Request
+#### リクエスト例
 
 ```http
 GET /rooms/58871b877390be11d5f1ab30 HTTP/1.1
@@ -40,7 +40,7 @@ Connection: close
 User-Agent: Paw/3.0.14 (Macintosh; OS X/10.11.6) GCDHTTPRequest
 ```
 
-**JavaScript Example:**
+**JavaScript 例:**
 
 ```javascript
 const response = await axios.get(
@@ -54,7 +54,7 @@ const response = await axios.get(
 );
 ```
 
-**cURL Example:**
+**cURL 例:**
 
 ```bash
 curl -X "GET" "https://your-app.imkit.io/rooms/58871b877390be11d5f1ab30" \
@@ -62,48 +62,48 @@ curl -X "GET" "https://your-app.imkit.io/rooms/58871b877390be11d5f1ab30" \
      -H 'IM-Authorization: {IM-Authorization}'
 ```
 
-#### Response
+#### レスポンス
 
-**Success Response (200 OK)**
+**成功レスポンス (200 OK)**
 
-| Parameter | Type   | Description                |
-| -------- | ------ | ---------------------- |
-| `RC`     | number | Response code (0 indicates success) |
-| `RM`     | string | Response message       |
-| `result` | object | Room details           |
+| パラメータ     | 型     | 説明                       |
+| -------- | ------ | -------------------------- |
+| `RC`     | number | レスポンスコード (0 は成功) |
+| `RM`     | string | レスポンスメッセージ        |
+| `result` | object | チャットルームの詳細情報     |
 
-**Room Details Object Structure**
+**チャットルーム詳細情報のオブジェクト構造**
 
-| Parameter           | Type   | Description                       |
-| ------------------- | ------ | --------------------------------- |
-| `_id`               | string | Room unique identifier            |
-| `appID`             | string | Application identifier            |
-| `description`       | string | Room description                  |
-| `lastMessage`       | object | Last message information          |
-| `memberProperties`  | array  | Member properties list (unread count, last read) |
-| `members`           | array  | Member details list               |
-| `unread`            | number | Unread message count for the current user |
-| `isSuperuser`       | bool   | Whether the current user is a superuser |
+| パラメータ                | 型     | 説明                                      |
+| ------------------- | ------ | ----------------------------------------- |
+| `_id`               | string | チャットルームの一意識別子                 |
+| `appID`             | string | アプリケーション ID                       |
+| `description`       | string | チャットルームの説明                       |
+| `lastMessage`       | object | 最新メッセージの情報                       |
+| `memberProperties`  | array  | メンバー属性リスト（未読数、最終既読など）   |
+| `members`           | array  | メンバー詳細情報リスト                     |
+| `unread`            | number | 現在のユーザーの未読メッセージ数           |
+| `isSuperuser`       | bool   | 現在のユーザーが特権ユーザーかどうか        |
 
-**Member Object Structure**
+**メンバーオブジェクトの構造**
 
-| Parameter         | Type   | Description                       |
-| ----------------- | ------ | --------------------------------- |
-| `_id`             | string | Member unique identifier          |
-| `nickname`        | string | Member nickname                   |
-| `avatarUrl`       | string | Member avatar URL                 |
-| `lastLoginTime`   | string | Last login time (ISO format)      |
-| `lastLoginTimeMS` | number | Last login time (millisecond timestamp) |
+| パラメータ              | 型     | 説明                               |
+| ----------------- | ------ | ---------------------------------- |
+| `_id`             | string | メンバーの一意識別子                 |
+| `nickname`        | string | メンバーのニックネーム               |
+| `avatarUrl`       | string | メンバーのアバター URL               |
+| `lastLoginTime`   | string | 最終ログイン時間 (ISO 形式)         |
+| `lastLoginTimeMS` | number | 最終ログイン時間 (ミリ秒タイムスタンプ) |
 
-**Member Properties Object Structure**
+**メンバー属性オブジェクトの構造**
 
-| Parameter  | Type   | Description                       |
-| ---------- | ------ | --------------------------------- |
-| `client`   | string | Member client ID                  |
-| `badge`    | number | Unread message count              |
-| `lastRead` | string | Last read message ID              |
+| パラメータ       | 型     | 説明                          |
+| ---------- | ------ | ----------------------------- |
+| `client`   | string | メンバーのクライアント ID      |
+| `badge`    | number | 未読メッセージ数               |
+| `lastRead` | string | 最終既読のメッセージ ID        |
 
-#### Example Response
+#### レスポンス例
 
 ```json
 {
@@ -174,9 +174,9 @@ curl -X "GET" "https://your-app.imkit.io/rooms/58871b877390be11d5f1ab30" \
 }
 ```
 
-#### Error Response
+#### エラーレスポンス
 
-**401 Unauthorized** - Authentication failed
+**401 Unauthorized** - 認証失敗
 
 ```json
 {
@@ -189,7 +189,7 @@ curl -X "GET" "https://your-app.imkit.io/rooms/58871b877390be11d5f1ab30" \
 }
 ```
 
-**403 Forbidden** - Insufficient permissions or not a member
+**403 Forbidden** - 権限不足または非メンバー
 
 ```json
 {
@@ -202,7 +202,7 @@ curl -X "GET" "https://your-app.imkit.io/rooms/58871b877390be11d5f1ab30" \
 }
 ```
 
-**404 Not Found** - Room does not exist
+**404 Not Found** - チャットルームが存在しない
 
 ```json
 {
@@ -217,31 +217,31 @@ curl -X "GET" "https://your-app.imkit.io/rooms/58871b877390be11d5f1ab30" \
 
 ------
 
-## Use Cases
+## ユースケース
 
-### Member Management
-- **Member list**: Display detailed information for all members in a room
-- **Member monitoring**: View member login status and activity levels
-- **Permission check**: Confirm the current user's permission level in the room
+### メンバー管理
+- **メンバーリスト**: チャットルーム内の全メンバーの詳細情報を表示します。
+- **メンバーの監視**: メンバーのログイン状態やアクティブ度を確認します。
+- **権限チェック**: 現在のユーザーがチャットルーム内で持っている権限レベルを確認します。
 
-### Room Information
-- **Room status**: Retrieve the complete status information of a room
-- **Unread statistics**: View individual and overall unread message statistics
-- **Latest message**: Retrieve the last message in the room
+### チャットルーム情報
+- **チャットルームのステータス**: チャットルームの完全なステータス情報を取得します。
+- **未読統計**: 個人および全体での未読メッセージの統計を確認します。
+- **最新メッセージ**: チャットルームの最新メッセージ情報を取得します。
 
-### Application Integration
-- **Data synchronization**: Synchronize room member and status information
-- **UI display**: Provide complete display data for the room interface
-- **Analytics**: Analyze member engagement and activity levels in the room
+### アプリケーション統合
+- **データ同期**: チャットルームのメンバーとステータス情報を同期します。
+- **UI 表示**: チャットルームインターフェースに完全な表示データを提供します。
+- **分析統計**: チャットルームメンバーの参加度やアクティブ度を分析します。
 
 ------
 
-## Notes
+## 注意事項
 
-- **Member permissions**: Only room members can view the detailed information
-- **Data completeness**: The response includes complete information for both the member list and member properties
-- **Unread calculation**: memberProperties contains the unread message count for each member
-- **Permission identification**: The isSuperuser field identifies whether the current user is an administrator
-- **Time formats**: Both ISO format and millisecond timestamps are provided
-- **Data volume**: Large rooms may return a significant amount of member data; be mindful of processing performance
-- **Real-time updates**: Member status and unread counts may need to be refreshed periodically to stay current
+- **メンバー権限**: チャットルームのメンバーのみが詳細情報を閲覧できます。
+- **データの完全性**: レスポンスには、メンバーリストとメンバー属性の完全な情報が含まれます。
+- **未読の計算**: `memberProperties` には各メンバーの未読メッセージ数が含まれます。
+- **権限の識別**: `isSuperuser` フィールドは、現在のユーザーが管理者（特権ユーザー）かどうかを示します。
+- **時間形式**: ISO 形式とミリ秒タイムスタンプの2つの時間形式を提供します。
+- **データ量**: 大規模なチャットルームでは大量のメンバーデータが返される可能性があるため、処理パフォーマンスに注意してください。
+- **リアルタイム性**: メンバーの状態や未読数は、リアルタイム性を維持するために定期的な更新が必要になる場合があります。

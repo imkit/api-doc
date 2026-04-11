@@ -1,47 +1,47 @@
-# Get Messages by Room
+# チャットルームのメッセージ取得
 
-## Overview
+## 概要
 
-Retrieve the message history of a specified chatroom, with support for time range filtering and pagination. This API uses the same endpoint `GET /rooms/{id}/messages/v3` as [List Messages](/en/message/message-basic/list-messages). This page focuses on common query scenarios and examples.
+指定されたチャットルームのメッセージ履歴を取得します。時間範囲によるフィルタリングやページネーションをサポートしています。この API は[メッセージリスト](/ja/message/message-basic/list-messages)と同じエンドポイント `GET /rooms/{id}/messages/v3` を使用していますが、このページでは一般的な照会シナリオと例に焦点を当てています。
 
 ------
 
-## API Endpoint
+## API エンドポイント
 
-### Get All Messages in a Chatroom
+### チャットルームの全メッセージ取得
 
-Retrieve message records from a specified chatroom, with support for pagination and time filtering.
+指定されたチャットルームのメッセージ履歴を取得します。ページネーションと時間によるフィルタリングをサポートしています。
 
 ```http
 GET /rooms/{id}/messages/v3
 ```
 
-#### Headers
+#### ヘッダー
 
-| Parameter          | Type   | Required | Description    |
-| ------------------ | ------ | -------- | -------------- |
-| `IM-CLIENT-KEY`    | string | ✅        | Client Key     |
-| `IM-Authorization` | string | ✅        | Client Token   |
+| パラメータ | 型 | 必須 | 説明 |
+| ------------------ | ------ | ---- | -------------- |
+| `IM-CLIENT-KEY` | string | ✅ | クライアントキー |
+| `IM-Authorization` | string | ✅ | ユーザートークン |
 
-#### Path Parameters
+#### パスパラメータ
 
-| Parameter | Type   | Required | Description   |
-| --------- | ------ | -------- | ------------- |
-| `id`      | string | ✅        | Chatroom ID   |
+| パラメータ | 型 | 必須 | 説明 |
+| ---- | ------ | ---- | ----------- |
+| `id` | string | ✅ | チャットルーム ID |
 
-#### Query Parameters
+#### クエリパラメータ
 
-| Parameter          | Type   | Required | Description                                                         |
-| ------------------ | ------ | -------- | ------------------------------------------------------------------- |
-| `limit`            | number | ❌        | Maximum number of messages to return (default: 20, recommended 50-100) |
-| `beforeMessage`    | string | ❌        | Retrieve messages before the specified message ID (for backward pagination) |
-| `afterMessage`     | string | ❌        | Retrieve messages after the specified message ID (for forward pagination) |
-| `afterTime`        | string | ❌        | Retrieve messages after the specified time (ISO-8601 or millisecond timestamp format) |
-| `timeRangeField`   | string | ❌        | Field used for time range queries: updatedAt, createdAt, messageTime (default: updatedAt) |
+| パラメータ | 型 | 必須 | 説明 |
+| ------------------ | ------ | ---- | ------------------------------------------------------- |
+| `limit` | number | ❌ | 返されるメッセージの最大数（デフォルト：20、推奨 50-100） |
+| `beforeMessage` | string | ❌ | 指定したメッセージ ID より前のメッセージを照会（過去方向へのページネーション用） |
+| `afterMessage` | string | ❌ | 指定したメッセージ ID より後のメッセージを照会（未来方向へのページネーション用） |
+| `afterTime` | string | ❌ | 指定した時間以降のメッセージを照会（ISO-8601 またはミリ秒タイムスタンプ形式） |
+| `timeRangeField` | string | ❌ | 時間範囲照会の基準フィールド：updatedAt, createdAt, messageTime（デフォルト：updatedAt） |
 
-#### Example Request
+#### リクエスト例
 
-**Get latest messages in a chatroom**
+**チャットルームの最新メッセージを取得**
 
 ```http
 GET /rooms/demo-room/messages/v3?limit=50 HTTP/1.1
@@ -51,7 +51,7 @@ Host: your-app.imkit.io
 Connection: close
 ```
 
-**Get historical messages (pagination)**
+**履歴メッセージの取得（ページネーション）**
 
 ```http
 GET /rooms/demo-room/messages/v3?limit=50&beforeMessage=5f890cf37d980e06f6aaf349 HTTP/1.1
@@ -61,7 +61,7 @@ Host: your-app.imkit.io
 Connection: close
 ```
 
-**Get messages after a specific time**
+**特定時間以降のメッセージを取得**
 
 ```http
 GET /rooms/demo-room/messages/v3?afterTime=2024-01-01T00:00:00Z&limit=100 HTTP/1.1
@@ -71,7 +71,7 @@ Host: your-app.imkit.io
 Connection: close
 ```
 
-**JavaScript Example:**
+**JavaScript 例：**
 
 ```javascript
 const response = await axios.get(
@@ -88,7 +88,7 @@ const response = await axios.get(
 );
 ```
 
-**cURL Example:**
+**cURL 例：**
 
 ```bash
 curl -X "GET" "https://your-app.imkit.io/rooms/demo-room/messages/v3?limit=50" \
@@ -96,41 +96,41 @@ curl -X "GET" "https://your-app.imkit.io/rooms/demo-room/messages/v3?limit=50" \
      -H 'IM-Authorization: {IM-Authorization}'
 ```
 
-#### Response
+#### レスポンス
 
-**Success Response (200 OK)**
+**成功（200 OK）**
 
-| Parameter | Type   | Description                         |
-| --------- | ------ | ----------------------------------- |
-| `RC`      | number | Response code (0 indicates success) |
-| `RM`      | string | Response message                    |
-| `result`  | object | Message query results               |
+| パラメータ | 型 | 説明 |
+| -------- | ------ | ---------------------- |
+| `RC` | number | レスポンスコード（0は成功） |
+| `RM` | string | レスポンスメッセージ |
+| `result` | object | メッセージ照会結果 |
 
-**Query Result Structure**
+**照会結果の構造**
 
-| Parameter          | Type   | Description                                        |
-| ------------------ | ------ | -------------------------------------------------- |
-| `totalCount`       | number | Total number of messages in the chatroom           |
-| `data`             | array  | Message array (sorted by time)                     |
-| `userDeletedIDs`   | array  | Array of message IDs deleted by the current user   |
-| `inspect`          | object | Diagnostic information (includes query conditions and execution time) |
+| パラメータ | 型 | 説明 |
+| ------------------ | ------ | --------------------------------------- |
+| `totalCount` | number | チャットルーム内のメッセージ総数 |
+| `data` | array | メッセージ配列（時系列順） |
+| `userDeletedIDs` | array | 現在のユーザーが削除したメッセージ ID の配列 |
+| `inspect` | object | 診断情報（照会条件と実行時間を含む） |
 
-**Message Object Structure**
+**メッセージオブジェクトの構造**
 
-| Parameter        | Type    | Description                              |
-| ---------------- | ------- | ---------------------------------------- |
-| `_id`            | string  | Message unique ID                        |
-| `message`        | any     | Message content                          |
-| `room`           | string  | Associated chatroom ID                   |
-| `sender`         | object  | Sender information                       |
-| `messageType`    | string  | Message type                             |
-| `messageTimeMS`  | number  | Message sent time (millisecond timestamp) |
-| `updatedAtMS`    | number  | Message updated time (millisecond timestamp) |
-| `createdAtMS`    | number  | Message created time (millisecond timestamp) |
-| `reactions`      | array   | Message reaction list                    |
-| `reactionCount`  | number  | Total number of reactions                |
+| パラメータ | 型 | 説明 |
+| ---------------- | ------- | ----------------------------- |
+| `_id` | string | メッセージ一意識別子 |
+| `message` | any | メッセージ内容 |
+| `room` | string | 所属チャットルーム ID |
+| `sender` | object | 送信者情報 |
+| `messageType` | string | メッセージタイプ |
+| `messageTimeMS` | number | メッセージ送信時間（ミリ秒タイムスタンプ） |
+| `updatedAtMS` | number | メッセージ更新時間（ミリ秒タイムスタンプ） |
+| `createdAtMS` | number | メッセージ作成時間（ミリ秒タイムスタンプ） |
+| `reactions` | array | メッセージへのリアクションリスト |
+| `reactionCount` | number | リアクション総数 |
 
-#### Example Response
+#### レスポンス例
 
 ```json
 {
@@ -172,9 +172,9 @@ curl -X "GET" "https://your-app.imkit.io/rooms/demo-room/messages/v3?limit=50" \
 }
 ```
 
-#### Error Response
+#### エラーレスポンス
 
-**401 Unauthorized** - Authentication failed
+**401 Unauthorized** - 認証失敗
 
 ```json
 {
@@ -187,7 +187,7 @@ curl -X "GET" "https://your-app.imkit.io/rooms/demo-room/messages/v3?limit=50" \
 }
 ```
 
-**403 Forbidden** - Insufficient permissions
+**403 Forbidden** - 権限不足
 
 ```json
 {
@@ -200,7 +200,7 @@ curl -X "GET" "https://your-app.imkit.io/rooms/demo-room/messages/v3?limit=50" \
 }
 ```
 
-**404 Not Found** - Chatroom does not exist
+**404 Not Found** - チャットルームが存在しない
 
 ```json
 {
@@ -215,30 +215,30 @@ curl -X "GET" "https://your-app.imkit.io/rooms/demo-room/messages/v3?limit=50" \
 
 ------
 
-## Use Cases
+## 使用シーン
 
-### Chatroom Loading
-- **Initial Load**: Load the latest messages when a user enters a chatroom
-- **History Browsing**: User scrolls up to view earlier message history
-- **Refresh**: Reload the complete conversation content of a chatroom
+### チャットルームの読み込み
+- **初期読み込み**: ユーザーがチャットルームに入った時に最新メッセージを読み込みます。
+- **履歴閲覧**: ユーザーが上にスクロールして過去のメッセージ履歴を表示します。
+- **リフレッシュ**: チャットルームの全対話内容を再読み込みします。
 
-### Message Synchronization
-- **Offline Sync**: Sync missed messages when a user comes back online
-- **Cross-Device Sync**: Maintain message consistency across multiple devices
-- **Backup Recovery**: Restore a chatroom's complete history from a backup
+### メッセージの同期
+- **オフライン同期**: ユーザーが再ログインした時に不在時のメッセージを同期します。
+- **マルチデバイス同期**: 複数のデバイス間でメッセージの一貫性を保ちます。
+- **バックアップからの復元**: バックアップからチャットルームの全履歴を復元します。
 
-### Content Analysis
-- **Conversation Analysis**: Analyze conversation patterns and trending topics in chatrooms
-- **Activity Statistics**: Track the message volume and user engagement in chatrooms
-- **Content Moderation**: Review all conversation content in a chatroom
+### コンテンツ分析
+- **対話分析**: チャットルーム内の対話パターンや人気トピックを分析します。
+- **アクティビティ統計**: チャットルームのメッセージ量とユーザー参加度を集計します。
+- **コンテンツ監査**: チャットルーム内のすべての対話内容を監査します。
 
 ------
 
-## Notes
+## 注意事項
 
-- **Permission Requirement**: Only chatroom members can retrieve message content
-- **Pagination Recommendation**: Use an appropriate limit value (20-100) to avoid loading too much data at once
-- **Time Ordering**: Messages are sorted by updatedAt time, with the latest messages first
-- **Deletion Handling**: The userDeletedIDs array contains messages deleted by the current user and should be filtered in the UI
-- **Performance Optimization**: For large chatrooms, it is recommended to use time range restrictions to improve query performance
-- **Real-Time Updates**: This API is suitable for batch loading; for real-time messages, use a WebSocket connection
+- **権限要件**: チャットルームのメンバーのみがメッセージ内容を取得できます。
+- **ページネーションの推奨**: 一度に大量のデータを読み込むのを避けるため、適切な limit 値（20-100）を使用することをお勧めします。
+- **時間順**: メッセージは updatedAt 時間でソートされ、最新メッセージが最初になります。
+- **削除済みメッセージの処理**: `userDeletedIDs` 配列には現在のユーザーが削除したメッセージが含まれているため、UI でフィルタリングする必要があります。
+- **パフォーマンス最適化**: 大規模なチャットルームでは、照会パフォーマンスを向上させるために時間範囲の制限を使用することをお勧めします。
+- **リアルタイム更新**: この API は一括読み込みに適しています。リアルタイムメッセージには WebSocket 接続の使用をお勧めします。

@@ -1,43 +1,43 @@
-# Update Sensitive Words
+# 敏感ワード設定の更新
 
-## Overview
+## 概要
 
-Update or create the system's sensitive word censorship configuration. Manage the blocked word list through the runtime configuration system to filter inappropriate content in real time and maintain the quality of the chat environment. This feature is suitable for content moderation, sensitive word management, and platform governance.
+システムの敏感ワード（不適切ワード）審査設定を更新または作成します。ランタイム設定システムを通じてブロックワードリストを管理することで、不適切なコンテンツをリアルタイムでフィルタリングし、チャット環境の品質を維持できます。この機能は、コンテンツ審査、敏感ワード管理、およびプラットフォームガバナンスに適しています。
 
 ------
 
-## API Endpoint
+## API エンドポイント
 
-### Update Sensitive Word Configuration
+### 敏感ワード設定の更新
 
-Create or update runtime configuration variables, including sensitive word list settings.
+敏感ワードリストの設定を含む、ランタイム設定変数を作成または更新します。
 
 ```http
 POST /config
 ```
 
-#### Headers
+#### ヘッダー
 
-| Parameter    | Type   | Required | Description |
-| ------------ | ------ | -------- | ----------- |
-| `IM-API-KEY` | string | ✅        | API Key     |
+| パラメータ    | 型     | 必須 | 説明        |
+| ------------ | ------ | ---- | ----------- |
+| `IM-API-KEY` | string | ✅    | API Key     |
 
-#### Post Body
+#### リクエストボディ (Post Body)
 
-| Parameter      | Type   | Required | Description                        |
-| -------------- | ------ | -------- | ---------------------------------- |
-| `censorship`   | object | ❌        | Content censorship configuration object |
-| `announcement` | object | ❌        | Announcement configuration object (optional) |
+| パラメータ     | 型     | 必須 | 説明                          |
+| -------------- | ------ | ---- | ----------------------------- |
+| `censorship`   | object | ❌    | コンテンツ審査設定オブジェクト  |
+| `announcement` | object | ❌    | 告知設定オブジェクト（オプション） |
 
-**Censorship Configuration Object Structure**
+**審査設定オブジェクトの構造**
 
-| Parameter  | Type  | Required | Description                         |
-| ---------- | ----- | -------- | ----------------------------------- |
-| `keywords` | array | ✅        | Array of sensitive words to block   |
+| パラメータ | 型    | 必須 | 説明                          |
+| --------- | ----- | ---- | ----------------------------- |
+| `keywords` | array | ✅    | ブロックする敏感ワードの配列   |
 
-#### Example Request
+#### リクエスト例
 
-**Set the sensitive word list**
+**敏感ワードリストの設定**
 
 ```http
 POST /config HTTP/1.1
@@ -60,7 +60,7 @@ Connection: close
 }
 ```
 
-**Update only the sensitive word list**
+**敏感ワードリストのみを更新**
 
 ```http
 POST /config HTTP/1.1
@@ -80,7 +80,7 @@ Connection: close
 }
 ```
 
-**Add sensitive words to the existing list**
+**既存のリストに敏感ワードを追加**
 
 ```http
 POST /config HTTP/1.1
@@ -101,7 +101,7 @@ Connection: close
 }
 ```
 
-**JavaScript Example:**
+**JavaScript 例:**
 
 ```javascript
 const response = await axios.post(
@@ -120,7 +120,7 @@ const response = await axios.post(
 );
 ```
 
-**cURL Example:**
+**cURL 例:**
 
 ```bash
 curl -X "POST" "https://your-app.imkit.io/config" \
@@ -129,17 +129,17 @@ curl -X "POST" "https://your-app.imkit.io/config" \
      -d '{"censorship": {"keywords": ["foo", "bar"]}}'
 ```
 
-#### Response
+#### レスポンス
 
-**Success Response (200 OK)**
+**成功レスポンス (200 OK)**
 
-| Parameter | Type   | Description                         |
-| --------- | ------ | ----------------------------------- |
-| `RC`      | number | Response code (0 indicates success) |
-| `RM`      | string | Response message                    |
-| `result`  | object | Updated configuration data          |
+| パラメータ | 型     | 説明                       |
+| --------- | ------ | -------------------------- |
+| `RC`      | number | レスポンスコード (0 は成功) |
+| `RM`      | string | レスポンスメッセージ        |
+| `result`  | object | 更新後の設定データ          |
 
-#### Example Response
+#### レスポンス例
 
 ```json
 {
@@ -160,9 +160,9 @@ curl -X "POST" "https://your-app.imkit.io/config" \
 }
 ```
 
-#### Error Response
+#### エラーレスポンス
 
-**401 Unauthorized** - Authentication failed
+**401 Unauthorized** - 認証失敗
 
 ```json
 {
@@ -175,7 +175,7 @@ curl -X "POST" "https://your-app.imkit.io/config" \
 }
 ```
 
-**403 Forbidden** - Insufficient permissions
+**403 Forbidden** - 権限不足
 
 ```json
 {
@@ -188,7 +188,7 @@ curl -X "POST" "https://your-app.imkit.io/config" \
 }
 ```
 
-**400 Bad Request** - Invalid request format
+**400 Bad Request** - リクエスト形式エラー
 
 ```json
 {
@@ -203,31 +203,31 @@ curl -X "POST" "https://your-app.imkit.io/config" \
 
 ------
 
-## Use Cases
+## ユースケース
 
-### Sensitive Word Management
-- **Add Sensitive Words**: Add new sensitive words to the filter list
-- **Update List**: Modify the existing sensitive word list
-- **Batch Configuration**: Set multiple sensitive words at once
+### 敏感ワード管理
+- **敏感ワードの追加**: フィルタリングリストに新しい敏感ワードを追加します。
+- **リストの更新**: 既存の敏感ワードリストを修正します。
+- **一括設定**: 複数の敏感ワードを一度に設定します。
 
-### Content Moderation
-- **Dynamic Adjustment**: Adjust filtering rules in real time based on content trends
-- **Emergency Response**: Quickly add sensitive content that needs to be filtered
-- **Rule Optimization**: Optimize filtering rules based on usage patterns
+### コンテンツ審査
+- **動的な調整**: コンテンツの傾向に合わせてリアルタイムでフィルタリングルールを調整します。
+- **緊急対応**: フィルタリングが必要な敏感な内容を迅速に追加します。
+- **ルールの最適化**: 使用状況に基づいてフィルタリングルールを最適化します。
 
-### Platform Governance
-- **Policy Enforcement**: Update content filtering rules based on platform policies
-- **Regional Adaptation**: Adjust sensitive words according to different regional regulations
-- **Compliance Requirements**: Meet legal and regulatory content review requirements
+### プラットフォームガバナンス
+- **ポリシーの実行**: プラットフォームのポリシーに従ってコンテンツフィルタリングルールを更新します。
+- **地域への適応**: さまざまな地域の規制に合わせて敏感ワードを調整します。
+- **コンプライアンス要件**: 法規制のコンテンツ審査要件を満たします。
 
 ------
 
-## Notes
+## 注意事項
 
-- **Platform Admin Only**: This feature is restricted to platform administrators and requires an API Key
-- **Immediate Effect**: Configuration updates take effect immediately, affecting all chat content
-- **Configuration Override**: POST requests override existing configurations; ensure you include the complete data
-- **Backup Recommendation**: It is recommended to query the current configuration as a backup before updating
-- **Keyword Format**: Sensitive words are stored as a string array and are case-sensitive
-- **Runtime Configuration**: Uses the runtime configuration system; no service restart is required for changes to take effect
-- **Complete Update**: It is recommended to include all configuration items you wish to retain to avoid losing other settings
+- **プラットフォーム管理者専用**: この機能はプラットフォーム管理者のみが利用可能で、API Key が必要です。
+- **即時反映**: 設定の更新は即時に反映され、すべてのチャット内容に影響します。
+- **設定の上書き**: POST リクエストは既存の設定を上書きします。必ず完全なデータを含めるようにしてください。
+- **バックアップ推奨**: 更新前に現在の設定を確認してバックアップすることを推奨します。
+- **キーワード形式**: 敏感ワードは文字列配列形式で保存され、大文字と小文字が区別されます。
+- **ランタイム設定**: ランタイム設定システムを使用するため、サービスを再起動せずに変更を反映できます。
+- **完全な更新**: 他の設定が失われないよう、保持する必要があるすべての設定項目を含めることを推奨します。

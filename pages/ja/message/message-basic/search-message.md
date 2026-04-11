@@ -1,41 +1,41 @@
-# Search Messages
+# メッセージの検索
 
-## Overview
+## 概要
 
-Search message content by keyword. This API uses a universal search function that performs full-text search on message content, supporting cross-chatroom search or searching within a specific chatroom scope. It is suitable for quickly locating specific message content.
+キーワードを使用してメッセージ内容を検索します。この API は汎用的な検索機能を使用し、メッセージ内容に基づいて全文検索を行うことができます。すべてのチャットルームを対象とした検索や、特定のチャットルーム内に範囲を限定した検索が可能で、特定のメッセージ内容を素早く見つけるのに適しています。
 
 ------
 
-## API Endpoint
+## API エンドポイント
 
-### Search Message Content
+### メッセージ内容の検索
 
-Search within message content using keywords.
+メッセージ内容に含まれるキーワードを使用して検索を行います。
 
 ```http
 POST /search
 ```
 
-#### Headers
+#### ヘッダー
 
-| Parameter          | Type   | Required | Description    |
-| ------------------ | ------ | -------- | -------------- |
-| `IM-CLIENT-KEY`    | string | ✅        | Client Key     |
-| `IM-Authorization` | string | ✅        | Client Token   |
+| パラメータ | 型 | 必須 | 説明 |
+| ------------------ | ------ | ---- | -------------- |
+| `IM-CLIENT-KEY` | string | ✅ | クライアントキー |
+| `IM-Authorization` | string | ✅ | ユーザートークン |
 
-#### Post Body
+#### ポストボディ
 
-| Parameter  | Type     | Required | Description                                    |
-| ---------- | -------- | -------- | ---------------------------------------------- |
-| `type`     | array    | ✅        | Search type, set to ["messages"]               |
-| `keyword`  | string   | ✅        | Search keyword (searches within message content) |
-| `room`     | string   | ❌        | Restrict search to a specific chatroom         |
-| `roomTags` | array    | ❌        | Restrict search to chatrooms with specified tags |
-| `limit`    | number   | ❌        | Maximum number of search results               |
+| パラメータ | 型 | 必須 | 説明 |
+| ---------- | -------- | ---- | ----------------------------------------- |
+| `type` | array | ✅ | 検索タイプ。`["messages"]` に設定します |
+| `keyword` | string | ✅ | 検索キーワード（メッセージ内容を検索） |
+| `room` | string | ❌ | 特定のチャットルーム内に検索を制限 |
+| `roomTags` | array | ❌ | 指定されたタグを持つチャットルーム内に検索を制限 |
+| `limit` | number | ❌ | 最大検索結果数 |
 
-#### Example Request
+#### リクエスト例
 
-**Search messages across all chatrooms**
+**すべてのチャットルームでメッセージを検索**
 
 ```http
 POST /search HTTP/1.1
@@ -52,7 +52,7 @@ Connection: close
 }
 ```
 
-**Search messages in a specific chatroom**
+**特定のチャットルームでメッセージを検索**
 
 ```http
 POST /search HTTP/1.1
@@ -69,7 +69,7 @@ Connection: close
 }
 ```
 
-**Search in chatrooms with specific tags**
+**特定のタグを持つチャットルームで検索**
 
 ```http
 POST /search HTTP/1.1
@@ -86,7 +86,7 @@ Connection: close
 }
 ```
 
-**JavaScript Example:**
+**JavaScript 例：**
 
 ```javascript
 const response = await axios.post(
@@ -106,7 +106,7 @@ const response = await axios.post(
 );
 ```
 
-**cURL Example:**
+**cURL 例：**
 
 ```bash
 curl -X "POST" "https://your-app.imkit.io/search" \
@@ -116,40 +116,40 @@ curl -X "POST" "https://your-app.imkit.io/search" \
      -d '{"type": ["messages"], "keyword": "hello", "limit": 20}'
 ```
 
-#### Response
+#### レスポンス
 
-**Success Response (200 OK)**
+**成功（200 OK）**
 
-| Parameter | Type   | Description                         |
-| --------- | ------ | ----------------------------------- |
-| `RC`      | number | Response code (0 indicates success) |
-| `RM`      | string | Response message                    |
-| `result`  | object | Search results                      |
+| パラメータ | 型 | 説明 |
+| -------- | ------ | ---------------------- |
+| `RC` | number | レスポンスコード（0は成功） |
+| `RM` | string | レスポンスメッセージ |
+| `result` | object | 検索結果 |
 
-**Search Result Structure**
+**検索結果の構造**
 
-| Parameter  | Type   | Description                                     |
-| ---------- | ------ | ----------------------------------------------- |
-| `messages` | array  | Matched message groups, grouped by chatroom     |
+| パラメータ | 型 | 説明 |
+| ---------- | ------ | --------------------------------- |
+| `messages` | array | 検索されたメッセージグループ（チャットルームごとにグループ化） |
 
-**Message Group Object Structure**
+**メッセージグループオブジェクトの構造**
 
-| Parameter  | Type   | Description                             |
-| ---------- | ------ | --------------------------------------- |
-| `room`     | object | Chatroom information                    |
-| `messages` | array  | Matched message IDs in this chatroom    |
+| パラメータ | 型 | 説明 |
+| ---------- | ------ | ------------------------- |
+| `room` | object | チャットルーム情報 |
+| `messages` | array | そのチャットルーム内で一致したメッセージ ID |
 
-**Chatroom Information Object Structure**
+**チャットルーム情報オブジェクトの構造**
 
-| Parameter       | Type    | Description              |
-| --------------- | ------- | ------------------------ |
-| `_id`           | string  | Chatroom unique ID       |
-| `name`          | string  | Chatroom name            |
-| `cover`         | string  | Chatroom cover image URL |
-| `description`   | string  | Chatroom description     |
-| `roomTags`      | array   | Chatroom tag list        |
+| パラメータ | 型 | 説明 |
+| --------------- | ------- | ------------------------- |
+| `_id` | string | チャットルームの一意識別子 |
+| `name` | string | チャットルーム名 |
+| `cover` | string | チャットルームのカバー画像 URL |
+| `description` | string | チャットルームの説明 |
+| `roomTags` | array | チャットルームタグのリスト |
 
-#### Example Response
+#### レスポンス例
 
 ```json
 {
@@ -188,9 +188,9 @@ curl -X "POST" "https://your-app.imkit.io/search" \
 }
 ```
 
-#### Error Response
+#### エラーレスポンス
 
-**401 Unauthorized** - Authentication failed
+**401 Unauthorized** - 認証失敗
 
 ```json
 {
@@ -203,7 +203,7 @@ curl -X "POST" "https://your-app.imkit.io/search" \
 }
 ```
 
-**400 Bad Request** - Invalid search parameters
+**400 Bad Request** - 検索パラメータが無効
 
 ```json
 {
@@ -218,30 +218,30 @@ curl -X "POST" "https://your-app.imkit.io/search" \
 
 ------
 
-## Use Cases
+## 使用シーン
 
-### Message Search
-- **Keyword Lookup**: Quickly find historical messages containing specific keywords
-- **Content Retrieval**: Locate relevant conversations within a large volume of messages
-- **Information Retrieval**: Search for discussions related to specific topics or projects
+### メッセージ検索
+- **キーワード検索**: 特定のキーワードを含む過去のメッセージを素早く見つけます。
+- **内容の振り返り**: 大量のメッセージの中から関連する対話内容を探し出します。
+- **情報検索**: 特定のトピックやプロジェクトに関連する議論を検索します。
 
-### Chatroom Management
-- **Content Moderation**: Search for messages containing specific terms for review
-- **Data Analysis**: Analyze trending topics discussed in chatrooms
-- **Compliance Check**: Search for messages that may violate policies
+### チャットルーム管理
+- **コンテンツ監査**: 特定の単語を含むメッセージを検索して監査します。
+- **データ分析**: チャットルームで議論されている人気トピックを分析します。
+- **コンプライアンスチェック**: 違反の可能性があるメッセージ内容を検索します。
 
-### User Experience
-- **Smart Search**: Provide users with the ability to quickly search historical conversations
-- **Contextual Display**: Display all messages related to the search keyword
-- **Cross-Room Search**: Search for related content across multiple chatrooms simultaneously
+### ユーザーエクスペリエンス
+- **スマート検索**: ユーザーに過去の対話を素早く検索する機能を提供します。
+- **関連表示**: 検索キーワードに関連するすべてのメッセージを表示します。
+- **複数ルーム検索**: 複数のチャットルームから同時に必要な内容を検索します。
 
 ------
 
-## Notes
+## 注意事項
 
-- **Search Scope**: Only searches chatrooms and messages that the current user has permission to access
-- **Keyword Matching**: Supports full-text search, matching keywords within message content
-- **Result Grouping**: Search results are grouped by chatroom for easy identification of message sources
-- **Permission Control**: Search results are filtered based on the user's chatroom permissions
-- **Performance Consideration**: Broad searches may take longer; it is recommended to set a reasonable limit value
-- **Message IDs**: The returned message ID array requires additional API calls to retrieve full message content
+- **検索範囲**: 現在のユーザーがアクセス権を持つチャットルームとメッセージのみが検索対象となります。
+- **キーワード一致**: 全文検索をサポートし、メッセージ内容のキーワードに一致します。
+- **結果のグループ化**: 検索結果はチャットルームごとにグループ化されるため、メッセージのソースがわかりやすくなっています。
+- **権限制御**: 検索結果はユーザーのチャットルーム権限に基づいてフィルタリングされます。
+- **パフォーマンスの考慮**: 広範囲の検索には時間がかかる場合があるため、適切な limit 値を設定することをお勧めします。
+- **メッセージ ID**: 返されるのはメッセージ ID の配列です。完全なメッセージ内容を取得するには、別途 API の呼び出しが必要になる場合があります。

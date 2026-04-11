@@ -1,45 +1,45 @@
 # Webhook
 
-## Overview
+## 概要
 
-The Webhook feature allows you to register specific URL endpoints to receive real-time messages and event notifications from chatrooms. When specific events occur in a chatroom (such as new messages, member joins, member leaves, etc.), the system will automatically send a POST request to your registered Webhook URL containing the relevant event data. This feature is suitable for building bots, automated processing, push notification systems, and other application scenarios.
-
-------
-
-## API Endpoint
-
-### Register a Webhook
-
-You can register a Webhook URL for each chatroom to receive messages and events from that chatroom.
-
-For Webhook configuration, refer to the `webhook` property in the [Update a Room](/en/room/room-management/update-a-room) API.
+Webhook 機能を使用すると、特定の URL エンドポイントを登録して、チャットルームからリアルタイムのメッセージやイベント通知を受信できます。チャットルームで特定のイベント（新しいメッセージ、メンバーの参加、メンバーの退出など）が発生すると、システムは登録された Webhook URL に対して、関連するイベントデータを含む POST リクエストを自動的に送信します。この機能は、ボットの構築、自動処理、プッシュ通知システム、およびその他のアプリケーションシナリオに適しています。
 
 ------
 
-## Webhook Received Data Format
+## API エンドポイント
 
-When an event occurs in a chatroom, the system sends a POST request to your registered Webhook URL containing JSON-formatted data as follows:
+### Webhook を登録する
 
-### Basic Data Structure
+各チャットルームに Webhook URL を登録して、そのチャットルームからのメッセージやイベントを受信できます。
 
-| Parameter  | Type   | Description                                                                                   |
+Webhook の設定については、[チャットルームの更新](/ja/room/room-management/update-a-room) API の `webhook` プロパティを参照してください。
+
+------
+
+## Webhook 受信データ形式
+
+チャットルームでイベントが発生すると、システムは登録された Webhook URL に対して、以下のような形式の JSON データを含む POST リクエストを送信します。
+
+### 基本的なデータ構造
+
+| パラメータ  | 型     | 説明                                                                                   |
 | ---------- | ------ | --------------------------------------------------------------------------------------------- |
-| `appID`    | string | Application ID                                                                                |
-| `clientID` | string | Sender ID                                                                                     |
-| `roomID`   | string | Chatroom ID where the event occurred                                                          |
-| `event`    | string | Event type                                                                                    |
-| `botState` | string | Current bot state of the chatroom (if your bot is implemented as a finite state machine, you can determine reactions based on the state and message) |
-| `data`     | object | Message or event data sent to the chatroom                                                    |
+| `appID`    | string | アプリケーション ID                                                                                |
+| `clientID` | string | 送信者の ID                                                                                     |
+| `roomID`   | string | イベントが発生したチャットルームの ID                                                          |
+| `event`    | string | イベントの種類                                                                                  |
+| `botState` | string | チャットルームの現在のボット状態（ボットが有限状態機械として実装されている場合、状態とメッセージに基づいて反応を決定できます） |
+| `data`     | object | チャットルームに送信されたメッセージまたはイベントデータ                                                    |
 
 ------
 
-## Event Types
+## イベントの種類
 
-### Join Room Event
+### チャットルームへの参加イベント
 
-Triggered when a user joins a chatroom.
+ユーザーがチャットルームに参加したときにトリガーされます。
 
-**Event Type**: `JOIN_ROOM`
+**イベントの種類**: `JOIN_ROOM`
 
 ```json
 {
@@ -67,11 +67,11 @@ Triggered when a user joins a chatroom.
 }
 ```
 
-### Add Members Event
+### メンバーの追加イベント
 
-Triggered when members are added to a chatroom.
+チャットルームにメンバーが追加されたときにトリガーされます。
 
-**Event Type**: `ADD_MEMBERS`
+**イベントの種類**: `ADD_MEMBERS`
 
 ```json
 {
@@ -99,11 +99,11 @@ Triggered when members are added to a chatroom.
 }
 ```
 
-### Remove Members Event
+### メンバーの削除イベント
 
-Triggered when members are removed from a chatroom.
+チャットルームからメンバーが削除されたときにトリガーされます。
 
-**Event Type**: `DELETE_MEMBERS`
+**イベントの種類**: `DELETE_MEMBERS`
 
 ```json
 {
@@ -131,11 +131,11 @@ Triggered when members are removed from a chatroom.
 }
 ```
 
-### Message Event
+### メッセージイベント
 
-Triggered when a new message is received in a chatroom.
+チャットルームで新しいメッセージを受信したときにトリガーされます。
 
-**Event Type**: `MESSAGE`
+**イベントの種類**: `MESSAGE`
 
 ```json
 {
@@ -167,21 +167,21 @@ Triggered when a new message is received in a chatroom.
 
 ------
 
-## Webhook Response Format
+## Webhook レスポンス形式
 
-Your Webhook service can return a JSON-formatted response to control bot behavior and send messages.
+あなたの Webhook サービスは、ボットの動作を制御し、メッセージを送信するために、JSON 形式のレスポンスを返すことができます。
 
-### Response Data Structure
+### レスポンスデータの構造
 
-| Parameter    | Type    | Required | Description                                                                  |
+| パラメータ    | 型      | 必須 | 説明                                                                  |
 | ------------ | ------- | -------- | ---------------------------------------------------------------------------- |
-| `senderID`   | string  | ❌        | Specify a sender ID to reply or send messages to the chatroom                |
-| `toBotState` | string  | ❌        | Transition the chatroom to the specified bot state; specify the current state to maintain it |
-| `data`       | message | ❌        | Reply message content                                                        |
+| `senderID`   | string  | ❌        | 返信またはチャットルームへのメッセージ送信に使用する送信者 ID を指定します                |
+| `toBotState` | string  | ❌        | チャットルームを指定されたボット状態に遷移させます。現在の状態を維持するには現在の状態を指定します |
+| `data`       | message | ❌        | 返信メッセージの内容                                                        |
 
-### Example Response
+### レスポンス例
 
-**Basic response** (no action taken)
+**基本的なレスポンス**（アクションなし）
 
 ```json
 {
@@ -190,14 +190,14 @@ Your Webhook service can return a JSON-formatted response to control bot behavio
 }
 ```
 
-**Bot reply message**
+**ボットの返信メッセージ**
 
 ```json
 {
   "senderID": "robot001",
   "toBotState": "active",
   "data": {
-    "message": "您好！我是機器人助手，有什麼可以幫助您的嗎？",
+    "message": "こんにちは！ボットアシスタントです。何かお手伝いできることはありますか？",
     "messageType": "text"
   }
 }
@@ -205,37 +205,37 @@ Your Webhook service can return a JSON-formatted response to control bot behavio
 
 ------
 
-## Use Cases
+## ユースケース
 
-### Bot Development
-- **Auto Reply**: Automatically reply with appropriate messages based on received message content
-- **State Management**: Implement a finite state machine to manage conversation flow
-- **Command Processing**: Parse user commands and execute corresponding actions
+### ボット開発
+- **自動返信**: 受信したメッセージの内容に基づいて、適切なメッセージで自動返信します。
+- **状態管理**: 会話の流れを管理するために有限状態機械を実装します。
+- **コマンド処理**: ユーザーコマンドを解析し、対応するアクションを実行します。
 
-### Notification System
-- **Custom Pushes**: Send customized push notifications based on specific events
-- **Real-Time Monitoring**: Monitor chatroom activity and trigger corresponding processing
-- **Event Logging**: Record important events for analysis or auditing
+### 通知システム
+- **カスタムプッシュ**: 特定のイベントに基づいてカスタマイズされたプッシュ通知を送信します。
+- **リアルタイム監視**: チャットルームのアクティビティを監視し、対応する処理をトリガーします。
+- **イベントログ**: 分析や監査のために重要なイベントを記録します。
 
-### System Integration
-- **Third-Party Services**: Integrate chat events with other systems or services
-- **Data Synchronization**: Synchronize chat data to external databases or systems
-- **Workflows**: Trigger automated workflows and business logic
+### システム統合
+- **サードパーティサービス**: チャットイベントを他のシステムやサービスと統合します。
+- **データ同期**: チャットデータを外部のデータベースやシステムに同期します。
+- **ワークフロー**: 自動化されたワークフローとビジネスロジックをトリガーします。
 
-### Content Management
-- **Message Filtering**: Automatically detect and process inappropriate content
-- **Content Analysis**: Analyze message content for sentiment analysis or keyword extraction
-- **Smart Assistant**: Provide smart Q&A or customer service functionality
+### コンテンツ管理
+- **メッセージフィルタリング**: 不適切なコンテンツを自動的に検出して処理します。
+- **コンテンツ分析**: 感情分析やキーワード抽出のためにメッセージ内容を分析します。
+- **スマートアシスタント**: スマートな Q&A やカスタマーサービス機能を提供します。
 
 ------
 
-## Notes
+## 注意事項
 
-- **HTTP POST**: All Webhook requests use the HTTP POST method
-- **JSON Format**: Both requests and responses use JSON format
-- **Real-Time**: Webhooks are triggered immediately when events occur
-- **Reliability**: It is recommended to implement retry mechanisms and error handling
-- **Security**: It is recommended to verify request origins and implement appropriate security measures
-- **Performance Consideration**: Webhook endpoints should respond quickly to avoid timeouts
-- **State Management**: Bot states can be used to implement complex conversation logic
-- **Response Format**: Incorrect response formats may cause bot functionality to malfunction
+- **HTTP POST**: すべての Webhook リクエストは HTTP POST メソッドを使用します。
+- **JSON 形式**: リクエストとレスポンスの両方で JSON 形式を使用します。
+- **リアルタイム**: Webhook はイベント発生時に即座にトリガーされます。
+- **信頼性**: 再試行メカニズムとエラー処理の実装をお勧めします。
+- **セキュリティ**: リクエストの送信元を検証し、適切なセキュリティ対策を実装することをお勧めします。
+- **パフォーマンスの考慮**: タイムアウトを避けるため、Webhook エンドポイントは迅速にレスポンスを返す必要があります。
+- **状態管理**: ボットの状態を使用して、複雑な会話ロジックを実装できます。
+- **レスポンス形式**: レスポンス形式が正しくない場合、ボット機能が正常に動作しない可能性があります。

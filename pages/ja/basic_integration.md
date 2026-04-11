@@ -1,39 +1,39 @@
-# Basic Integration
+# 基本的な統合 (Basic Integration)
 
-## Overview
+## 概要
 
-This guide walks you through the basic integration process with IMKIT. After completing the "Quick Start" to obtain your API Key and Chat Server URL, you can follow these three steps to quickly create users, create a chat room, and start your first conversation.
+このガイドでは、IMKIT の基本的な統合プロセスについて説明します。「クイックスタート」を完了して API Key と Chat Server URL を取得した後、以下の 3 つのステップに従うことで、ユーザーの作成、チャットルームの作成、そして最初の対話の開始を迅速に行うことができます。
 
 ------
 
-## Prerequisites
+## 前提条件
 
-Please confirm you have completed the following preparations:
+以下の準備が完了していることを確認してください。
 
-| Item | Description | How to Obtain |
+| 項目 | 説明 | 取得方法 |
 | ---- | ---- | -------- |
-| API Key | Backend API authentication key (`IM-API-KEY`) | IMKIT Dashboard |
-| Client Key | Client-side connection key (`IM-CLIENT-KEY`) | IMKIT Dashboard |
-| Chat Server URL | Your Chat Server URL | IMKIT Dashboard |
+| API Key | バックエンド API 認証キー（`IM-API-KEY`） | IMKIT ダッシュボード |
+| Client Key | クライアント接続キー（`IM-CLIENT-KEY`） | IMKIT ダッシュボード |
+| Chat Server URL | Chat Server の URL | IMKIT ダッシュボード |
 
 ------
 
-## Step 1: Create Users
+## ステップ 1：ユーザーの作成
 
-Create IMKIT users for the users in your system via the API and obtain access tokens.
+API を使用して、システムのユーザーに対応する IMKIT ユーザーを作成し、アクセストークン（Token）を取得します。
 
 ```http
 POST /admin/clients
 ```
 
-#### Headers
+#### ヘッダー (Headers)
 
-| Parameter | Type | Required | Description |
+| パラメータ | 型 | 必須 | 説明 |
 | ---- | ---- | ---- | ---- |
-| `IM-API-KEY` | string | ✅ | Your platform API key |
+| `IM-API-KEY` | string | ✅ | プラットフォームの API キー |
 | `Content-Type` | string | ✅ | `application/json; charset=utf-8` |
 
-#### Create User A
+#### ユーザー A の作成
 
 ```javascript
 const axios = require("axios");
@@ -41,7 +41,7 @@ const axios = require("axios");
 const BASE_URL = "https://your-app.imkit.io";
 const API_KEY = process.env.IM_API_KEY;
 
-// Create User A and obtain Token
+// ユーザー A を作成し、Token を取得
 const userA = await axios.post(
   `${BASE_URL}/admin/clients`,
   {
@@ -59,13 +59,13 @@ const userA = await axios.post(
 );
 
 const tokenA = userA.data.result.token;
-console.log("User A Token:", tokenA);
+console.log("ユーザー A の Token:", tokenA);
 ```
 
-#### Create User B
+#### ユーザー B の作成
 
 ```javascript
-// Create User B and obtain Token
+// ユーザー B を作成し、Token を取得
 const userB = await axios.post(
   `${BASE_URL}/admin/clients`,
   {
@@ -83,10 +83,10 @@ const userB = await axios.post(
 );
 
 const tokenB = userB.data.result.token;
-console.log("User B Token:", tokenB);
+console.log("ユーザー B の Token:", tokenB);
 ```
 
-#### Example Response
+#### レスポンス例
 
 ```json
 {
@@ -103,29 +103,29 @@ console.log("User B Token:", tokenB);
 }
 ```
 
-> Please securely pass the obtained Token to the frontend for use with the SDK or Web URL.
+> 取得した Token は、SDK や Web URL で使用するために、フロントエンドに安全に渡してください。
 
 ------
 
-## Step 2: Create a Chat Room
+## ステップ 2：チャットルームの作成
 
-Create a chat room and add User A and User B as members.
+チャットルームを作成し、ユーザー A とユーザー B をメンバーとして追加します。
 
 ```http
 POST /rooms/
 ```
 
-#### Headers
+#### ヘッダー (Headers)
 
-| Parameter | Type | Required | Description |
+| パラメータ | 型 | 必須 | 説明 |
 | ---- | ---- | ---- | ---- |
-| `IM-API-KEY` | string | ✅ | Your platform API key |
+| `IM-API-KEY` | string | ✅ | プラットフォームの API キー |
 | `Content-Type` | string | ✅ | `application/json; charset=utf-8` |
 
-#### Example Request
+#### リクエスト例
 
 ```javascript
-// Create a one-on-one chat room
+// 1対1のチャットルームを作成
 const room = await axios.post(
   `${BASE_URL}/rooms/`,
   {
@@ -141,17 +141,17 @@ const room = await axios.post(
 );
 
 const roomId = room.data.result._id;
-console.log("Chat Room ID:", roomId);
+console.log("チャットルーム ID:", roomId);
 ```
 
-To create a group chat room, change `roomType` to `"group"` and add more members:
+グループチャットルームを作成する場合は、`roomType` を `"group"` に変更し、さらにメンバーを追加します：
 
 ```javascript
-// Create a group chat room
+// グループチャットルームを作成
 const groupRoom = await axios.post(
   `${BASE_URL}/rooms/`,
   {
-    name: "Project Discussion Group",
+    name: "プロジェクト相談グループ",
     roomType: "group",
     members: ["user-a", "user-b", "user-c"],
   },
@@ -164,7 +164,7 @@ const groupRoom = await axios.post(
 );
 ```
 
-#### Example Response
+#### レスポンス例
 
 ```json
 {
@@ -182,13 +182,13 @@ const groupRoom = await axios.post(
 
 ------
 
-## Step 3: Start a Conversation
+## ステップ 3：対話の開始
 
-After the chat room is created, pass the user's Token into the Web URL to start a conversation.
+チャットルームの作成が完了したら、ユーザーの Token を Web URL に含めることで、対話を開始できます。
 
-### Using the Web SDK
+### Web SDK の使用
 
-Embed the IMKIT Web SDK in your web page and initialize it with the user's Token:
+ウェブページに IMKIT Web SDK を埋め込み、ユーザーの Token を使用して初期化します：
 
 ```html
 <div id="imkit-container"></div>
@@ -196,27 +196,27 @@ Embed the IMKIT Web SDK in your web page and initialize it with the user's Token
 <script>
   window.IMKitUI.init({
     domain: "https://your-app.imkit.io",
-    clientKey: "YOUR_CLIENT_KEY",
-    token: "USER_TOKEN",
+    clientKey: "あなたの_CLIENT_KEY",
+    token: "ユーザーの_TOKEN",
   });
 </script>
 ```
 
-### Using Web URL
+### Web URL の使用
 
-If you have obtained the Web URL provided by IMKIT, you can directly pass the user Token as a parameter:
+IMKIT から提供された Web URL をお持ちの場合は、ユーザーの Token をパラメータとして直接含めることができます：
 
 ```
-https://your-app.imkit.io/chat?token=USER_TOKEN
+https://your-app.imkit.io/chat?token=ユーザーの_TOKEN
 ```
 
-You can embed this URL in your application via an iframe or direct navigation.
+ご自身のアプリケーション内で iframe を使用するか、この URL に直接リダイレクトすることで埋め込むことができます。
 
 ------
 
-## Complete Integration Flow
+## 完全な統合フロー
 
-Below is a complete backend integration example covering the full process of creating two users and one chat room:
+以下は、2 人のユーザーと 1 つのチャットルームを作成する一連の流れをカバーした、バックエンド統合の完全な例です：
 
 ```javascript
 const axios = require("axios");
@@ -230,21 +230,21 @@ const headers = {
 };
 
 async function setupChat() {
-  // 1. Create User A
+  // 1. ユーザー A を作成
   const userA = await axios.post(
     `${BASE_URL}/admin/clients`,
     { _id: "user-a", nickname: "Alice", issueAccessToken: true },
     { headers }
   );
 
-  // 2. Create User B
+  // 2. ユーザー B を作成
   const userB = await axios.post(
     `${BASE_URL}/admin/clients`,
     { _id: "user-b", nickname: "Bob", issueAccessToken: true },
     { headers }
   );
 
-  // 3. Create Chat Room
+  // 3. チャットルームを作成
   const room = await axios.post(
     `${BASE_URL}/rooms/`,
     { roomType: "direct", members: ["user-a", "user-b"] },
@@ -259,21 +259,21 @@ async function setupChat() {
 }
 
 setupChat().then((result) => {
-  console.log("Integration complete!");
-  console.log("User A Token:", result.tokenA);
-  console.log("User B Token:", result.tokenB);
-  console.log("Chat Room ID:", result.roomId);
+  console.log("統合完了！");
+  console.log("ユーザー A の Token:", result.tokenA);
+  console.log("ユーザー B の Token:", result.tokenB);
+  console.log("チャットルーム ID:", result.roomId);
 });
 ```
 
 ------
 
-## Next Steps
+## 次のステップ
 
-After completing the basic integration, you can explore further:
+基本統合が完了したら、さらに以下について確認してください：
 
-- [Authentication](/en/auth) — Learn the detailed usage of API Key and Client Key
-- [User Management](/en/user/user-management) — More user management features
-- [Chat Room Management](/en/room/room-management) — Advanced chat room operations
-- [Messaging](/en/message/message-basic) — Send and manage messages via API
-- [Webhook](/en/webhook) — Receive chat room events for automated workflows
+- [認証](/ja/auth) — API Key と Client Key の詳細な使い方
+- [ユーザー管理](/ja/user/user-management) — その點のユーザー管理機能
+- [チャットルーム管理](/ja/room/room-management) — チャットルームの高度な操作
+- [メッセージ機能](/ja/message/message-basic) — API を介したメッセージの送信と管理
+- [Webhook](/ja/webhook) — チャットルームイベントを受信し、自動化プロセスを実現

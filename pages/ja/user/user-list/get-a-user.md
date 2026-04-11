@@ -1,29 +1,29 @@
-# Get User Information
+# ユーザー情報の取得
 
-## Overview
+## 概要
 
-Retrieve the detailed information of the currently logged-in user. This API can be used to obtain the personal profile, login status, and other related information of the currently authenticated user.
+現在ログインしているユーザーの詳細情報を取得します。この API は、現在認証されているユーザーのプロフィール、ログイン状態、およびその他の関連情報を取得するために使用できます。
 
 ------
 
-## API Endpoint
+## API エンドポイント
 
-### Get Current User Information
+### 現在のユーザー情報を取得
 
-Retrieve the complete profile of the currently logged-in user.
+現在ログインしているユーザーの完全なデータを取得します。
 
 ```http
 GET /me
 ```
 
-#### Headers
+#### ヘッダー
 
-| Parameter            | Type   | Required | Description           |
+| パラメータ            | 型     | 必須 | 説明            |
 | --------------- | ------ | ---- | -------------- |
 | `IM-CLIENT-KEY` | string | ✅    | Client Key     |
 | `IM-Authorization` | string | ✅    | Client Token   |
 
-#### Example Request
+#### リクエスト例
 
 ```http
 GET /me HTTP/1.1
@@ -33,7 +33,7 @@ Host: your-app.imkit.io
 Connection: close
 ```
 
-**JavaScript Example:**
+**JavaScript 例:**
 
 ```javascript
 const response = await axios.get(
@@ -47,7 +47,7 @@ const response = await axios.get(
 );
 ```
 
-**cURL Example:**
+**cURL 例:**
 
 ```bash
 curl -X "GET" "https://your-app.imkit.io/me" \
@@ -55,31 +55,31 @@ curl -X "GET" "https://your-app.imkit.io/me" \
      -H 'IM-Authorization: {IM-Authorization}'
 ```
 
-#### Response
+#### レスポンス
 
-**Success Response (200 OK)**
+**成功レスポンス (200 OK)**
 
-| Parameter     | Type   | Description                   |
-| -------- | ------ | ---------------------- |
-| `RC`     | number | Response code (0 indicates success) |
-| `RM`     | string | Response message               |
-| `result` | object | User detailed information           |
+| パラメータ     | 型     | 説明                       |
+| -------- | ------ | -------------------------- |
+| `RC`     | number | レスポンスコード (0 は成功) |
+| `RM`     | string | レスポンスメッセージ        |
+| `result` | object | ユーザーの詳細情報          |
 
-**User Object Structure**
+**ユーザーオブジェクトの構造**
 
-| Parameter                    | Type   | Description                          |
-| ----------------------- | ------ | ----------------------------- |
-| `_id`                   | string | Unique user identifier                |
-| `email`                 | string | User email                  |
-| `nickname`              | string | User display name                  |
-| `appID`                 | string | Application identifier                |
-| `avatarUrl`             | string | User avatar URL                  |
-| `address`               | object | Last connected network address information        |
-| `userAgent`             | string | Last used browser/application information |
-| `lastLoginTimeMS`       | number | Last login time (millisecond timestamp)    |
-| `notificationEnabled`   | boolean| Whether notifications are enabled                  |
+| パラメータ              | 型      | 説明                               |
+| ----------------------- | ------ | ---------------------------------- |
+| `_id`                   | string | ユーザーの一意識別子                 |
+| `email`                 | string | ユーザーのメールアドレス             |
+| `nickname`              | string | ユーザーの表示名                     |
+| `appID`                 | string | アプリケーション ID                |
+| `avatarUrl`             | string | ユーザーのアバター URL               |
+| `address`               | object | 最終接続時のネットワークアドレス情報   |
+| `userAgent`             | string | 最後に使用されたブラウザ/アプリの情報 |
+| `lastLoginTimeMS`       | number | 最終ログイン時間 (ミリ秒タイムスタンプ) |
+| `notificationEnabled`   | boolean| 通知が有効かどうか                   |
 
-#### Example Response
+#### レスポンス例
 
 ```json
 {
@@ -104,9 +104,9 @@ curl -X "GET" "https://your-app.imkit.io/me" \
 }
 ```
 
-#### Error Response
+#### エラーレスポンス
 
-**401 Unauthorized** - Authentication failed
+**401 Unauthorized** - 認証失敗
 
 ```json
 {
@@ -119,7 +119,7 @@ curl -X "GET" "https://your-app.imkit.io/me" \
 }
 ```
 
-**403 Forbidden** - Invalid Client Key
+**403 Forbidden** - 無効な Client Key
 
 ```json
 {
@@ -134,23 +134,23 @@ curl -X "GET" "https://your-app.imkit.io/me" \
 
 ------
 
-## Use Cases
+## ユースケース
 
-### User Profile Display
-- **Profile Page**: Display the user's personal information in the application
-- **Settings Page**: Load the current user's settings for editing
-- **Permission Check**: Verify user identity and permissions
+### ユーザーデータの表示
+- **プロフィールページ**: アプリケーション内でユーザーの個人情報を表示します。
+- **設定ページ**: 現在のユーザー設定を読み込んで編集します。
+- **権限チェック**: ユーザーの身分と権限を確認します。
 
-### Status Check
-- **Login Verification**: Confirm whether the user's login status is valid
-- **Session Management**: Check whether the user's session has expired
-- **Notification Settings**: Confirm the user's notification preferences
+### ステータスチェック
+- **ログイン検証**: ユーザーのログイン状態が有効であることを確認します。
+- **セッション管理**: ユーザーセッションが期限切れになっていないかチェックします。
+- **通知設定**: ユーザーの通知設定（好み）を確認します。
 
 ------
 
-## Notes
+## 注意事項
 
-- **Authentication Required**: This API requires valid user authentication
-- **Sensitive Information**: Sensitive information such as passwords is not returned
-- **Caching Recommendation**: User information can be appropriately cached to improve performance
-- **Privacy Protection**: Only the information of the currently authenticated user is returned
+- **認証の必要性**: この API には有効なユーザー認証が必要です。
+- **機密情報**: パスワードなどの機密情報は返されません。
+- **キャッシュの推奨**: パフォーマンス向上のため、ユーザー情報は適宜キャッシュすることを検討してください。
+- **プライバシー保護**: 現在認証されているユーザーの情報のみが返されます。

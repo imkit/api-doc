@@ -1,47 +1,47 @@
-# Update Member Property
+# メンバー属性の更新
 
-## Overview
+## 概要
 
-This endpoint allows you to update custom properties of a specific member in a room, such as role, location, score, level, or any custom field. This API is for server-side use only and requires proper authentication.
+このエンドポイントを使用すると、チャットルーム内の特定のメンバーのカスタム属性（ロール、位置、スコア、レベル、または任意のカスタムフィールドなど）を更新できます。この API はサーバーサイド専用であり、適切な認証が必要です。
 
 ------
 
-## API Endpoint
+## API エンドポイント
 
-### Update Member Property
+### メンバー属性を更新
 
-Update the custom properties of a specific member in a room.
+チャットルーム内の特定のメンバーのカスタム属性を更新します。
 
 ```http
 PUT /rooms/:id/member/:client
 ```
 
-#### Headers
+#### ヘッダー
 
-| Parameter | Type | Required | Description |
+| パラメータ | 型 | 必須 | 説明 |
 | --- | --- | --- | --- |
-| `IM-CLIENT-KEY` | string | ✅ | Client key |
-| `IM-Authorization` | string | ✅ | Client token |
+| `IM-CLIENT-KEY` | string | ✅ | クライアントキー |
+| `IM-Authorization` | string | ✅ | クライアントトークン |
 
-#### Path Parameters
+#### パスパラメータ
 
-| Parameter | Type | Required | Description |
+| パラメータ | 型 | 必須 | 説明 |
 | --- | --- | --- | --- |
-| `:id` | string | ✅ | Room unique identifier |
-| `:client` | string | ✅ | Member's client ID |
+| `:id` | string | ✅ | チャットルームの一意識別子 |
+| `:client` | string | ✅ | メンバーのクライアント ID |
 
-#### Request Body
+#### リクエストボディ (Request Body)
 
-| Parameter | Type | Required | Description |
+| パラメータ | 型 | 必須 | 説明 |
 | --- | --- | --- | --- |
-| `property` | string | ✅ | Name of the member property field to update |
-| `value` | mixed | ✅ | New value for the property |
+| `property` | string | ✅ | 更新するメンバー属性のフィールド名 |
+| `value` | mixed | ✅ | 属性の新しい値 |
 
-#### Example Request
+#### リクエスト例
 
-**Example 1: Set a member as administrator**
+**例 1：メンバーを管理者に設定**
 
-**cURL Example:**
+**cURL 例：**
 
 ```bash
 curl -X "PUT" "https://your-app.imkit.io/rooms/demo-room/member/user-001" \
@@ -51,7 +51,7 @@ curl -X "PUT" "https://your-app.imkit.io/rooms/demo-room/member/user-001" \
      -d '{"property": "role", "value": "admin"}'
 ```
 
-**JavaScript Example:**
+**JavaScript 例：**
 
 ```javascript
 const response = await axios.put(
@@ -70,9 +70,9 @@ const response = await axios.put(
 );
 ```
 
-**Example 2: Update a custom property**
+**例 2：カスタム属性を更新**
 
-**JavaScript Example:**
+**JavaScript 例：**
 
 ```javascript
 const response = await axios.put(
@@ -91,17 +91,17 @@ const response = await axios.put(
 );
 ```
 
-#### Response
+#### レスポンス
 
-**Success Response (200 OK)**
+**成功レスポンス (200 OK)**
 
-| Parameter | Type | Description |
+| パラメータ | 型 | 説明 |
 | --- | --- | --- |
-| `RC` | number | Response code (0 indicates success) |
-| `RM` | string | Response message |
-| `result` | object | Complete room information after the update |
+| `RC` | number | レスポンスコード (0 は成功) |
+| `RM` | string | レスポンスメッセージ |
+| `result` | object | 更新後のチャットルームの完全な情報 |
 
-#### Example Response
+#### レスポンス例
 
 ```json
 {
@@ -127,30 +127,30 @@ const response = await axios.put(
 }
 ```
 
-#### Error Response
+#### エラーレスポンス
 
-When a request fails, you will receive an error response containing error details. Common error scenarios include:
+リクエストが失敗した場合、エラーの詳細情報を含むエラーレスポンスが返されます。一般的なエラーシナリオは以下の通りです：
 
-- Invalid client key or authorization token
-- The specified room or member does not exist
-- Internal server error
-
-------
-
-## Use Cases
-
-### Role Management
-- **Assign administrator**: Set `property` to `"role"` and `value` to `"admin"` to assign the administrator role
-
-### Custom Properties
-- **Set score**: Set `property` to `"score"` to track a member's score in the room
-- **Set level**: Set `property` to `"level"` to manage member levels
-- **Set location**: Set `property` to `"location"` to record member location information
+- 無効なクライアントキーまたは認証トークン
+- 指定されたチャットルームまたはメンバーが存在しない
+- サーバー内部エラー
 
 ------
 
-## Notes
+## ユースケース
 
-- **Role setting**: When `property` is set to `"role"` and `value` is set to `"admin"`, the system automatically generates an `assignAdmin` system message in the room
-- **Custom properties**: In addition to `role`, any custom property can be set, such as location (`location`), score (`score`), level (`level`), etc.
-- The `property` field directly maps to the field name in the member properties object, and the type of `value` should match the field definition
+### ロール（役割）管理
+- **管理者の指派**: `property` を `"role"`、`value` を `"admin"` に設定して、管理者ロールを割り当てます。
+
+### カスタム属性
+- **スコアの設定**: `property` を `"score"` に設定して、チャットルーム内でのメンバーのスコアを追跡します。
+- **レベルの設定**: `property` を `"level"` に設定して、メンバーのレベルを管理します。
+- **位置の設定**: `property` を `"location"` に設定して、メンバーの位置情報を記録します。
+
+------
+
+## 注意事項
+
+- **ロール設定**: `property` が `"role"` で `value` が `"admin"` の場合、システムは自動的にチャットルーム内に `assignAdmin` システムメッセージを生成します。
+- **カスタム属性**: `role` 以外にも、位置（`location`）、スコア（`score`）、レベル（`level`）などの任意のカスタム属性を設定できます。
+- `property` フィールドはメンバー属性オブジェクト内のフィールド名に直接対応し、`value` の型はフィールド定義と一致する必要があります。

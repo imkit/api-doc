@@ -1,37 +1,37 @@
-# Unmute a Member
+# ユーザーのチャットルーム消音を解除
 
-## Overview
+## 概要
 
-An administrator unmutes a specific chatroom for a specified user, restoring the user's notification reception for that chatroom. This feature is the counterpart to "Mute a Member."
+管理者が指定したユーザーの特定のチャットルームに対する消音（ミュート）状態を解除し、そのユーザーがチャットルームからの通知を再び受信できるようにします。この機能は「ユーザーのチャットルームを消音」と対になる機能です。
 
 ------
 
-## API Endpoint
+## API エンドポイント
 
-### Unmute a Specified Client's Chatroom
+### 指定したクライアントのチャットルーム消音を解除
 
-Remove the mute status on a specific chatroom for a specified client.
+指定したクライアントの特定のチャットルームに対する消音状態を削除します。
 
 ```http
 DELETE /admin/clients/{uid}/mute/{room}
 ```
 
-#### Headers
+#### ヘッダー
 
-| Parameter    | Type   | Required | Description |
-| ------------ | ------ | -------- | ----------- |
-| `IM-API-KEY` | string | ✅        | API Key     |
+| パラメータ    | 型     | 必須 | 説明        |
+| ------------ | ------ | ---- | ----------- |
+| `IM-API-KEY` | string | ✅    | API Key     |
 
-#### Path Parameters
+#### パスパラメータ
 
-| Parameter | Type   | Required | Description  |
-| --------- | ------ | -------- | ------------ |
-| `uid`     | string | ✅        | Client ID    |
-| `room`    | string | ✅        | Chatroom ID  |
+| パラメータ | 型     | 必須 | 説明            |
+| --------- | ------ | ---- | -------------- |
+| `uid`     | string | ✅    | クライアント ID |
+| `room`    | string | ✅    | チャットルーム ID |
 
-#### Example Request
+#### リクエスト例
 
-**Unmute a specific chatroom**
+**特定のチャットルームの消音を解除**
 
 ```http
 DELETE /admin/clients/aaa/mute/demo HTTP/1.1
@@ -39,7 +39,7 @@ IM-API-KEY: {IM-API-KEY}
 Host: your-app.imkit.io
 ```
 
-**JavaScript Example:**
+**JavaScript 例:**
 
 ```javascript
 const response = await axios.delete(
@@ -52,41 +52,41 @@ const response = await axios.delete(
 );
 ```
 
-**cURL Example:**
+**cURL 例:**
 
 ```bash
 curl -X "DELETE" "https://your-app.imkit.io/admin/clients/{uid}/mute/{room}" \
      -H 'IM-API-KEY: {IM-API-KEY}'
 ```
 
-#### Response
+#### レスポンス
 
-**Success Response (200 OK)**
+**成功レスポンス (200 OK)**
 
-| Parameter | Type   | Description                         |
-| --------- | ------ | ----------------------------------- |
-| `RC`      | number | Response code (0 indicates success) |
-| `RM`      | string | Response message                    |
-| `result`  | object | Updated client data                 |
+| パラメータ | 型     | 説明                         |
+| --------- | ------ | ---------------------------- |
+| `RC`      | number | レスポンスコード (0 は成功)   |
+| `RM`      | string | レスポンスメッセージ          |
+| `result`  | object | 更新後のクライアントデータ    |
 
-**Client Data Object Structure**
+**クライアントデータオブジェクトの構造**
 
-| Parameter         | Type   | Description                             |
-| ----------------- | ------ | --------------------------------------- |
-| `mute`            | array  | List of muted chatroom IDs             |
-| `isRobot`         | bool   | Whether this is a bot                   |
-| `_id`             | string | Client unique ID                        |
-| `appID`           | string | Application ID                          |
-| `description`     | string | Client description                      |
-| `avatarUrl`       | string | Avatar URL                              |
-| `nickname`        | string | Nickname                                |
-| `email`           | string | Email address                           |
-| `address`         | object | Connection address information          |
-| `userAgent`       | string | User agent string                       |
-| `updatedAt`       | string | Last updated time                       |
-| `lastLoginTimeMS` | number | Last login time (millisecond timestamp) |
+| パラメータ         | 型     | 説明                               |
+| ----------------- | ------ | ---------------------------------- |
+| `mute`            | array  | 消音設定されているチャットルーム ID リスト |
+| `isRobot`         | bool   | ロボット（ボット）かどうか          |
+| `_id`             | string | クライアントの一意識別子            |
+| `appID`           | string | アプリケーション ID                |
+| `description`     | string | クライアントの説明                  |
+| `avatarUrl`       | string | アバターの URL                      |
+| `nickname`        | string | ニックネーム                        |
+| `email`           | string | メールアドレス                      |
+| `address`         | object | 接続アドレス情報                    |
+| `userAgent`       | string | ユーザーエージェント文字列           |
+| `updatedAt`       | string | 最終更新日時                        |
+| `lastLoginTimeMS` | number | 最終ログイン時間（ミリ秒タイムスタンプ） |
 
-#### Example Response
+#### レスポンス例
 
 ```json
 {
@@ -115,9 +115,9 @@ curl -X "DELETE" "https://your-app.imkit.io/admin/clients/{uid}/mute/{room}" \
 }
 ```
 
-#### Error Response
+#### エラーレスポンス
 
-**401 Unauthorized** - Authentication failed
+**401 Unauthorized** - 認証失敗
 
 ```json
 {
@@ -130,7 +130,7 @@ curl -X "DELETE" "https://your-app.imkit.io/admin/clients/{uid}/mute/{room}" \
 }
 ```
 
-**404 Not Found** - Client does not exist
+**404 Not Found** - クライアントが存在しない
 
 ```json
 {
@@ -143,7 +143,7 @@ curl -X "DELETE" "https://your-app.imkit.io/admin/clients/{uid}/mute/{room}" \
 }
 ```
 
-**404 Not Found** - Chatroom does not exist
+**404 Not Found** - チャットルームが存在しない
 
 ```json
 {
@@ -156,7 +156,7 @@ curl -X "DELETE" "https://your-app.imkit.io/admin/clients/{uid}/mute/{room}" \
 }
 ```
 
-**400 Bad Request** - Chatroom is not muted
+**400 Bad Request** - チャットルームが消音されていない
 
 ```json
 {
@@ -171,31 +171,31 @@ curl -X "DELETE" "https://your-app.imkit.io/admin/clients/{uid}/mute/{room}" \
 
 ------
 
-## Use Cases
+## ユースケース
 
-### Notification Restoration
-- **Re-Enable Reminders**: Restore push notifications for specific chatrooms
-- **Work Hours Adjustment**: Restore notifications for important chatrooms during work hours
-- **Context Switching**: Restore notification settings based on different usage contexts
+### 通知の復元
+- **通知の再開**: 特定のチャットルームのプッシュ通知を復元します。
+- **勤務時間の調整**: 勤務時間中に重要なチャットルームの通知を復元します。
+- **シチュエーションの切り替え**: 利用シーンに合わせて通知設定を復元します。
 
-### User Experience Management
-- **Personal Preference Adjustment**: Adjust notification settings based on user needs
-- **Temporary Mute Removal**: Remove a temporarily set mute status
-- **Batch Management**: Centrally restore notification settings for multiple chatrooms
+### ユーザー体験管理
+- **個人の好みに合わせた調整**: ユーザーのニーズに応じて通知設定を調整します。
+- **一時的な消音の解除**: 一時的に設定した消音状態を解除します。
+- **一括管理**: 複数のチャットルームの通知設定を一括で復元します。
 
-### Administrative Functions
-- **Backend Control**: Administrators help users restore chatroom notifications
-- **User Support**: Resolve user notification-related issues
-- **System Maintenance**: Restore notification functionality after system maintenance is complete
+### 管理機能
+- **バックエンド制御**: 管理者がユーザーに代わってチャットルームの通知を復元します。
+- **ユーザーサポート**: ユーザーの通知に関する問題を解決します。
+- **システムメンテナンス**: システムメンテナンス完了後に通知機能を復元します。
 
 ------
 
-## Notes
+## 注意事項
 
-- **Admin Permission**: This API requires administrator permissions and an API Key
-- **Status Removal**: Unmuting removes the chatroom ID from the mute array
-- **Immediate Effect**: Unmuting takes effect immediately; the user will start receiving notifications
-- **Empty Array**: After successfully unmuting all chatrooms, the mute array becomes empty
-- **Query Parameters**: The API supports limit and skip parameters, but they do not affect the unmute functionality
-- **Persistent Setting**: The unmuted status is permanently saved
-- **Notification Restoration**: After unmuting, the user will resume receiving notifications from that chatroom
+- **管理者権限**: この API には管理者権限と API Key が必要です。
+- **ステータスの削除**: 消音を解除すると、チャットルーム ID が mute 配列から削除されます。
+- **即時反映**: 消音解除は即時に反映され、ユーザーは通知の受信を開始します。
+- **空の配列**: すべての消音を正常に解除すると、mute 配列は空になります。
+- **クエリパラメータ**: API は limit と skip パラメータをサポートしていますが、消音解除機能には影響しません。
+- **永続的な設定**: 消音解除の状態は永続的に保存されます。
+- **通知の復元**: 消音解除後、ユーザーは該当するチャットルームからの通知を再び受信するようになります。

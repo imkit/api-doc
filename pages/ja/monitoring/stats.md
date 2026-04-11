@@ -1,28 +1,28 @@
-# Statistics Report
+# 統計レポート
 
-## Overview
+## 概要
 
-Retrieve application statistics report data, including the user list, chatroom count, message count, connection peak, and system memory information. By default, the data is sampled from the most recent one hour (3600 seconds). Suitable for usage analysis, capacity monitoring, and operational reporting.
+アプリケーションの統計レポートデータを取得します。これには、ユーザーリスト、チャットルーム数、メッセージ数、接続ピーク、およびシステムメモリ情報が含まれます。デフォルトでは、直近1時間（3600秒）のデータをサンプリングします。使用量分析、キャパシティ監視、および運用レポートなどのシナリオに適しています。
 
 ------
 
-## API Endpoint
+## API エンドポイント
 
-### Get Statistics Report
+### 統計レポートを取得
 
-Query the application's statistical data within a specified time range.
+指定された時間範囲内のアプリケーションの統計データを照会します。
 
 ```http
 GET /admin/stats
 ```
 
-#### Headers
+#### ヘッダー
 
-| Parameter    | Type   | Required | Description           |
-| ------------ | ------ | -------- | --------------------- |
-| `IM-API-KEY` | string | ✅        | Your platform API Key |
+| パラメータ    | 型     | 必須 | 説明                    |
+| ------------ | ------ | ---- | ----------------------- |
+| `IM-API-KEY` | string | ✅    | プラットフォーム API キー |
 
-#### Example Request
+#### リクエスト例
 
 **JavaScript (axios)**
 
@@ -44,30 +44,30 @@ curl -X GET "https://your-app.imkit.io/admin/stats" \
   -H "IM-API-KEY: your_api_key"
 ```
 
-#### Response
+#### レスポンス
 
-**Success Response (200 OK)**
+**成功レスポンス (200 OK)**
 
-| Parameter                    | Type   | Description                                          |
-| ---------------------------- | ------ | ---------------------------------------------------- |
-| `RC`                         | number | Response code (0 indicates success)                  |
-| `RM`                         | string | Response message                                     |
-| `result`                     | object | Statistics result                                    |
-| `result.clientKey`           | string | Client Key (sensitive information, do not log)       |
-| `result.apiKey`              | string | API Key (sensitive information, do not log)          |
-| `result.startTime`           | string | Statistics start time (ISO format)                   |
-| `result.endTime`             | string | Statistics end time (ISO format)                     |
-| `result.start`               | number | Statistics start time (Unix timestamp, seconds)      |
-| `result.end`                 | number | Statistics end time (Unix timestamp, seconds)        |
-| `result.userList`            | array  | List of active users during the period               |
-| `result.roomCount`           | number | Number of active chatrooms during the period         |
-| `result.totalRoomCount`      | number | Total chatroom count                                 |
-| `result.messageCount`        | number | Total message count during the period                |
-| `result.peakConnectionCount` | number | WebSocket connection peak during the period          |
-| `result.totalMem`            | number | Total system memory (bytes)                          |
-| `result.freeMem`             | number | Available system memory (bytes)                      |
+| パラメータ             | 型     | 説明                                         |
+| --------------------- | ------ | -------------------------------------------- |
+| `RC`                  | number | レスポンスコード (0 は成功)                   |
+| `RM`                  | string | レスポンスメッセージ                          |
+| `result`              | object | 統計結果                                     |
+| `result.clientKey`    | string | Client Key (機密情報、ログに記録しないでください) |
+| `result.apiKey`       | string | API Key (機密情報、ログに記録しないでください)    |
+| `result.startTime`    | string | 統計開始時間 (ISO 形式)                       |
+| `result.endTime`      | string | 統計終了時間 (ISO 形式)                       |
+| `result.start`        | number | 統計開始時間 (Unix タイムスタンプ、秒)          |
+| `result.end`          | number | 統計終了時間 (Unix タイムスタンプ、秒)          |
+| `result.userList`     | array  | 期間内のアクティブユーザーリスト               |
+| `result.roomCount`    | number | 期間内のアクティブチャットルーム数             |
+| `result.totalRoomCount` | number | チャットルーム総数                             |
+| `result.messageCount` | number | 期間内のメッセージ総数                         |
+| `result.peakConnectionCount` | number | 期間内の WebSocket 接続ピーク数          |
+| `result.totalMem`     | number | システム総メモリ (バイト)                      |
+| `result.freeMem`      | number | システム空きメモリ (バイト)                    |
 
-#### Example Response
+#### レスポンス例
 
 ```json
 {
@@ -91,9 +91,9 @@ curl -X GET "https://your-app.imkit.io/admin/stats" \
 }
 ```
 
-#### Error Response
+#### エラーレスポンス
 
-**401 Unauthorized** - Invalid API Key
+**401 Unauthorized** - API キーが無効
 
 ```json
 {
@@ -106,7 +106,7 @@ curl -X GET "https://your-app.imkit.io/admin/stats" \
 }
 ```
 
-**403 Forbidden** - Insufficient permissions
+**403 Forbidden** - 権限不足
 
 ```json
 {
@@ -121,28 +121,28 @@ curl -X GET "https://your-app.imkit.io/admin/stats" \
 
 ------
 
-## Use Cases
+## ユースケース
 
-### Usage Analysis
-- **Active User Statistics**: Use `userList` to identify active users during the period
-- **Message Volume Analysis**: Track `messageCount` to understand message sending trends
-- **Chatroom Activity**: Compare the ratio of `roomCount` (active) to `totalRoomCount` (total)
+### 使用量分析
+- **アクティブユーザー統計**: `userList` を通じて期間内のアクティブユーザーを把握します。
+- **メッセージ量分析**: `messageCount` を追跡してメッセージ送信の傾向を把握します。
+- **チャットルームのアクティブ度**: `roomCount`（アクティブ）と `totalRoomCount`（総数）の比率を比較します。
 
-### Capacity Monitoring
-- **Peak Connection Tracking**: Use `peakConnectionCount` to understand connection peaks and plan for server scaling
-- **Memory Monitoring**: Monitor system memory usage through `totalMem` and `freeMem`
-- **Performance Baseline**: Establish performance baselines to detect abnormal loads
+### キャパシティ監視
+- **接続ピークの追跡**: `peakConnectionCount` を通じて接続ピークを把握し、サーバーの拡張を計画します。
+- **メモリ監視**: `totalMem` と `freeMem` を通じてシステムのメモリ使用状況を監視します。
+- **パフォーマンス基準**: パフォーマンスの基準線（ベースライン）を確立し、異常な負荷を検知します。
 
-### Operational Reports
-- **Hourly Reports**: Periodically retrieve statistical data to generate operational reports
-- **Trend Analysis**: Accumulate historical data for long-term trend analysis
+### 運用レポート
+- **1時間ごとのレポート**: 定期的に統計データを取得し、運用レポートを作成します。
+- **傾向分析**: 履歴データを蓄積して、長期的な傾向分析を行います。
 
 ------
 
-## Notes
+## 注意事項
 
-- **Sampling Interval**: By default, data is sampled from the most recent one hour (3600 seconds)
-- **Platform API Permission Required**: This endpoint requires authentication using `IM-API-KEY`
-- **Memory Data**: `totalMem` and `freeMem` represent the server host's memory information, in bytes
-- **Active Users**: `userList` includes only users who were active during the sampling interval, not all registered users
-- **Data Timeliness**: Statistical data is a snapshot at the time of the query and may have slight delays
+- **サンプリング間隔**: デフォルトでは直近1時間（3600秒）のデータをサンプリングします。
+- **プラットフォーム API 権限が必要**: このエンドポイントは `IM-API-KEY` を使用して認証する必要があります。
+- **メモリデータ**: `totalMem` と `freeMem` はサーバーホストのメモリ情報であり、単位はバイトです。
+- **アクティブユーザー**: `userList` にはサンプリング期間内にアクティビティがあったユーザーのみが含まれ、登録済みユーザー全員を代表するものではありません。
+- **データのリアルタイム性**: 統計データは照会時点のスナップショットであり、わずかな遅延が発生する場合があります。

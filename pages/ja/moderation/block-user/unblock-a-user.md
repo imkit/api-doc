@@ -1,37 +1,37 @@
-# Unblock a User
+# ユーザーのブロック解除 (Unblock User)
 
-## Overview
+## 概要
 
-Remove the block status on a specified user, restoring their ability to have direct chats with the current user. After unblocking, both parties can send private messages again, but this will not affect the interaction status in group chatrooms. This feature is suitable for correcting accidental blocks or re-establishing contact.
+指定したユーザーのブロック状態を解除し、現在のユーザーとの直接チャット機能を回復させます。ブロック解除後、双方は再びプライベートメッセージを送信できるようになりますが、グループチャットルーム内での対話ステータスには影響しません。この機能は、誤操作の修正や連絡関係の再構築に適しています。
 
 ------
 
-## API Endpoint
+## API エンドポイント
 
-### Unblock a Specified User
+### 特定のユーザーのブロックを解除する
 
-Remove the specified user from the block list, restoring direct chat functionality.
+指定したユーザーをブロックリストから削除し、直接チャット機能を回復させます。
 
 ```http
 DELETE /blockStatus/my/{blockee}
 ```
 
-#### Headers
+#### ヘッダー (Headers)
 
-| Parameter          | Type   | Required | Description    |
-| ------------------ | ------ | -------- | -------------- |
-| `IM-CLIENT-KEY`    | string | ✅        | Client Key     |
-| `IM-Authorization` | string | ✅        | Client Token   |
+| パラメータ | 型 | 必須 | 説明 |
+| ------------------ | ------ | ---- | -------------- |
+| `IM-CLIENT-KEY` | string | ✅ | Client Key |
+| `IM-Authorization` | string | ✅ | Client Token |
 
-#### Path Parameters
+#### パスパラメータ (Path Parameters)
 
-| Parameter | Type   | Required | Description               |
-| --------- | ------ | -------- | ------------------------- |
-| `blockee` | string | ✅        | ID of the user to unblock |
+| パラメータ | 型 | 必須 | 説明 |
+| --------- | ------ | ---- | --------------------- |
+| `blockee` | string | ✅ | ブロックを解除するユーザー ID |
 
-#### Example Request
+#### リクエスト例
 
-**Unblock a specific user**
+**特定のユーザーのブロックを解除する**
 
 ```http
 DELETE /blockStatus/my/ddd HTTP/1.1
@@ -41,7 +41,7 @@ Host: your-app.imkit.io
 Connection: close
 ```
 
-**Unblock another user**
+**他のユーザーのブロックを解除する**
 
 ```http
 DELETE /blockStatus/my/user123 HTTP/1.1
@@ -51,7 +51,7 @@ Host: your-app.imkit.io
 Connection: close
 ```
 
-**JavaScript Example:**
+**JavaScript 例：**
 
 ```javascript
 const response = await axios.delete(
@@ -65,7 +65,7 @@ const response = await axios.delete(
 );
 ```
 
-**cURL Example:**
+**cURL 例：**
 
 ```bash
 curl -X "DELETE" "https://your-app.imkit.io/blockStatus/my/{blockee}" \
@@ -73,38 +73,38 @@ curl -X "DELETE" "https://your-app.imkit.io/blockStatus/my/{blockee}" \
      -H 'IM-Authorization: {IM-Authorization}'
 ```
 
-#### Response
+#### レスポンス (Response)
 
-**Success Response (200 OK)**
+**成功レスポンス（200 OK）**
 
-| Parameter | Type   | Description                         |
-| --------- | ------ | ----------------------------------- |
-| `RC`      | number | Response code (0 indicates success) |
-| `RM`      | string | Response message                    |
-| `result`  | object | Unblock status information          |
+| パラメータ | 型 | 説明 |
+| -------- | ------ | ---------------------- |
+| `RC` | number | レスポンスコード（0 は成功を示す） |
+| `RM` | string | レスポンスメッセージ |
+| `result` | object | ブロック解除ステータス情報 |
 
-**Unblock Status Object Structure**
+**ブロック解除ステータスオブジェクトの構造**
 
-| Parameter   | Type   | Description                              |
-| ----------- | ------ | ---------------------------------------- |
-| `appID`     | string | Application ID                           |
-| `blockee`   | object | Detailed information of unblocked user   |
-| `blocker`   | string | ID of the user who performed the unblock |
-| `room`      | string | Associated chatroom ID                   |
-| `createdAt` | string | Original block creation time             |
-| `updatedAt` | string | Unblock time                             |
+| パラメータ | 型 | 説明 |
+| ----------- | ------ | ----------------------------- |
+| `appID` | string | アプリケーション識別子 |
+| `blockee` | object | ブロックを解除されたユーザーの詳細情報 |
+| `blocker` | string | ブロック解除を実行したユーザー ID |
+| `room` | string | 関連付けられたチャットルーム ID |
+| `createdAt` | string | 元のブロック作成日時 |
+| `updatedAt` | string | ブロック解除日時 |
 
-**Unblocked User Object Structure**
+**ブロックを解除されたユーザーオブジェクトの構造**
 
-| Parameter         | Type   | Description                             |
-| ----------------- | ------ | --------------------------------------- |
-| `_id`             | string | User unique ID                          |
-| `nickname`        | string | User nickname                           |
-| `avatarUrl`       | string | User avatar URL                         |
-| `id`              | string | User ID                                 |
-| `lastLoginTimeMS` | number | Last login time (millisecond timestamp) |
+| パラメータ | 型 | 説明 |
+| ----------------- | ------ | ----------------------------- |
+| `_id` | string | ユーザー一意識別子 |
+| `nickname` | string | ユーザーのニックネーム |
+| `avatarUrl` | string | ユーザーのアバター URL |
+| `id` | string | ユーザー ID |
+| `lastLoginTimeMS` | number | 最終ログイン時間（ミリ秒タイムスタンプ） |
 
-#### Example Response
+#### レスポンス例
 
 ```json
 {
@@ -127,9 +127,9 @@ curl -X "DELETE" "https://your-app.imkit.io/blockStatus/my/{blockee}" \
 }
 ```
 
-#### Error Response
+#### エラーレスポンス
 
-**401 Unauthorized** - Authentication failed
+**401 Unauthorized** - 認証失敗
 
 ```json
 {
@@ -142,7 +142,7 @@ curl -X "DELETE" "https://your-app.imkit.io/blockStatus/my/{blockee}" \
 }
 ```
 
-**404 Not Found** - Block relationship does not exist
+**404 Not Found** - ブロック関係が存在しない
 
 ```json
 {
@@ -155,7 +155,7 @@ curl -X "DELETE" "https://your-app.imkit.io/blockStatus/my/{blockee}" \
 }
 ```
 
-**400 Bad Request** - Invalid parameters
+**400 Bad Request** - パラメータが無効
 
 ```json
 {
@@ -170,30 +170,30 @@ curl -X "DELETE" "https://your-app.imkit.io/blockStatus/my/{blockee}" \
 
 ------
 
-## Use Cases
+## 使用シーン
 
-### Relationship Repair
-- **Accidental Block Correction**: Unblock users who were blocked by mistake
-- **Relationship Improvement**: Re-establish contact with users after a previous conflict
-- **Second Chance**: Give blocked users an opportunity for a fresh start
+### 関係の修復
+- **誤操作の修正**：誤ってブロックしたユーザーのブロックを解除します。
+- **関係の改善**：かつて紛争があったユーザーと再び連絡を取れるようにします。
+- **セカンドチャンス**：ブロックされたユーザーにやり直しの機会を与えます。
 
-### Management Flexibility
-- **Dynamic Management**: Adjust block status based on changing circumstances
-- **Temporary Blocking**: Restore normal contact after a short-term block
-- **Testing Purposes**: Validate block functionality during development and testing
+### 管理の柔軟性
+- **動的な管理**：状況の変化に応じてブロックステータスを調整します。
+- **一時的なブロック**：短期間のブロックの後に通常の連絡を回復させます。
+- **テスト用途**：開発およびテスト段階でのブロック機能の検証。
 
-### User Experience Optimization
-- **Convenient Operation**: Provide a simple way to unblock users
-- **Immediate Effect**: Chat functionality is restored immediately after unblocking
-- **Status Synchronization**: Ensure block status is synchronized across all platforms
+### ユーザー体験の最適化
+- **便利な操作**：簡単なブロック解除方法を提供します。
+- **即時有効**：ブロック解除後、すぐにチャット機能が回復します。
+- **ステータスの同期**：ブロックステータスが各プラットフォーム間で同期して更新されるようにします。
 
 ------
 
-## Notes
+## 注意事項
 
-- **Bidirectional Unblock**: After unblocking, both parties can send private messages again
-- **Non-Existence Handling**: Attempting to unblock a non-existent block relationship will return a 404 error
-- **Immediate Effect**: The unblock operation takes effect immediately with no waiting required
-- **Chatroom Association**: Unblocking does not affect the existence of the associated chatroom
-- **History Retention**: Unblocking does not delete previous chat history
-- **Group Unaffected**: Unblocking does not affect interaction status in group chats
+- **双方向の解除**：ブロック解除後、双方が再びプライベートメッセージを送信できるようになります。
+- **存在しない場合の処理**：存在しないブロック関係を解除しようとすると、404 エラーが返されます。
+- **即時有効**：ブロック解除操作は即座に有効になります。
+- **チャットルームの関連付け**：ブロックを解除しても、関連するチャットルームの存在状態には影響しません。
+- **履歴記録**：ブロックを解除しても、以前のチャット履歴は削除されません。
+- **グループへの影響なし**：ブロック解除は、グループチャットでの対話ステータスには影響しません。

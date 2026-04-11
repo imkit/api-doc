@@ -1,46 +1,46 @@
-# Remove a Member
+# メンバーの削除
 
-## Overview
+## 概要
 
-This endpoint allows you to remove one or more members from a specified room. If the current user's own ID is passed in the `members` array, it means the user is voluntarily leaving the room.
+このエンドポイントを使用すると、指定したチャットルームから1人または複数のメンバーを削除できます。`members` に現在のユーザー自身の ID を渡すと、そのユーザーが能動的にチャットルームから退出することを意味します。
 
 ------
 
-## API Endpoint
+## API エンドポイント
 
-### Remove a Member
+### メンバーの削除
 
-Remove one or more members from a specified room.
+指定したチャットルームから1人または複数のメンバーを削除します。
 
 ```http
 POST /rooms/:id/delete/members
 ```
 
-#### Headers
+#### ヘッダー
 
-| Parameter | Type | Required | Description |
+| パラメータ | 型 | 必須 | 説明 |
 | --- | --- | --- | --- |
-| `IM-CLIENT-KEY` | string | ✅ | Client key |
-| `IM-Authorization` | string | ✅ | Client token |
+| `IM-CLIENT-KEY` | string | ✅ | クライアントキー |
+| `IM-Authorization` | string | ✅ | クライアントトークン |
 
-#### Path Parameters
+#### パスパラメータ
 
-| Parameter | Type | Required | Description |
+| パラメータ | 型 | 必須 | 説明 |
 | --- | --- | --- | --- |
-| `:id` | string | ✅ | Room unique identifier |
+| `:id` | string | ✅ | チャットルームの一意識別子 |
 
-#### Post Body
+#### リクエストボディ (Post Body)
 
-| Parameter | Type | Required | Description |
+| パラメータ | 型 | 必須 | 説明 |
 | --- | --- | --- | --- |
-| `members` | array[string] | ✅ | Array of member IDs to remove; if the current user's own ID is included, it means the user is voluntarily leaving the room |
-| `systemMessage` | boolean | ❌ | Whether to automatically generate a system message for the leave or removal (`leaveRoom` or `deleteMember`), defaults to `false` |
+| `members` | array[string] | ✅ | 削除するメンバーの ID 配列。現在のユーザー自身の ID を含めると、能動的な退出を意味します。 |
+| `systemMessage` | boolean | ❌ | メンバーの退出または削除のシステムメッセージ（`leaveRoom` または `deleteMember`）を自動生成するかどうか。デフォルトは `false` です。 |
 
-#### Example Request
+#### リクエスト例
 
-**Example 1: Remove specific members**
+**例 1：指定したメンバーを削除**
 
-**cURL Example:**
+**cURL 例：**
 
 ```bash
 curl -X "POST" "https://your-app.imkit.io/rooms/demo-room/delete/members" \
@@ -50,7 +50,7 @@ curl -X "POST" "https://your-app.imkit.io/rooms/demo-room/delete/members" \
      -d '{"members": ["ccc", "bbb"], "systemMessage": true}'
 ```
 
-**JavaScript Example:**
+**JavaScript 例：**
 
 ```javascript
 const response = await axios.post(
@@ -69,9 +69,9 @@ const response = await axios.post(
 );
 ```
 
-**Example 2: Current user voluntarily leaves the room**
+**例 2：現在のユーザーが能動的にチャットルームから退出**
 
-**JavaScript Example:**
+**JavaScript 例：**
 
 ```javascript
 const response = await axios.post(
@@ -90,17 +90,17 @@ const response = await axios.post(
 );
 ```
 
-#### Response
+#### レスポンス
 
-**Success Response (200 OK)**
+**成功レスポンス (200 OK)**
 
-| Parameter | Type | Description |
+| パラメータ | 型 | 説明 |
 | --- | --- | --- |
-| `RC` | number | Response code (0 indicates success) |
-| `RM` | string | Response message |
-| `result` | object | Complete room information after the update |
+| `RC` | number | レスポンスコード (0 は成功) |
+| `RM` | string | レスポンスメッセージ |
+| `result` | object | 更新後のチャットルームの完全な情報 |
 
-#### Example Response
+#### レスポンス例
 
 ```json
 {
@@ -143,30 +143,30 @@ const response = await axios.post(
 }
 ```
 
-#### Error Response
+#### エラーレスポンス
 
-When a request fails, you will receive an error response containing error details. Common error scenarios include:
+リクエストが失敗した場合、エラーの詳細情報を含むエラーレスポンスが返されます。一般的なエラーシナリオは以下の通りです：
 
-- Invalid client key or authorization token
-- The specified room does not exist
-- `members` contains a user ID that is not in the room
-- Internal server error
-
-------
-
-## Use Cases
-
-### Member Management
-- **Remove members**: Administrators can remove one or more members from a room
-- **Voluntarily leave**: Users can voluntarily leave a room by passing their own ID
-
-### System Notifications
-- **Automatic notification**: When `systemMessage: true` is set, the system automatically generates a system message of type `leaveRoom` or `deleteMember` depending on the context
+- 無効なクライアントキーまたは認証トークン
+- 指定されたチャットルームが存在しない
+- `members` に、チャットルームに参加していないユーザー ID が含まれている
+- サーバー内部エラー
 
 ------
 
-## Notes
+## ユースケース
 
-- **Voluntarily leaving**: Passing the current user's own ID in the `members` array means the user is voluntarily leaving the room
-- **System messages**: When `systemMessage: true` is set, if the member leaves voluntarily, the system message type is `leaveRoom`; if the member is removed by others, the type is `deleteMember`
-- After a member is removed, they will no longer be able to access any message history from that room
+### メンバー管理
+- **メンバーの削除**: 管理者がチャットルームから1人または複数のメンバーを削除します。
+- **能動的な退出**: ユーザーが自身の ID を渡すことで、能動的にチャットルームから退出します。
+
+### システム通知
+- **自動通知**: `systemMessage: true` に設定すると、システムが状況に応じて自動的に `leaveRoom` または `deleteMember` タイプのシステムメッセージを生成します。
+
+------
+
+## 注意事項
+
+- **能動的な退出**: `members` 配列に現在のユーザー自身の ID を含めると、そのユーザーは能動的にチャットルームから退出したことになります。
+- **システムメッセージ**: `systemMessage: true` の場合、能動的な退出であればシステムメッセージの種類は `leaveRoom`、管理者による削除であれば `deleteMember` になります。
+- メンバーが削除（または退出）されると、そのユーザーは該当チャットルームのいかなるメッセージ履歴にもアクセスできなくなります。

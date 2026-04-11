@@ -1,37 +1,37 @@
-# List Banned Members
+# 禁止メンバーの一覧表示 (List Banned Members)
 
-## Overview
+## 概要
 
-Retrieve the ban list for a specified chatroom, displaying detailed information for all banned users in that chatroom. Only the chatroom owner has the permission to view the ban list (limited to group chatrooms with an owner). This feature is suitable for chatroom owners to review and manage the ban status of a chatroom.
+指定したチャットルームの禁止リストを取得し、そのチャットルームで禁止されているすべてのユーザーの詳細情報を表示します。禁止リストを表示できるのは、チャットルームのオーナーのみです（オーナーが設定されているグループチャットルームに限ります）。この機能は、チャットルームのオーナーがチャットルームの禁止ステータスを確認および管理するのに適しています。
 
 ------
 
-## API Endpoint
+## API エンドポイント
 
-### Get Chatroom Ban List
+### チャットルームの禁止リストを取得する
 
-Retrieve detailed information about all banned users in a specified chatroom.
+指定したチャットルームで禁止されているすべてのユーザーの詳細情報を取得します。
 
 ```http
 GET /blockStatus/room/{roomID}
 ```
 
-#### Headers
+#### ヘッダー (Headers)
 
-| Parameter          | Type   | Required | Description    |
-| ------------------ | ------ | -------- | -------------- |
-| `IM-CLIENT-KEY`    | string | ✅        | Client Key     |
-| `IM-Authorization` | string | ✅        | Client Token   |
+| パラメータ | 型 | 必須 | 説明 |
+| ------------------ | ------ | ---- | -------------- |
+| `IM-CLIENT-KEY` | string | ✅ | Client Key |
+| `IM-Authorization` | string | ✅ | Client Token |
 
-#### Path Parameters
+#### パスパラメータ (Path Parameters)
 
-| Parameter | Type   | Required | Description   |
-| --------- | ------ | -------- | ------------- |
-| `roomID`  | string | ✅        | Chatroom ID   |
+| パラメータ | 型 | 必須 | 説明 |
+| -------- | ------ | ---- | ----------- |
+| `roomID` | string | ✅ | チャットルーム ID |
 
-#### Example Request
+#### リクエスト例
 
-**Get the chatroom ban list**
+**チャットルームの禁止リストを取得する**
 
 ```http
 GET /blockStatus/room/demo-room HTTP/1.1
@@ -41,7 +41,7 @@ Host: your-app.imkit.io
 Connection: close
 ```
 
-**JavaScript Example:**
+**JavaScript 例：**
 
 ```javascript
 const response = await axios.get(
@@ -55,7 +55,7 @@ const response = await axios.get(
 );
 ```
 
-**cURL Example:**
+**cURL 例：**
 
 ```bash
 curl -X "GET" "https://your-app.imkit.io/blockStatus/room/{roomID}" \
@@ -63,62 +63,62 @@ curl -X "GET" "https://your-app.imkit.io/blockStatus/room/{roomID}" \
      -H 'IM-Authorization: {IM-Authorization}'
 ```
 
-#### Response
+#### レスポンス (Response)
 
-**Success Response (200 OK)**
+**成功レスポンス（200 OK）**
 
-| Parameter | Type   | Description                         |
-| --------- | ------ | ----------------------------------- |
-| `RC`      | number | Response code (0 indicates success) |
-| `RM`      | string | Response message                    |
-| `result`  | object | Ban list data                       |
+| パラメータ | 型 | 説明 |
+| -------- | ------ | ---------------------- |
+| `RC` | number | レスポンスコード（0 は成功を示す） |
+| `RM` | string | レスポンスメッセージ |
+| `result` | object | 禁止リストデータ |
 
-**Result Object Structure**
+**結果オブジェクトの構造**
 
-| Parameter | Type  | Description          |
-| --------- | ----- | -------------------- |
-| `data`    | array | Ban record array     |
+| パラメータ | 型 | 説明 |
+| ------ | ----- | ---------------- |
+| `data` | array | 禁止記録リストの配列 |
 
-**Ban Record Object Structure**
+**禁止記録オブジェクトの構造**
 
-| Parameter   | Type   | Description                                |
-| ----------- | ------ | ------------------------------------------ |
-| `blockee`   | object | Detailed information of banned user        |
-| `blocker`   | object | Detailed information of banning user       |
-| `room`      | object | Chatroom detailed information              |
-| `createdAt` | string | Ban creation time                          |
-| `updatedAt` | string | Ban update time                            |
+| パラメータ | 型 | 説明 |
+| ----------- | ------ | --------------------------- |
+| `blockee` | object | 禁止されたユーザーの詳細情報 |
+| `blocker` | object | 禁止を実行したユーザーの詳細情報 |
+| `room` | object | チャットルームの詳細情報 |
+| `createdAt` | string | 禁止作成日時 |
+| `updatedAt` | string | 禁止更新日時 |
 
-**Banned User Object Structure**
+**禁止されたユーザーオブジェクトの構造**
 
-| Parameter         | Type   | Description                             |
-| ----------------- | ------ | --------------------------------------- |
-| `_id`             | string | User unique ID                          |
-| `nickname`        | string | User nickname                           |
-| `avatarUrl`       | string | User avatar URL                         |
-| `id`              | string | User ID                                 |
-| `lastLoginTimeMS` | number | Last login time (millisecond timestamp) |
+| パラメータ | 型 | 説明 |
+| ----------------- | ------ | ----------------------------- |
+| `_id` | string | ユーザー一意識別子 |
+| `nickname` | string | ユーザーのニックネーム |
+| `avatarUrl` | string | ユーザーのアバター URL |
+| `id` | string | ユーザー ID |
+| `lastLoginTimeMS` | number | 最終ログイン時間（ミリ秒タイムスタンプ） |
 
-**Banning User Object Structure**
+**禁止を実行したユーザーオブジェクトの構造**
 
-| Parameter         | Type   | Description                             |
-| ----------------- | ------ | --------------------------------------- |
-| `_id`             | string | User unique ID                          |
-| `nickname`        | string | User nickname                           |
-| `avatarUrl`       | string | User avatar URL                         |
-| `id`              | string | User ID                                 |
-| `lastLoginTimeMS` | number | Last login time (millisecond timestamp) |
+| パラメータ | 型 | 説明 |
+| ----------------- | ------ | ----------------------------- |
+| `_id` | string | ユーザー一意識別子 |
+| `nickname` | string | ユーザーのニックネーム |
+| `avatarUrl` | string | ユーザーのアバター URL |
+| `id` | string | ユーザー ID |
+| `lastLoginTimeMS` | number | 最終ログイン時間（ミリ秒タイムスタンプ） |
 
-**Chatroom Object Structure**
+**チャットルームオブジェクトの構造**
 
-| Parameter       | Type   | Description                                |
-| --------------- | ------ | ------------------------------------------ |
-| `_id`           | string | Chatroom unique ID                         |
-| `roomType`      | string | Chatroom type (group, etc.)                |
-| `id`            | string | Chatroom ID                                |
-| `createdTimeMS` | number | Chatroom creation time (millisecond timestamp) |
+| パラメータ | 型 | 説明 |
+| --------------- | ------ | ----------------------------- |
+| `_id` | string | チャットルーム一意識別子 |
+| `roomType` | string | チャットルームの種類（groupなど） |
+| `id` | string | チャットルーム ID |
+| `createdTimeMS` | number | チャットルーム作成時間（ミリ秒タイムスタンプ） |
 
-#### Example Response
+#### レスポンス例
 
 ```json
 {
@@ -155,9 +155,9 @@ curl -X "GET" "https://your-app.imkit.io/blockStatus/room/{roomID}" \
 }
 ```
 
-#### Error Response
+#### エラーレスポンス
 
-**401 Unauthorized** - Authentication failed
+**401 Unauthorized** - 認証失敗
 
 ```json
 {
@@ -170,7 +170,7 @@ curl -X "GET" "https://your-app.imkit.io/blockStatus/room/{roomID}" \
 }
 ```
 
-**403 Forbidden** - Insufficient permissions
+**403 Forbidden** - 権限不足
 
 ```json
 {
@@ -183,7 +183,7 @@ curl -X "GET" "https://your-app.imkit.io/blockStatus/room/{roomID}" \
 }
 ```
 
-**404 Not Found** - Chatroom does not exist
+**404 Not Found** - チャットルームが存在しない
 
 ```json
 {
@@ -198,30 +198,30 @@ curl -X "GET" "https://your-app.imkit.io/blockStatus/room/{roomID}" \
 
 ------
 
-## Use Cases
+## 使用シーン
 
-### Chatroom Management
-- **Ban Status Review**: Chatroom owners view the current ban list
-- **Member Management**: View detailed information about banned users and ban records
-- **Management Decisions**: Make subsequent management decisions based on the ban list
+### チャットルーム管理
+- **禁止ステータスの確認**：チャットルームのオーナーが現在の禁止リストを確認します。
+- **メンバー管理**：禁止されたユーザーの詳細情報と禁止記録を確認します。
+- **管理上の意思決定**：禁止リストに基づき、その後の管理上の意思決定を行います。
 
-### Permission Management
-- **Owner Exclusive**: Only chatroom owners can view the ban list
-- **Privacy Protection**: Protect ban information from unauthorized users
-- **Permission Verification**: Ensure viewing permissions comply with chatroom settings
+### 権限管理
+- **オーナー専用**：チャットルームのオーナーのみが禁止リストを表示できます。
+- **プライバシー保護**：禁止情報が権限のないユーザーに閲覧されないように保護します。
+- **権限検証**：表示権限がチャットルームの設定に準拠していることを確認します。
 
-### Record Tracking
-- **Ban History**: View the time records of ban operations
-- **User Information**: Obtain detailed information about banned users and banning users
-- **Chatroom Status**: Understand the ban management status of the chatroom
+### 記録の追跡
+- **禁止履歴**：禁止操作の時間記録を確認します。
+- **ユーザー情報**：禁止されたユーザーと禁止を実行したユーザーの詳細情報を取得します。
+- **チャットルームのステータス**：チャットルームの禁止管理状況を把握します。
 
 ------
 
-## Notes
+## 注意事項
 
-- **Permission Restriction**: Only chatroom owners can view the ban list (limited to group chatrooms with an owner)
-- **Chatroom Type**: This feature is primarily for group chatrooms that have a designated owner
-- **Complete Information**: Returns complete information about banned users, banning users, and the chatroom
-- **Time Records**: Includes ban creation and update timestamps
-- **Data Structure**: Returns an array format, supporting multiple ban records
-- **Empty List Handling**: Returns an empty array if no users have been banned in the chatroom
+- **権限制限**：チャットルームのオーナーのみが禁止リストを表示できます（オーナーが設定されているグループチャットルームに限ります）。
+- **チャットルームの種類**：この機能は主にグループチャットルームを対象としており、そのチャットルームにはオーナーが設定されている必要があります。
+- **完全な情報**：禁止されたユーザー、禁止を実行したユーザー、およびチャットルームの完全な情報が返されます。
+- **時間記録**：禁止の作成および更新のタイムスタンプが含まれます。
+- **データ構造**：複数の禁止記録をサポートする配列形式で返されます。
+- **空のリストの処理**：チャットルームで禁止されているユーザーがいない場合は、空の配列が返されます。

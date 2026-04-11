@@ -1,37 +1,37 @@
-# Get Unread Messages by Room
+# チャットルームごとの未読メッセージ取得
 
-## Overview
+## 概要
 
-Count unread messages by chatroom tags. This API allows grouping unread message counts by chatroom tags, suitable for displaying unread status across different types of chatrooms, building message summaries, and managing notification reminders.
+チャットルームのタグに基づいて未読メッセージ数を集計します。この API を使用すると、チャットルームのタグごとに未読メッセージをグループ化して集計できるため、異なるタイプのチャットルームの未読状態の表示、メッセージサマリーの作成、通知アラートの管理に適しています。
 
 ------
 
-## API Endpoint
+## API エンドポイント
 
-### Count Unread Messages by Chatroom Tags
+### チャットルームタグによる未読メッセージ集計
 
-Count unread messages based on specified chatroom tags.
+指定されたチャットルームタグに基づいて未読メッセージ数を集計します。
 
 ```http
 POST /badges/byRoomTags
 ```
 
-#### Headers
+#### ヘッダー
 
-| Parameter          | Type   | Required | Description    |
-| ------------------ | ------ | -------- | -------------- |
-| `IM-CLIENT-KEY`    | string | ✅        | Client Key     |
-| `IM-Authorization` | string | ✅        | Client Token   |
+| パラメータ | 型 | 必須 | 説明 |
+| ------------------ | ------ | ---- | -------------- |
+| `IM-CLIENT-KEY` | string | ✅ | クライアントキー |
+| `IM-Authorization` | string | ✅ | ユーザートークン |
 
-#### Post Body
+#### ポストボディ
 
-| Parameter | Type   | Required | Description                                        |
-| --------- | ------ | -------- | -------------------------------------------------- |
-| `tags`    | array  | ❌        | Chatroom tag array (queries all tags when omitted)  |
+| パラメータ | 型 | 必須 | 説明 |
+| ------ | ------ | ---- | --------------------------------------- |
+| `tags` | array | ❌ | チャットルームタグの配列（省略時はすべてのタグを照会） |
 
-#### Example Request
+#### リクエスト例
 
-**Query unread count for specific tags**
+**特定のタグの未読数を照会**
 
 ```http
 POST /badges/byRoomTags HTTP/1.1
@@ -46,7 +46,7 @@ Connection: close
 }
 ```
 
-**Query unread count for work-related chatrooms**
+**業務関連チャットルームの未読数を照会**
 
 ```http
 POST /badges/byRoomTags HTTP/1.1
@@ -61,7 +61,7 @@ Connection: close
 }
 ```
 
-**Query unread count for all tags**
+**すべてのタグの未読数を照会**
 
 ```http
 POST /badges/byRoomTags HTTP/1.1
@@ -76,7 +76,7 @@ Connection: close
 }
 ```
 
-**JavaScript Example:**
+**JavaScript 例：**
 
 ```javascript
 const response = await axios.post(
@@ -94,7 +94,7 @@ const response = await axios.post(
 );
 ```
 
-**cURL Example:**
+**cURL 例：**
 
 ```bash
 curl -X "POST" "https://your-app.imkit.io/badges/byRoomTags" \
@@ -104,24 +104,24 @@ curl -X "POST" "https://your-app.imkit.io/badges/byRoomTags" \
      -d '{"tags": ["demo", "sample"]}'
 ```
 
-#### Response
+#### レスポンス
 
-**Success Response (200 OK)**
+**成功（200 OK）**
 
-| Parameter | Type   | Description                         |
-| --------- | ------ | ----------------------------------- |
-| `RC`      | number | Response code (0 indicates success) |
-| `RM`      | string | Response message                    |
-| `result`  | object | Statistics results                  |
+| パラメータ | 型 | 説明 |
+| -------- | ------ | ---------------------- |
+| `RC` | number | レスポンスコード（0は成功） |
+| `RM` | string | レスポンスメッセージ |
+| `result` | object | 集計結果 |
 
-**Statistics Result Structure**
+**集計結果の構造**
 
-| Parameter    | Type   | Description                                      |
-| ------------ | ------ | ------------------------------------------------ |
-| `totalBadge` | number | Total unread message count across all queried tags |
-| `data`       | object | Unread message count for each tag                |
+| パラメータ | 型 | 説明 |
+| ------------ | ------ | --------------------------------- |
+| `totalBadge` | number | 照会したすべてのタグの未読メッセージ総数 |
+| `data` | object | 各タグに対応する未読メッセージ数 |
 
-#### Example Response
+#### レスポンス例
 
 ```json
 {
@@ -140,9 +140,9 @@ curl -X "POST" "https://your-app.imkit.io/badges/byRoomTags" \
 }
 ```
 
-#### Error Response
+#### エラーレスポンス
 
-**401 Unauthorized** - Authentication failed
+**401 Unauthorized** - 認証失敗
 
 ```json
 {
@@ -155,7 +155,7 @@ curl -X "POST" "https://your-app.imkit.io/badges/byRoomTags" \
 }
 ```
 
-**400 Bad Request** - Invalid request parameters
+**400 Bad Request** - リクエストパラメータが無効
 
 ```json
 {
@@ -170,30 +170,30 @@ curl -X "POST" "https://your-app.imkit.io/badges/byRoomTags" \
 
 ------
 
-## Use Cases
+## 使用シーン
 
-### Unread Status Display
-- **Tag Grouping**: Display unread counts grouped by tags in the chatroom list
-- **Priority Levels**: Show different notification statuses based on tag priority
-- **Visual Reminders**: Use different colors or styles to indicate different types of unread messages
+### 未読状態の表示
+- **タグによるグループ化**: チャットルームリストでタグごとに未読数を表示します。
+- **重要度による分類**: タグの優先度に応じて異なる通知ステータスを表示します。
+- **視覚的なアラート**: 未読メッセージのタイプを異なる色やスタイルで示します。
 
-### Notification Management
-- **Smart Notifications**: Set different notification strategies based on chatroom tags
-- **Batch Operations**: Batch mark messages in chatrooms with specific tags as read
-- **Filter Control**: Allow users to focus on chatrooms with specific tags
+### 通知管理
+- **スマート通知**: チャットルームのタグに基づいて異なる通知ポリシーを設定します。
+- **一括操作**: 特定のタグを持つチャットルームのメッセージを一括で既読にします。
+- **フィルタリング制御**: ユーザーが特定のタグを持つチャットルームのみに注目できるようにします。
 
-### Data Statistics
-- **Activity Analysis**: Analyze the activity level of different types of chatrooms
-- **Workflow**: Count unprocessed messages in work-related chatrooms
-- **Priority Management**: Identify chatroom types that need priority attention
+### データ統計
+- **アクティビティ分析**: 異なるタイプのチャットルームのアクティビティレベルを分析します。
+- **ワークフロー**: 業務関連チャットルームの未処理メッセージを集計します。
+- **優先度管理**: 優先的に処理が必要なチャットルームのタイプを識別します。
 
 ------
 
-## Notes
+## 注意事項
 
-- **Tag Permissions**: Only counts chatrooms that the user has permission to access
-- **Empty Array Handling**: Passing an empty array queries all available tags
-- **Real-Time**: Statistics results reflect real-time data at the moment of the query
-- **Tag Matching**: Matches the specified tag names exactly
-- **Performance Consideration**: Querying a large number of tags may affect response time
-- **Zero Value Display**: Tags with no unread messages will display as 0
+- **タグの権限**: ユーザーがアクセス権を持つチャットルームのみが集計されます。
+- **空の配列の処理**: 空の配列を渡すと、利用可能なすべてのタグが照会されます。
+- **即時性**: 集計結果は照会時点のリアルタイムデータです。
+- **タグの一致**: 指定されたタグ名と完全に一致するもののみが対象となります。
+- **パフォーマンスの考慮**: 大量のタグを照会する場合、レスポンス時間に影響を与える可能性があります。
+- **ゼロ値の表示**: 未読メッセージがないタグは 0 と表示されます。

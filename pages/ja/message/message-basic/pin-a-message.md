@@ -1,39 +1,39 @@
-# Pin a Message
+# メッセージのピン留め
 
-## Overview
+## 概要
 
-This endpoint allows chatroom owners or administrators to pin a specified message to the top of a chatroom, making it easy for members to quickly access important messages. Each chatroom can only have one pinned message at a time.
+このエンドポイントを使用すると、チャットルームのオーナーや管理者は特定のメッセージをチャットルームの上部にピン留めして、メンバーが重要なメッセージを素早く確認できるようにします。各チャットルームでピン留めできるメッセージは、一度に 1 つだけです。
 
 ------
 
-## API Endpoint
+## API エンドポイント
 
-### Pin a Message
+### メッセージのピン留め
 
-Pin a specified message to the top of a chatroom.
+指定されたメッセージをチャットルームの上部にピン留めします。
 
 ```http
 POST /messages/:id/pin
 ```
 
-#### Headers
+#### ヘッダー
 
-| Parameter          | Type   | Required | Description    |
-| ------------------ | ------ | -------- | -------------- |
-| `IM-CLIENT-KEY`    | string | ✅       | Client Key     |
-| `IM-Authorization` | string | ✅       | Client Token   |
+| パラメータ | 型 | 必須 | 説明 |
+| ------------------ | ------ | ---- | ------------ |
+| `IM-CLIENT-KEY` | string | ✅ | クライアントキー |
+| `IM-Authorization` | string | ✅ | ユーザートークン |
 
-#### Path Parameters
+#### パスパラメータ
 
-| Parameter | Type   | Required | Description           |
-| --------- | ------ | -------- | --------------------- |
-| `:id`     | string | ✅       | Message unique ID     |
+| パラメータ | 型 | 必須 | 説明 |
+| ----- | ------ | ---- | ---------------- |
+| `:id` | string | ✅ | メッセージの一意識別子 |
 
-This API does not require a Request Body.
+この API はリクエストボディ（Request Body）を必要としません。
 
-#### Example Request
+#### リクエスト例
 
-**cURL Example:**
+**cURL 例：**
 
 ```bash
 curl -X "POST" "https://your-app.imkit.io/messages/5f890cf37d980e06f6aaf349/pin" \
@@ -41,7 +41,7 @@ curl -X "POST" "https://your-app.imkit.io/messages/5f890cf37d980e06f6aaf349/pin"
      -H 'IM-Authorization: {IM-Authorization}'
 ```
 
-**JavaScript Example:**
+**JavaScript 例：**
 
 ```javascript
 const response = await axios.post(
@@ -56,24 +56,24 @@ const response = await axios.post(
 );
 ```
 
-#### Response
+#### レスポンス
 
-**Success Response (200 OK)**
+**成功（200 OK）**
 
-| Parameter             | Type    | Description                              |
-| --------------------- | ------- | ---------------------------------------- |
-| `RC`                  | number  | Response code (0 indicates success)      |
-| `RM`                  | string  | Response message                         |
-| `result._id`          | string  | Message unique ID                        |
-| `result.message`      | string  | Message content                          |
-| `result.room`         | string  | Associated chatroom ID                   |
-| `result.sender`       | object  | Message sender information               |
-| `result.messageType`  | string  | Message type                             |
-| `result.pinned`       | boolean | Whether the message is pinned (`true` after pinning) |
-| `result.messageTimeMS`| number  | Message sent timestamp (milliseconds)    |
-| `result.updatedAtMS`  | number  | Last updated timestamp (milliseconds)    |
+| パラメータ | 型 | 説明 |
+| --------------------- | ------- | ---------------------------------- |
+| `RC` | number | レスポンスコード（0は成功） |
+| `RM` | string | レスポンスメッセージ |
+| `result._id` | string | メッセージの一意識別子 |
+| `result.message` | string | メッセージ内容 |
+| `result.room` | string | 所属チャットルーム ID |
+| `result.sender` | object | メッセージ送信者情報 |
+| `result.messageType` | string | メッセージタイプ |
+| `result.pinned` | boolean | ピン留めされているかどうか（ピン留め後は `true`） |
+| `result.messageTimeMS`| number | メッセージ送信タイムスタンプ（ミリ秒） |
+| `result.updatedAtMS` | number | 最終更新タイムスタンプ（ミリ秒） |
 
-#### Example Response
+#### レスポンス例
 
 ```json
 {
@@ -81,7 +81,7 @@ const response = await axios.post(
   "RM": "OK",
   "result": {
     "_id": "5f890cf37d980e06f6aaf349",
-    "message": "重要公告：明天下午兩點開會",
+    "message": "重要なお知らせ：明日午後2時に会議を行います",
     "room": "demo-room",
     "sender": {
       "_id": "aaa",
@@ -102,27 +102,27 @@ const response = await axios.post(
 }
 ```
 
-#### Error Response
+#### エラーレスポンス
 
-When a request fails, you will receive an error response containing error details. Common error scenarios include:
+リクエストが失敗した場合、エラーの詳細情報を含むレスポンスが返されます。一般的なエラーには以下が含まれます：
 
-- Invalid client key or authorization token
-- The specified message does not exist
-- The current user is not the chatroom owner or administrator
-- Internal server error
-
-------
-
-## Use Cases
-
-### Important Message Management
-
-- **Pin Announcements**: Pin important announcements to the top of a chatroom to ensure all members can see them
-- **Quick Reference**: Allow members to find key information without scrolling through message history
+- 無効なクライアントキーまたは認証トークン
+- 指定されたメッセージが存在しない
+- 現在のユーザーがチャットルームのオーナーまたは管理者ではない
+- サーバー内部エラー
 
 ------
 
-## Notes
+## 使用シーン
 
-- **Permission Restriction**: Only chatroom **owners** or **admins** can perform the pin operation
-- To unpin a message, use the [Unpin a Message](./unpin-a-message) API
+### 重要メッセージの管理
+
+- **お知らせの固定**: 重要なお知らせをチャットルームの上部にピン留めして、すべてのメンバーが確実に確認できるようにします。
+- **素早い参照**: メンバーが履歴メッセージを遡ることなく、重要な情報をすぐに見つけられるようにします。
+
+------
+
+## 注意事項
+
+- **権限制限**: チャットルームの**オーナー（owner）**または**管理者（admin）**のみがピン留め操作を実行できます。
+- ピン留めを解除するには、[メッセージのピン留め解除](./unpin-a-message) API を使用してください。

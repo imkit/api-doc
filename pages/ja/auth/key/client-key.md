@@ -1,46 +1,46 @@
-# Client Key
+# クライアントキー
 
-## Overview
+## 概要
 
-The Client Key (`IM-CLIENT-KEY`) is an authentication key used to identify applications in the IMKIT Platform API. It must be used together with a user Token (`IM-Authorization`), representing performing operations "as a specific user." It is primarily used for SDK initialization, establishing WebSocket connections, and performing user-level API operations.
+クライアントキー（`IM-CLIENT-KEY`）は、IMKIT Platform APIにおいてアプリケーションを識別するための認証キーです。ユーザートークン（`IM-Authorization`）と組み合わせて使用し、「特定のユーザー」として操作を実行することを意味します。主にSDKの初期化、WebSocket接続の確立、およびユーザーレベルのAPI操作に使用されます。
 
 ------
 
-## Client Key Characteristics
+## クライアントキーの特性
 
-### Basic Information
+### 基本情報
 
-| Property         | Description                                   |
+| 属性 | 説明 |
 | ------------ | -------------------------------------- |
-| **Purpose**     | Identifies the application; used with a user Token to perform operations  |
-| **Pairing**     | Requires `IM-Authorization` (user Token)|
-| **Format**     | JWT Token format                         |
-| **Validity**   | Long-lived (unless manually revoked)               |
-| **Scope**   | Operation scope is limited by user permissions                 |
-| **Security Level** | Public (can be exposed in frontend code)             |
+| **用途** | アプリケーションを識別し、ユーザートークンと組み合わせて操作を実行する |
+| **組み合わせ** | `IM-Authorization`（ユーザートークン）が必要 |
+| **形式** | JWTトークン形式 |
+| **有効期限** | 長期有効（明示的に取り消さない限り） |
+| **スコープ** | 操作範囲はユーザー権限によって制限される |
+| **セキュリティレベル** | 公開（フロントエンドのコードに含めることが可能） |
 
-### Differences from API Key
+### APIキーとの違い
 
-| Item         | Client Key (`IM-CLIENT-KEY`)          | API Key (`IM-API-KEY`)   |
+| 項目 | クライアントキー (`IM-CLIENT-KEY`) | APIキー (`IM-API-KEY`) |
 | ------------ | ------------------------------------- | ------------------------ |
-| **Pairing**     | Requires user Token (`IM-Authorization`) | Used independently                 |
-| **Identity**     | Operates as a specific user                    | Operates as platform administrator     |
-| **Used By**   | SDK frontend / Backend                       | Backend only                   |
-| **Permission Scope** | Limited by user permissions                        | Full management permissions             |
-| **Security**   | Publicly visible                              | Must be kept confidential                 |
+| **組み合わせ** | ユーザートークン (`IM-Authorization`) が必要 | 単独で使用 |
+| **身分** | 特定のユーザーとして操作 | プラットフォーム管理者として操作 |
+| **利用場所** | SDKフロントエンド / バックエンド | バックエンドのみ |
+| **権限範囲** | ユーザー権限による制限あり | 完全な管理権限 |
+| **セキュリティ** | 公開可能 | 秘密保持が必須 |
 
 ------
 
-## Obtaining the Client Key
+## クライアントキーの取得
 
-### Via IMKIT Dashboard
+### IMKIT Dashboard経由
 
-1. Log in to the [IMKIT Dashboard](https://dashboard.imkit.io/)
-2. Select your application
-3. Navigate to the "Settings" page
-4. Copy the Client Key
+1. [IMKIT Dashboard](https://dashboard.imkit.io/) にログインします。
+2. アプリケーションを選択します。
+3. 「設定」ページに移動します。
+4. クライアントキーをコピーします。
 
-### Example Client Key
+### クライアントキーの例
 
 ```
 eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJhcGlLZXkiOiIySllwWWhEYVFsSVFsRFN2VkxDTExvMk1QekZmVm05allweHcydnVCcm1rPSIsImNyZWF0ZUF0IjoxNTkxOTcyNTc2NDE0LCJjbGllbnRJZCI6IjJiM2JkNWNjLTRhODYtNGE0MC1hMTU0LTE2NDA0MDE0ZGE4OCJ9.bdIWOcPfDrNuLRszgtrQDaQiow_X-WolzjDhtiLEED8
@@ -48,9 +48,9 @@ eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJhcGlLZXkiOiIySllwWWhEYVFsSVFsRFN2VkxDTEx
 
 ------
 
-## Usage
+## 使用方法
 
-### Web SDK Initialization
+### Web SDK 初期化
 
 ```javascript
 const config = {
@@ -62,7 +62,7 @@ const config = {
 window.IMKitUI.init(config);
 ```
 
-### iOS SDK Initialization
+### iOS SDK 初期化
 
 ```swift
 let config = IMKitConfig(
@@ -74,7 +74,7 @@ let config = IMKitConfig(
 IMKit.shared.initialize(config: config)
 ```
 
-### Android SDK Initialization
+### Android SDK 初期化
 
 ```kotlin
 val config = IMKitConfig(
@@ -88,70 +88,70 @@ IMKit.initialize(config)
 
 ------
 
-## Client Key Permissions
+## クライアントキーの権限
 
-### Allowed Operations (requires user Token)
+### 許可される操作（ユーザートークンが必要）
 
-- ✅ Establish WebSocket connections
-- ✅ Receive and send chat messages
-- ✅ Join/leave chat rooms
-- ✅ Manage chat room members
-- ✅ Upload multimedia files
-- ✅ Update user status
-- ✅ Block/ban users
-- ✅ Pin/recall messages
+- ✅ WebSocket接続の確立
+- ✅ チャットメッセージの送受信
+- ✅ チャットルームへの参加/退出
+- ✅ チャットルームメンバーの管理
+- ✅ マルチメディアファイルのアップロード
+- ✅ ユーザーステータスの更新
+- ✅ ユーザーのブロック/禁止
+- ✅ メッセージのピン留め/取り消し
 
-### Disallowed Operations (requires API Key)
+### 許可されない操作（APIキーが必要）
 
-- ❌ Create/delete users
-- ❌ Manage user Tokens
-- ❌ Modify application settings
-- ❌ Access cross-chat room message history
-- ❌ Batch send messages
-
-------
-
-## Security Considerations
-
-### Why Can the Client Key Be Public?
-
-1. **Limited Permissions**: Operation scope is restricted by user permissions
-2. **Requires Token**: Must be paired with a valid user Token to perform operations
-3. **No Admin Permissions**: Cannot perform user management, token management, or other administrative operations
-4. **Application Isolation**: Can only connect to a specific application
-
-### Best Practices
-
-- **Version Control**: The Client Key can be included in version control
-- **Environment Separation**: Use different Client Keys for different environments
-- **Regular Rotation**: Although the risk is relatively low, periodic rotation is still recommended
-- **Usage Monitoring**: Monitor Client Key usage patterns
+- ❌ ユーザーの作成/削除
+- ❌ ユーザートークンの管理
+- ❌ アプリケーション設定の変更
+- ❌ チャットルームを跨いだメッセージ履歴へのアクセス
+- ❌ メッセージの一括送信
 
 ------
 
-## FAQ
+## セキュリティ上の考慮事項
 
-### Q: What are the risks if the Client Key is leaked?
+### なぜクライアントキーを公開できるのか？
 
-**A:** The risk is relatively low, as an attacker would still need a valid user token to perform actual operations. However, it is recommended to replace the Client Key immediately upon discovering a leak.
+1. **限定的な権限**: 操作範囲がユーザー権限に制限されているため
+2. **トークンが必要**: 有効なユーザートークンがないと操作できないため
+3. **管理権限なし**: ユーザー管理やトークン管理などの管理者操作は実行できないため
+4. **アプリケーションの隔離**: 特定のアプリケーションにしか接続できないため
 
-### Q: Can the Client Key be used in mobile applications?
+### ベストプラクティス
 
-**A:** Yes, the Client Key is designed to be safely embedded in mobile applications, including native iOS/Android apps.
-
-### Q: Does the Client Key expire?
-
-**A:** The Client Key does not expire by default, but you can manually revoke it and generate a new Client Key in the Dashboard.
-
-### Q: Can an application have multiple Client Keys?
-
-**A:** Currently, each application can only have one Client Key. If you need to replace it, revoke the old one first and then generate a new one.
+- **バージョン管理**: クライアントキーをバージョン管理に含めることができます
+- **環境の区別**: 環境ごとに異なるクライアントキーを使用する
+- **定期的なローテーション**: リスクは比較的低いですが、定期的な更新を推奨します
+- **使用状況の監視**: クライアントキーの使用状況を監視する
 
 ------
 
-## Error Handling
+## よくある質問
 
-### Common Errors
+### Q: クライアントキーが漏洩した場合、どのようなリスクがありますか？
+
+**A:** リスクは比較的低いですが、攻撃者が実際の操作を行うには有効なユーザートークンが必要です。しかし、漏洩を発見した場合は、速やかに新しいクライアントキーに更新することをお勧めします。
+
+### Q: モバイルアプリケーションでクライアントキーを使用できますか？
+
+**A:** はい、クライアントキーはネイティブのiOS/Androidアプリを含むモバイルアプリケーションに安全に埋め込めるように設計されています。
+
+### Q: クライアントキーに有効期限はありますか？
+
+**A:** デフォルトでは有効期限はありませんが、Dashboardで手動で取り消し、新しいクライアントキーを生成することができます。
+
+### Q: 1つのアプリケーションに複数のクライアントキーを持つことはできますか？
+
+**A:** 現在、各アプリケーションに持てるクライアントキーは1つだけです。更新が必要な場合は、古いキーを取り消してから新しいキーを生成してください。
+
+------
+
+## エラー処理
+
+### よくあるエラー
 
 **Invalid Client Key**
 

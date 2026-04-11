@@ -1,38 +1,38 @@
-# Unmute Room Notification
+# チャットルーム通知の消音解除
 
-## Overview
+## 概要
 
-This endpoint allows the current user to unmute a specified room, restoring push notifications for that room. This setting is a personal preference and only affects the current user, not other members.
+このエンドポイントを使用すると、現在のユーザーが指定したチャットルームの消音設定を解除し、そのチャットルームのプッシュ通知の受信を再開できます。この設定は個人設定であり、現在のユーザーにのみ影響し、他のメンバーには影響しません。
 
 ------
 
-## API Endpoint
+## API エンドポイント
 
-### Unmute Room Notification
-Unmute a specified room to resume receiving push notifications.
+### チャットルーム通知の消音解除
+指定したチャットルームの消音設定を解除し、プッシュ通知の受信を再開します。
 
 ```http
 DELETE /me/mute/:room
 ```
 
-#### Headers
+#### ヘッダー
 
-| Parameter | Type | Required | Description |
+| パラメータ | 型 | 必須 | 説明 |
 | --- | --- | --- | --- |
-| `IM-CLIENT-KEY` | string | ✅ | Client key |
-| `IM-Authorization` | string | ✅ | Client token |
+| `IM-CLIENT-KEY` | string | ✅ | クライアントキー |
+| `IM-Authorization` | string | ✅ | クライアントトークン |
 
-#### Path Parameters
+#### パスパラメータ
 
-| Parameter | Type | Required | Description |
+| パラメータ | 型 | 必須 | 説明 |
 | --- | --- | --- | --- |
-| `:room` | string | ✅ | Room unique identifier |
+| `:room` | string | ✅ | チャットルームの一意識別子 |
 
-This API does not require a request body.
+この API にはリクエストボディ (Request Body) は不要です。
 
-#### Example Request
+#### リクエスト例
 
-**cURL Example:**
+**cURL 例：**
 
 ```bash
 curl -X "DELETE" "https://your-app.imkit.io/me/mute/demo-room" \
@@ -40,7 +40,7 @@ curl -X "DELETE" "https://your-app.imkit.io/me/mute/demo-room" \
      -H 'IM-Authorization: {IM-Authorization}'
 ```
 
-**JavaScript Example:**
+**JavaScript 例：**
 
 ```javascript
 const response = await axios.delete(
@@ -54,21 +54,21 @@ const response = await axios.delete(
 );
 ```
 
-#### Response
+#### レスポンス
 
-**Success Response (200 OK)**
+**成功レスポンス (200 OK)**
 
-| Parameter | Type | Description |
+| パラメータ | 型 | 説明 |
 | --- | --- | --- |
-| `RC` | number | Response code (0 indicates success) |
-| `RM` | string | Response message |
-| `result` | object | Updated current user information |
-| `result._id` | string | User unique identifier |
-| `result.nickname` | string | User display name |
-| `result.email` | string | User email |
-| `result.mute` | array[string] | Array of muted room IDs (removed after unmuting) |
+| `RC` | number | レスポンスコード (0 は成功) |
+| `RM` | string | レスポンスメッセージ |
+| `result` | object | 更新後の現在のユーザー情報 |
+| `result._id` | string | ユーザーの一意識別子 |
+| `result.nickname` | string | ユーザーの表示名 |
+| `result.email` | string | ユーザーのメールアドレス |
+| `result.mute` | array[string] | 消音設定されているチャットルーム ID の配列（解除後に削除されます） |
 
-#### Example Response
+#### レスポンス例
 
 ```json
 {
@@ -92,24 +92,24 @@ const response = await axios.delete(
 }
 ```
 
-#### Error Response
+#### エラーレスポンス
 
-When a request fails, you will receive an error response containing error details. Common error scenarios include:
+リクエストが失敗した場合、エラーの詳細情報を含むエラーレスポンスが返されます。一般的なエラーシナリオは以下の通りです：
 
-- Invalid client key or authorization token
-- The specified room does not exist
-- Internal server error
-
-------
-
-## Use Cases
-
-- **Restore room notifications**: When a user wants to resume receiving push notifications from a particular room, they can unmute it
-- **Mute a room**: To mute a room, use the [Mute Room Notification](./mute-room-notification) API
+- 無効なクライアントキーまたは認証トークン
+- 指定されたチャットルームが存在しない
+- サーバー内部エラー
 
 ------
 
-## Notes
+## ユースケース
 
-- **Personal preference**: The unmute setting only affects the current user; other members' notifications are not affected
-- **Mute status**: After success, the room ID is removed from the `mute` array in the response, which represents all rooms currently muted by the user
+- **チャットルーム通知の再開**: ユーザーが特定のチャットルームのプッシュ通知を再び受信したい場合、消音を解除できます。
+- **チャットルームの消音**: チャットルームを消音に設定するには、[チャットルーム通知の消音](./mute-room-notification) API を使用してください。
+
+------
+
+## 注意事項
+
+- **個人設定**: 消音解除の設定は現在のユーザーにのみ影響し、他のメンバーの通知には影響しません。
+- **消音状態**: 成功すると、該当するチャットルーム ID がレスポンス内の `mute` 配列から削除されます。これは、ユーザーが現在消音しているすべてのチャットルームを表します。

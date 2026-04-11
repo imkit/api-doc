@@ -1,36 +1,36 @@
-# Delete Sensitive Words
+# 敏感ワード設定の削除
 
-## Overview
+## 概要
 
-Delete the system's sensitive word censorship configuration. By removing the censorship settings from the runtime configuration, you can disable the sensitive word filtering feature or clear specific configuration items. This feature is suitable for configuration cleanup, feature deactivation, and system maintenance.
+システムの敏感ワード（不適切ワード）審査設定を削除します。ランタイム設定から審査設定を削除することで、敏感ワードフィルタリング機能を無効化したり、特定の設定項目をクリアしたりできます。この機能は、設定のクリーンアップ、機能の無効化、システムのメンテナンスに適しています。
 
 ------
 
-## API Endpoint
+## API エンドポイント
 
-### Delete Configuration Item
+### 設定項目の削除
 
-Delete a specified runtime configuration item.
+指定したランタイム設定項目を削除します。
 
 ```http
 DELETE /config/{key}
 ```
 
-#### Headers
+#### ヘッダー
 
-| Parameter    | Type   | Required | Description           |
-| ------------ | ------ | -------- | --------------------- |
-| `IM-API-KEY` | string | ✅        | Platform Admin API Key |
+| パラメータ    | 型     | 必須 | 説明                    |
+| ------------ | ------ | ---- | ----------------------- |
+| `IM-API-KEY` | string | ✅    | プラットフォーム管理者 API Key |
 
-#### Path Parameters
+#### パスパラメータ
 
-| Parameter | Type   | Required | Description              |
-| --------- | ------ | -------- | ------------------------ |
-| `key`     | string | ✅        | Runtime configuration key |
+| パラメータ | 型     | 必須 | 説明                |
+| --------- | ------ | ---- | ------------------ |
+| `key`     | string | ✅    | ランタイム設定キー値 |
 
-#### Example Request
+#### リクエスト例
 
-**Delete sensitive word configuration**
+**敏感ワード設定の削除**
 
 ```http
 DELETE /config/censorship HTTP/1.1
@@ -39,7 +39,7 @@ Host: your-app.imkit.io
 Connection: close
 ```
 
-**Delete announcement configuration**
+**告知設定の削除**
 
 ```http
 DELETE /config/announcement HTTP/1.1
@@ -48,7 +48,7 @@ Host: your-app.imkit.io
 Connection: close
 ```
 
-**Delete other configuration**
+**その他の設定の削除**
 
 ```http
 DELETE /config/push HTTP/1.1
@@ -57,7 +57,7 @@ Host: your-app.imkit.io
 Connection: close
 ```
 
-**JavaScript Example:**
+**JavaScript 例:**
 
 ```javascript
 const response = await axios.delete(
@@ -70,24 +70,24 @@ const response = await axios.delete(
 );
 ```
 
-**cURL Example:**
+**cURL 例:**
 
 ```bash
 curl -X "DELETE" "https://your-app.imkit.io/config/censorship" \
      -H 'IM-API-KEY: {IM-API-KEY}'
 ```
 
-#### Response
+#### レスポンス
 
-**Success Response (200 OK)**
+**成功レスポンス (200 OK)**
 
-| Parameter | Type   | Description                         |
-| --------- | ------ | ----------------------------------- |
-| `RC`      | number | Response code (0 indicates success) |
-| `RM`      | string | Response message                    |
-| `result`  | object | Empty object                        |
+| パラメータ | 型     | 説明                       |
+| --------- | ------ | -------------------------- |
+| `RC`      | number | レスポンスコード (0 は成功) |
+| `RM`      | string | レスポンスメッセージ        |
+| `result`  | object | 空のオブジェクト            |
 
-#### Example Response
+#### レスポンス例
 
 ```json
 {
@@ -97,9 +97,9 @@ curl -X "DELETE" "https://your-app.imkit.io/config/censorship" \
 }
 ```
 
-#### Error Response
+#### エラーレスポンス
 
-**401 Unauthorized** - Authentication failed
+**401 Unauthorized** - 認証失敗
 
 ```json
 {
@@ -112,7 +112,7 @@ curl -X "DELETE" "https://your-app.imkit.io/config/censorship" \
 }
 ```
 
-**403 Forbidden** - Insufficient permissions
+**403 Forbidden** - 権限不足
 
 ```json
 {
@@ -125,7 +125,7 @@ curl -X "DELETE" "https://your-app.imkit.io/config/censorship" \
 }
 ```
 
-**404 Not Found** - Configuration item does not exist
+**404 Not Found** - 設定項目が存在しない
 
 ```json
 {
@@ -140,31 +140,31 @@ curl -X "DELETE" "https://your-app.imkit.io/config/censorship" \
 
 ------
 
-## Use Cases
+## ユースケース
 
-### Feature Deactivation
-- **Disable Filtering**: Completely disable the sensitive word filtering feature
-- **Temporary Shutdown**: Temporarily disable certain configuration features
-- **Test Environment**: Remove production configurations in the test environment
+### 機能の無効化
+- **フィルタリングの停止**: 敏感ワードフィルタリング機能を完全に無効にします。
+- **一時的な停止**: 特定の設定機能を一時的に停止します。
+- **テスト環境**: テスト環境から本番環境の設定を削除します。
 
-### Configuration Cleanup
-- **Expired Configuration**: Clean up configuration items that are no longer in use
-- **Reconfiguration**: Clear old configurations to prepare for reconfiguration
-- **System Reset**: Reset configurations to their default state
+### 設定のクリーンアップ
+- **期限切れの設定**: 使用されなくなった設定項目をクリーンアップします。
+- **再設定**: 古い設定を削除して再設定の準備をします。
+- **システムのリセット**: 設定をデフォルト状態にリセットします。
 
-### Maintenance Operations
-- **Emergency Handling**: Urgently remove problematic configurations
-- **Version Update**: Clean up old configurations during system updates
-- **Bug Fix**: Remove configuration items that are causing issues
+### メンテナンス操作
+- **緊急対応**: 問題のある設定を緊急に削除します。
+- **バージョンアップ**: システム更新時に古い設定をクリーンアップします。
+- **バグ修正**: 問題の原因となっている設定項目を削除します。
 
 ------
 
-## Notes
+## 注意事項
 
-- **Platform Admin Only**: This feature is restricted to platform administrators and requires an API Key
-- **Immediate Effect**: Configuration deletion takes effect immediately, and the related feature will be disabled instantly
-- **Irreversible**: Delete operations cannot be undone; it is recommended to back up configurations beforehand
-- **Feature Impact**: Deleting the censorship configuration will completely disable sensitive word filtering
-- **Runtime Configuration**: Only affects runtime configuration and does not modify file-based configuration
-- **Dependency Check**: Before deleting, ensure no other features depend on this configuration
-- **Monitoring Recommendation**: After deletion, monitor system functionality to ensure everything operates normally
+- **プラットフォーム管理者専用**: この機能はプラットフォーム管理者のみが利用可能で、API Key が必要です。
+- **即時反映**: 設定の削除は即時に反映され、関連機能はすぐに停止します。
+- **復旧不可**: 削除操作は元に戻せません。事前の設定バックアップを推奨します。
+- **機能への影響**: `censorship` 設定を削除すると、敏感ワードフィルタリングが完全に無効になります。
+- **ランタイム設定**: ランタイム設定のみに影響し、ファイルベースの設定は変更しません。
+- **依存関係の確認**: 削除前に、他の機能がこの設定に依存していないか確認してください。
+- **モニタリング推奨**: 削除後、システム機能が正常に動作しているかモニタリングしてください。

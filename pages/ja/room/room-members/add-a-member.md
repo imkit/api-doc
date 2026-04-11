@@ -1,47 +1,47 @@
-# Add a Member
+# メンバーの追加
 
-## Overview
+## 概要
 
-This endpoint allows you to add one or more users to a specified room. It supports an invitation confirmation mechanism and the option to automatically generate system message notifications.
+このエンドポイントを使用すると、1人または複数のユーザーを指定したチャットルームに追加できます。招待の確認メカニズムをサポートしており、システムメッセージによる通知を自動生成するかどうかを選択できます。
 
 ------
 
-## API Endpoint
+## API エンドポイント
 
-### Add a Member
+### メンバーの追加
 
-Add one or more users to a specified room.
+1人または複数のユーザーを指定したチャットルームに追加します。
 
 ```http
 POST /rooms/:id/members
 ```
 
-#### Headers
+#### ヘッダー
 
-| Parameter | Type | Required | Description |
+| パラメータ | 型 | 必須 | 説明 |
 | --- | --- | --- | --- |
-| `IM-CLIENT-KEY` | string | ✅ | Client key |
-| `IM-Authorization` | string | ✅ | Client token |
+| `IM-CLIENT-KEY` | string | ✅ | クライアントキー |
+| `IM-Authorization` | string | ✅ | クライアントトークン |
 
-#### Path Parameters
+#### パスパラメータ
 
-| Parameter | Type | Required | Description |
+| パラメータ | 型 | 必須 | 説明 |
 | --- | --- | --- | --- |
-| `:id` | string | ✅ | Room unique identifier |
+| `:id` | string | ✅ | チャットルームの一意識別子 |
 
-#### Post Body
+#### リクエストボディ (Post Body)
 
-| Parameter | Type | Required | Description |
+| パラメータ | 型 | 必須 | 説明 |
 | --- | --- | --- | --- |
-| `invitees` | array[string] | ✅ | Array of client IDs of members to add |
-| `systemMessage` | boolean | ❌ | Whether to automatically generate a system message for the member addition, defaults to `false` |
-| `invitationRequired` | boolean | ❌ | Whether the invitee must accept the invitation before joining, defaults to `false`. Only applicable to **group** rooms |
+| `invitees` | array[string] | ✅ | 追加するメンバーのクライアント ID 配列 |
+| `systemMessage` | boolean | ❌ | メンバー追加のシステムメッセージを自動生成するかどうか。デフォルトは `false` です。 |
+| `invitationRequired` | boolean | ❌ | 招待されたユーザーが参加するために招待を承諾する必要があるかどうか。デフォルトは `false` です。**グループ**チャットルームにのみ適用されます。 |
 
-#### Example Request
+#### リクエスト例
 
-**Example 1: Invite multiple members (invitation acceptance required)**
+**例 1：複数のメンバーを招待（招待の承諾が必要）**
 
-**cURL Example:**
+**cURL 例：**
 
 ```bash
 curl -X "POST" "https://your-app.imkit.io/rooms/demo-room/members" \
@@ -51,7 +51,7 @@ curl -X "POST" "https://your-app.imkit.io/rooms/demo-room/members" \
      -d '{"invitees": ["ccc", "bbb"], "invitationRequired": true, "systemMessage": true}'
 ```
 
-**JavaScript Example:**
+**JavaScript 例：**
 
 ```javascript
 const response = await axios.post(
@@ -71,9 +71,9 @@ const response = await axios.post(
 );
 ```
 
-**Example 2: Add members directly (no invitation confirmation required)**
+**例 2：メンバーを直接追加（招待の確認は不要）**
 
-**JavaScript Example:**
+**JavaScript 例：**
 
 ```javascript
 const response = await axios.post(
@@ -93,17 +93,17 @@ const response = await axios.post(
 );
 ```
 
-#### Response
+#### レスポンス
 
-**Success Response (200 OK)**
+**成功レスポンス (200 OK)**
 
-| Parameter | Type | Description |
+| パラメータ | 型 | 説明 |
 | --- | --- | --- |
-| `RC` | number | Response code (0 indicates success) |
-| `RM` | string | Response message |
-| `result` | object | Complete room information after the update |
+| `RC` | number | レスポンスコード (0 は成功) |
+| `RM` | string | レスポンスメッセージ |
+| `result` | object | 更新後のチャットルームの完全な情報 |
 
-#### Example Response
+#### レスポンス例
 
 ```json
 {
@@ -179,31 +179,31 @@ const response = await axios.post(
 }
 ```
 
-#### Error Response
+#### エラーレスポンス
 
-When a request fails, you will receive an error response containing error details. Common error scenarios include:
+リクエストが失敗した場合、エラーの詳細情報を含むエラーレスポンスが返されます。一般的なエラーシナリオは以下の通りです：
 
-- Invalid client key or authorization token
-- The specified room does not exist
-- `invitees` contains a non-existent user ID
-- Internal server error
-
-------
-
-## Use Cases
-
-### Invitation
-- **Invite multiple members**: By setting `invitationRequired: true`, invitees must actively accept the invitation before joining the room
-- **Direct addition**: By setting `invitationRequired: false`, invitees are added to the room directly without confirmation
-
-### System Notifications
-- **Automatic notification**: When `systemMessage: true` is set, the system automatically generates an "add member" notification message in the room
+- 無効なクライアントキーまたは認証トークン
+- 指定されたチャットルームが存在しない
+- `invitees` に存在しないユーザー ID が含まれている
+- サーバー内部エラー
 
 ------
 
-## Notes
+## ユースケース
 
-- **`invitationRequired`**: When set to `true`, invitees must actively accept the invitation before joining the room; when set to `false`, invitees are added directly
-- **System messages**: When `systemMessage: true` is set, the system automatically generates an "add member" notification message in the room
-- **One-on-one rooms**: `invitationRequired` has no effect on one-on-one (`direct`) rooms; the system automatically sets it to `false`
-- After successful addition, the response includes the complete updated room information, including the latest member list
+### 参加の招待
+- **複数のメンバーを招待**: `invitationRequired: true` に設定することで、招待されたユーザーが能動的に招待を承諾した後にチャットルームに参加するようにします。
+- **直接追加**: `invitationRequired: false` に設定することで、招待されたユーザーは確認なしに直接チャットルームに追加されます。
+
+### システム通知
+- **自動通知**: `systemMessage: true` に設定すると、システムが自動的にチャットルーム内に「メンバー追加」の通知メッセージを生成します。
+
+------
+
+## 注意事項
+
+- **`invitationRequired`**: `true` の場合、招待されたユーザーは能動的に招待を承諾する必要があります。`false` の場合、直接追加されます。
+- **システムメッセージ**: `systemMessage: true` の場合、システムが自動的に「メンバー追加」の通知メッセージを生成します。
+- **1対1のチャットルーム**: `invitationRequired` は 1対1 (`direct`) チャットルームには無効であり、システムは自動的に `false` に設定します。
+- 正常に追加されると、レスポンスには最新のメンバーリストを含む更新後のチャットルーム情報が含まれます。

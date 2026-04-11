@@ -1,37 +1,37 @@
-# Get Unread Messages by User
+# ユーザーの未読メッセージ取得
 
-## Overview
+## 概要
 
-Retrieve the total unread message count for the current user. This API can count the total number of unread messages across all chatrooms the user has access to, and supports filtering by chatroom tags. It is suitable for displaying the user's overall unread status.
+現在のユーザーの総未読メッセージ数を取得します。この API は、ユーザーが権限を持つすべてのチャットルームにおける未読メッセージの総計を算出でき、チャットルームタグによるフィルタリング集計もサポートしています。ユーザー全体の未読状態を表示するのに適しています。
 
 ------
 
-## API Endpoint
+## API エンドポイント
 
-### Get User's Total Unread Message Count
+### ユーザーの未読メッセージ総数の取得
 
-Retrieve the current user's unread message count, with optional filtering by tags.
+現在のユーザーの未読メッセージ数を取得します。オプションでタグによるフィルタリングが可能です。
 
 ```http
 GET /me/badge
 ```
 
-#### Headers
+#### ヘッダー
 
-| Parameter          | Type   | Required | Description    |
-| ------------------ | ------ | -------- | -------------- |
-| `IM-CLIENT-KEY`    | string | ✅        | Client Key     |
-| `IM-Authorization`    | string | ✅        | Client Token   |
+| パラメータ | 型 | 必須 | 説明 |
+| ------------------ | ------ | ---- | -------------- |
+| `IM-CLIENT-KEY` | string | ✅ | クライアントキー |
+| `IM-Authorization` | string | ✅ | ユーザートークン |
 
-#### Query Parameters
+#### クエリパラメータ
 
-| Parameter  | Type   | Required | Description                                                       |
-| ---------- | ------ | -------- | ----------------------------------------------------------------- |
-| `roomTags` | string | ❌        | Filter by chatroom tags (multiple roomTags parameters can be used) |
+| パラメータ | 型 | 必須 | 説明 |
+| ---------- | ------ | ---- | --------------------------------------------------------- |
+| `roomTags` | string | ❌ | チャットルームタグによるフィルタリング（複数指定可能） |
 
-#### Example Request
+#### リクエスト例
 
-**Get total unread message count**
+**総未読メッセージ数の取得**
 
 ```http
 GET /me/badge HTTP/1.1
@@ -41,7 +41,7 @@ Host: your-app.imkit.io
 Connection: close
 ```
 
-**Get unread message count for specific tags**
+**特定のタグの未読メッセージ数の取得**
 
 ```http
 GET /me/badge?roomTags=demo&roomTags=foo HTTP/1.1
@@ -51,7 +51,7 @@ Host: your-app.imkit.io
 Connection: close
 ```
 
-**Get unread message count for work-related chatrooms**
+**業務関連チャットルームの未読メッセージ数の取得**
 
 ```http
 GET /me/badge?roomTags=work&roomTags=project&roomTags=meeting HTTP/1.1
@@ -61,7 +61,7 @@ Host: your-app.imkit.io
 Connection: close
 ```
 
-**JavaScript Example:**
+**JavaScript 例：**
 
 ```javascript
 const response = await axios.get(
@@ -75,7 +75,7 @@ const response = await axios.get(
 );
 ```
 
-**cURL Example:**
+**cURL 例：**
 
 ```bash
 curl -X "GET" "https://your-app.imkit.io/me/badge" \
@@ -83,23 +83,23 @@ curl -X "GET" "https://your-app.imkit.io/me/badge" \
      -H 'IM-Authorization: {IM-Authorization}'
 ```
 
-#### Response
+#### レスポンス
 
-**Success Response (200 OK)**
+**成功（200 OK）**
 
-| Parameter | Type   | Description                         |
-| --------- | ------ | ----------------------------------- |
-| `RC`      | number | Response code (0 indicates success) |
-| `RM`      | string | Response message                    |
-| `result`  | object | Unread message statistics result    |
+| パラメータ | 型 | 説明 |
+| -------- | ------ | ---------------------- |
+| `RC` | number | レスポンスコード（0は成功） |
+| `RM` | string | レスポンスメッセージ |
+| `result` | object | 未読メッセージ集計結果 |
 
-**Result Object Structure**
+**結果オブジェクトの構造**
 
-| Parameter | Type   | Description                                                   |
-| --------- | ------ | ------------------------------------------------------------- |
-| `badge`   | number | Unread message count (total across all matching chatrooms)    |
+| パラメータ | 型 | 説明 |
+| ------- | ------ | --------------------------------------- |
+| `badge` | number | 未読メッセージ数（条件に一致するすべてのチャットルームの合計） |
 
-#### Example Response
+#### レスポンス例
 
 ```json
 {
@@ -111,7 +111,7 @@ curl -X "GET" "https://your-app.imkit.io/me/badge" \
 }
 ```
 
-**Response example with tag filtering**
+**タグによるフィルタリング時のレスポンス例**
 
 ```json
 {
@@ -123,9 +123,9 @@ curl -X "GET" "https://your-app.imkit.io/me/badge" \
 }
 ```
 
-#### Error Response
+#### エラーレスポンス
 
-**401 Unauthorized** - Authentication failed
+**401 Unauthorized** - 認証失敗
 
 ```json
 {
@@ -138,7 +138,7 @@ curl -X "GET" "https://your-app.imkit.io/me/badge" \
 }
 ```
 
-**400 Bad Request** - Invalid parameters
+**400 Bad Request** - パラメータが無効
 
 ```json
 {
@@ -153,30 +153,30 @@ curl -X "GET" "https://your-app.imkit.io/me/badge" \
 
 ------
 
-## Use Cases
+## 使用シーン
 
-### Global Notification Display
-- **Total Count Display**: Show the total unread message count on the app icon or title bar
-- **Badge Marking**: Used for badge number display on mobile applications
-- **Status Indicator**: Determine whether the user has unread messages to process
+### グローバルな通知表示
+- **総数の表示**: アプリケーションのアイコンやタイトルバーに未読メッセージの総数を表示します。
+- **バッジ表示**: モバイルアプリのバッジ（数字）表示に使用します。
+- **ステータス表示**: ユーザーが処理すべき未読メッセージがあるかどうかを判断します。
 
-### Category Statistics
-- **Work Messages**: Count unread messages in work-related chatrooms
-- **Personal Messages**: Count unread messages in personal or private chats
-- **System Notifications**: Count unread messages in system announcement chatrooms
+### カテゴリ別の集計
+- **業務メッセージ**: 業務関連チャットルームの未読数を集計します。
+- **個人メッセージ**: 個人またはプライベートチャットの未読数を集計します。
+- **システム通知**: システムお知らせタイプのチャットルームの未読数を集計します。
 
-### User Experience Optimization
-- **Smart Reminders**: Adjust reminder frequency based on unread count
-- **Priority Display**: Sort display based on the importance of different tags
-- **Quick Access**: Provide quick navigation to chatrooms with unread messages
+### ユーザーエクスペリエンスの最適化
+- **スマート通知**: 未読数に応じて通知頻度を調整します。
+- **優先順位表示**: タグの重要度に応じて優先的に表示します。
+- **クイックアクセス**: 未読メッセージがあるチャットルームへのクイックジャンプを提供します。
 
 ------
 
-## Notes
+## 注意事項
 
-- **Permission Control**: Only counts chatrooms that the user has permission to access
-- **Tag Filtering**: Multiple roomTags parameters can be used for AND condition filtering
-- **Real-Time**: Returns the real-time unread count at the moment of the query
-- **Performance Consideration**: Frequent queries may affect performance; use moderately
-- **Parameter Format**: Multiple tags must use the `roomTags=tag1&roomTags=tag2` format
-- **Zero Value Handling**: Returns 0 when there are no unread messages
+- **権限制御**: ユーザーがアクセス権を持つチャットルームのみが集計されます。
+- **タグフィルタリング**: 複数の `roomTags` パラメータを使用して AND 条件でフィルタリングできます。
+- **即時性**: 照会時点のリアルタイムな未読数を返します。
+- **パフォーマンスの考慮**: 頻繁な照会はパフォーマンスに影響を与える可能性があるため、適切な使用を推奨します。
+- **パラメータ形式**: 複数タグの場合は `roomTags=tag1&roomTags=tag2` 形式を使用します。
+- **ゼロ値の処理**: 未読メッセージがない場合は 0 を返します。

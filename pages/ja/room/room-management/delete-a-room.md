@@ -1,37 +1,37 @@
-# Delete a Room
+# チャットルームの削除
 
-## Overview
+## 概要
 
-This endpoint allows you to permanently delete a specified room and all its messages. After deletion, the room data and message history will be completely removed from the database and cannot be recovered.
+このエンドポイントを使用すると、指定したチャットルームとそのすべてのメッセージを永久に削除できます。削除後、チャットルームのデータとメッセージ履歴はデータベースから完全に削除され、復元することはできません。
 
 ------
 
-## API Endpoint
+## API エンドポイント
 
-### Delete a Room
+### チャットルームの削除
 
-Permanently delete a specified room and all its messages.
+指定したチャットルームとそのすべてのメッセージを永久に削除します。
 
 ```http
 DELETE /rooms/:id
 ```
 
-#### Headers
+#### ヘッダー
 
-| Parameter | Type | Required | Description |
+| パラメータ | 型 | 必須 | 説明 |
 | --- | --- | --- | --- |
-| `IM-CLIENT-KEY` | string | ✅ | Client key |
-| `IM-Authorization` | string | ✅ | Client token |
+| `IM-CLIENT-KEY` | string | ✅ | クライアントキー |
+| `IM-Authorization` | string | ✅ | クライアントトークン |
 
-#### Path Parameters
+#### パスパラメータ
 
-| Parameter | Type | Required | Description |
+| パラメータ | 型 | 必須 | 説明 |
 | --- | --- | --- | --- |
-| `:id` | string | ✅ | Room unique identifier |
+| `:id` | string | ✅ | チャットルームの一意識別子 |
 
-#### Example Request
+#### リクエスト例
 
-**cURL Example:**
+**cURL 例:**
 
 ```bash
 curl -X "DELETE" "https://your-app.imkit.io/rooms/test-room-123" \
@@ -40,7 +40,7 @@ curl -X "DELETE" "https://your-app.imkit.io/rooms/test-room-123" \
      -H 'Content-Type: application/json; charset=utf-8'
 ```
 
-**JavaScript Example:**
+**JavaScript 例:**
 
 ```javascript
 const response = await axios.delete(
@@ -55,24 +55,24 @@ const response = await axios.delete(
 );
 ```
 
-#### Response
+#### レスポンス
 
-**Success Response (200 OK)**
+**成功レスポンス (200 OK)**
 
-| Parameter | Type | Description |
+| パラメータ | 型 | 説明 |
 | --- | --- | --- |
-| `RC` | number | Response code (0 indicates success) |
-| `RM` | string | Response message |
-| `result` | object | Result of the delete operation |
+| `RC` | number | レスポンスコード (0 は成功) |
+| `RM` | string | レスポンスメッセージ |
+| `result` | object | 削除操作の結果 |
 
-**Result Object Fields**
+**結果オブジェクトのフィールド**
 
-| Parameter | Type | Description |
+| パラメータ | 型 | 説明 |
 | --- | --- | --- |
-| `n` | number | Number of affected documents |
-| `ok` | number | Whether the operation was successful (1 indicates success) |
+| `n` | number | 影響を受けたドキュメント数 |
+| `ok` | number | 操作が成功したかどうか (1 は成功) |
 
-#### Example Response
+#### レスポンス例
 
 ```json
 {
@@ -85,28 +85,28 @@ const response = await axios.delete(
 }
 ```
 
-#### Error Response
+#### エラーレスポンス
 
-When a request fails, you will receive an error response containing error details. Common error scenarios include:
+リクエストが失敗した場合、エラーの詳細情報を含むエラーレスポンスが返されます。一般的なエラーシナリオは以下の通りです：
 
-- Invalid client key or authorization token
-- The specified room does not exist
-- No permission to delete the room
-- Internal server error
-
-------
-
-## Use Cases
-
-### Room Management
-- **Clean up unused rooms**: Permanently delete rooms that are no longer active or needed
-- **Data management**: Remove rooms and all their associated message history when necessary
+- 無効なクライアントキーまたは認証トークン
+- 指定されたチャットルームが存在しない
+- 該当するチャットルームを削除する権限がない
+- サーバー内部エラー
 
 ------
 
-## Notes
+## ユースケース
 
-- **Permanent deletion**: This operation permanently deletes the room and all its messages from the database and cannot be undone
-- **Messages deleted together**: All message history within the room will also be deleted
-- Make sure the room ID is correct to avoid accidentally deleting important rooms
-- After deletion, members who were in the room will no longer be able to access any related data
+### チャットルーム管理
+- **使用されなくなったチャットルームのクリーンアップ**: アクティブでなくなった、または不要になったチャットルームを永久に削除します。
+- **データ管理**: 必要に応じて、チャットルームとそのすべての関連メッセージ履歴を削除します。
+
+------
+
+## 注意事項
+
+- **永久削除**: この操作により、チャットルームとそのすべてのメッセージがデータベースから永久に削除され、復元はできません。
+- **メッセージの同時削除**: チャットルーム内のすべてのメッセージ履歴も同期して削除されます。
+- 重要なチャットルームを誤って削除しないよう、チャットルーム ID が正しいことを確認してください。
+- 削除後、元のチャットルームメンバーは関連データにアクセスできなくなります。

@@ -1,51 +1,51 @@
-# Update a Room
+# チャットルームの更新
 
-## Overview
+## 概要
 
-Update the information and settings of an existing room. This API allows modifying the room's basic information, permission settings, administrator configuration, and more. Only the room owner, administrators, or platform administrators can use this API.
+既存のチャットルームの情報と設定を更新します。この API を使用すると、チャットルームの基本情報、権限設定、管理者構成などを変更できます。チャットルームの所有者、管理者、またはプラットフォーム管理者のみが使用できます。
 
 ------
 
-## API Endpoint
+## API エンドポイント
 
-### Update Room Information
+### チャットルーム情報を更新
 
-Modify the properties and settings of a specified room.
+指定したチャットルームの属性と設定を変更します。
 
 ```http
 PUT /rooms/{id}
 ```
 
-#### Headers
+#### ヘッダー
 
-| Parameter       | Type   | Required | Description    |
+| パラメータ            | 型     | 必須 | 説明            |
 | --------------- | ------ | ---- | -------------- |
 | `IM-CLIENT-KEY` | string | ✅    | Client Key     |
 | `IM-Authorization` | string | ✅    | Client Token   |
 
-#### Path Parameters
+#### パスパラメータ
 
-| Parameter | Type   | Required | Description |
-| ---- | ------ | ---- | ----------- |
-| `id` | string | ✅    | Room ID     |
+| パラメータ | 型     | 必須 | 説明            |
+| ---- | ------ | ---- | -------------- |
+| `id` | string | ✅    | チャットルーム ID |
 
-#### Request Body
+#### リクエストボディ (Request Body)
 
-| Parameter     | Type    | Required | Description                                                   |
-| ------------- | ------- | ---- | ------------------------------------------------------------- |
-| `name`        | string  | ❌    | Room name                                                     |
-| `cover`       | string  | ❌    | Room cover image URL                                          |
-| `description` | string  | ❌    | Room description                                              |
-| `roomTags`    | array   | ❌    | Shared room tags array                                        |
-| `webhook`     | string  | ❌    | Webhook key or URL                                            |
-| `botMode`     | boolean | ❌    | Whether to enable room bot                                    |
-| `extParams`   | string  | ❌    | Extended custom parameters in the format: param1=value1&param2=value2&... |
-| `opening`     | number  | ❌    | Open status: 0 = closed to joining or invitations, 1 = open to joining and invitations |
-| `owner`       | string  | ❌    | New owner client ID (restricted to platform administrators or room superusers) |
-| `managers`    | array   | ❌    | Manager client ID array (restricted to platform administrators or room superusers) |
-| `status`      | number  | ❌    | Room status: 0 = inactive, 1 = active                        |
+| パラメータ          | 型      | 必須 | 説明                                                      |
+| ------------- | ------- | ---- | --------------------------------------------------------- |
+| `name`        | string  | ❌    | チャットルーム名                                            |
+| `cover`       | string  | ❌    | チャットルームのカバー画像 URL                                |
+| `description` | string  | ❌    | チャットルームの説明                                        |
+| `roomTags`    | array   | ❌    | 共有チャットルームタグの配列                                  |
+| `webhook`     | string  | ❌    | Webhook キーまたは URL                                      |
+| `botMode`     | boolean | ❌    | チャットルームボットを有効にするかどうか                        |
+| `extParams`   | string  | ❌    | 拡張カスタムパラメータ。形式：param1=value1&param2=value2&... |
+| `opening`     | number  | ❌    | 開放状態：0=参加または招待を閉じる、1=参加と招待を開放する        |
+| `owner`       | string  | ❌    | 新しい所有者のクライアント ID（プラットフォーム管理者またはチャットルーム特権ユーザー限定） |
+| `managers`    | array   | ❌    | 管理者クライアント ID の配列（プラットフォーム管理者またはチャットルーム特権ユーザー限定） |
+| `status`      | number  | ❌    | チャットルームのステータス：0=無効、1=有効                      |
 
-#### Example Request
+#### リクエスト例
 
 ```http
 PUT /rooms/58871b877390be11d5f1ab30 HTTP/1.1
@@ -62,7 +62,7 @@ Connection: close
 }
 ```
 
-**JavaScript Example:**
+**JavaScript 例:**
 
 ```javascript
 const response = await axios.put(
@@ -82,7 +82,7 @@ const response = await axios.put(
 );
 ```
 
-**cURL Example:**
+**cURL 例:**
 
 ```bash
 curl -X "PUT" "https://your-app.imkit.io/rooms/58871b877390be11d5f1ab30" \
@@ -92,29 +92,29 @@ curl -X "PUT" "https://your-app.imkit.io/rooms/58871b877390be11d5f1ab30" \
      -d '{"description": "Description La La", "name": "Martena", "cover": "http://loremflickr.com/240/240/style?Kelly"}'
 ```
 
-#### Response
+#### レスポンス
 
-**Success Response (200 OK)**
+**成功レスポンス (200 OK)**
 
-| Parameter | Type   | Description                |
-| -------- | ------ | ---------------------- |
-| `RC`     | number | Response code (0 indicates success) |
-| `RM`     | string | Response message       |
-| `result` | object | Updated room data      |
+| パラメータ     | 型     | 説明                       |
+| -------- | ------ | -------------------------- |
+| `RC`     | number | レスポンスコード (0 は成功) |
+| `RM`     | string | レスポンスメッセージ        |
+| `result` | object | 更新後のチャットルームデータ |
 
-**Room Object Structure**
+**チャットルームオブジェクトの構造**
 
-| Parameter       | Type   | Description             |
+| パラメータ            | 型     | 説明                      |
 | --------------- | ------ | ------------------------- |
-| `_id`           | string | Room unique identifier    |
-| `name`          | string | Room name                 |
-| `cover`         | string | Room cover image URL      |
-| `description`   | string | Room description          |
-| `status`        | number | Room status               |
-| `lastMessage`   | object | Last message information  |
-| `members`       | array  | Room member list          |
+| `_id`           | string | チャットルームの一意識別子 |
+| `name`          | string | チャットルーム名           |
+| `cover`         | string | チャットルームのカバー画像 URL |
+| `description`   | string | チャットルームの説明        |
+| `status`        | number | チャットルームのステータス  |
+| `lastMessage`   | object | 最新メッセージの情報        |
+| `members`       | array  | チャットルームメンバーリスト |
 
-#### Example Response
+#### レスポンス例
 
 ```json
 {
@@ -150,9 +150,9 @@ curl -X "PUT" "https://your-app.imkit.io/rooms/58871b877390be11d5f1ab30" \
 }
 ```
 
-#### Error Response
+#### エラーレスポンス
 
-**401 Unauthorized** - Authentication failed
+**401 Unauthorized** - 認証失敗
 
 ```json
 {
@@ -165,7 +165,7 @@ curl -X "PUT" "https://your-app.imkit.io/rooms/58871b877390be11d5f1ab30" \
 }
 ```
 
-**403 Forbidden** - Insufficient permissions
+**403 Forbidden** - 権限不足
 
 ```json
 {
@@ -178,7 +178,7 @@ curl -X "PUT" "https://your-app.imkit.io/rooms/58871b877390be11d5f1ab30" \
 }
 ```
 
-**404 Not Found** - Room does not exist
+**404 Not Found** - チャットルームが存在しない
 
 ```json
 {
@@ -193,29 +193,29 @@ curl -X "PUT" "https://your-app.imkit.io/rooms/58871b877390be11d5f1ab30" \
 
 ------
 
-## Use Cases
+## ユースケース
 
-### Room Management
-- **Basic information maintenance**: Update room name, description, and cover image
-- **Permission management**: Adjust room open status and administrator configuration
-- **Feature settings**: Enable or disable bot mode
+### チャットルーム管理
+- **基本情報のメンテナンス**: チャットルーム名、説明、カバー画像を更新します。
+- **権限管理**: チャットルームの開放状態と管理者の構成を調整します。
+- **機能設定**: ボットモードの有効化または無効化を行います。
 
-### Admin Console
-- **Batch management**: Batch update room settings through the admin interface
-- **Content moderation**: Modify inappropriate room information
-- **Ownership transfer**: Transfer room ownership to another user
+### 管理バックエンド
+- **一括管理**: 管理インターフェースを通じてチャットルームの設定を一括更新します。
+- **コンテンツ審査**: 不適切なチャットルーム情報を修正します。
+- **所有権の移転**: チャットルームの所有権を他のユーザーに移転します。
 
-### System Integration
-- **Webhook configuration**: Set up the room's webhook receiving endpoint
-- **Extended parameters**: Integrate third-party systems via extParams
-- **Status management**: Enable or disable specific rooms
+### システム統合
+- **Webhook 構成**: チャットルームの Webhook 受信エンドポイントを設定します。
+- **拡張パラメータ**: extParams を通じてサードパーティシステムと統合します。
+- **ステータス管理**: 特定のチャットルームを有効または無効にします。
 
 ------
 
-## Notes
+## 注意事項
 
-- **Permission restrictions**: Only the room owner, administrators, or platform administrators can perform updates
-- **Ownership transfer**: Changing the owner and managers requires elevated permissions
-- **Parameter validation**: All parameters are optional; only the provided fields will be updated
-- **Status impact**: Setting status=0 will make the room inactive
-- **Open setting**: The opening parameter controls whether new users can join the room
+- **権限制限**: チャットルームの所有者、管理者、またはプラットフォーム管理者のみが更新を実行できます。
+- **所有権の移転**: `owner` や `managers` の変更には、より高い権限が必要です。
+- **パラメータの検証**: すべてのパラメータはオプションであり、提供されたフィールドのみが更新されます。
+- **ステータスの影響**: `status=0` に設定すると、チャットルームは無効状態になります。
+- **開放設定**: `opening` パラメータは、新しいユーザーがチャットルームに参加できるかどうかに影響します。

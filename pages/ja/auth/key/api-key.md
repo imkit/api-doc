@@ -1,46 +1,46 @@
-# API Key
+# APIキー
 
-## Overview
+## 概要
 
-The API Key (`IM-API-KEY`) is an authentication key used for backend services in the IMKIT Platform API. It represents performing operations "as a platform administrator." It has full management permissions, enabling operations such as user management, chat room management, token management, and more. It can call all APIs (including Client Key-level APIs) and must be securely stored on the server side.
+APIキー（`IM-API-KEY`）は、IMKIT Platform APIにおいてバックエンドサービスで使用される認証キーであり、「プラットフォーム管理者」としての操作を象徴します。これには完全な管理権限が含まれており、ユーザー管理、チャットルーム管理、トークン管理などのすべての操作を実行でき、すべてのAPI（クライアントキーレベルのAPIを含む）を呼び出すことができます。サーバー側で安全に保管する必要があります。
 
 ------
 
-## API Key Characteristics
+## APIキーの特性
 
-### Basic Information
+### 基本情報
 
-| Property         | Description                                     |
+| 属性 | 説明 |
 | ------------ | ---------------------------------------- |
-| **Purpose**     | Perform operations as a platform administrator                 |
-| **Pairing**     | Used independently; does not require a user Token             |
-| **Format**     | Base64-encoded string                          |
-| **Validity**   | Long-lived (unless manually revoked)                 |
-| **Scope**   | Full management permissions; can call all APIs             |
-| **Security Level** | Confidential (must never be exposed on the frontend)                 |
+| **用途** | プラットフォーム管理者として操作を実行する |
+| **組み合わせ** | 単独で使用し、ユーザートークンは不要 |
+| **形式** | Base64エンコード文字列 |
+| **有効期限** | 長期有効（明示的に取り消さない限り） |
+| **スコープ** | 完全な管理権限、すべてのAPIを呼び出し可能 |
+| **セキュリティレベル** | 機密（フロントエンドに公開してはならない） |
 
-### Differences from Client Key
+### クライアントキーとの違い
 
-| Item         | API Key (`IM-API-KEY`)   | Client Key (`IM-CLIENT-KEY`)          |
+| 項目 | APIキー (`IM-API-KEY`) | クライアントキー (`IM-CLIENT-KEY`) |
 | ------------ | ------------------------ | ------------------------------------- |
-| **Pairing**     | Used independently                 | Requires user Token (`IM-Authorization`) |
-| **Identity**     | Operates as platform administrator     | Operates as a specific user                    |
-| **Used By**   | Backend only                   | SDK frontend / Backend                       |
-| **Permission Scope** | Full management permissions             | Limited by user permissions                        |
-| **Security**   | Must be kept confidential                 | Publicly visible                              |
+| **組み合わせ** | 単独で使用 | ユーザートークン (`IM-Authorization`) が必要 |
+| **身分** | プラットフォーム管理者として操作 | 特定のユーザーとして操作 |
+| **利用場所** | バックエンドのみ | SDKフロントエンド / バックエンド |
+| **権限範囲** | 完全な管理権限 | ユーザー権限による制限あり |
+| **セキュリティ** | 秘密保持が必須 | 公開可能 |
 
 ------
 
-## Obtaining the API Key
+## APIキーの取得
 
-### Via IMKIT Dashboard
+### IMKIT Dashboard経由
 
-1. Log in to the [IMKIT Dashboard](https://dashboard.imkit.io/)
-2. Select your application
-3. Navigate to the "API Settings" page
-4. Copy the API Key (displayed only once)
+1. [IMKIT Dashboard](https://dashboard.imkit.io/) にログインします。
+2. アプリケーションを選択します。
+3. 「API設定」ページに移動します。
+4. APIキーをコピーします（一度だけ表示されます）。
 
-### Example API Key
+### APIキーの例
 
 ```
 MjJZcFlIRGFRbElRbERTdlZMQ0xMbzJNUHpGZlZtOWpZcHh3MnZ1QnJtaz0=
@@ -48,9 +48,9 @@ MjJZcFlIRGFRbElRbERTdlZMQ0xMbzJNUHpGZlZtOWpZcHh3MnZ1QnJtaz0=
 
 ------
 
-## Usage
+## 使用方法
 
-### HTTP Header Authentication
+### HTTPヘッダー認証
 
 ```http
 POST /admin/clients
@@ -64,7 +64,7 @@ Content-Type: application/json
 }
 ```
 
-### Code Examples
+### コード例
 
 **Node.js**
 
@@ -79,7 +79,7 @@ const headers = {
   'Content-Type': 'application/json'
 };
 
-// Create a user
+// ユーザー作成
 const createUser = async (userData) => {
   try {
     const response = await axios.post(`${baseURL}/admin/clients`, userData, { headers });
@@ -146,78 +146,78 @@ function createUser($userData) {
 
 ------
 
-## API Key Permissions
+## APIキーの権限
 
-### Allowed Operations
+### 許可される操作
 
-- ✅ **User Management**
-  - Create, update, and delete users
-  - Query user information
-  - Manage user permissions
-- ✅ **Token Management**
-  - Issue Token
-  - Update Token
-  - Revoke Token
-- ✅ **Chat Room Management**
-  - Create and delete chat rooms
-  - Manage chat room members
-  - Configure chat room permissions
-- ✅ **Message Management**
-  - Send system messages
-  - Delete messages
-  - Query message history
-- ✅ **Application Settings**
-  - Modify application configuration
-  - Manage Webhook settings
-  - View usage statistics
+- ✅ **ユーザー管理**
+  - ユーザーの作成、更新、削除
+  - ユーザー情報の照会
+  - ユーザー権限の管理
+- ✅ **トークン管理**
+  - トークンの発行 (Issue Token)
+  - トークンの更新
+  - トークンの取り消し
+- ✅ **チャットルーム管理**
+  - チャットルームの作成、削除
+  - チャットルームメンバーの管理
+  - チャットルーム権限の設定
+- ✅ **メッセージ管理**
+  - システムメッセージの送信
+  - メッセージの削除
+  - メッセージ履歴の照会
+- ✅ **アプリケーション設定**
+  - アプリケーション設定の変更
+  - Webhook設定の管理
+  - 利用統計の確認
 
-### High-Risk Operations
+### 高リスクな操作
 
-- ⚠️ **Full Control**: Can access and modify all application data
-- ⚠️ **User Data**: Can access all users' private information
-- ⚠️ **Chat History**: Can read message content from all chat rooms
-- ⚠️ **System Settings**: Can modify the application's core settings
+- ⚠️ **完全な制御権**: すべてのアプリケーションデータにアクセスおよび修正が可能
+- ⚠️ **ユーザーデータ**: すべてのユーザーの個人情報にアクセス可能
+- ⚠️ **チャット履歴**: すべてのチャットルームのメッセージ内容を読み取り可能
+- ⚠️ **システム設定**: アプリケーションのコア設定を修正可能
 
 ------
 
-## Security Considerations
+## セキュリティ上の考慮事項
 
-### Why Must the API Key Be Kept Confidential?
+### なぜAPIキーを秘密にする必要があるのか？
 
-1. **Full Permissions**: Has complete control over the application
-2. **Data Access**: Can access all user and chat data
-3. **Irreversible Operations**: Can perform irreversible operations such as deletion
-4. **No User Verification**: Does not require additional user identity verification
+1. **完全な権限**: アプリケーションの完全な制御権を保持しているため
+2. **データアクセス**: すべてのユーザーおよびチャットデータにアクセスできるため
+3. **取り消し不可能な操作**: 削除などの不可逆的な操作を実行できるため
+4. **ユーザー認証なし**: 追加のユーザー認証を必要としないため
 
-### Security Best Practices
+### セキュリティのベストプラクティス
 
-#### Storage Security
+#### ストレージの安全性
 
-- **Environment Variables**: Store the API Key in environment variables
-- **Configuration Files**: Use encrypted configuration files for management
-- **Secret Management Services**: Use AWS Secrets Manager, Azure Key Vault, etc.
-- **Version Control Exclusion**: Never commit the API Key to version control systems
+- **環境変数**: APIキーを環境変数に保存する
+- **設定ファイル**: 暗号化された設定ファイルを使用する
+- **シークレット管理サービス**: AWS Secrets Manager、Azure Key Vaultなどを使用する
+- **バージョン管理の除外**: APIキーをバージョン管理システムにコミットしない
 
-#### Access Control
+#### アクセス制御
 
-- **Principle of Least Privilege**: Only use the API Key in services that require it
-- **Network Restrictions**: Restrict the source IP range for the API Key
-- **Regular Rotation**: Rotate the API Key periodically
-- **Usage Monitoring**: Monitor API Key usage and detect anomalous activity
+- **最小権限の原則**: 必要なサービスでのみAPIキーを使用する
+- **ネットワーク制限**: APIキーの送信元IP範囲を制限する
+- **定期的なローテーション**: APIキーを定期的に更新する
+- **使用状況の監視**: APIキーの使用状況や異常なアクティビティを監視する
 
-#### Application Security
+#### アプリケーションのセキュリティ
 
 ```javascript
-// ✅ Correct: Use on the server side
-const apiKey = process.env.IMKIT_API_KEY; // Read from environment variable
+// ✅ 正解：サーバー側で使用する
+const apiKey = process.env.IMKIT_API_KEY; // 環境変数から読み込む
 
-// ❌ Wrong: Never expose on the frontend
+// ❌ 間違い：フロントエンドに公開しない
 // const apiKey = 'MjJZcFlIRGFRbElRbERTdlZMQ0xMbzJNUHpGZlZtOWpZcHh3MnZ1QnJtaz0=';
 ```
 
 ------
 
-## Environment Configuration Examples
+## 環境設定の例
 
 ### Docker
 
@@ -225,7 +225,7 @@ const apiKey = process.env.IMKIT_API_KEY; // Read from environment variable
 ENV IMKIT_API_KEY=MjJZcFlIRGFRbElRbERTdlZMQ0xMbzJNUHpGZlZtOWpZcHh3MnZ1QnJtaz0=
 ```
 
-### .env File
+### .env ファイル
 
 ```env
 IMKIT_API_KEY=MjJZcFlIRGFRbElRbERTdlZMQ0xMbzJNUHpGZlZtOWpZcHh3MnZ1QnJtaz0=
@@ -246,49 +246,49 @@ data:
 
 ------
 
-## FAQ
+## よくある質問
 
-### Q: What are the risks if the API Key is leaked?
+### Q: APIキーが漏洩した場合、どのようなリスクがありますか？
 
-**A:** Extremely high risk! An attacker could:
+**A:** 非常に高いリスクがあります！攻撃者は以下のことが可能になります：
 
-- Gain full control of your IMKIT application
-- Access all user data and chat history
-- Delete or modify critical data
-- Incur additional costs
+- IMKITアプリケーションの完全な制御
+- すべてのユーザーデータおよびチャット履歴へのアクセス
+- 重要なデータの削除または修正
+- 追加費用の発生
 
-**If a leak is discovered, immediately:**
+**漏洩を発見した場合は、直ちに以下の対応を行ってください：**
 
-1. Revoke the old API Key in the Dashboard
-2. Generate a new API Key
-3. Update all services using the API Key
-4. Check for any anomalous operation logs
+1. Dashboardで古いAPIキーを取り消す
+2. 新しいAPIキーを生成する
+3. そのAPIキーを使用しているすべてのサービスを更新する
+4. 異常な操作記録がないか確認する
 
-### Q: Can I use the API Key in frontend JavaScript?
+### Q: フロントエンドのJavaScriptでAPIキーを使用できますか？
 
-**A:** Absolutely not! Frontend code is exposed to all users. Use the Client Key for frontend integration.
+**A:** 絶対に使用しないでください！フロントエンドのコードはすべてのユーザーに公開されます。フロントエンドの統合にはクライアントキーを使用してください。
 
-### Q: How can I restrict the access scope of the API Key?
+### Q: APIキーのアクセス範囲を制限するにはどうすればよいですか？
 
-**A:** Currently, the API Key has full permissions. It is recommended to control access through:
+**A:** 現在、APIキーは完全な権限を持っています。以下の方法で制御することをお勧めします：
 
-- Restricting source IPs at the network level
-- Implementing permission controls at the application level
-- Using a proxy service to restrict callable APIs
+- ネットワーク層で送信元IPを制限する
+- アプリケーション層で権限制御を実装する
+- プロキシサービスを使用して呼び出し可能なAPIを制限する
 
-### Q: Is there a rate limit on API Key usage?
+### Q: APIキーに使用回数制限はありますか？
 
-**A:** Yes, the API Key has rate limiting protection:
+**A:** はい、APIキーにはレート制限（Rate Limiting）保護があります：
 
-- Maximum of 1000 requests per minute
-- Exceeding the limit will result in a 429 error
-- It is recommended to implement appropriate retry mechanisms
+- 1分間に最大1000リクエスト
+- 制限を超えると 429 エラーが返されます
+- 適切なリトライメカニズムの実装を推奨します
 
 ------
 
-## Error Handling
+## エラー処理
 
-### Common Errors
+### よくあるエラー
 
 **Invalid API Key**
 

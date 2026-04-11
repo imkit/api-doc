@@ -1,59 +1,59 @@
-# List Rooms
+# チャットルームリスト
 
-## Overview
+## 概要
 
-This endpoint allows you to retrieve the list of rooms that the current user has joined, with support for pagination, sorting, and conditional filtering. It is suitable for scenarios such as displaying room lists and incremental synchronization.
+このエンドポイントを使用すると、現在のユーザーが参加しているチャットルームのリストを取得できます。ページネーション、ソート、および条件フィルタリングをサポートしています。チャットルームリストの表示や増分同期などのシナリオに適しています。
 
 ------
 
-## API Endpoint
+## API エンドポイント
 
-### Get Room List
+### チャットルームリストを取得
 
-Retrieve the list of rooms the current user has joined, with support for pagination, sorting, and conditional filtering.
+現在のユーザーが参加しているチャットルームのリストを取得します。ページネーション、ソート、および条件フィルタリングをサポートしています。
 
 ```http
 GET /rooms
 ```
 
-#### Headers
+#### ヘッダー
 
-| Parameter | Type | Required | Description |
+| パラメータ | 型 | 必須 | 説明 |
 | --- | --- | --- | --- |
-| `IM-CLIENT-KEY` | string | ✅ | Client key |
-| `IM-CLIENT-ID` | string | ✅ | Current user's client ID (required by this endpoint to calculate unread counts and other user-specific data) |
-| `IM-Authorization` | string | ✅ | Client token |
+| `IM-CLIENT-KEY` | string | ✅ | クライアントキー |
+| `IM-CLIENT-ID` | string | ✅ | 現在のユーザーのクライアント ID (このエンドポイントでは、未読数の計算などのユーザー関連データのために追加で提供する必要があります) |
+| `IM-Authorization` | string | ✅ | クライアントトークン |
 
-#### Query Parameters
+#### クエリパラメータ
 
-| Parameter | Type | Required | Description |
+| パラメータ | 型 | 必須 | 説明 |
 | --- | --- | --- | --- |
-| `sort` | string | ❌ | Sort criteria; multiple fields can be combined, separated by spaces; prefix `-` indicates descending order |
-| `skip` | integer | ❌ | Pagination offset, defaults to `0` |
-| `limit` | integer | ❌ | Maximum number of rooms to return, defaults to `0` (no limit) |
-| `updatedAfter` | string or integer | ❌ | Filter rooms that have new messages or were created after the specified timestamp; supports ISO-8601 string or millisecond Epoch integer |
-| `pref` | JSON | ❌ | Filter by the user's room preference settings, e.g., `{"tags": "some-tag"}` |
-| `sortUnreadFirst` | integer | ❌ | When non-zero, rooms with unread messages are sorted first |
+| `sort` | string | ❌ | ソート条件。複数のフィールドをスペースで区切って組み合わせることができます。接頭辞 `-` は降順を意味します。 |
+| `skip` | integer | ❌ | ページネーションのオフセット。デフォルトは `0` です。 |
+| `limit` | integer | ❌ | 返されるチャットルーム数の上限。デフォルトは `0` (制限なし) です。 |
+| `updatedAfter` | string または integer | ❌ | 指定したタイムスタンプ以降に最新メッセージがある、または作成されたチャットルームをフィルタリングします。ISO-8601 文字列またはミリ秒 Epoch 整数をサポートしています。 |
+| `pref` | JSON | ❌ | ユーザーのチャットルーム設定（好み）に基づいてフィルタリングします。例: `{"tags": "some-tag"}` |
+| `sortUnreadFirst` | integer | ❌ | 0 以外の値の場合、未読メッセージがあるチャットルームを優先的にソートします。 |
 
-**sort Parameter Examples**
+**sort パラメータの例**
 
-Sort by latest message and creation time in descending order:
+最新メッセージと作成時間で降順にソートする場合：
 
 ```
 -lastMessage -createdTime
 ```
 
-Sort by creation time in ascending order:
+作成時間で昇順にソートする場合：
 
 ```
 createdTime
 ```
 
-#### Example Request
+#### リクエスト例
 
-**Example 1: Get room list (pagination + time filter)**
+**例 1：チャットルームリストを取得（ページネーション + 時間フィルタリング）**
 
-cURL Example:
+cURL 例：
 
 ```bash
 curl "https://your-app.imkit.io/rooms?skip=0&limit=20&sort=-lastMessage&updatedAfter=2020-10-15T03:28:54Z" \
@@ -62,7 +62,7 @@ curl "https://your-app.imkit.io/rooms?skip=0&limit=20&sort=-lastMessage&updatedA
      -H 'IM-Authorization: {IM-Authorization}'
 ```
 
-JavaScript Example:
+JavaScript 例：
 
 ```javascript
 const response = await axios.get(
@@ -83,7 +83,7 @@ const response = await axios.get(
 );
 ```
 
-**Example 2: Filter rooms by tag and prioritize unread rooms**
+**例 2：タグでチャットルームをフィルタリングし、未読を優先表示**
 
 ```javascript
 const response = await axios.get(
@@ -102,53 +102,53 @@ const response = await axios.get(
 );
 ```
 
-#### Response
+#### レスポンス
 
-**Success Response (200 OK)**
+**成功レスポンス (200 OK)**
 
-| Parameter | Type | Description |
+| パラメータ | 型 | 説明 |
 | --- | --- | --- |
-| `RC` | number | Response code (0 indicates success) |
-| `RM` | string | Response message |
-| `result.totalCount` | number | Total number of rooms matching the criteria |
-| `result.data` | array | Array of room objects |
-| `result.inspect` | object | Diagnostic information (query criteria and duration) |
+| `RC` | number | レスポンスコード (0 は成功) |
+| `RM` | string | レスポンスメッセージ |
+| `result.totalCount` | number | 条件に一致するチャットルームの総数 |
+| `result.data` | array | チャットルームオブジェクトの配列 |
+| `result.inspect` | object | 診断情報 (クエリ条件と所要時間) |
 
-**Room Object Fields**
+**チャットルームオブジェクトのフィールド**
 
-| Parameter | Type | Description |
+| パラメータ | 型 | 説明 |
 | --- | --- | --- |
-| `_id` | string | Room unique identifier |
-| `name` | string | Room name |
-| `cover` | string | Room cover image URL |
-| `description` | string | Room description |
-| `roomType` | string | Room type (`"direct"` or `"group"`) |
-| `webhook` | string | Webhook key or URL |
-| `botState` | string | Bot state |
-| `botMode` | boolean | Whether bot mode is enabled |
-| `encrypted` | boolean | Whether encryption is enabled |
-| `serviceStatus` | number | Service status |
-| `roomTags` | array[string] | Room tags array |
-| `status` | number | Room status (`1` indicates active) |
-| `unread` | number | Unread message count for the current user |
-| `muted` | boolean | Whether the current user has muted this room |
-| `lastMessage` | object | Latest message object |
-| `members` | array[object] | Room members array |
-| `pref` | object | Current user's personal preference settings for this room |
-| `createdTimeMS` | number | Room creation timestamp (milliseconds) |
+| `_id` | string | チャットルームの一意識別子 |
+| `name` | string | チャットルーム名 |
+| `cover` | string | チャットルームのカバー画像 URL |
+| `description` | string | チャットルームの説明 |
+| `roomType` | string | チャットルームの種類 (`"direct"` または `"group"`) |
+| `webhook` | string | Webhook キーまたは URL |
+| `botState` | string | ボットの状態 |
+| `botMode` | boolean | ボットモードが有効かどうか |
+| `encrypted` | boolean | 暗号化されているかどうか |
+| `serviceStatus` | number | サービスステータス |
+| `roomTags` | array[string] | チャットルームタグの配列 |
+| `status` | number | チャットルームのステータス (`1` は正常) |
+| `unread` | number | 現在のユーザーの未読メッセージ数 |
+| `muted` | boolean | 現在のユーザーがこのチャットルームを消音しているかどうか |
+| `lastMessage` | object | 最新のメッセージオブジェクト |
+| `members` | array[object] | チャットルームメンバーの配列 |
+| `pref` | object | 現在のユーザーのこのチャットルームに対する個人設定（好み） |
+| `createdTimeMS` | number | チャットルーム作成時間のタイムスタンプ (ミリ秒) |
 
-**Preference Object Fields (`pref`)**
+**個人設定オブジェクトのフィールド (`pref`)**
 
-| Parameter | Type | Description |
+| パラメータ | 型 | 説明 |
 | --- | --- | --- |
-| `tags` | array[string] | Custom tags the user has set for this room |
-| `tagColors` | object | Color for each tag (hex color code) |
-| `hidden` | boolean | Whether this room is hidden |
-| `sticky` | boolean | Whether this room is pinned |
-| `muted` | boolean | Whether notifications for this room are muted |
-| `folder` | string | Folder name this room belongs to |
+| `tags` | array[string] | ユーザーがこのチャットルームに設定したカスタムタグ |
+| `tagColors` | object | 各タグに対応する色 (16進数カラーコード) |
+| `hidden` | boolean | このチャットルームを非表示にするかどうか |
+| `sticky` | boolean | このチャットルームをピン留め（トップに固定）するかどうか |
+| `muted` | boolean | このチャットルームの通知を消音するかどうか |
+| `folder` | string | 所属するフォルダ名 |
 
-#### Example Response
+#### レスポンス例
 
 ```json
 {
@@ -233,32 +233,32 @@ const response = await axios.get(
 }
 ```
 
-#### Error Response
+#### エラーレスポンス
 
-When a request fails, you will receive an error response containing error details. Common error scenarios include:
+リクエストが失敗した場合、エラーの詳細情報を含むエラーレスポンスが返されます。一般的なエラーシナリオは以下の通りです：
 
-- Invalid client key or authorization token
-- Incorrect `updatedAfter` time format
-- Invalid JSON format for the `pref` parameter
-- Internal server error
-
-------
-
-## Use Cases
-
-### Room List Display
-- **Home page room list**: Use pagination and sorting to retrieve the user's room list
-- **Tag filtering**: Filter specific rooms by tags using the `pref` parameter
-
-### Incremental Synchronization
-- **Efficient sync**: Use `updatedAfter` with the timestamp from the last request to fetch only updated rooms
+- 無効なクライアントキーまたは認証トークン
+- `updatedAfter` の時間形式が正しくない
+- `pref` パラメータの JSON 形式が無効
+- サーバー内部エラー
 
 ------
 
-## Notes
+## ユースケース
 
-- **Incremental sync**: Use `updatedAfter` with the timestamp from the last request to achieve efficient incremental synchronization, avoiding full data pulls each time
-- **Pagination recommendation**: It is recommended to use `limit` and `skip` for pagination to avoid returning too much data at once, which can impact performance
-- **Sorting**: The `sort` field separates multiple criteria by spaces, with a `-` prefix indicating descending order
-- **`pref` filtering**: The `pref` parameter is in JSON format and must be URL-encoded before being passed
-- **`inspect` field**: For debugging purposes only; contains the actual query criteria and execution time, and can be ignored in production environments
+### チャットルームリストの表示
+- **トップページのチャットルームリスト**: ページネーションとソートを使用して、ユーザーのチャットルームリストを取得します。
+- **タグフィルタリング**: `pref` パラメータを使用して、タグごとに特定のチャットルームをフィルタリングします。
+
+### 増分同期
+- **効率的な同期**: `updatedAfter` を前回のクエストのタイムスタンプと組み合わせて使用し、更新があったチャットルームのみを取得します。
+
+------
+
+## 注意事項
+
+- **増分同期**: `updatedAfter` を前回のクエストのタイムスタンプと組み合わせて使用することで、毎回全データを取得することを避け、効率的な増分同期を実現できます。
+- **ページネーションの推奨**: 一度に大量のデータが返されることによるパフォーマンスへの影響を避けるため、`limit` と `skip` を組み合わせたページネーションの使用を推奨します。
+- **ソート**: `sort` フィールドは複数の条件をスペースで区切り、接頭辞 `-` は降順を表します。
+- **`pref` フィルタリング**: `pref` パラメータは JSON 形式であり、URL エンコードして渡す必要があります。
+- **`inspect` フィールド**: デバッグ専用です。実際のクエリ条件と実行所要時間が含まれています。本番環境では無視して構いません。

@@ -1,57 +1,57 @@
-# Batch Send Messages
+# メッセージの一括送信
 
-## Overview
+## 概要
 
-Send messages to multiple rooms or multiple users at once via the platform management API. Supports template variable substitution, making it suitable for broadcast notifications, marketing pushes, system announcements, and other scenarios.
+プラットフォーム管理 API を使用して、複数のチャットルームまたは複数のユーザーに対して一度にメッセージを送信します。テンプレート変数の置換をサポートしており、一斉通知、マーケティングプッシュ、システムお知らせなどのシナリオに適しています。
 
 ------
 
-## API Endpoint
+## API エンドポイント
 
-### Batch Send Messages
+### メッセージの一括送信
 
-Send messages to multiple rooms or users' one-on-one rooms.
+メッセージを複数のチャットルーム、またはユーザーの 1 対 1 チャットルームに送信します。
 
 ```http
 POST /messages/batch
 ```
 
-#### Headers
+#### ヘッダー
 
-| Parameter | Type | Required | Description |
+| パラメータ | 型 | 必須 | 説明 |
 | ---- | ---- | ---- | ---- |
-| `IM-API-KEY` | string | ✅ | Your platform API key |
+| `IM-API-KEY` | string | ✅ | 平台 API キー |
 | `Content-Type` | string | ✅ | `application/json; charset=utf-8` |
 
-#### Post Body
+#### ポストボディ
 
-| Parameter | Type | Required | Description |
+| パラメータ | 型 | 必須 | 説明 |
 | ---- | ---- | ---- | ---- |
-| `message` | string | ✅ | Message content, supports `$pattern$` template substitution |
-| `messageType` | string | ✅ | Message type (e.g., `"text"`) |
-| `sender` | string | ❌ | Specified sender ID (admin only) |
-| `push` | boolean | ❌ | Whether to enable push notifications, defaults to `false` |
-| `skipTotalBadge` | boolean | ❌ | Skip calculating the sender's total unread count, defaults to `false` |
-| `paras` | array[object] | ✅ | Recipient parameters array |
+| `message` | string | ✅ | メッセージ内容。`$pattern$` テンプレート置換をサポート |
+| `messageType` | string | ✅ | メッセージタイプ（例：`"text"`） |
+| `sender` | string | ❌ | 送信者 ID を指定（管理者のみ利用可能） |
+| `push` | boolean | ❌ | プッシュ通知を有効にするかどうか。デフォルトは `false` |
+| `skipTotalBadge` | boolean | ❌ | 送信者の総未読数の計算をスキップするかどうか。デフォルトは `false` |
+| `paras` | array[object] | ✅ | 受信者パラメータの配列 |
 
-**Recipient Parameter Object**
+**受信者パラメータオブジェクト**
 
-| Parameter | Type | Required | Description |
+| パラメータ | 型 | 必須 | 説明 |
 | ---- | ---- | ---- | ---- |
-| `receiver` | string | ❌ | Recipient user ID (sends to one-on-one room) |
-| `room` | string | ❌ | Room ID (if specified, `receiver` is ignored) |
-| `$pattern$` | string | ❌ | Replacement value for template variables |
+| `receiver` | string | ❌ | 受信者のユーザー ID（1 対 1 チャットルームに送信） |
+| `room` | string | ❌ | チャットルーム ID（指定された場合、`receiver` は無視されます） |
+| `$pattern$` | string | ❌ | テンプレート変数の置換値 |
 
-#### Example Request
+#### リクエスト例
 
-**Basic batch send**
+**基本的な一括送信**
 
 ```javascript
 const response = await axios.post(
   "https://your-app.imkit.io/messages/batch",
   {
     messageType: "text",
-    message: "系統公告：明天將進行例行維護",
+    message: "システムお知らせ：明日、定期メンテナンスを行います",
     push: true,
     sender: "system",
     paras: [
@@ -69,16 +69,16 @@ const response = await axios.post(
 );
 ```
 
-**Using template variables**
+**テンプレート変数の使用**
 
-Variables wrapped in `$pattern$` in the message will be replaced with the corresponding value for each recipient:
+メッセージ内で `$pattern$` で囲まれた変数は、各受信者に対応する値に置換されます。
 
 ```javascript
 const response = await axios.post(
   "https://your-app.imkit.io/messages/batch",
   {
     messageType: "text",
-    message: "Hi $name$，您的訂單 $orderId$ 已出貨！",
+    message: "こんにちは $name$ 様、ご注文の $orderId$ が発送されました！",
     push: true,
     sender: "system",
     paras: [
@@ -103,14 +103,14 @@ const response = await axios.post(
 );
 ```
 
-**Send to specific rooms**
+**指定したチャットルームへの送信**
 
 ```javascript
 const response = await axios.post(
   "https://your-app.imkit.io/messages/batch",
   {
     messageType: "text",
-    message: "活動提醒：明天 14:00 開始",
+    message: "イベントリマインド：明日 14:00 開始",
     sender: "system",
     paras: [
       { room: "room-001" },
@@ -127,18 +127,18 @@ const response = await axios.post(
 );
 ```
 
-#### Response
+#### レスポンス
 
-**Success Response (200 OK)**
+**成功（200 OK）**
 
-| Parameter | Type | Description |
+| パラメータ | 型 | 説明 |
 | ---- | ---- | ---- |
-| `RC` | number | Response code (0 indicates success) |
-| `RM` | string | Response message |
-| `result.batchID` | string | Batch task ID |
-| `result.count` | number | Number of recipients |
+| `RC` | number | レスポンスコード（0は成功） |
+| `RM` | string | レスポンスメッセージ |
+| `result.batchID` | string | 一括タスク ID |
+| `result.count` | number | 受信者数 |
 
-#### Example Response
+#### レスポンス例
 
 ```json
 {
@@ -151,32 +151,32 @@ const response = await axios.post(
 }
 ```
 
-#### Error Response
+#### エラーレスポンス
 
-When a request fails, you will receive an error response containing error details. Common error scenarios include:
+リクエストが失敗した場合、エラーの詳細情報を含むレスポンスが返されます。一般的なエラーには以下が含まれます：
 
-- **Invalid API key** — The provided `IM-API-KEY` is invalid or expired
-- **Missing required parameters** — `message`, `messageType`, or `paras` was not provided
-- **Recipient does not exist** — A `receiver` in `paras` does not exist
-- **Internal server error** — An unexpected error occurred on the server side
-
-------
-
-## Use Cases
-
-### Broadcast Notifications
-- **System announcements**: Push maintenance notifications or important announcements to all users
-- **Event promotions**: Send event or promotional messages to specific user groups
-
-### Personalized Messages
-- **Template messages**: Use `$pattern$` variables to send notifications containing personal information (such as order numbers, usernames)
-- **Billing notifications**: Send personalized notifications for bill due dates, successful payments, etc.
+- **無効な API キー** — 提供された `IM-API-KEY` が無効または期限切れです。
+- **必須パラメータの欠落** — `message`、`messageType`、または `paras` が提供されていません。
+- **受信者が存在しない** — `paras` 内の `receiver` が存在しません。
+- **サーバー内部エラー** — サーバー側で予期しないエラーが発生しました。
 
 ------
 
-## Notes
+## 使用シーン
 
-- **Asynchronous processing**: Batch messages are added to a processing queue; the response only indicates that the task has been created
-- **Template substitution**: Variable names must be wrapped in `$`, e.g., `$name$`; substitution applies to both the `message` and `extra` fields
-- **Recipient priority**: If both `receiver` and `room` are specified in `paras`, `room` takes priority
-- **Push disabled by default**: `push` defaults to `false`; it must be explicitly set to `true` to enable push notifications
+### 一斉通知
+- **システムお知らせ**: すべてのユーザーにメンテナンス通知や重要なお知らせをプッシュします。
+- **イベントプッシュ**: 特定のユーザーグループにイベントや特典情報を送信します。
+
+### パーソナライズされたメッセージ
+- **テンプレートメッセージ**: `$pattern$` 変数を使用して、個人情報（注文番号、ユーザー名など）を含む通知を送信します。
+- **会計通知**: 支払期限や支払い完了などのパーソナライズされた通知を送信します。
+
+------
+
+## 注意事項
+
+- **非同期処理**: 一括メッセージは処理キューに追加されます。レスポンスはタスクが作成されたことのみを示します。
+- **テンプレート置換**: 変数名は `$` で囲む必要があります（例：`$name$`）。置換は `message` および `extra` フィールドに適用されます。
+- **受信者の優先順位**: `paras` 内で `receiver` と `room` の両方が指定された場合、`room` が優先されます。
+- **プッシュ通知はデフォルトでオフ**: `push` はデフォルトで `false` です。プッシュ通知を行うには明示的に `true` に設定する必要があります。

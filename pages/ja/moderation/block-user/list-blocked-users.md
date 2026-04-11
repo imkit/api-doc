@@ -1,31 +1,31 @@
-# List Blocked Users
+# ブロックユーザーの一覧表示 (List Blocked Users)
 
-## Overview
+## 概要
 
-Retrieve the current user's complete block list, displaying detailed information for all blocked users. This API provides users with the ability to manage their personal block list, including viewing blocked users' basic information, block times, and related chatroom information. It is suitable for users to review and manage their privacy settings.
+現在のユーザーの完全なブロックリストを取得し、ブロックされているすべてのユーザーの詳細情報を表示します。この API は、ブロックされたユーザーの基本情報、ブロック時間、関連するチャットルーム情報など、ユーザーが自身のブロックリストを管理する機能を提供し、ユーザーが自身のプライバシー設定を確認および管理するのに適しています。
 
 ------
 
-## API Endpoint
+## API エンドポイント
 
-### Get Block List
+### ブロックリストを取得する
 
-Retrieve detailed information about all block relationships created by the current user.
+現在のユーザーが作成したすべてのブロック関係の詳細情報を取得します。
 
 ```http
 GET /blockStatus/my
 ```
 
-#### Headers
+#### ヘッダー (Headers)
 
-| Parameter          | Type   | Required | Description    |
-| ------------------ | ------ | -------- | -------------- |
-| `IM-CLIENT-KEY`    | string | ✅        | Client Key     |
-| `IM-Authorization` | string | ✅        | Client Token   |
+| パラメータ | 型 | 必須 | 説明 |
+| ------------------ | ------ | ---- | -------------- |
+| `IM-CLIENT-KEY` | string | ✅ | Client Key |
+| `IM-Authorization` | string | ✅ | Client Token |
 
-#### Example Request
+#### リクエスト例
 
-**Get the complete block list**
+**完全なブロックリストを取得する**
 
 ```http
 GET /blockStatus/my HTTP/1.1
@@ -35,7 +35,7 @@ Host: your-app.imkit.io
 Connection: close
 ```
 
-**JavaScript Example:**
+**JavaScript 例：**
 
 ```javascript
 const response = await axios.get(
@@ -49,7 +49,7 @@ const response = await axios.get(
 );
 ```
 
-**cURL Example:**
+**cURL 例：**
 
 ```bash
 curl -X "GET" "https://your-app.imkit.io/blockStatus/my" \
@@ -57,52 +57,52 @@ curl -X "GET" "https://your-app.imkit.io/blockStatus/my" \
      -H 'IM-Authorization: {IM-Authorization}'
 ```
 
-#### Response
+#### レスポンス (Response)
 
-**Success Response (200 OK)**
+**成功レスポンス（200 OK）**
 
-| Parameter | Type   | Description                         |
-| --------- | ------ | ----------------------------------- |
-| `RC`      | number | Response code (0 indicates success) |
-| `RM`      | string | Response message                    |
-| `result`  | object | Block list data                     |
+| パラメータ | 型 | 説明 |
+| -------- | ------ | ---------------------- |
+| `RC` | number | レスポンスコード（0 は成功を示す） |
+| `RM` | string | レスポンスメッセージ |
+| `result` | object | ブロックリストデータ |
 
-**Result Object Structure**
+**結果オブジェクトの構造**
 
-| Parameter | Type  | Description                |
-| --------- | ----- | -------------------------- |
-| `data`    | array | Block relationship array   |
+| パラメータ | 型 | 説明 |
+| ------ | ----- | ------------------ |
+| `data` | array | ブロック関係リストの配列 |
 
-**Block Relationship Object Structure**
+**ブロック関係オブジェクトの構造**
 
-| Parameter   | Type   | Description                              |
-| ----------- | ------ | ---------------------------------------- |
-| `blockee`   | object | Detailed information of blocked user     |
-| `blocker`   | string | ID of the user who performed the block   |
-| `room`      | object | Detailed information of associated chatroom |
-| `createdAt` | string | Block creation time                      |
-| `updatedAt` | string | Block update time                        |
+| パラメータ | 型 | 説明 |
+| ----------- | ------ | ----------------------------- |
+| `blockee` | object | ブロックされたユーザーの詳細情報 |
+| `blocker` | string | ブロックを実行したユーザー ID |
+| `room` | object | 関連するチャットルームの詳細情報 |
+| `createdAt` | string | ブロック作成日時 |
+| `updatedAt` | string | ブロック更新日時 |
 
-**Blocked User Object Structure**
+**ブロックされたユーザーオブジェクトの構造**
 
-| Parameter         | Type   | Description                             |
-| ----------------- | ------ | --------------------------------------- |
-| `_id`             | string | User unique ID                          |
-| `nickname`        | string | User nickname                           |
-| `avatarUrl`       | string | User avatar URL                         |
-| `id`              | string | User ID                                 |
-| `lastLoginTimeMS` | number | Last login time (millisecond timestamp) |
+| パラメータ | 型 | 説明 |
+| ----------------- | ------ | ----------------------------- |
+| `_id` | string | ユーザー一意識別子 |
+| `nickname` | string | ユーザーのニックネーム |
+| `avatarUrl` | string | ユーザーのアバター URL |
+| `id` | string | ユーザー ID |
+| `lastLoginTimeMS` | number | 最終ログイン時間（ミリ秒タイムスタンプ） |
 
-**Chatroom Object Structure**
+**チャットルームオブジェクトの構造**
 
-| Parameter       | Type   | Description                                |
-| --------------- | ------ | ------------------------------------------ |
-| `_id`           | string | Chatroom unique ID                         |
-| `roomType`      | string | Chatroom type (direct/group)               |
-| `id`            | string | Chatroom ID                                |
-| `createdTimeMS` | number | Chatroom creation time (millisecond timestamp) |
+| パラメータ | 型 | 説明 |
+| --------------- | ------ | --------------------------------- |
+| `_id` | string | チャットルーム一意識別子 |
+| `roomType` | string | チャットルームの種類（direct/group） |
+| `id` | string | チャットルーム ID |
+| `createdTimeMS` | number | チャットルーム作成時間（ミリ秒タイムスタンプ） |
 
-#### Example Response
+#### レスポンス例
 
 ```json
 {
@@ -151,9 +151,9 @@ curl -X "GET" "https://your-app.imkit.io/blockStatus/my" \
 }
 ```
 
-#### Error Response
+#### エラーレスポンス
 
-**401 Unauthorized** - Authentication failed
+**401 Unauthorized** - 認証失敗
 
 ```json
 {
@@ -166,7 +166,7 @@ curl -X "GET" "https://your-app.imkit.io/blockStatus/my" \
 }
 ```
 
-**403 Forbidden** - Insufficient permissions
+**403 Forbidden** - 権限不足
 
 ```json
 {
@@ -181,30 +181,30 @@ curl -X "GET" "https://your-app.imkit.io/blockStatus/my" \
 
 ------
 
-## Use Cases
+## 使用シーン
 
-### Personal Privacy Management
-- **Block List Review**: View all currently blocked users
-- **Privacy Settings Management**: Review and manage personal privacy status in one place
-- **Relationship Status Confirmation**: Confirm the block status of a specific user
+### 個人のプライバシー管理
+- **ブロックリストの確認**：現在ブロックしているすべてのユーザーを確認します。
+- **プライバシー設定の管理**：個人のプライバシー状態を統一的に確認および管理します。
+- **関係ステータスの確認**：特定のユーザーのブロックステータスを確認します。
 
-### User Experience Optimization
-- **List Management Interface**: Provide a complete blocked user management feature
-- **Quick Unblock**: Quickly select users to unblock from the list
-- **Status Synchronization**: Ensure block list consistency across all platforms
+### ユーザー体験の最適化
+- **リスト管理インターフェース**：完全なブロックユーザー管理機能を提供します。
+- **迅速なブロック解除**：リストからブロックを解除したいユーザーを素早く選択します。
+- **ステータスの同期**：各プラットフォーム間でブロックリストの一貫性を確保します。
 
-### System Management
-- **Behavior Tracking**: Understand user blocking behavior patterns
-- **Relationship Analysis**: Analyze interaction relationships between users
-- **Data Statistics**: Track usage statistics of the block feature
+### システム管理
+- **行動追跡**：ユーザーのブロック行動パターンを把握します。
+- **関係分析**：ユーザー間のインタラクション関係を分析します。
+- **データ統計**：ブロック機能の使用状況を統計します。
 
 ------
 
-## Notes
+## 注意事項
 
-- **Own List Only**: Users can only view block relationships they have created
-- **Complete Information**: Includes detailed information about blocked users and associated chatrooms
-- **Time Sorting**: Typically sorted by block time
-- **Chatroom Types**: Supports block relationships for both direct chats and group chats
-- **Real-Time**: Returns the current latest block list status
-- **Empty List Handling**: Returns an empty array if no users have been blocked
+- **自身のリストのみ表示**：現在認証されているユーザーが作成したブロック関係のみを表示できます。
+- **完全な情報の提供**：ブロックされたユーザーおよび関連するチャットルームの詳細情報が含まれます。
+- **時間順のソート**：通常、ブロックした時間の順にソートされて表示されます。
+- **チャットルームの種類**：直接チャット（direct）およびグループチャット（group）のブロック関係をサポートします。
+- **即時性**：現在の最新のブロックリストステータスを返します。
+- **空のリストの処理**：ユーザーを一人もブロックしていない場合は、空の配列が返されます。

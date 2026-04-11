@@ -1,44 +1,44 @@
-# Update Token
+# トークンの更新
 
-## Overview
+## 概要
 
-Update the access token and validity period for a specified user. Suitable for scenarios such as token rotation, extending validity, or replacing authentication credentials.
+指定したユーザーのアクセストークンと有効期限を更新します。トークンのローテーション、有効期限の延長、または認証情報の変更などのシナリオに適しています。
 
 ------
 
-## API Endpoint
+## API エンドポイント
 
-### Update User Token
+### ユーザーのトークンを更新
 
-Update the access token and expiration time for a specified user.
+指定したユーザーのアクセストークンと有効期限を更新します。
 
 ```http
 PUT /admin/clients/{client_id}/token
 ```
 
-#### Headers
+#### ヘッダー
 
-| Parameter | Type | Required | Description |
+| パラメータ | 型 | 必須 | 説明 |
 | ---- | ---- | ---- | ---- |
-| `IM-API-KEY` | string | ✅ | Your API key |
+| `IM-API-KEY` | string | ✅ | あなたの API キー |
 | `Content-Type` | string | ✅ | `application/json` |
 
-#### Path Parameters
+#### パスパラメータ
 
-| Parameter | Type | Required | Description |
+| パラメータ | 型 | 必須 | 説明 |
 | ---- | ---- | ---- | ---- |
-| `client_id` | string | ✅ | Unique user identifier |
+| `client_id` | string | ✅ | ユーザーの一意識別子 |
 
-#### Request Body
+#### リクエストボディ (Request Body)
 
-| Parameter | Type | Required | Description |
+| パラメータ | 型 | 必須 | 説明 |
 | ---- | ---- | ---- | ---- |
-| `token` | string | ✅ | New access token |
-| `expirationDate` | string | ✅ | Token expiration time (ISO 8601 format) |
+| `token` | string | ✅ | 新しいアクセストークン |
+| `expirationDate` | string | ✅ | トークンの有効期限 (ISO 8601 形式) |
 
-#### Example Request
+#### リクエスト例
 
-**JavaScript Example:**
+**JavaScript 例:**
 
 ```javascript
 const response = await axios.put(
@@ -56,7 +56,7 @@ const response = await axios.put(
 );
 ```
 
-**cURL Example:**
+**cURL 例:**
 
 ```bash
 curl -X "PUT" "https://your-app.imkit.io/admin/clients/{client_id}/token" \
@@ -68,21 +68,21 @@ curl -X "PUT" "https://your-app.imkit.io/admin/clients/{client_id}/token" \
 }'
 ```
 
-#### Response
+#### レスポンス
 
-**Success Response (200 OK)**
+**成功レスポンス (200 OK)**
 
-| Parameter | Type | Description |
+| パラメータ | 型 | 説明 |
 | ---- | ---- | ---- |
-| `_id` | string | Unique user identifier |
-| `nickname` | string | User display name |
-| `avatarUrl` | string | User avatar URL |
-| `issueAccessToken` | boolean | Token issue mode |
-| `token` | string | Updated access token |
-| `expirationDate` | string | Updated token expiration time |
-| `updatedAt` | string | Token update time (ISO 8601 format) |
+| `_id` | string | ユーザーの一意識別子 |
+| `nickname` | string | ユーザーの表示名 |
+| `avatarUrl` | string | ユーザーのアバター URL |
+| `issueAccessToken` | boolean | トークン発行モード |
+| `token` | string | 更新後のアクセストークン |
+| `expirationDate` | string | 更新後のトークン有効期限 |
+| `updatedAt` | string | トークンの更新日時 (ISO 8601 形式) |
 
-#### Example Response
+#### レスポンス例
 
 ```json
 {
@@ -96,9 +96,9 @@ curl -X "PUT" "https://your-app.imkit.io/admin/clients/{client_id}/token" \
 }
 ```
 
-#### Error Response
+#### エラーレスポンス
 
-**400 Bad Request** — Invalid request parameters
+**400 Bad Request** — リクエストパラメータエラー
 
 ```json
 {
@@ -107,7 +107,7 @@ curl -X "PUT" "https://your-app.imkit.io/admin/clients/{client_id}/token" \
 }
 ```
 
-**401 Unauthorized** — Invalid API key
+**401 Unauthorized** — API キーが無効
 
 ```json
 {
@@ -116,7 +116,7 @@ curl -X "PUT" "https://your-app.imkit.io/admin/clients/{client_id}/token" \
 }
 ```
 
-**404 Not Found** — User not found
+**404 Not Found** — ユーザーが存在しません
 
 ```json
 {
@@ -125,7 +125,7 @@ curl -X "PUT" "https://your-app.imkit.io/admin/clients/{client_id}/token" \
 }
 ```
 
-**409 Conflict** — Token conflict
+**409 Conflict** — トークンの競合
 
 ```json
 {
@@ -136,24 +136,24 @@ curl -X "PUT" "https://your-app.imkit.io/admin/clients/{client_id}/token" \
 
 ------
 
-## Use Cases
+## ユースケース
 
-### Token Lifecycle Management
-- **Regular Rotation**: Periodically update tokens to enhance security
-- **Extend Validity**: Extend the validity period of tokens that are about to expire
-- **Emergency Update**: Urgently replace tokens when a security incident occurs
+### トークンのライフサイクル管理
+- **定期的なローテーション**: セキュリティ向上のためにトークンを定期的に更新します。
+- **有効期限の延長**: 期限切れ間近のトークンの有効期限を延長します。
+- **緊急更新**: セキュリティインシデント発生時にトークンを緊急に変更します。
 
-### System Maintenance
-- **Batch Update**: Batch update user tokens during system upgrades
-- **Format Migration**: Migrate from old token formats to new formats
+### システムメンテナンス
+- **一括更新**: システムアップグレード時にユーザーのトークンを一括更新します。
+- **形式の移行**: 旧形式のトークンから新形式に移行します。
 
 ------
 
-## Notes
+## 注意事項
 
-- **Immediate Effect**: Token updates take effect immediately; the old token will be invalidated
-- **Uniqueness Check**: The system checks whether the new token conflicts with other users
-- **Time Format**: `expirationDate` must be in ISO 8601 format
-- **Token Complexity**: It is recommended to use a sufficiently complex token format
-- **Expiration Time Settings**: Set a reasonable expiration time, balancing security and usability
-- **Synchronization Mechanism**: Ensure synchronization with your authentication system when updating
+- **即時反映**: トークンの更新は即時に有効になり、古いトークンは使用できなくなります。
+- **一意性チェック**: システムは、新しいトークンが他のユーザーと競合していないかチェックします。
+- **時間形式**: `expirationDate` は ISO 8601 形式を使用する必要があります。
+- **トークンの複雑さ**: 十分に複雑なトークン形式を使用することをお勧めします。
+- **有効期限の設定**: セキュリティと利便性のバランスを考慮して、適切な有効期限を設定してください。
+- **同期メカニズム**: あなたの認証システムと同期して更新されるようにしてください。

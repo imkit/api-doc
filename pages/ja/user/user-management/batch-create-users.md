@@ -1,43 +1,43 @@
-# Batch Create Users
+# ユーザーの一括作成
 
-## Overview
+## 概要
 
-This endpoint allows you to create or update multiple users at once. It is suitable for scenarios such as system migration and bulk user import. This API is for server-side use only and requires proper authentication.
+このエンドポイントを使用すると、一度に複数のユーザーを作成または更新できます。システムの移行やユーザーの大量インポートなどのシナリオに適しています。この API はサーバーサイド専用であり、適切な認証が必要です。
 
 ------
 
-## API Endpoint
+## API エンドポイント
 
-### Batch Create or Update Users
+### ユーザーの一括作成または更新
 
-Create or update multiple users at once.
+一度に複数のクライアント（ユーザー）を作成または更新します。
 
 ```http
 POST /admin/clients/list
 ```
 
-#### Headers
+#### ヘッダー
 
-| Parameter | Type | Required | Description |
+| パラメータ | 型 | 必須 | 説明 |
 | ---- | ---- | ---- | ---- |
-| `IM-API-KEY` | string | ✅ | Your platform API key |
+| `IM-API-KEY` | string | ✅ | プラットフォーム API キー |
 | `Content-Type` | string | ✅ | `application/json; charset=utf-8` |
 
-#### Request Body
+#### リクエストボディ (Post Body)
 
-| Parameter | Type | Required | Description |
+| パラメータ | 型 | 必須 | 説明 |
 | ---- | ---- | ---- | ---- |
-| `data` | array[object] | ✅ | Array of user information objects |
+| `data` | array[object] | ✅ | ユーザー情報の配列 |
 
-**User Information Object**
+**ユーザー情報オブジェクト**
 
-| Parameter | Type | Required | Description |
+| パラメータ | 型 | 必須 | 説明 |
 | ---- | ---- | ---- | ---- |
-| `_id` | string | ✅ | Unique user identifier |
-| `nickname` | string | ❌ | User display name |
-| `avatarUrl` | string | ❌ | User avatar image URL |
+| `_id` | string | ✅ | ユーザーの一意識別子 |
+| `nickname` | string | ❌ | ユーザーの表示名 |
+| `avatarUrl` | string | ❌ | ユーザーのアバター画像 URL |
 
-#### Example Request
+#### リクエスト例
 
 ```javascript
 const response = await axios.post(
@@ -70,7 +70,7 @@ const response = await axios.post(
 );
 ```
 
-##### cURL Example
+##### cURL 例
 
 ```bash
 curl -X "POST" "https://your-app.imkit.io/admin/clients/list" \
@@ -84,17 +84,17 @@ curl -X "POST" "https://your-app.imkit.io/admin/clients/list" \
 }'
 ```
 
-#### Response
+#### レスポンス
 
-**Success Response (200 OK)**
+**成功レスポンス (200 OK)**
 
-| Parameter | Type | Description |
+| パラメータ | 型 | 説明 |
 | ---- | ---- | ---- |
-| `RC` | number | Response code (0 indicates success) |
-| `RM` | string | Response message |
-| `result.count` | number | Number of users successfully created or updated |
+| `RC` | number | レスポンスコード (0 は成功) |
+| `RM` | string | レスポンスメッセージ |
+| `result.count` | number | 正常に作成または更新されたユーザー数 |
 
-#### Example Response
+#### レスポンス例
 
 ```json
 {
@@ -106,32 +106,32 @@ curl -X "POST" "https://your-app.imkit.io/admin/clients/list" \
 }
 ```
 
-#### Error Response
+#### エラーレスポンス
 
-When a request fails, you will receive an error response containing error details. Common error scenarios include:
+リクエストが失敗した場合、エラーの詳細情報を含むエラーレスポンスが返されます。一般的なエラーシナリオは以下の通りです：
 
-- **Invalid API Key** — The provided `IM-API-KEY` is invalid or expired
-- **Invalid Data Format** — The `data` array format is incorrect
-- **Missing Required Fields** — The user information is missing the `_id` field
-- **Internal Server Error** — An unexpected error occurred on the server side
-
-------
-
-## Use Cases
-
-### System Migration
-- **User Import**: Migrate user data from an existing system to IMKIT
-- **Batch Initialization**: Batch create all users when an application is launched
-
-### Data Synchronization
-- **Periodic Sync**: Periodically synchronize user data (nickname, avatar, etc.) from the primary system
-- **Update Information**: Batch update the display names or avatars of multiple users
+- **無効な API キー** — 提供された `IM-API-KEY` が無効であるか、期限切れです
+- **データ形式エラー** — `data` 配列の形式が正しくありません
+- **必須フィールドの欠落** — ユーザー情報に `_id` が含まれていません
+- **サーバー内部エラー** — サーバー側で予期しないエラーが発生しました
 
 ------
 
-## Notes
+## ユースケース
 
-- **Server-Side Only**: This endpoint must be called from the backend
-- **No Token Generation**: This API does not generate access tokens for users. If tokens are needed, use the "Create a User" API with `issueAccessToken: true`
-- **Idempotency**: If the `_id` already exists, the user's data will be updated rather than creating a new user
-- **Performance Considerations**: It is recommended to keep each batch under 100 records to avoid request timeouts
+### システム移行
+- **ユーザーインポート**: 既存のシステムから IMKIT へユーザーデータを移行します。
+- **一括初期化**: アプリケーション起動時にすべてのユーザーを一括作成します。
+
+### データ同期
+- **定期同期**: メインシステムからユーザーデータ（ニックネーム、アバターなど）を定期的に同期します。
+- **情報の更新**: 複数のユーザーの表示名やアバターを一括更新します。
+
+------
+
+## 注意事項
+
+- **サーバーサイド専用**: このエンドポイントはバックエンドから呼び出す必要があります。
+- **トークンを生成しない**: この API はユーザーのアクセストークンを生成しません。トークンが必要な場合は、「ユーザーの作成」API を使用し、`issueAccessToken: true` を設定してください。
+- **冪等性**: `_id` が既に存在する場合、新しいユーザーを作成するのではなく、既存のユーザーデータを更新します。
+- **パフォーマンスの考慮**: リクエストのタイムアウトを避けるため、1回の一括処理は100件以内に抑えることをお勧めします。

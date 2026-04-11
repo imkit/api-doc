@@ -1,28 +1,28 @@
-# Connection Count
+# 接続数の取得
 
-## Overview
+## 概要
 
-Retrieve the current number of WebSocket real-time connections in the system. This endpoint can be used for real-time system load monitoring, capacity planning, and operational monitoring. Platform API permissions are required to call this endpoint.
+システムの現在の WebSocket リアルタイム接続数を取得します。このエンドポイントは、システム負荷のリアルタイム監視、キャパシティプランニング、および運用監視などの目的に使用できます。呼び出しにはプラットフォーム API 権限が必要です。
 
 ------
 
-## API Endpoint
+## API エンドポイント
 
-### Get Current Connection Count
+### 現在の接続数を取得
 
-Query the current number of WebSocket connections on the system.
+システム上の現在の WebSocket 接続数を照会します。
 
 ```http
 GET /admin/connection-count
 ```
 
-#### Headers
+#### ヘッダー
 
-| Parameter    | Type   | Required | Description           |
-| ------------ | ------ | -------- | --------------------- |
-| `IM-API-KEY` | string | ✅        | Your platform API Key |
+| パラメータ    | 型     | 必須 | 説明                    |
+| ------------ | ------ | ---- | ----------------------- |
+| `IM-API-KEY` | string | ✅    | プラットフォーム API キー |
 
-#### Example Request
+#### リクエスト例
 
 **JavaScript (axios)**
 
@@ -44,18 +44,18 @@ curl -X GET "https://your-app.imkit.io/admin/connection-count" \
   -H "IM-API-KEY: your_api_key"
 ```
 
-#### Response
+#### レスポンス
 
-**Success Response (200 OK)**
+**成功レスポンス (200 OK)**
 
-| Parameter      | Type   | Description                         |
-| -------------- | ------ | ----------------------------------- |
-| `RC`           | number | Response code (0 indicates success) |
-| `RM`           | string | Response message                    |
-| `result`       | object | Query result                        |
-| `result.count` | number | Current WebSocket connection count  |
+| パラメータ       | 型     | 説明                         |
+| -------------- | ------ | ---------------------------- |
+| `RC`           | number | レスポンスコード (0 は成功)   |
+| `RM`           | string | レスポンスメッセージ          |
+| `result`       | object | 照会結果                     |
+| `result.count` | number | 現在の WebSocket 接続数       |
 
-#### Example Response
+#### レスポンス例
 
 ```json
 {
@@ -67,9 +67,9 @@ curl -X GET "https://your-app.imkit.io/admin/connection-count" \
 }
 ```
 
-#### Error Response
+#### エラーレスポンス
 
-**401 Unauthorized** - Invalid API Key
+**401 Unauthorized** - API キーが無効
 
 ```json
 {
@@ -82,7 +82,7 @@ curl -X GET "https://your-app.imkit.io/admin/connection-count" \
 }
 ```
 
-**403 Forbidden** - Insufficient permissions
+**403 Forbidden** - 権限不足
 
 ```json
 {
@@ -97,25 +97,25 @@ curl -X GET "https://your-app.imkit.io/admin/connection-count" \
 
 ------
 
-## Use Cases
+## ユースケース
 
-### Real-Time Monitoring
-- **Connection Monitoring**: Display the current WebSocket connection count in real-time on a monitoring dashboard
-- **Anomaly Detection**: Set connection count thresholds to trigger alerts when counts exceed or suddenly drop
+### リアルタイム監視
+- **接続数監視**: 監視ダッシュボードに現在の WebSocket 接続数をリアルタイムで表示します。
+- **異常検知**: 接続数の閾値を設定し、超過または急落した際にアラートをトリガーします。
 
-### Capacity Planning
-- **Load Assessment**: Periodically retrieve connection counts to assess system load conditions
-- **Scaling Decisions**: Decide whether server resources need to be scaled based on connection count trends
+### キャパシティプランニング
+- **負荷評価**: 定期的に接続数を取得し、システムの負荷状況を評価します。
+- **拡張の意思決定**: 接続数の傾向に基づいて、サーバーリソースの拡張が必要かどうかを判断します。
 
-### Operational Reports
-- **Usage Statistics**: Record connection counts at various time periods to generate usage reports
-- **Peak Analysis**: Analyze connection peaks at different times to optimize resource allocation
+### 運用レポート
+- **利用統計**: 時間帯別の接続数を記録し、利用レポートを作成します。
+- **ピーク分析**: さまざまな時間帯の接続ピークを分析し、リソース配置を最適化します。
 
 ------
 
-## Notes
+## 注意事項
 
-- **Platform API Permission Required**: This endpoint requires authentication using an `IM-API-KEY` with platform API permissions
-- **Real-Time Data**: The returned value is the real-time connection count at the moment of the call; results may differ with each call
-- **WebSocket Connections**: The count includes only WebSocket persistent connections, not regular HTTP requests
-- **Monitoring Frequency**: It is recommended to poll at an appropriate interval (e.g., every 30 seconds or every minute) to avoid overly frequent calls
+- **プラットフォーム API 権限が必要**: このエンドポイントは、プラットフォーム API 権限を持つ `IM-API-KEY` を使用して認証する必要があります。
+- **リアルタイムデータ**: 返されるのは呼び出し時点のリアルタイムな接続数であり、呼び出しごとに結果が異なる場合があります。
+- **WebSocket 接続**: 統計対象は WebSocket の長時間接続数であり、一般的な HTTP リクエストは含まれません。
+- **監視頻度**: 過度な頻繁な呼び出しを避けるため、適切な間隔（例：30秒ごと、または1分ごと）でポーリングすることをお勧めします。

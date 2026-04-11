@@ -1,38 +1,38 @@
-# Ban a Member
+# メンバーの禁止 (Ban Member)
 
-## Overview
+## 概要
 
-Ban a specified user in a chatroom, preventing them from participating in activities within that chatroom. This feature allows platform administrators and chatroom owners to manage members in group chatrooms. When a chatroom has an owner, only platform administrators and the chatroom owner have this permission. After being banned, the user will be unable to send messages or participate in interactions in that chatroom.
+チャットルーム内で特定のユーザーを禁止し、そのチャットルームでの活動を阻止します。この機能により、プラットフォーム管理者やチャットルームのオーナーは、グループチャットルーム内のメンバーを管理できます。チャットルームにオーナーが設定されている場合、プラットフォーム管理者とチャットルームのオーナーのみがこの権限を持ちます。禁止されたユーザーは、そのチャットルームでメッセージを送信したり、対話に参加したりすることができなくなります。
 
 ------
 
-## API Endpoint
+## API エンドポイント
 
-### Ban a Specified User in a Chatroom
+### チャットルームで特定のユーザーを禁止する
 
-Add a specified user to the chatroom's ban list, restricting their activity permissions in that chatroom.
+指定したユーザーをチャットルームの禁止リストに追加し、そのチャットルームでの活動権限を制限します。
 
 ```http
 POST /blockStatus/room/{roomID}/{blockee}
 ```
 
-#### Headers
+#### ヘッダー (Headers)
 
-| Parameter          | Type   | Required | Description    |
-| ------------------ | ------ | -------- | -------------- |
-| `IM-CLIENT-KEY`    | string | ✅        | Client Key     |
-| `IM-Authorization` | string | ✅        | Client Token   |
+| パラメータ | 型 | 必須 | 説明 |
+| ------------------ | ------ | ---- | -------------- |
+| `IM-CLIENT-KEY` | string | ✅ | Client Key |
+| `IM-Authorization` | string | ✅ | Client Token |
 
-#### Path Parameters
+#### パスパラメータ (Path Parameters)
 
-| Parameter | Type   | Required | Description            |
-| --------- | ------ | -------- | ---------------------- |
-| `roomID`  | string | ✅        | Chatroom ID            |
-| `blockee` | string | ✅        | ID of the user to ban  |
+| パラメータ | 型 | 必須 | 説明 |
+| --------- | ------ | ---- | ----------------- |
+| `roomID` | string | ✅ | チャットルーム ID |
+| `blockee` | string | ✅ | 禁止するユーザー ID |
 
-#### Example Request
+#### リクエスト例
 
-**Ban a specific user in a chatroom**
+**チャットルームで特定のユーザーを禁止する**
 
 ```http
 POST /blockStatus/room/demo-room/ccc HTTP/1.1
@@ -42,7 +42,7 @@ Host: your-app.imkit.io
 Connection: close
 ```
 
-**JavaScript Example:**
+**JavaScript 例：**
 
 ```javascript
 const response = await axios.post(
@@ -57,7 +57,7 @@ const response = await axios.post(
 );
 ```
 
-**cURL Example:**
+**cURL 例：**
 
 ```bash
 curl -X "POST" "https://your-app.imkit.io/blockStatus/room/{roomID}/{blockee}" \
@@ -65,38 +65,38 @@ curl -X "POST" "https://your-app.imkit.io/blockStatus/room/{roomID}/{blockee}" \
      -H 'IM-Authorization: {IM-Authorization}'
 ```
 
-#### Response
+#### レスポンス (Response)
 
-**Success Response (200 OK)**
+**成功レスポンス（200 OK）**
 
-| Parameter | Type   | Description                         |
-| --------- | ------ | ----------------------------------- |
-| `RC`      | number | Response code (0 indicates success) |
-| `RM`      | string | Response message                    |
-| `result`  | object | Ban status information              |
+| パラメータ | 型 | 説明 |
+| -------- | ------ | ---------------------- |
+| `RC` | number | レスポンスコード（0 は成功を示す） |
+| `RM` | string | レスポンスメッセージ |
+| `result` | object | 禁止ステータス情報 |
 
-**Ban Status Object Structure**
+**禁止ステータスオブジェクトの構造**
 
-| Parameter   | Type   | Description                            |
-| ----------- | ------ | -------------------------------------- |
-| `appID`     | string | Application ID                         |
-| `blockee`   | object | Detailed information of banned user    |
-| `blocker`   | string | ID of the user who performed the ban   |
-| `room`      | string | Chatroom ID                            |
-| `createdAt` | string | Ban creation time                      |
-| `updatedAt` | string | Ban update time                        |
+| パラメータ | 型 | 説明 |
+| ----------- | ------ | ------------------------- |
+| `appID` | string | アプリケーション識別子 |
+| `blockee` | object | 禁止されたユーザーの詳細情報 |
+| `blocker` | string | 禁止を実行したユーザー ID |
+| `room` | string | チャットルーム ID |
+| `createdAt` | string | 禁止作成日時 |
+| `updatedAt` | string | 禁止更新日時 |
 
-**Banned User Object Structure**
+**禁止されたユーザーオブジェクトの構造**
 
-| Parameter         | Type   | Description                             |
-| ----------------- | ------ | --------------------------------------- |
-| `_id`             | string | User unique ID                          |
-| `nickname`        | string | User nickname                           |
-| `avatarUrl`       | string | User avatar URL                         |
-| `id`              | string | User ID                                 |
-| `lastLoginTimeMS` | number | Last login time (millisecond timestamp) |
+| パラメータ | 型 | 説明 |
+| ----------------- | ------ | ----------------------------- |
+| `_id` | string | ユーザー一意識別子 |
+| `nickname` | string | ユーザーのニックネーム |
+| `avatarUrl` | string | ユーザーのアバター URL |
+| `id` | string | ユーザー ID |
+| `lastLoginTimeMS` | number | 最終ログイン時間（ミリ秒タイムスタンプ） |
 
-#### Example Response
+#### レスポンス例
 
 ```json
 {
@@ -119,9 +119,9 @@ curl -X "POST" "https://your-app.imkit.io/blockStatus/room/{roomID}/{blockee}" \
 }
 ```
 
-#### Error Response
+#### エラーレスポンス
 
-**401 Unauthorized** - Authentication failed
+**401 Unauthorized** - 認証失敗
 
 ```json
 {
@@ -134,7 +134,7 @@ curl -X "POST" "https://your-app.imkit.io/blockStatus/room/{roomID}/{blockee}" \
 }
 ```
 
-**403 Forbidden** - Insufficient permissions
+**403 Forbidden** - 権限不足
 
 ```json
 {
@@ -147,7 +147,7 @@ curl -X "POST" "https://your-app.imkit.io/blockStatus/room/{roomID}/{blockee}" \
 }
 ```
 
-**404 Not Found** - Chatroom or user does not exist
+**404 Not Found** - チャットルームまたはユーザーが存在しない
 
 ```json
 {
@@ -160,7 +160,7 @@ curl -X "POST" "https://your-app.imkit.io/blockStatus/room/{roomID}/{blockee}" \
 }
 ```
 
-**409 Conflict** - User is already banned
+**409 Conflict** - ユーザーは既に禁止されている
 
 ```json
 {
@@ -175,30 +175,30 @@ curl -X "POST" "https://your-app.imkit.io/blockStatus/room/{roomID}/{blockee}" \
 
 ------
 
-## Use Cases
+## 使用シーン
 
-### Chatroom Management
-- **Member Control**: Chatroom owners manage group members' participation permissions
-- **Violation Handling**: Handle users who send inappropriate content in the chatroom
-- **Order Maintenance**: Maintain a healthy discussion environment in the chatroom
+### チャットルーム管理
+- **メンバー制限**：チャットルームのオーナーがグループメンバーの参加権限を管理します。
+- **違反対応**：チャットルーム内で不適切なコンテンツを送信したユーザーに対応します。
+- **秩序維持**：チャットルームの良好な議論環境を維持します。
 
-### Permission Management
-- **Owner Privileges**: Chatroom owners manage members
-- **Platform Administration**: Platform administrators assist with chatroom management issues
-- **Tiered Management**: Users with different permission levels have different management capabilities
+### 権限管理
+- **オーナー権限**：チャットルーム의 オーナーがメンバーを管理します。
+- **プラットフォーム管理**：プラットフォーム管理者がチャットルームの管理問題を解決するのを支援します。
+- **階層管理**：異なる権限レベルのユーザーが異なる管理能力を持ちます。
 
-### Security Protection
-- **Harassment Prevention**: Block specific users from harassing other members in the chatroom
-- **Content Control**: Restrict users who send inappropriate content
-- **Environment Protection**: Protect the healthy discussion environment of the chatroom
+### セキュリティ保護
+- **嫌がらせ防止**：特定のユーザーがチャットルームで他のメンバーに嫌がらせをするのを阻止します。
+- **コンテンツ規制**：不適切なコンテンツを送信するユーザーを制限します。
+- **環境保護**：チャットルームの健全な議論環境を保護します。
 
 ------
 
-## Notes
+## 注意事項
 
-- **Permission Restriction**: Only platform administrators and chatroom owners can perform this operation (limited to group chatrooms with an owner)
-- **Chatroom Type**: This feature is primarily for group chatrooms that have a designated owner
-- **Ban Scope**: The ban is limited to the specified chatroom and does not affect the user's permissions in other chatrooms
-- **Immediate Effect**: The ban takes effect immediately; the banned user cannot participate in activities in that chatroom
-- **Duplicate Operation**: Banning an already banned user will return a conflict error
-- **Record Keeping**: All ban operations are recorded, including the operator and timestamp information
+- **権限制限**：プラットフォーム管理者とチャットルームのオーナーのみがこの操作を実行できます（オーナーが設定されているグループチャットルームに限ります）。
+- **チャットルームの種類**：この機能は主にグループチャットルームを対象としており、そのチャットルームにはオーナーが設定されている必要があります。
+- **禁止範囲**：禁止は指定されたチャットルームに限定され、他のチャットルームでのユーザーの権限には影響しません。
+- **即時有効**：禁止ステータスは即座に有効になり、禁止されたユーザーはそのチャットルームで活動できなくなります。
+- **重複操作**：既に禁止されているユーザーに対して繰り返し禁止を実行すると、コンフリクトエラーが返されます。
+- **ログ保存**：すべての禁止操作は、実行者と時間の情報を含めて記録されます。

@@ -1,45 +1,45 @@
-# Issue Token
+# トークンの発行
 
-## Overview
+## 概要
 
-User data is created by your server, but the authorization token is issued and managed by the IMKIT Chat Server. This mode is suitable for applications that want to integrate quickly without needing to manage the token lifecycle on their own.
+ユーザーデータはあなたのサーバーで作成されますが、認可トークン（Access Token）は IMKIT Chat Server によって発行および管理されます。このモードは、迅速な統合を希望し、自身でトークンのライフサイクルを管理する必要がないアプリケーションに適しています。
 
-Implementation flow:
-1. Use the `/admin/clients` API to create a Client with `issueAccessToken: true`
-2. The Chat Server will issue an access token that can be used for subsequent API calls
-3. Use the returned token for client-side authentication
+実装フロー：
+1. `/admin/clients` API を使用してクライアント（ユーザー）を作成し、`issueAccessToken: true` を設定します。
+2. Chat Server がアクセストークンを発行します。これは後続の API 呼び出しに使用できます。
+3. 返されたトークンを使用してクライアント認証を行います。
 
 ------
 
-## API Endpoint
+## API エンドポイント
 
-### Create a User and Issue a Token
+### ユーザーを作成し、トークンを発行
 
-Create a new user and have the Chat Server automatically issue an access token.
+新しいユーザーを作成し、Chat Server によってアクセストークンを自動発行します。
 
 ```http
 POST /admin/clients
 ```
 
-#### Headers
+#### ヘッダー
 
-| Parameter | Type | Required | Description |
+| パラメータ | 型 | 必須 | 説明 |
 | ---- | ---- | ---- | ---- |
-| `IM-API-KEY` | string | ✅ | Your API key |
+| `IM-API-KEY` | string | ✅ | あなたの API キー |
 | `Content-Type` | string | ✅ | `application/json` |
 
-#### Request Body
+#### リクエストボディ (Request Body)
 
-| Parameter | Type | Required | Description |
+| パラメータ | 型 | 必須 | 説明 |
 | ---- | ---- | ---- | ---- |
-| `_id` | string | ✅ | Unique user identifier |
-| `nickname` | string | ❌ | User display name |
-| `avatarUrl` | string | ❌ | User avatar URL |
-| `issueAccessToken` | boolean | ✅ | Set to `true` to enable this authorization mode |
+| `_id` | string | ✅ | ユーザーの一意識別子 |
+| `nickname` | string | ❌ | ユーザーの表示名 |
+| `avatarUrl` | string | ❌ | ユーザーのアバター URL |
+| `issueAccessToken` | boolean | ✅ | この認証モードを有効にするには `true` に設定します |
 
-#### Example Request
+#### リクエスト例
 
-**JavaScript Example:**
+**JavaScript 例:**
 
 ```javascript
 const response = await axios.post(
@@ -59,7 +59,7 @@ const response = await axios.post(
 );
 ```
 
-**cURL Example:**
+**cURL 例:**
 
 ```bash
 curl -X "POST" "https://your-app.imkit.io/admin/clients" \
@@ -73,20 +73,20 @@ curl -X "POST" "https://your-app.imkit.io/admin/clients" \
 }'
 ```
 
-#### Response
+#### レスポンス
 
-**Success Response (200 OK)**
+**成功レスポンス (200 OK)**
 
-| Parameter | Type | Description |
+| パラメータ | 型 | 説明 |
 | ---- | ---- | ---- |
-| `_id` | string | Unique user identifier |
-| `nickname` | string | User display name |
-| `avatarUrl` | string | User avatar URL |
-| `issueAccessToken` | boolean | Token issue mode |
-| `token` | string | Access token issued by the Chat Server |
-| `expirationDate` | string | Token expiration time (ISO 8601 format) |
+| `_id` | string | ユーザーの一意識別子 |
+| `nickname` | string | ユーザーの表示名 |
+| `avatarUrl` | string | ユーザーのアバター URL |
+| `issueAccessToken` | boolean | トークン発行モード |
+| `token` | string | Chat Server によって発行されたアクセストークン |
+| `expirationDate` | string | トークンの有効期限 (ISO 8601 形式) |
 
-#### Example Response
+#### レスポンス例
 
 ```json
 {
@@ -99,9 +99,9 @@ curl -X "POST" "https://your-app.imkit.io/admin/clients" \
 }
 ```
 
-#### Error Response
+#### エラーレスポンス
 
-**400 Bad Request** — Invalid request parameters
+**400 Bad Request** — リクエストパラメータエラー
 
 ```json
 {
@@ -110,7 +110,7 @@ curl -X "POST" "https://your-app.imkit.io/admin/clients" \
 }
 ```
 
-**401 Unauthorized** — Invalid API key
+**401 Unauthorized** — API キーが無効
 
 ```json
 {
@@ -119,7 +119,7 @@ curl -X "POST" "https://your-app.imkit.io/admin/clients" \
 }
 ```
 
-**409 Conflict** — User already exists
+**409 Conflict** — ユーザーが既に存在します
 
 ```json
 {
@@ -130,22 +130,22 @@ curl -X "POST" "https://your-app.imkit.io/admin/clients" \
 
 ------
 
-## Use Cases
+## ユースケース
 
-### Rapid Integration
-- **Simple Development**: Let the system automatically generate tokens without needing to manage token generation logic yourself
-- **Quick Validation**: Suitable for quickly obtaining valid access tokens during development and testing
+### 迅速な統合
+- **簡単な開発**: システムにトークンを自動生成させ、自身でトークン生成ロジックを管理する必要がありません。
+- **迅速な検証**: 開発およびテスト段階で有効なアクセストークンを迅速に取得するのに適しています。
 
-### User Provisioning
-- **New User Registration**: Create an IMKIT user and obtain a token at the same time during user registration, all in one step
-- **Automated Workflow**: Automatically create accounts and obtain access tokens for new users in backend services
+### ユーザーのアクティベーション
+- **新規ユーザー登録**: ユーザー登録時に IMKIT ユーザーを同時に作成し、トークンを取得します。1ステップで完了します。
+- **自動化フロー**: バックエンドサービスで新規ユーザーのアカウントを自動作成し、アクセストークンを取得します。
 
 ------
 
-## Notes
+## 注意事項
 
-- **Token Validity Period**: Managed by the Chat Server; pay attention to the `expirationDate` field
-- **Token Expiration**: After expiration, you can call the same endpoint (`POST /admin/clients` with `issueAccessToken: true`) again to obtain a new token without needing to delete the user
-- **No Customization**: In this mode, the token content and expiration time cannot be customized
-- **Caching Recommendation**: It is recommended to cache the token in your application to avoid redundant requests
-- **Using the Token**: After obtaining the token, pass it via the `IM-Authorization` header in subsequent API calls
+- **トークンの有効期限**: Chat Server によって管理されます。`expirationDate` フィールドに注意してください。
+- **トークンの期限切れ**: 期限が切れた後は、同じエンドポイント（`issueAccessToken: true` を指定した `POST /admin/clients`）を再度呼び出すことで、トークンを再取得できます。ユーザーを削除する必要はありません。
+- **カスタマイズ不可**: このモードでは、トークンの内容や有効期限をカスタマイズすることはできません。
+- **キャッシュの推奨**: 重複したリクエストを避けるため、アプリケーション内でトークンをキャッシュすることをお勧めします。
+- **トークンの使用**: トークンを取得した後、後続 of API 呼び出しで `IM-Authorization` ヘッダーを通じて渡します。

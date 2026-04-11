@@ -1,31 +1,31 @@
-# Get Config
+# システム設定の取得
 
-## Overview
+## 概要
 
-Retrieve the application's runtime configuration. This endpoint returns all configuration key-value pairs set in the system, including announcements, censorship keywords, feature flags, and more. Clients can authenticate using `IM-CLIENT-KEY` with `IM-Authorization` to read the configuration.
+アプリケーションのランタイム設定を取得します。このエンドポイントは、システムに設定されているすべての構成キーと値のペア（お知らせ、検閲ワード、機能フラグなど）を返します。クライアントは `IM-CLIENT-KEY` と `IM-Authorization` を使用して認証を行い、設定を読み取ることができます。
 
 ------
 
-## API Endpoint
+## API エンドポイント
 
-### Get Config
+### システム設定の取得
 
-Retrieve all current system configuration settings.
+現在設定されているすべてのシステム構成を取得します。
 
 ```http
 GET /config
 ```
 
-#### Headers
+#### ヘッダー
 
-| Parameter          | Type   | Required | Description            |
-| ------------------ | ------ | -------- | ---------------------- |
-| `IM-CLIENT-KEY`    | string | ✅        | Your Client Key        |
-| `IM-Authorization` | string | ✅        | User authorization token |
+| パラメータ | 型 | 必須 | 説明 |
+| ------------------ | ------ | ---- | -------------------------- |
+| `IM-CLIENT-KEY` | string | ✅ | クライアントキー |
+| `IM-Authorization` | string | ✅ | ユーザー認証トークン |
 
-#### Example Request
+#### リクエスト例
 
-**JavaScript (axios)**
+**JavaScript（axios）**
 
 ```javascript
 const response = await axios.get(
@@ -47,17 +47,17 @@ curl -X GET "https://your-app.imkit.io/config" \
   -H "IM-Authorization: Bearer user_access_token"
 ```
 
-#### Response
+#### レスポンス
 
-**Success Response (200 OK)**
+**成功（200 OK）**
 
-| Parameter | Type   | Description                                                 |
-| --------- | ------ | ----------------------------------------------------------- |
-| `RC`      | number | Response code (0 indicates success)                         |
-| `RM`      | string | Response message                                            |
-| `result`  | object | System configuration key-value pairs, content varies by settings |
+| パラメータ | 型 | 説明 |
+| -------- | ------ | ---------------------------------- |
+| `RC` | number | レスポンスコード（0は成功） |
+| `RM` | string | レスポンスメッセージ |
+| `result` | object | システム構成のキーと値。内容は実際の設定により異なります |
 
-#### Example Response
+#### レスポンス例
 
 ```json
 {
@@ -65,11 +65,11 @@ curl -X GET "https://your-app.imkit.io/config" \
   "RM": "OK",
   "result": {
     "announcement": {
-      "text": "歡迎使用 IMKit 即時通訊服務！",
+      "text": "IMKit リアルタイムメッセージングサービスへようこそ！",
       "pin": true
     },
     "censorship": {
-      "keywords": ["廣告", "垃圾訊息"]
+      "keywords": ["広告", "スパム"]
     },
     "featureFlags": {
       "enableVoiceMessage": true,
@@ -80,9 +80,9 @@ curl -X GET "https://your-app.imkit.io/config" \
 }
 ```
 
-#### Error Response
+#### エラーレスポンス
 
-**401 Unauthorized** - Authorization verification failed
+**401 Unauthorized** - 認証失敗
 
 ```json
 {
@@ -97,25 +97,25 @@ curl -X GET "https://your-app.imkit.io/config" \
 
 ------
 
-## Use Cases
+## 使用シーン
 
-### Feature Flags
-- **Dynamic Feature Toggles**: Read feature flags at client startup to dynamically enable or disable specific features
-- **Gradual Rollout**: Control the gradual release of new features through configuration
+### 機能フラグ
+- **動的な機能切り替え**: クライアント起動時に機能フラグを読み取り、特定の機能を動的に有効化または無効化します。
+- **カナリアリリース**: 構成制御を通じて新機能を段階的に開放します。
 
-### Announcement Messages
-- **System Announcements**: Read pinned announcement content to display in the client interface
-- **Maintenance Notices**: Retrieve scheduled maintenance information to notify users in advance
+### お知らせメッセージ
+- **システムお知らせ**: 固定表示のお知らせ内容を読み取り、クライアントインターフェースに表示します。
+- **メンテナンス通知**: 予定されているメンテナンス情報を取得し、事前にユーザーに通知します。
 
-### Content Moderation
-- **Censorship Keywords**: Retrieve the sensitive word list for client-side message filtering
-- **Content Policy**: Read content policy settings to ensure client compliance with guidelines
+### コンテンツ検閲
+- **検閲ワード**: クライアント側でのメッセージフィルタリングに使用する禁止ワードリストを取得します。
+- **コンテンツポリシー**: コンテンツポリシー設定を読み取り、クライアントが規範に従うようにします。
 
 ------
 
-## Notes
+## 注意事項
 
-- **Client Readable**: This endpoint uses `IM-CLIENT-KEY` and `IM-Authorization` for authentication, allowing client applications to call it directly
-- **Read-Only Operation**: This endpoint only provides read functionality; updating settings requires `POST /config` (which needs `IM-API-KEY`)
-- **Dynamic Content**: The returned configuration content depends on items set by the administrator via `POST /config`; different applications may have different settings
-- **Caching Recommendation**: It is recommended that clients cache configuration data appropriately to avoid frequent calls to this API
+- **クライアント側で読み取り可能**: このエンドポイントは `IM-CLIENT-KEY` と `IM-Authorization` で認証され、クライアントアプリケーションから直接呼び出すことができます。
+- **読み取り専用操作**: このエンドポイントは読み取り機能のみを提供します。設定の更新には `POST /config`（`IM-API-KEY` が必要）を使用してください。
+- **動的なコンテンツ**: 返される構成内容は、管理者が `POST /config` で設定した項目に依存します。アプリケーションによって設定が異なる場合があります。
+- **キャッシュの推奨**: 頻繁な呼び出しを避けるため、クライアント側で構成データを適切にキャッシュすることをお勧めします。

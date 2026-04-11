@@ -1,75 +1,75 @@
-# List Users
+# ユーザーリスト
 
-## Overview
+## 概要
 
-Query and search the user list in your application. Supports conditional filtering, pagination, and complex searches using MongoDB query syntax. Suitable for user management, data analysis, and system monitoring scenarios.
+アプリケーション内のユーザーリストを照会および検索します。条件フィルタリング、ページネーションクエリ、および MongoDB クエリ構文を使用した複雑な検索をサポートしています。ユーザー管理、データ分析、およびシステム監視などのシナリオに適しています。
 
 ------
 
-## API Endpoint
+## API エンドポイント
 
-### Query User List
+### ユーザーリストを照会
 
-Retrieve the list of users in your application with support for filtering and pagination.
+アプリケーション内のユーザーリストを取得します。フィルタリングとページネーション機能をサポートしています。
 
 ```http
 GET /admin/clients
 ```
 
-#### Headers
+#### ヘッダー
 
-| Parameter         | Type   | Required | Description          |
+| パラメータ         | 型     | 必須 | 説明          |
 | ------------ | ------ | ---- | ------------- |
-| `IM-API-KEY` | string | ✅    | Your API key |
+| `IM-API-KEY` | string | ✅    | あなたの API キー |
 
-#### Query Parameters
+#### クエリパラメータ (Query Parameters)
 
-| Parameter    | Type   | Required | Description                                          |
+| パラメータ | 型     | 必須 | 説明                                          |
 | ------- | ------ | ---- | --------------------------------------------- |
-| `q`     | string | ❌    | MongoDB query syntax for conditional filtering                |
-| `limit` | number | ❌    | Maximum number of users returned per page (default: 50, max: 100) |
-| `skip`  | number | ❌    | Number of users to skip, used for pagination (default: 0)           |
+| `q`     | string | ❌    | 条件フィルタリング用の MongoDB クエリ構文        |
+| `limit` | number | ❌    | 1ページあたりの最大ユーザー数（デフォルト：50、最大：100） |
+| `skip`  | number | ❌    | ページネーション用のスキップ件数（デフォルト：0）    |
 
-#### Query Syntax Examples
+#### クエリ構文の例
 
-**Basic Filtering**
+**基本フィルタリング**
 
 ```javascript
-// Query users whose nickname contains "AB"
+// ニックネームに "AB" を含むユーザーを検索
 q={"nickname": {"$regex": ".*AB.*"}}
 
-// Query a user with a specific email
+// 特定のメールアドレスを持つユーザーを検索
 q={"email": "user@example.com"}
 
-// Query recently logged-in users (within the last 7 days)
+// 最近ログインしたユーザー（7日以内）を検索
 q={"lastLoginTimeMS": {"$gte": 1640995200000}}
 ```
 
-**Compound Conditions**
+**複合条件**
 
 ```javascript
-// Query users whose nickname contains "admin" and who have an email
+// ニックネームに "admin" を含み、かつメールアドレスが設定されているユーザーを検索
 q={"nickname": {"$regex": ".*admin.*"}, "email": {"$exists": true}}
 
-// Query users registered within a specific time range
+// 特定の時間範囲内に登録されたユーザーを検索
 q={"createdAt": {"$gte": "2025-01-01T00:00:00Z", "$lt": "2025-02-01T00:00:00Z"}}
 ```
 
-#### Example Request
+#### リクエスト例
 
-**Get All Users**
+**すべてのユーザーを取得**
 
 ```http
 GET /admin/clients?limit=20&skip=0
 ```
 
-**Search for Specific Users**
+**特定のユーザーを検索**
 
 ```http
 GET /admin/clients?q=%7B%22nickname%22:%7B%22%24regex%22:%22.*AB.*%22%7D%7D&limit=10
 ```
 
-**JavaScript Example:**
+**JavaScript 例:**
 
 ```javascript
 const response = await axios.get(
@@ -87,38 +87,38 @@ const response = await axios.get(
 );
 ```
 
-**cURL Example:**
+**cURL 例:**
 
 ```bash
 curl -X "GET" "https://your-app.imkit.io/admin/clients?q=%7B%22nickname%22%3A%7B%22%24regex%22%3A%22.*AB.*%22%7D%7D&limit=20&skip=0" \
      -H 'IM-API-KEY: {IM-API-KEY}'
 ```
 
-#### Response
+#### レスポンス
 
-**Success Response (200 OK)**
+**成功レスポンス (200 OK)**
 
-| Parameter                | Type   | Description                   |
-| ------------------- | ------ | ---------------------- |
-| `RC`                | number | Response code (0 indicates success) |
-| `RM`                | string | Response message               |
-| `result`            | object | Query results               |
-| `result.totalCount` | number | Total number of users matching the criteria     |
-| `result.data`       | array  | Array of user data           |
+| パラメータ          | 型     | 説明                       |
+| ------------------- | ------ | -------------------------- |
+| `RC`                | number | レスポンスコード (0 は成功) |
+| `RM`                | string | レスポンスメッセージ        |
+| `result`            | object | 照会結果                   |
+| `result.totalCount` | number | 条件に一致するユーザーの総数 |
+| `result.data`       | array  | ユーザーデータの配列         |
 
-**User Object Structure**
+**ユーザーオブジェクトの構造**
 
-| Parameter              | Type   | Description                          |
-| ----------------- | ------ | ----------------------------- |
-| `_id`             | string | Unique user identifier                |
-| `nickname`        | string | User display name                  |
-| `email`           | string | User email (if provided)    |
-| `avatarUrl`       | string | User avatar URL                  |
-| `address`         | object | Last connected network address information        |
-| `userAgent`       | string | Last used browser/application information |
-| `lastLoginTimeMS` | number | Last login time (millisecond timestamp)    |
+| パラメータ              | 型     | 説明                               |
+| ----------------- | ------ | ---------------------------------- |
+| `_id`             | string | ユーザーの一意識別子                 |
+| `nickname`        | string | ユーザーの表示名                     |
+| `email`           | string | ユーザーのメールアドレス (設定されている場合) |
+| `avatarUrl`       | string | ユーザーのアバター URL               |
+| `address`         | object | 最終接続時のネットワークアドレス情報   |
+| `userAgent`       | string | 最後に使用されたブラウザ/アプリの情報 |
+| `lastLoginTimeMS` | number | 最終ログイン時間 (ミリ秒タイムスタンプ) |
 
-#### Example Response
+#### レスポンス例
 
 ```json
 {
@@ -145,9 +145,9 @@ curl -X "GET" "https://your-app.imkit.io/admin/clients?q=%7B%22nickname%22%3A%7B
 }
 ```
 
-#### Error Response
+#### エラーレスポンス
 
-**400 Bad Request** - Invalid query syntax
+**400 Bad Request** - クエリ構文エラー
 
 ```json
 {
@@ -160,7 +160,7 @@ curl -X "GET" "https://your-app.imkit.io/admin/clients?q=%7B%22nickname%22%3A%7B
 }
 ```
 
-**401 Unauthorized** - Invalid API key
+**401 Unauthorized** - API キーが無効
 
 ```json
 {
@@ -173,7 +173,7 @@ curl -X "GET" "https://your-app.imkit.io/admin/clients?q=%7B%22nickname%22%3A%7B
 }
 ```
 
-**413 Payload Too Large** - Query result too large
+**413 Payload Too Large** - クエリ結果が大きすぎる
 
 ```json
 {
@@ -188,94 +188,94 @@ curl -X "GET" "https://your-app.imkit.io/admin/clients?q=%7B%22nickname%22%3A%7B
 
 ------
 
-## Use Cases
+## ユースケース
 
-### User Management
+### ユーザー管理
 
-- **User List Display**: Display all users in the admin dashboard
-- **User Search**: Search for specific users based on criteria such as nickname and email
-- **Batch Operations**: Select multiple users for batch management
+- **ユーザーリストの表示**: 管理バックエンドですべてのユーザーを表示します。
+- **ユーザー検索**: ニックネームやメールアドレスなどの条件に基づいて特定のユーザーを検索します。
+- **一括操作**: 複数のユーザーを選択して一括管理を行います。
 
-### Data Analysis
+### データ分析
 
-- **Activity Analysis**: Query statistics on recently logged-in users
-- **User Distribution**: Analyze users' geographic distribution and device usage
-- **Growth Tracking**: Track user growth over specific time periods
+- **アクティブ度分析**: 最近ログインしたユーザーの統計を照会します。
+- **ユーザー分布**: ユーザーの地理的分布やデバイスの使用状況を分析します。
+- **成長追跡**: 特定の期間のユーザー成長を追跡します。
 
-### System Monitoring
+### システム監視
 
-- **Anomaly Detection**: Query users with abnormal login behavior
-- **Capacity Planning**: Understand total user count and growth trends
-- **Compliance Auditing**: Query specific user data as needed
-
-------
-
-## Notes
-
-- **Query Syntax**: Valid MongoDB query syntax must be used
-- **URL Encoding**: Query parameters need to be URL-encoded
-- **Sensitive Information**: The response does not include sensitive information such as user tokens
-- **Permission Control**: Only administrators can call this API
-- **Pagination Limit**: A single query returns a maximum of 100 records
-- **Index Usage**: Commonly queried fields (such as nickname and email) are indexed
-- **Query Optimization**: Avoid using overly complex regular expressions
-- **Caching Recommendation**: It is recommended to implement caching for query results that do not change frequently
+- **異常検知**: 異常なログイン動作を行っているユーザーを照会します。
+- **キャパシティプランニング**: ユーザー総数と増加傾向を把握します。
+- **コンプライアンス審査**: 必要に応じて特定のユーザーデータを照会します。
 
 ------
 
-## Appendix: MongoDB Query Syntax Guide
+## 注意事項
 
-### Basic Operators
+- **クエリ構文**: 有効な MongoDB クエリ構文を使用する必要があります。
+- **URL エンコード**: クエリパラメータは URL エンコードする必要があります。
+- **機密情報**: レスポンスにはユーザーのトークンなどの機密情報は含まれません。
+- **権限管理**: 管理者権限を持つユーザーのみがこの API を呼び出すことができます。
+- **ページネーションの制限**: 1回の照会で返されるデータは最大100件です。
+- **インデックスの使用**: 頻繁に使用されるクエリフィールド（nickname、email など）にはインデックスが作成されています。
+- **クエリの最適化**: 過度に複雑な正規表現の使用は避けてください。
+- **キャッシュの推奨**: 頻繁に変更されないクエリ結果については、キャッシュメカニズムの実装を検討してください。
 
-| Operator | Description     | Example                                          |
+------
+
+## 付録：MongoDB クエリ構文ガイド
+
+### 基本演算子
+
+| 演算子 | 説明     | 例                                          |
 | ------ | -------- | --------------------------------------------- |
-| `$eq`  | Equal to     | `{"nickname": {"$eq": "Alice"}}`              |
-| `$ne`  | Not equal to   | `{"nickname": {"$ne": "Admin"}}`              |
-| `$gt`  | Greater than     | `{"lastLoginTimeMS": {"$gt": 1640995200000}}` |
-| `$gte` | Greater than or equal to | `{"createdAt": {"$gte": "2025-01-01"}}`       |
-| `$lt`  | Less than     | `{"lastLoginTimeMS": {"$lt": 1640995200000}}` |
-| `$lte` | Less than or equal to | `{"createdAt": {"$lte": "2025-12-31"}}`       |
+| `$eq`  | 等しい   | `{"nickname": {"$eq": "Alice"}}`              |
+| `$ne`  | 等しくない | `{"nickname": {"$ne": "Admin"}}`              |
+| `$gt`  | より大きい | `{"lastLoginTimeMS": {"$gt": 1640995200000}}` |
+| `$gte` | 以上     | `{"createdAt": {"$gte": "2025-01-01"}}`       |
+| `$lt`  | 未満     | `{"lastLoginTimeMS": {"$lt": 1640995200000}}` |
+| `$lte` | 以下     | `{"createdAt": {"$lte": "2025-12-31"}}`       |
 
-### String Operations
+### 文字列操作
 
-| Operator   | Description         | Example                                                     |
+| 演算子   | 説明         | 例                                                     |
 | -------- | ------------ | -------------------------------------------------------- |
-| `$regex` | Regular expression   | `{"nickname": {"$regex": ".*admin.*", "$options": "i"}}` |
-| `$in`    | Included in list   | `{"_id": {"$in": ["user1", "user2", "user3"]}}`          |
-| `$nin`   | Not included in list | `{"nickname": {"$nin": ["admin", "test"]}}`              |
+| `$regex` | 正規表現     | `{"nickname": {"$regex": ".*admin.*", "$options": "i"}}` |
+| `$in`    | リストに含まれる | `{"_id": {"$in": ["user1", "user2", "user3"]}}`          |
+| `$nin`   | リストに含まれない | `{"nickname": {"$nin": ["admin", "test"]}}`              |
 
-### Existence Check
+### 存在チェック
 
-| Operator    | Description     | Example                                       |
+| 演算子    | 説明     | 例                                       |
 | --------- | -------- | ------------------------------------------ |
-| `$exists` | Field exists | `{"email": {"$exists": true}}`             |
-| `$type`   | Data type | `{"lastLoginTimeMS": {"$type": "number"}}` |
+| `$exists` | フィールドの存在 | `{"email": {"$exists": true}}`             |
+| `$type`   | データ型 | `{"lastLoginTimeMS": {"$type": "number"}}` |
 
 ------
 
-## Pagination Best Practices
+## ページネーションのベストプラクティス
 
-### Basic Pagination
+### 基本的なページネーション
 
 ```javascript
-// First page (20 records per page)
+// 1ページ目（1ページ20件）
 GET /admin/clients?limit=20&skip=0
 
-// Second page
+// 2ページ目
 GET /admin/clients?limit=20&skip=20
 
-// Third page
+// 3ページ目
 GET /admin/clients?limit=20&skip=40
 ```
 
-### Large Dataset Handling
+### 大規模データセットの処理
 
 ```javascript
-// For large datasets, it is recommended to use more specific query criteria
+// 大量データの場合は、より具体的なクエリ条件を併用することをお勧めします
 GET /admin/clients?q={"lastLoginTimeMS":{"$gte":1640995200000}}&limit=50
 ```
 
-## Pagination Recommendations
+## ページネーションに関するアドバイス
 
-- For large datasets, it is recommended to use more specific query criteria combined with pagination
-- A single query returns a maximum of 100 records
+- 大量データの場合は、より具体的なクエリ条件をページネーションと組み合わせて使用することをお勧めします。
+- 1回の照会で返されるデータは最大100件です。

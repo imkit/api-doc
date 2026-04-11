@@ -1,38 +1,38 @@
-# Delete a Message
+# メッセージの削除
 
-## Overview
+## 概要
 
-An admin-only message deletion feature that allows platform administrators, room owners, and room managers to delete a specific message or clear all messages in a room. This feature is suitable for content management, violation content cleanup, and room maintenance.
+管理者権限専用のメッセージ削除機能です。プラットフォーム管理者、チャットルームのオーナー、およびチャットルームの管理者が、指定したメッセージを削除したり、チャットルーム内のすべてのメッセージを消去したりすることができます。この機能は、コンテンツ管理、違反コンテンツのクリーンアップ、およびチャットルームのメンテナンスに適しています。
 
 ------
 
-## API Endpoint
+## API エンドポイント
 
-### Delete Room Messages
+### チャットルームメッセージの削除
 
-Delete a specific message or all messages in a room. Restricted to users with administrative permissions.
+チャットルーム内の特定のメッセージまたはすべてのメッセージを削除します。管理権限を持つユーザーのみが使用できます。
 
 ```http
 DELETE /rooms/{roomID}/messages/{messageID}
 ```
 
-#### Headers
+#### ヘッダー
 
-| Parameter          | Type   | Required | Description    |
+| パラメータ | 型 | 必須 | 説明 |
 | ------------------ | ------ | ---- | -------------- |
-| `IM-CLIENT-KEY`    | string | ✅    | Client Key     |
-| `IM-Authorization` | string | ✅    | Client Token   |
+| `IM-CLIENT-KEY` | string | ✅ | クライアントキー |
+| `IM-Authorization` | string | ✅ | ユーザートークン |
 
-#### Path Parameters
+#### パスパラメータ
 
-| Parameter   | Type   | Required | Description                                                  |
+| パラメータ | 型 | 必須 | 説明 |
 | ----------- | ------ | ---- | --------------------------------------------------- |
-| `roomID`    | string | ✅    | Room ID                                              |
-| `messageID` | string | ✅    | Message ID to delete, or use `_all` to delete all messages in the room |
+| `roomID` | string | ✅ | チャットルーム ID |
+| `messageID` | string | ✅ | 削除するメッセージ ID。または `_all` を使用してチャットルーム内のすべてのメッセージを削除 |
 
-#### Example Request
+#### リクエスト例
 
-**Delete a specific message**
+**特定のメッセージを削除**
 
 ```http
 DELETE /rooms/test-room-123/messages/5f890cf37d980e06f6aaf349 HTTP/1.1
@@ -42,7 +42,7 @@ Content-Type: application/json; charset=utf-8
 Connection: close
 ```
 
-**Delete all messages in a room**
+**チャットルームのすべてのメッセージを削除**
 
 ```http
 DELETE /rooms/test-room-123/messages/_all HTTP/1.1
@@ -52,29 +52,29 @@ Content-Type: application/json; charset=utf-8
 Connection: close
 ```
 
-#### Response
+#### レスポンス
 
-**Success Response (200 OK)**
+**成功（200 OK）**
 
-| Parameter | Type   | Description                |
+| パラメータ | 型 | 説明 |
 | -------- | ------ | ---------------------- |
-| `RC`     | number | Response code (0 indicates success) |
-| `RM`     | string | Response message       |
-| `result` | object | Deletion result        |
+| `RC` | number | レスポンスコード（0は成功） |
+| `RM` | string | レスポンスメッセージ |
+| `result` | object | 削除操作の結果 |
 
-**Deletion Result Object Structure**
+**削除結果オブジェクトの構造**
 
-| Parameter      | Type   | Description                       |
+| パラメータ | 型 | 説明 |
 | -------------- | ------ | ----------------------------- |
-| `deletedCount` | number | Number of deleted messages         |
-| `roomID`       | string | Room ID                            |
-| `messageID`    | string | Deleted message ID (or "_all")     |
-| `deletedBy`    | string | User ID who performed the deletion |
-| `deletedAt`    | string | Deletion time                      |
+| `deletedCount` | number | 削除されたメッセージの数 |
+| `roomID` | string | チャットルーム ID |
+| `messageID` | string | 削除されたメッセージ ID（または "_all"） |
+| `deletedBy` | string | 削除操作を実行したユーザー ID |
+| `deletedAt` | string | 削除日時 |
 
-#### Example Response
+#### レスポンス例
 
-**Delete a single message**
+**単一メッセージの削除**
 
 ```json
 {
@@ -90,7 +90,7 @@ Connection: close
 }
 ```
 
-**Delete all messages**
+**すべてのメッセージの削除**
 
 ```json
 {
@@ -106,9 +106,9 @@ Connection: close
 }
 ```
 
-#### Error Response
+#### エラーレスポンス
 
-**401 Unauthorized** - Authentication failed
+**401 Unauthorized** - 認証失敗
 
 ```json
 {
@@ -121,7 +121,7 @@ Connection: close
 }
 ```
 
-**403 Forbidden** - Insufficient permissions
+**403 Forbidden** - 権限不足
 
 ```json
 {
@@ -134,7 +134,7 @@ Connection: close
 }
 ```
 
-**404 Not Found** - Message or room does not exist
+**404 Not Found** - メッセージまたはチャットルームが存在しない
 
 ```json
 {
@@ -147,7 +147,7 @@ Connection: close
 }
 ```
 
-**404 Not Found** - Room does not exist
+**404 Not Found** - チャットルームが存在しない
 
 ```json
 {
@@ -162,31 +162,31 @@ Connection: close
 
 ------
 
-## Use Cases
+## 使用シーン
 
-### Content Management
-- **Violation handling**: Delete messages that violate community guidelines
-- **Spam**: Clean up advertising or spam content
-- **Sensitive content**: Remove messages containing sensitive information
+### コンテンツ管理
+- **違反対応**: コミュニティガイドラインに違反する不適切なメッセージを削除します。
+- **スパム対策**: 広告メッセージやスパムコンテンツをクリーンアップします。
+- **機密内容**: 機密情報を含むメッセージを削除します。
 
-### Room Maintenance
-- **Room reset**: Clear all messages to restart conversations in a room
-- **Test cleanup**: Clean up test messages in testing environments
-- **Periodic maintenance**: Periodically clean up outdated message content
+### チャットルームのメンテナンス
+- **チャットルームのリセット**: チャットルームを空にして対話をやり直します。
+- **テストデータのクリーンアップ**: テスト環境のテスト用メッセージを削除します。
+- **定期メンテナンス**: 古すぎるメッセージ内容を定期的に削除します。
 
-### Administrative Operations
-- **Emergency handling**: Quickly handle content that needs to be removed immediately
-- **Bulk cleanup**: Delete all messages in a room at once
-- **Access control**: Ensure only authorized users can perform deletion operations
+### 管理操作
+- **緊急対応**: 直ちに削除が必要なコンテンツを迅速に処理します。
+- **一括クリーンアップ**: チャットルーム内のすべてのメッセージを一度に削除します。
+- **権限制御**: 許可されたユーザーのみが削除操作を実行できるようにします。
 
 ------
 
-## Notes
+## 注意事項
 
-- **Permission restrictions**: Restricted to platform administrators, room owners, and room managers only
-- **Permanent deletion**: Deleted messages cannot be recovered; use with caution
-- **Bulk deletion**: Using the `_all` parameter deletes all messages in the room
-- **Operation logging**: All deletion operations record the executor and time
-- **Immediate effect**: Deletion operations take effect immediately; all users will see the message disappear
-- **Notification mechanism**: Deletion operations may trigger related notifications or events
-- **Difference from recall**: This feature is a forced deletion, which differs from user-initiated message recall
+- **権限制限**: プラットフォーム管理者、チャットルームオーナー、およびチャットルーム管理者に限定されます。
+- **永久削除**: 削除されたメッセージは復元できません。慎重に使用してください。
+- **一括削除**: `_all` パラメータを使用すると、チャットルーム内のすべてのメッセージが削除されます。
+- **操作ログ**: すべての削除操作は、実行者と日時が記録されます。
+- **即時反映**: 削除操作は即座に反映され、すべてのユーザーからメッセージが見えなくなります。
+- **通知メカニズム**: 削除操作により、関連する通知やイベントがトリガーされる場合があります。
+- **撤回との違い**: この機能は強制的な削除であり、ユーザーによる自発的な撤回機能とは異なります。

@@ -1,56 +1,56 @@
-# Recall a Message
+# メッセージの撤回
 
-## Overview
+## 概要
 
-This endpoint allows a user to recall a specified message in a room. After recall, the original message content is cleared, the message type is changed to `recall`, and all members in the room can see that the message has been recalled. Both client-side and platform API authentication methods are supported.
+このエンドポイントを使用すると、ユーザーはチャットルーム内の指定したメッセージを撤回できます。撤回後、元のメッセージ内容は消去され、メッセージタイプは `recall` に変更されます。チャットルーム内のすべてのメンバーは、そのメッセージが撤回されたことを確認できます。クライアント認証とプラットフォーム API 認証の両方をサポートしています。
 
 ------
 
-## API Endpoint
+## API エンドポイント
 
-### Recall a Message
+### メッセージの撤回
 
-Recall a specified message in a room.
+チャットルーム内の指定されたメッセージを撤回します。
 
 ```http
 POST /rooms/:roomId/message
 ```
 
-#### Headers
+#### ヘッダー
 
-This API supports two authentication methods; use one of them:
+この API は 2 種類の認証方式をサポートしています。いずれか一方を使用してください。
 
-**Client Authentication**
+**クライアント認証**
 
-| Parameter          | Type   | Required | Description    |
+| パラメータ | 型 | 必須 | 説明 |
 | ------------------ | ------ | ---- | ------------ |
-| `IM-CLIENT-KEY`    | string | ✅   | Client key   |
-| `IM-Authorization` | string | ✅   | Client token |
+| `IM-CLIENT-KEY` | string | ✅ | クライアントキー |
+| `IM-Authorization` | string | ✅ | ユーザートークン |
 
-**Platform API Authentication**
+**プラットフォーム API 認証**
 
-| Parameter    | Type   | Required | Description        |
+| パラメータ | 型 | 必須 | 説明 |
 | ------------ | ------ | ---- | ---------------- |
-| `IM-API-KEY` | string | ✅   | Platform API key |
+| `IM-API-KEY` | string | ✅ | 平台 API キー |
 
-#### Path Parameters
+#### パスパラメータ
 
-| Parameter  | Type   | Required | Description          |
-| ---------- | ------ | ---- | -------------------- |
-| `:roomId`  | string | ✅   | Room unique identifier |
+| パラメータ | 型 | 必須 | 説明 |
+| ---------- | ------ | ---- | ---------------- |
+| `:roomId` | string | ✅ | チャットルームの一意識別子 |
 
-#### Post Body
+#### ポストボディ
 
-| Parameter     | Type   | Required | Description                         |
-| ------------- | ------ | ---- | ----------------------------------- |
-| `messageType` | string | ✅   | Must be set to `"recall"`           |
-| `_id`         | string | ✅   | Unique identifier of the message to recall |
+| パラメータ | 型 | 必須 | 説明 |
+| ------------- | ------ | ---- | ------------------------------- |
+| `messageType` | string | ✅ | 固定値 `"recall"` |
+| `_id` | string | ✅ | 撤回するメッセージの一意識別子 |
 
-#### Example Request
+#### リクエスト例
 
-**Example 1: Recall a message with client authentication**
+**例 1：クライアント認証によるメッセージの撤回**
 
-**cURL Example:**
+**cURL 例：**
 
 ```bash
 curl -X "POST" "https://your-app.imkit.io/rooms/demo-room/message" \
@@ -60,7 +60,7 @@ curl -X "POST" "https://your-app.imkit.io/rooms/demo-room/message" \
      -d '{"_id": "5ce3d80bd594874e495895a4", "messageType": "recall"}'
 ```
 
-**JavaScript Example:**
+**JavaScript 例：**
 
 ```javascript
 const response = await axios.post(
@@ -79,9 +79,9 @@ const response = await axios.post(
 );
 ```
 
-**Example 2: Recall a message with platform API authentication**
+**例 2：プラットフォーム API 認証によるメッセージの撤回**
 
-**JavaScript Example:**
+**JavaScript 例：**
 
 ```javascript
 const response = await axios.post(
@@ -99,23 +99,23 @@ const response = await axios.post(
 );
 ```
 
-#### Response
+#### レスポンス
 
-**Success Response (200 OK)**
+**成功（200 OK）**
 
-| Parameter             | Type   | Description                            |
-| --------------------- | ------ | -------------------------------------- |
-| `RC`                  | number | Response code (0 indicates success)    |
-| `RM`                  | string | Response message                       |
-| `result._id`          | string | Message unique identifier              |
-| `result.message`      | string | Message content (empty string after recall) |
-| `result.room`         | string | Room ID the message belongs to         |
-| `result.sender`       | object | Sender information for the recall operation |
-| `result.messageType`  | string | Message type (`"recall"` after recall) |
-| `result.messageTimeMS`| number | Message sent timestamp (milliseconds)  |
-| `result.updatedAtMS`  | number | Last updated timestamp (milliseconds)  |
+| パラメータ | 型 | 説明 |
+| --------------------- | ------ | ---------------------------------- |
+| `RC` | number | レスポンスコード（0は成功） |
+| `RM` | string | レスポンスメッセージ |
+| `result._id` | string | メッセージの一意識別子 |
+| `result.message` | string | メッセージ内容（撤回後は空文字列） |
+| `result.room` | string | 所属チャットルーム ID |
+| `result.sender` | object | 撤回操作を行った送信者情報 |
+| `result.messageType` | string | メッセージタイプ（撤回後は `"recall"`） |
+| `result.messageTimeMS`| number | メッセージ送信タイムスタンプ（ミリ秒） |
+| `result.updatedAtMS` | number | 最終更新タイムスタンプ（ミリ秒） |
 
-#### Example Response
+#### レスポンス例
 
 ```json
 {
@@ -143,29 +143,29 @@ const response = await axios.post(
 }
 ```
 
-#### Error Response
+#### エラーレスポンス
 
-When a request fails, you will receive an error response containing error details. Common error scenarios include:
+リクエストが失敗した場合、エラーの詳細情報を含むレスポンスが返されます。一般的なエラーには以下が含まれます：
 
-- Invalid authentication key or token
-- The specified message or room does not exist
-- No permission to recall the message
-- Internal server error
-
-------
-
-## Use Cases
-
-### Message Management
-
-- **Correct mistaken messages**: Users can immediately recall a message sent by mistake
-- **Remove sensitive information**: Recall messages containing sensitive or inappropriate content
-- **Backend management**: Administrators can recall violating messages via the platform API
+- 無効な認証キーまたはトークン
+- 指定されたメッセージまたはチャットルームが存在しない
+- そのメッセージを撤回する権限がない
+- サーバー内部エラー
 
 ------
 
-## Notes
+## 使用シーン
 
-- **Recall effect**: After recall, the message's `message` field becomes an empty string, `messageType` changes to `"recall"`, and all room members can see the recalled status
-- **`_id`**: The `_id` in the request body is the **message** ID to be recalled, not the room ID
-- **Two authentication methods**: Client authentication (`IM-CLIENT-KEY` + `IM-Authorization`) is for regular user operations; platform API authentication (`IM-API-KEY`) is for backend management operations
+### メッセージ管理
+
+- **誤送信メッセージの修正**: 誤ったメッセージを送信した直後に撤回できます。
+- **機密情報の削除**: 機密情報や不適切な内容を含むメッセージを撤回します。
+- **バックエンド管理**: 管理者がプラットフォーム API を使用して違反メッセージを撤回します。
+
+------
+
+## 注意事項
+
+- **撤回の効果**: 撤回後、メッセージの `message` フィールドは空文字列になり、`messageType` は `"recall"` に変更されます。チャットルームのすべてのメンバーが撤回状態を確認できます。
+- **`_id`**: リクエストボディの `_id` は撤回する**メッセージ**の ID であり、チャットルームの ID ではありません。
+- **2 種類の認証**: クライアント認証（`IM-CLIENT-KEY` + `IM-Authorization`）は一般ユーザーの操作に適しており、プラットフォーム API 認証（`IM-API-KEY`）はバックエンド管理操作に適しています。

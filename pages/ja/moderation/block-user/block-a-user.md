@@ -1,37 +1,37 @@
-# Block a User
+# ユーザーのブロック (Block User)
 
-## Overview
+## 概要
 
-Block a specified user to prevent them from having direct chats with the current user. After blocking, the blocked user will be unable to send private messages to the blocker, but this will not affect interactions in group chatrooms. This feature is suitable for preventing harassment and managing personal privacy.
+指定したユーザーをブロックし、現在のユーザーとの直接のチャットを阻止します。ブロック後、ブロックされたユーザーはブロックしたユーザーにプライベートメッセージを送信できなくなりますが、グループチャットルーム内での対話には影響しません。この機能は、嫌がらせの防止や個人のプライバシー管理に適しています。
 
 ------
 
-## API Endpoint
+## API エンドポイント
 
-### Block a Specified User
+### 特定のユーザーをブロックする
 
-Add the specified user to the block list to prevent direct chatting.
+指定したユーザーをブロックリストに追加し、直接のチャットを阻止します。
 
 ```http
 POST /blockStatus/my/{blockee}
 ```
 
-#### Headers
+#### ヘッダー (Headers)
 
-| Parameter          | Type   | Required | Description    |
-| ------------------ | ------ | -------- | -------------- |
-| `IM-CLIENT-KEY`    | string | ✅        | Client Key     |
-| `IM-Authorization` | string | ✅        | Client Token   |
+| パラメータ | 型 | 必須 | 説明 |
+| ------------------ | ------ | ---- | -------------- |
+| `IM-CLIENT-KEY` | string | ✅ | Client Key |
+| `IM-Authorization` | string | ✅ | Client Token |
 
-#### Path Parameters
+#### パスパラメータ (Path Parameters)
 
-| Parameter | Type   | Required | Description             |
-| --------- | ------ | -------- | ----------------------- |
-| `blockee` | string | ✅        | ID of the user to block |
+| パラメータ | 型 | 必須 | 説明 |
+| --------- | ------ | ---- | ----------------- |
+| `blockee` | string | ✅ | ブロックするユーザー ID |
 
-#### Example Request
+#### リクエスト例
 
-**Block a specific user**
+**特定のユーザーをブロックする**
 
 ```http
 POST /blockStatus/my/ccc HTTP/1.1
@@ -41,7 +41,7 @@ Host: your-app.imkit.io
 Connection: close
 ```
 
-**Block another user**
+**他のユーザーをブロックする**
 
 ```http
 POST /blockStatus/my/user123 HTTP/1.1
@@ -51,7 +51,7 @@ Host: your-app.imkit.io
 Connection: close
 ```
 
-**JavaScript Example:**
+**JavaScript 例：**
 
 ```javascript
 const response = await axios.post(
@@ -66,7 +66,7 @@ const response = await axios.post(
 );
 ```
 
-**cURL Example:**
+**cURL 例：**
 
 ```bash
 curl -X "POST" "https://your-app.imkit.io/blockStatus/my/{blockee}" \
@@ -74,37 +74,37 @@ curl -X "POST" "https://your-app.imkit.io/blockStatus/my/{blockee}" \
      -H 'IM-Authorization: {IM-Authorization}'
 ```
 
-#### Response
+#### レスポンス (Response)
 
-**Success Response (200 OK)**
+**成功レスポンス（200 OK）**
 
-| Parameter | Type   | Description                         |
-| --------- | ------ | ----------------------------------- |
-| `RC`      | number | Response code (0 indicates success) |
-| `RM`      | string | Response message                    |
-| `result`  | object | Block status information            |
+| パラメータ | 型 | 説明 |
+| -------- | ------ | ---------------------- |
+| `RC` | number | レスポンスコード（0 は成功を示す） |
+| `RM` | string | レスポンスメッセージ |
+| `result` | object | ブロックステータス情報 |
 
-**Block Status Object Structure**
+**ブロックステータスオブジェクトの構造**
 
-| Parameter   | Type   | Description                           |
-| ----------- | ------ | ------------------------------------- |
-| `appID`     | string | Application ID                        |
-| `blockee`   | object | Detailed information of blocked user  |
-| `blocker`   | string | ID of the user who performed the block |
-| `room`      | string | Associated chatroom ID                |
-| `createdAt` | string | Block creation time                   |
-| `updatedAt` | string | Block update time                     |
+| パラメータ | 型 | 説明 |
+| ----------- | ------ | ----------------------------- |
+| `appID` | string | アプリケーション識別子 |
+| `blockee` | object | ブロックされたユーザーの詳細情報 |
+| `blocker` | string | ブロックを実行したユーザー ID |
+| `room` | string | 関連付けられたチャットルーム ID |
+| `createdAt` | string | ブロック作成日時 |
+| `updatedAt` | string | ブロック更新日時 |
 
-**Blocked User Object Structure**
+**ブロックされたユーザーオブジェクトの構造**
 
-| Parameter         | Type   | Description                             |
-| ----------------- | ------ | --------------------------------------- |
-| `_id`             | string | User unique ID                          |
-| `nickname`        | string | User nickname                           |
-| `avatarUrl`       | string | User avatar URL                         |
-| `lastLoginTimeMS` | number | Last login time (millisecond timestamp) |
+| パラメータ | 型 | 説明 |
+| ----------------- | ------ | ----------------------------- |
+| `_id` | string | ユーザー一意識別子 |
+| `nickname` | string | ユーザーのニックネーム |
+| `avatarUrl` | string | ユーザーのアバター URL |
+| `lastLoginTimeMS` | number | 最終ログイン時間（ミリ秒タイムスタンプ） |
 
-#### Example Response
+#### レスポンス例
 
 ```json
 {
@@ -127,9 +127,9 @@ curl -X "POST" "https://your-app.imkit.io/blockStatus/my/{blockee}" \
 }
 ```
 
-#### Error Response
+#### エラーレスポンス
 
-**401 Unauthorized** - Authentication failed
+**401 Unauthorized** - 認証失敗
 
 ```json
 {
@@ -142,7 +142,7 @@ curl -X "POST" "https://your-app.imkit.io/blockStatus/my/{blockee}" \
 }
 ```
 
-**404 Not Found** - User does not exist
+**404 Not Found** - ユーザーが存在しない
 
 ```json
 {
@@ -155,7 +155,7 @@ curl -X "POST" "https://your-app.imkit.io/blockStatus/my/{blockee}" \
 }
 ```
 
-**400 Bad Request** - Cannot block yourself
+**400 Bad Request** - 自分自身をブロックすることはできません
 
 ```json
 {
@@ -168,7 +168,7 @@ curl -X "POST" "https://your-app.imkit.io/blockStatus/my/{blockee}" \
 }
 ```
 
-**409 Conflict** - User is already blocked
+**409 Conflict** - ユーザーは既にブロックされています
 
 ```json
 {
@@ -183,30 +183,30 @@ curl -X "POST" "https://your-app.imkit.io/blockStatus/my/{blockee}" \
 
 ------
 
-## Use Cases
+## 使用シーン
 
-### Personal Privacy Protection
-- **Prevent Harassment**: Block inappropriate users from sending private messages
-- **Privacy Management**: Control who can directly contact you
-- **Safety Protection**: Guard against persistent harassment from malicious users
+### 個人のプライバシー保護
+- **嫌がらせ防止**：不適切なユーザーがプライベートメッセージを送信するのを阻止します。
+- **プライバシー管理**：誰が自分と直接連絡を取れるかをコントロールします。
+- **セキュリティ保護**：悪意のあるユーザーによる継続的な嫌がらせ行為を防ぎます。
 
-### User Experience Improvement
-- **Content Filtering**: Avoid receiving unwanted message content
-- **Environment Cleanup**: Create a more comfortable chat environment
-- **Focus on Work**: Reduce unnecessary disturbances and interruptions
+### ユーザー体験の改善
+- **コンテンツフィルタリング**：望まないメッセージ内容の受信を避けます。
+- **環境の浄化**：より快適なチャット環境を構築します。
+- **仕事への集中**：不要な邪魔や干渉を減らします。
 
-### Community Management
-- **Behavioral Standards**: Take personal-level protective measures against rule-violating users
-- **Conflict Resolution**: Handle personal conflicts between users
-- **Self-Management**: Allow users to manage their own social circle
+### コミュニティ管理
+- **行動規範**：違反ユーザーに対して個人レベルの保護措置を講じます。
+- **紛争処理**：ユーザー間の個人的な紛争を処理します。
+- **自主管理**：ユーザーが自身のソーシャルサークルを自ら管理できるようにします。
 
 ------
 
-## Notes
+## 注意事項
 
-- **Direct Chat Only**: Blocking only affects private chats and does not affect interactions in group chatrooms
-- **Bidirectional Effect**: After blocking takes effect, neither party can send private messages
-- **Automatic Chatroom Creation**: Blocking is associated with the corresponding direct chatroom
-- **Cannot Block Self**: Users cannot block their own account
-- **Duplicate Blocking**: Blocking an already blocked user will return a conflict error
-- **Persistent Status**: The block status persists until manually unblocked
+- **直接チャット限定**：ブロックはプライベートチャットにのみ影響し、グループチャットルーム内での対話には影響しません。
+- **双方向の効果**：ブロックが有効になると、双方ともプライベートメッセージを送信できなくなります。
+- **チャットルームの自動作成**：ブロックは対応する直接チャットルームに関連付けられます。
+- **自己ブロック不可**：自分自身のアカウントをブロックすることはできません。
+- **重複ブロック**：既にブロックされているユーザーに対してブロックを実行すると、コンフリクトエラーが返されます。
+- **ステータスの持続**：ブロックステータスは、手動でブロックを解除するまで持続します。

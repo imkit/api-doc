@@ -1,43 +1,43 @@
-# Freeze a Chatroom
+# チャットルームの凍結 (Freeze Chatroom)
 
-## Overview
+## 概要
 
-The freeze chatroom feature suspends or disables a chatroom by updating its status. When the chatroom status is set to inactive (status=0), the chatroom will be frozen and users will be unable to interact normally within it. This feature is suitable for content management, violation handling, and chatroom maintenance.
+チャットルームの凍結機能は、チャットルームのステータスを更新することで、チャットルームの使用を一時停止または無効化します。チャットルームのステータスが無効（status=0）に設定されると、チャットルームは凍結され、ユーザーはその中で通常の対話を行うことができなくなります。この機能は、コンテンツ管理、違反対応、およびチャットルームのメンテナンスに適しています。
 
 ------
 
-## API Endpoint
+## API エンドポイント
 
-### Freeze a Specified Chatroom
+### 指定したチャットルームを凍結する
 
-Freeze a chatroom by updating its status to inactive.
+チャットルームのステータスを更新してチャットルームを凍結し、無効な状態にします。
 
 ```http
 PUT /rooms/{id}
 ```
 
-#### Headers
+#### ヘッダー (Headers)
 
-| Parameter          | Type   | Required | Description    |
-| ------------------ | ------ | -------- | -------------- |
-| `IM-CLIENT-KEY`    | string | ✅        | Client Key     |
-| `IM-Authorization` | string | ✅        | Client Token   |
+| パラメータ | 型 | 必須 | 説明 |
+| --------------- | ------ | ---- | -------------- |
+| `IM-CLIENT-KEY` | string | ✅ | Client Key |
+| `IM-Authorization` | string | ✅ | Client Token |
 
-#### Path Parameters
+#### パスパラメータ (Path Parameters)
 
-| Parameter | Type   | Required | Description   |
-| --------- | ------ | -------- | ------------- |
-| `id`      | string | ✅        | Chatroom ID   |
+| パラメータ | 型 | 必須 | 説明 |
+| ---- | ------ | ---- | ----------- |
+| `id` | string | ✅ | チャットルーム ID |
 
-#### Post Body
+#### ポストボディ (Post Body)
 
-| Parameter | Type   | Required | Description                                |
-| --------- | ------ | -------- | ------------------------------------------ |
-| `status`  | number | ✅        | Chatroom status: 0=inactive (frozen), 1=active |
+| パラメータ | 型 | 必須 | 説明 |
+| -------- | ------ | ---- | ---------------------------------- |
+| `status` | number | ✅ | チャットルームのステータス：0=無効（凍結）、1=有効 |
 
-#### Example Request
+#### リクエスト例
 
-**Freeze a chatroom**
+**チャットルームを凍結する**
 
 ```http
 PUT /rooms/58871b877390be11d5f1ab30 HTTP/1.1
@@ -52,7 +52,7 @@ Connection: close
 }
 ```
 
-**Unfreeze a chatroom**
+**チャットルームの凍結を解除する**
 
 ```http
 PUT /rooms/58871b877390be11d5f1ab30 HTTP/1.1
@@ -67,7 +67,7 @@ Connection: close
 }
 ```
 
-**JavaScript Example:**
+**JavaScript 例：**
 
 ```javascript
 const response = await axios.put(
@@ -85,7 +85,7 @@ const response = await axios.put(
 );
 ```
 
-**cURL Example:**
+**cURL 例：**
 
 ```bash
 curl -X "PUT" "https://your-app.imkit.io/rooms/{id}" \
@@ -95,31 +95,31 @@ curl -X "PUT" "https://your-app.imkit.io/rooms/{id}" \
      -d '{"status": 0}'
 ```
 
-#### Response
+#### レスポンス (Response)
 
-**Success Response (200 OK)**
+**成功レスポンス（200 OK）**
 
-| Parameter | Type   | Description                         |
-| --------- | ------ | ----------------------------------- |
-| `RC`      | number | Response code (0 indicates success) |
-| `RM`      | string | Response message                    |
-| `result`  | object | Updated chatroom data               |
+| パラメータ | 型 | 説明 |
+| -------- | ------ | ---------------------- |
+| `RC` | number | レスポンスコード（0 は成功を示す） |
+| `RM` | string | レスポンスメッセージ |
+| `result` | object | 更新後のチャットルームデータ |
 
-**Chatroom Object Structure**
+**チャットルームオブジェクトの構造**
 
-| Parameter       | Type   | Description                           |
-| --------------- | ------ | ------------------------------------- |
-| `_id`           | string | Chatroom unique ID                    |
-| `name`          | string | Chatroom name                         |
-| `cover`         | string | Chatroom cover image URL              |
-| `description`   | string | Chatroom description                  |
-| `status`        | number | Chatroom status (0=frozen, 1=active)  |
-| `lastMessage`   | object | Last message information              |
-| `members`       | array  | Chatroom member list                  |
+| パラメータ | 型 | 説明 |
+| --------------- | ------ | ------------------------- |
+| `_id` | string | チャットルーム一意識別子 |
+| `name` | string | チャットルーム名 |
+| `cover` | string | チャットルームのカバー画像 URL |
+| `description` | string | チャットルームの説明 |
+| `status` | number | チャットルームのステータス（0=凍結、1=正常）|
+| `lastMessage` | object | 最後のメッセージ情報 |
+| `members` | array | チャットルームのメンバーリスト |
 
-#### Example Response
+#### レスポンス例
 
-**Chatroom frozen successfully**
+**チャットルームの凍結成功**
 
 ```json
 {
@@ -155,9 +155,9 @@ curl -X "PUT" "https://your-app.imkit.io/rooms/{id}" \
 }
 ```
 
-#### Error Response
+#### エラーレスポンス
 
-**401 Unauthorized** - Authentication failed
+**401 Unauthorized** - 認証失敗
 
 ```json
 {
@@ -170,7 +170,7 @@ curl -X "PUT" "https://your-app.imkit.io/rooms/{id}" \
 }
 ```
 
-**403 Forbidden** - Insufficient permissions
+**403 Forbidden** - 権限不足
 
 ```json
 {
@@ -183,7 +183,7 @@ curl -X "PUT" "https://your-app.imkit.io/rooms/{id}" \
 }
 ```
 
-**404 Not Found** - Chatroom does not exist
+**404 Not Found** - チャットルームが存在しない
 
 ```json
 {
@@ -198,31 +198,31 @@ curl -X "PUT" "https://your-app.imkit.io/rooms/{id}" \
 
 ------
 
-## Use Cases
+## 使用シーン
 
-### Content Management
-- **Violation Handling**: Temporarily freeze chatrooms that violate community guidelines
-- **Emergency Situations**: Quickly lock down a chatroom during emergency events
-- **Content Review**: Temporarily freeze a chatroom for content review
+### コンテンツ管理
+- **違反対応**：コミュニティ規範に違反したチャットルームを一時的に凍結します。
+- **緊急事態**：緊急事態が発生した際に、チャットルームを迅速にブロックします。
+- **コンテンツ審査**：チャットルームを一時的に凍結してコンテンツ審査を行います。
 
-### Chatroom Maintenance
-- **System Maintenance**: Temporarily freeze chatrooms during system maintenance
-- **Feature Updates**: Temporarily disable chatrooms during feature updates
-- **Data Migration**: Suspend chatroom usage during data migration
+### チャットルームのメンテナンス
+- **システムメンテナンス**：システムメンテナンス中にチャットルームを一時的に凍結します。
+- **機能更新**：チャットルームの機能更新時に一時的に停止します。
+- **データ移行**：データ移行中にチャットルームの使用を一時停止します。
 
-### Administrative Operations
-- **Batch Management**: Batch freeze or unfreeze multiple chatrooms
-- **Permission Control**: Ensure only authorized users can perform freeze operations
-- **Status Tracking**: Monitor chatroom freeze status and history
+### 管理操作
+- **一括管理**：複数のチャットルームを一括で凍結または凍結解除します。
+- **権限管理**：許可されたユーザーのみが凍結操作を実行できるようにします。
+- **ステータス追跡**：チャットルームの凍結ステータスと履歴を監視します。
 
 ------
 
-## Notes
+## 注意事項
 
-- **Permission Restriction**: Only chatroom owners, administrators, or platform administrators can perform freeze operations
-- **Status Impact**: A frozen chatroom (status=0) cannot be used normally
-- **User Experience**: During the freeze period, users may be unable to send messages or interact
-- **Immediate Effect**: The status change takes effect immediately, affecting all chatroom members
-- **Reversible Operation**: A chatroom can be unfrozen by setting status=1
-- **Data Preservation**: Freezing a chatroom does not delete historical messages or member data
-- **Notification Mechanism**: Freeze operations may trigger related notifications or events
+- **権限制限**：チャットルームのオーナー、管理者、またはプラットフォーム管理者のみが凍結操作を実行できます。
+- **ステータスの影響**：凍結されたチャットルーム（status=0）は正常に使用できなくなります。
+- **ユーザー体験**：凍結期間中、ユーザーはメッセージを送信したり対話したりできなくなる場合があります。
+- **即時有効**：ステータスの変更は即座に有効になり、すべてのチャットルームメンバーに影響します。
+- **可逆的な操作**：status=1 に設定することで、チャットルームの凍結を解除できます。
+- **データの保存**：チャットルームを凍結しても、過去のメッセージやメンバーデータは削除されません。
+- **通知メカニズム**：凍結操作により、関連する通知やイベントがトリガーされる場合があります。

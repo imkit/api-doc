@@ -1,46 +1,46 @@
-# Update Config
+# システム設定の更新
 
-## Overview
+## 概要
 
-Update the application's system configuration settings. This endpoint allows you to set announcements, censorship keywords, feature flags, and other arbitrary key-value pairs. This is an admin-only API that requires `IM-API-KEY` for authentication.
+アプリケーションのシステム構成を更新します。このエンドポイントを通じて、お知らせ、検閲ワード、機能フラグなどの任意のキーと値のペアを設定できます。これは管理者専用の API であり、認証には `IM-API-KEY` が必要です。
 
 ------
 
-## API Endpoint
+## API エンドポイント
 
-### Update Config
+### システム設定の更新
 
-Add or update system configuration key-value pairs.
+システム構成のキーと値のペアを追加または更新します。
 
 ```http
 POST /config
 ```
 
-#### Headers
+#### ヘッダー
 
-| Parameter      | Type   | Required | Description                       |
-| -------------- | ------ | -------- | --------------------------------- |
-| `IM-API-KEY`   | string | ✅        | Your platform API Key             |
-| `Content-Type` | string | ✅        | `application/json; charset=utf-8` |
+| パラメータ | 型 | 必須 | 説明 |
+| -------------- | ------ | ---- | ------------------------------- |
+| `IM-API-KEY` | string | ✅ | 平台 API キー |
+| `Content-Type` | string | ✅ | `application/json; charset=utf-8` |
 
-#### Post Body
+#### ポストボディ
 
-The request body consists of arbitrary JSON key-value pairs that will be stored as system configuration.
+リクエスト内容は任意の JSON キーと値のペアで、システム構成として保存されます。
 
-| Parameter    | Type | Required | Description                                        |
-| ------------ | ---- | -------- | -------------------------------------------------- |
-| (any key)    | any  | ❌        | Any key-value pair, will be stored as system config |
+| パラメータ | 型 | 必須 | 説明 |
+| ------ | ------ | ---- | ---------------------------------- |
+| （任意のキー）| any | ❌ | 任意のキーと値のペア。システム構成設定として保存されます |
 
-#### Example Request
+#### リクエスト例
 
-**JavaScript (axios) - Set announcement**
+**JavaScript（axios）- お知らせの設定**
 
 ```javascript
 const response = await axios.post(
   "https://your-app.imkit.io/config",
   {
     announcement: {
-      text: "系統將於 2026/04/15 02:00 進行例行維護，預計維護時間 2 小時。",
+      text: "システムは 2026/04/15 02:00 に定期メンテナンスを行います。メンテナンス時間は2時間を予定しています。",
       pin: true
     }
   },
@@ -53,14 +53,14 @@ const response = await axios.post(
 );
 ```
 
-**JavaScript (axios) - Set censorship keywords**
+**JavaScript（axios）- 検閲ワードの設定**
 
 ```javascript
 const response = await axios.post(
   "https://your-app.imkit.io/config",
   {
     censorship: {
-      keywords: ["廣告", "垃圾訊息", "詐騙"]
+      keywords: ["広告", "スパム", "詐欺"]
     }
   },
   {
@@ -72,7 +72,7 @@ const response = await axios.post(
 );
 ```
 
-**cURL - Set multiple configuration items**
+**cURL - 複数の構成を設定**
 
 ```bash
 curl -X POST "https://your-app.imkit.io/config" \
@@ -80,11 +80,11 @@ curl -X POST "https://your-app.imkit.io/config" \
   -H "Content-Type: application/json; charset=utf-8" \
   -d '{
     "announcement": {
-      "text": "歡迎使用 IMKit！",
+      "text": "IMKitへようこそ！",
       "pin": true
     },
     "censorship": {
-      "keywords": ["廣告", "垃圾訊息"]
+      "keywords": ["広告", "スパム"]
     },
     "featureFlags": {
       "enableVoiceMessage": true,
@@ -93,17 +93,17 @@ curl -X POST "https://your-app.imkit.io/config" \
   }'
 ```
 
-#### Response
+#### レスポンス
 
-**Success Response (200 OK)**
+**成功（200 OK）**
 
-| Parameter | Type   | Description                            |
-| --------- | ------ | -------------------------------------- |
-| `RC`      | number | Response code (0 indicates success)    |
-| `RM`      | string | Response message                       |
-| `result`  | object | Updated system configuration settings  |
+| パラメータ | 型 | 説明 |
+| -------- | ------ | ---------------------------- |
+| `RC` | number | レスポンスコード（0は成功） |
+| `RM` | string | レスポンスメッセージ |
+| `result` | object | 更新後のシステム構成設定 |
 
-#### Example Response
+#### レスポンス例
 
 ```json
 {
@@ -111,11 +111,11 @@ curl -X POST "https://your-app.imkit.io/config" \
   "RM": "OK",
   "result": {
     "announcement": {
-      "text": "歡迎使用 IMKit！",
+      "text": "IMKitへようこそ！",
       "pin": true
     },
     "censorship": {
-      "keywords": ["廣告", "垃圾訊息"]
+      "keywords": ["広告", "スパム"]
     },
     "featureFlags": {
       "enableVoiceMessage": true,
@@ -125,9 +125,9 @@ curl -X POST "https://your-app.imkit.io/config" \
 }
 ```
 
-#### Error Response
+#### エラーレスポンス
 
-**401 Unauthorized** - Invalid API Key
+**401 Unauthorized** - API キーが無効
 
 ```json
 {
@@ -140,7 +140,7 @@ curl -X POST "https://your-app.imkit.io/config" \
 }
 ```
 
-**400 Bad Request** - Invalid request format
+**400 Bad Request** - リクエスト形式が不正
 
 ```json
 {
@@ -155,25 +155,25 @@ curl -X POST "https://your-app.imkit.io/config" \
 
 ------
 
-## Use Cases
+## 使用シーン
 
-### Announcement Management
-- **Set System Announcements**: Publish or update system announcement messages, with the option to pin them
-- **Event Announcements**: Publish information about limited-time events, promotions, etc.
+### お知らせ管理
+- **システムお知らせの設定**: システムお知らせメッセージを公開または更新し、固定表示するかどうかを設定できます。
+- **イベント告知**: 期間限定のイベントやプロモーションなどの情報を公開します。
 
-### Content Moderation Settings
-- **Set Censorship Keywords**: Add or update the sensitive word list for message content filtering
-- **Moderation Rule Adjustment**: Dynamically adjust content moderation rules
+### コンテンツ検閲設定
+- **検閲ワードの設定**: メッセージフィルタリングに使用する禁止ワードリストを追加または更新します。
+- **検閲ルールの調整**: コンテンツ検閲ルールを動的に調整します。
 
-### Feature Flag Management
-- **Feature Toggles**: Dynamically enable or disable specific features
-- **Parameter Adjustment**: Update system parameters such as file size limits, message length limits, etc.
+### 機能フラグ管理
+- **機能切り替え**: 特定の機能を動的に有効化または無効化します。
+- **パラメータ調整**: ファイルサイズ制限やメッセージ長制限などのシステムパラメータを更新します。
 
 ------
 
-## Notes
+## 注意事項
 
-- **Admin Only**: This endpoint requires `IM-API-KEY` authentication and is restricted to server-side use
-- **Override Behavior**: Settings with the same key name will be overwritten
-- **Arbitrary Key-Value Pairs**: The request body supports any JSON structure; the system does not restrict key names or value formats
-- **Immediate Effect**: Updated settings take effect immediately; clients will receive the latest settings on their next `GET /config` call
+- **管理者専用**: このエンドポイントは `IM-API-KEY` での認証が必要で、サーバー側からの呼び出しに限定されます。
+- **上書き動作**: 同じキー名の設定値は上書き更新されます。
+- **任意のキーと値**: リクエストボディは任意の JSON 構造をサポートしており、キー名や値の形式に制限はありません。
+- **即時反映**: 更新された設定は即座に反映され、クライアントが次回 `GET /config` を読み取った際に最新の設定が取得されます。
