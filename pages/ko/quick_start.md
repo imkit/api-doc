@@ -44,3 +44,26 @@ IMKIT Platform API를 사용하려면 먼저 [IMKIT Dashboard](https://dashboard
 3. **Chat Server URL**: 이 애플리케이션의 Chat Server 실제 URL로, `https://[애플리케이션이름].imkit.io` 형식입니다
 
 ![key3](https://raw.githubusercontent.com/imkit/api-doc/refs/heads/main/images/dashboard_key3.png)
+
+## 4단계: Postman으로 API 테스트하기 (선택)
+
+Key를 발급받은 후 Postman Collection을 가져오면 코드 작성 없이 바로 Chat Server API를 테스트할 수 있습니다.
+
+### 다운로드
+
+- [IMKit API Collection](/collections/IMKit-API.postman_collection.json) (51개 API request)
+- [IMKit API Environment](/collections/IMKit-API.postman_environment.json) (환경 변수 템플릿)
+
+### 가져오기 단계
+
+1. Postman을 열고 왼쪽 상단 **Import**를 클릭하여 위의 두 JSON 파일을 가져옵니다
+2. 오른쪽 상단 Environment 드롭다운에서 **IMKit API**를 선택하고 **Edit**을 클릭하여 다음 변수를 입력합니다：
+
+| 변수 | 값 (3단계에서 확인) |
+|------|---------------------|
+| `domain` | Chat Server URL (예: `https://myapp.imkit.io`) |
+| `apiKey` | Backend API Key |
+| `clientKey` | Client Key |
+| `token` | "Create or Update User" API로 발급받은 Access Token |
+
+3. 저장 후 원하는 request를 선택하고 **Send**를 클릭하여 테스트를 시작합니다

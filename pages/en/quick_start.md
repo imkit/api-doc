@@ -44,3 +44,26 @@ You need to first create an account on the [IMKIT Dashboard](https://dashboard.i
 3. **Chat Server URL**: The actual URL of this Application's Chat Server, which will be `https://[YourApplicationName].imkit.io`
 
 ![key3](https://raw.githubusercontent.com/imkit/api-doc/refs/heads/main/images/dashboard_key3.png)
+
+## Step 4: Test the API with Postman (Optional)
+
+Once you have your keys, import our Postman Collection to start testing the Chat Server APIs immediately — no code required.
+
+### Downloads
+
+- [IMKit API Collection](/collections/IMKit-API.postman_collection.json) (51 API requests)
+- [IMKit API Environment](/collections/IMKit-API.postman_environment.json) (environment variable template)
+
+### Import Steps
+
+1. Open Postman, click **Import** in the top-left corner, and import both JSON files
+2. Switch to the Environment dropdown in the top-right corner, select **IMKit API**, then click **Edit** to fill in the following variables:
+
+| Variable | Value (from Step 3) |
+|----------|---------------------|
+| `domain` | Chat Server URL (e.g. `https://myapp.imkit.io`) |
+| `apiKey` | Backend API Key |
+| `clientKey` | Client Key |
+| `token` | Access Token obtained from the "Create or Update User" API |
+
+3. Save and select any request, then click **Send** to start testing

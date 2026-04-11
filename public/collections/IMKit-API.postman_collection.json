@@ -1,0 +1,1126 @@
+{
+  "info": {
+    "_postman_id": "imkit-api-doc-collection-v1",
+    "name": "IMKit API",
+    "description": "IMKit Chat Platform API — based on API documentation at https://docs.imkit.io\n\n**Variables to configure:**\n- `domain` — your app base URL (e.g. https://your-app.imkit.io)\n- `apiKey` — IM-API-KEY (server-side admin key)\n- `clientKey` — IM-CLIENT-KEY (client/SDK key)\n- `token` — IM-Authorization (user access token)\n- `roomId` — target room ID\n- `clientId` — target user/client ID\n- `messageId` — target message ID",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "domain",    "value": "https://your-app.imkit.io", "type": "string" },
+    { "key": "apiKey",    "value": "",                          "type": "string", "description": "IM-API-KEY — server-side admin key" },
+    { "key": "clientKey", "value": "",                          "type": "string", "description": "IM-CLIENT-KEY — client/SDK key" },
+    { "key": "token",     "value": "",                          "type": "string", "description": "IM-Authorization — user access token" },
+    { "key": "roomId",    "value": "",                          "type": "string" },
+    { "key": "clientId",  "value": "",                          "type": "string" },
+    { "key": "messageId", "value": "",                          "type": "string" }
+  ],
+  "item": [
+
+    {
+      "name": "User Management",
+      "item": [
+        {
+          "name": "Create or Update User",
+          "protocolProfileBehavior": { "followRedirects": false, "followOriginalHttpMethod": false, "followAuthorizationHeader": false },
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "IM-API-KEY",    "value": "{{apiKey}}" },
+              { "key": "Content-Type",  "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"_id\": \"user123\",\n  \"nickname\": \"John Doe\",\n  \"avatarUrl\": \"https://example.com/avatar.jpg\",\n  \"issueAccessToken\": true\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": {
+              "raw": "{{domain}}/admin/clients",
+              "host": ["{{domain}}"],
+              "path": ["admin", "clients"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Batch Create Users",
+          "protocolProfileBehavior": { "followRedirects": false, "followOriginalHttpMethod": false, "followAuthorizationHeader": false },
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "IM-API-KEY",   "value": "{{apiKey}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"data\": [\n    { \"_id\": \"user001\", \"nickname\": \"Alice\", \"avatarUrl\": \"https://example.com/alice.jpg\" },\n    { \"_id\": \"user002\", \"nickname\": \"Bob\",   \"avatarUrl\": \"https://example.com/bob.jpg\"   },\n    { \"_id\": \"user003\", \"nickname\": \"Carol\", \"avatarUrl\": \"https://example.com/carol.jpg\" }\n  ]\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": {
+              "raw": "{{domain}}/admin/clients/list",
+              "host": ["{{domain}}"],
+              "path": ["admin", "clients", "list"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "List Users",
+          "protocolProfileBehavior": { "followRedirects": false, "followOriginalHttpMethod": false, "followAuthorizationHeader": false },
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "IM-API-KEY", "value": "{{apiKey}}" }
+            ],
+            "url": {
+              "raw": "{{domain}}/admin/clients?limit=20&skip=0",
+              "host": ["{{domain}}"],
+              "path": ["admin", "clients"],
+              "query": [
+                { "key": "q",     "value": "{\"nickname\":{\"$regex\":\".*keyword.*\"}}", "disabled": true },
+                { "key": "limit", "value": "20" },
+                { "key": "skip",  "value": "0" }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Me (Current User)",
+          "protocolProfileBehavior": { "followRedirects": false, "followOriginalHttpMethod": false, "followAuthorizationHeader": false },
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "IM-CLIENT-KEY",    "value": "{{clientKey}}" },
+              { "key": "IM-Authorization", "value": "{{token}}" }
+            ],
+            "url": {
+              "raw": "{{domain}}/me",
+              "host": ["{{domain}}"],
+              "path": ["me"]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+
+    {
+      "name": "User Groups",
+      "item": [
+        {
+          "name": "Create Group",
+          "protocolProfileBehavior": { "followRedirects": false, "followOriginalHttpMethod": false, "followAuthorizationHeader": false },
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "IM-API-KEY",   "value": "{{apiKey}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"_id\": \"group001\",\n  \"nickname\": \"Support Team\",\n  \"avatarUrl\": \"https://example.com/group.jpg\",\n  \"members\": [\"user001\", \"user002\", \"user003\"]\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": {
+              "raw": "{{domain}}/admin/groups",
+              "host": ["{{domain}}"],
+              "path": ["admin", "groups"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "List Groups",
+          "protocolProfileBehavior": { "followRedirects": false, "followOriginalHttpMethod": false, "followAuthorizationHeader": false },
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "IM-API-KEY", "value": "{{apiKey}}" }
+            ],
+            "url": {
+              "raw": "{{domain}}/admin/groups?limit=20",
+              "host": ["{{domain}}"],
+              "path": ["admin", "groups"],
+              "query": [
+                { "key": "limit", "value": "20" }
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+
+    {
+      "name": "User Token",
+      "item": [
+        {
+          "name": "Issue Token (Server Generated)",
+          "protocolProfileBehavior": { "followRedirects": false, "followOriginalHttpMethod": false, "followAuthorizationHeader": false },
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "IM-API-KEY",   "value": "{{apiKey}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"_id\": \"user123\",\n  \"issueAccessToken\": true\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": {
+              "raw": "{{domain}}/admin/clients",
+              "host": ["{{domain}}"],
+              "path": ["admin", "clients"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Assign Token (Custom Token)",
+          "protocolProfileBehavior": { "followRedirects": false, "followOriginalHttpMethod": false, "followAuthorizationHeader": false },
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "IM-API-KEY",   "value": "{{apiKey}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"_id\": \"user123\",\n  \"issueAccessToken\": false,\n  \"token\": \"your-custom-token-here\",\n  \"expirationDate\": \"2027-12-31T23:59:59.000Z\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": {
+              "raw": "{{domain}}/admin/clients",
+              "host": ["{{domain}}"],
+              "path": ["admin", "clients"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update Token",
+          "protocolProfileBehavior": { "followRedirects": false, "followOriginalHttpMethod": false, "followAuthorizationHeader": false },
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "IM-API-KEY",   "value": "{{apiKey}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"token\": \"new-token-001\",\n  \"expirationDate\": \"2027-01-01T00:00:00.000Z\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": {
+              "raw": "{{domain}}/admin/clients/{{clientId}}/token",
+              "host": ["{{domain}}"],
+              "path": ["admin", "clients", "{{clientId}}", "token"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Revoke Token",
+          "protocolProfileBehavior": { "followRedirects": false, "followOriginalHttpMethod": false, "followAuthorizationHeader": false },
+          "request": {
+            "method": "DELETE",
+            "header": [
+              { "key": "IM-API-KEY",   "value": "{{apiKey}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"token\": \"token-to-revoke\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": {
+              "raw": "{{domain}}/admin/clients/{{clientId}}/token",
+              "host": ["{{domain}}"],
+              "path": ["admin", "clients", "{{clientId}}", "token"]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+
+    {
+      "name": "Room Management",
+      "item": [
+        {
+          "name": "Create Room",
+          "protocolProfileBehavior": { "followRedirects": false, "followOriginalHttpMethod": false, "followAuthorizationHeader": false },
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "IM-API-KEY",   "value": "{{apiKey}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Project Discussion\",\n  \"roomType\": \"group\",\n  \"members\": [\"user001\", \"user002\", \"user003\"],\n  \"roomTags\": [\"project\", \"team-a\"],\n  \"systemMessage\": true\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": {
+              "raw": "{{domain}}/rooms/",
+              "host": ["{{domain}}"],
+              "path": ["rooms", ""]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Room",
+          "protocolProfileBehavior": { "followRedirects": false, "followOriginalHttpMethod": false, "followAuthorizationHeader": false },
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "IM-CLIENT-KEY",    "value": "{{clientKey}}" },
+              { "key": "IM-Authorization", "value": "{{token}}" }
+            ],
+            "url": {
+              "raw": "{{domain}}/rooms/{{roomId}}",
+              "host": ["{{domain}}"],
+              "path": ["rooms", "{{roomId}}"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "List Rooms",
+          "protocolProfileBehavior": { "followRedirects": false, "followOriginalHttpMethod": false, "followAuthorizationHeader": false },
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "IM-CLIENT-KEY",    "value": "{{clientKey}}" },
+              { "key": "IM-Authorization", "value": "{{token}}" }
+            ],
+            "url": {
+              "raw": "{{domain}}/rooms?skip=0&limit=30&sort=-lastMessage -createdTime",
+              "host": ["{{domain}}"],
+              "path": ["rooms"],
+              "query": [
+                { "key": "skip",           "value": "0" },
+                { "key": "limit",          "value": "30" },
+                { "key": "sort",           "value": "-lastMessage -createdTime" },
+                { "key": "updatedAfter",   "value": "", "disabled": true },
+                { "key": "pref",           "value": "true", "disabled": true },
+                { "key": "sortUnreadFirst","value": "true", "disabled": true }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update Room",
+          "protocolProfileBehavior": { "followRedirects": false, "followOriginalHttpMethod": false, "followAuthorizationHeader": false },
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "IM-CLIENT-KEY",    "value": "{{clientKey}}" },
+              { "key": "IM-Authorization", "value": "{{token}}" },
+              { "key": "Content-Type",     "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Updated Room Name\",\n  \"description\": \"Updated description\",\n  \"roomTags\": [\"tag1\", \"tag2\"]\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": {
+              "raw": "{{domain}}/rooms/{{roomId}}",
+              "host": ["{{domain}}"],
+              "path": ["rooms", "{{roomId}}"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Room",
+          "protocolProfileBehavior": { "followRedirects": false, "followOriginalHttpMethod": false, "followAuthorizationHeader": false },
+          "request": {
+            "method": "DELETE",
+            "header": [
+              { "key": "IM-API-KEY", "value": "{{apiKey}}" }
+            ],
+            "url": {
+              "raw": "{{domain}}/rooms/{{roomId}}",
+              "host": ["{{domain}}"],
+              "path": ["rooms", "{{roomId}}"]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+
+    {
+      "name": "Room Members",
+      "item": [
+        {
+          "name": "Add Members",
+          "protocolProfileBehavior": { "followRedirects": false, "followOriginalHttpMethod": false, "followAuthorizationHeader": false },
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "IM-CLIENT-KEY",    "value": "{{clientKey}}" },
+              { "key": "IM-Authorization", "value": "{{token}}" },
+              { "key": "Content-Type",     "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"invitees\": [\"user001\", \"user002\"],\n  \"systemMessage\": true\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": {
+              "raw": "{{domain}}/rooms/{{roomId}}/members",
+              "host": ["{{domain}}"],
+              "path": ["rooms", "{{roomId}}", "members"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Remove Members",
+          "protocolProfileBehavior": { "followRedirects": false, "followOriginalHttpMethod": false, "followAuthorizationHeader": false },
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "IM-CLIENT-KEY",    "value": "{{clientKey}}" },
+              { "key": "IM-Authorization", "value": "{{token}}" },
+              { "key": "Content-Type",     "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"members\": [\"user001\", \"user002\"],\n  \"systemMessage\": true\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": {
+              "raw": "{{domain}}/rooms/{{roomId}}/delete/members",
+              "host": ["{{domain}}"],
+              "path": ["rooms", "{{roomId}}", "delete", "members"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update Member Property",
+          "protocolProfileBehavior": { "followRedirects": false, "followOriginalHttpMethod": false, "followAuthorizationHeader": false },
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "IM-CLIENT-KEY",    "value": "{{clientKey}}" },
+              { "key": "IM-Authorization", "value": "{{token}}" },
+              { "key": "Content-Type",     "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"property\": \"nickname\",\n  \"value\": \"New Nickname\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": {
+              "raw": "{{domain}}/rooms/{{roomId}}/member/{{clientId}}",
+              "host": ["{{domain}}"],
+              "path": ["rooms", "{{roomId}}", "member", "{{clientId}}"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update Member Role",
+          "protocolProfileBehavior": { "followRedirects": false, "followOriginalHttpMethod": false, "followAuthorizationHeader": false },
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "IM-CLIENT-KEY",    "value": "{{clientKey}}" },
+              { "key": "IM-Authorization", "value": "{{token}}" },
+              { "key": "Content-Type",     "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"property\": \"role\",\n  \"value\": \"admin\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": {
+              "raw": "{{domain}}/rooms/{{roomId}}/member/{{clientId}}",
+              "host": ["{{domain}}"],
+              "path": ["rooms", "{{roomId}}", "member", "{{clientId}}"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "List Members (via Get Room)",
+          "protocolProfileBehavior": { "followRedirects": false, "followOriginalHttpMethod": false, "followAuthorizationHeader": false },
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "IM-CLIENT-KEY",    "value": "{{clientKey}}" },
+              { "key": "IM-Authorization", "value": "{{token}}" }
+            ],
+            "url": {
+              "raw": "{{domain}}/rooms/{{roomId}}",
+              "host": ["{{domain}}"],
+              "path": ["rooms", "{{roomId}}"]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+
+    {
+      "name": "Room Preference",
+      "item": [
+        {
+          "name": "Mute Room Notification",
+          "protocolProfileBehavior": { "followRedirects": false, "followOriginalHttpMethod": false, "followAuthorizationHeader": false },
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "IM-CLIENT-KEY",    "value": "{{clientKey}}" },
+              { "key": "IM-Authorization", "value": "{{token}}" }
+            ],
+            "url": {
+              "raw": "{{domain}}/me/mute/{{roomId}}",
+              "host": ["{{domain}}"],
+              "path": ["me", "mute", "{{roomId}}"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Unmute Room Notification",
+          "protocolProfileBehavior": { "followRedirects": false, "followOriginalHttpMethod": false, "followAuthorizationHeader": false },
+          "request": {
+            "method": "DELETE",
+            "header": [
+              { "key": "IM-CLIENT-KEY",    "value": "{{clientKey}}" },
+              { "key": "IM-Authorization", "value": "{{token}}" }
+            ],
+            "url": {
+              "raw": "{{domain}}/me/mute/{{roomId}}",
+              "host": ["{{domain}}"],
+              "path": ["me", "mute", "{{roomId}}"]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+
+    {
+      "name": "Message",
+      "item": [
+        {
+          "name": "Send Message",
+          "protocolProfileBehavior": { "followRedirects": false, "followOriginalHttpMethod": false, "followAuthorizationHeader": false },
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "IM-API-KEY",   "value": "{{apiKey}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"room\": \"{{roomId}}\",\n  \"sender\": \"system\",\n  \"message\": \"Hello, welcome!\",\n  \"messageType\": \"text\",\n  \"push\": true\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": {
+              "raw": "{{domain}}/messages",
+              "host": ["{{domain}}"],
+              "path": ["messages"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Batch Send Messages",
+          "protocolProfileBehavior": { "followRedirects": false, "followOriginalHttpMethod": false, "followAuthorizationHeader": false },
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "IM-API-KEY",   "value": "{{apiKey}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"message\": \"System announcement: maintenance scheduled for tonight\",\n  \"messageType\": \"text\",\n  \"sender\": \"system\",\n  \"push\": true,\n  \"paras\": [\n    { \"receiver\": \"user001\" },\n    { \"receiver\": \"user002\" },\n    { \"room\": \"room-abc\" }\n  ]\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": {
+              "raw": "{{domain}}/messages/batch",
+              "host": ["{{domain}}"],
+              "path": ["messages", "batch"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "List Messages",
+          "protocolProfileBehavior": { "followRedirects": false, "followOriginalHttpMethod": false, "followAuthorizationHeader": false },
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "IM-CLIENT-KEY",    "value": "{{clientKey}}" },
+              { "key": "IM-Authorization", "value": "{{token}}" }
+            ],
+            "url": {
+              "raw": "{{domain}}/rooms/{{roomId}}/messages/v3?limit=20",
+              "host": ["{{domain}}"],
+              "path": ["rooms", "{{roomId}}", "messages", "v3"],
+              "query": [
+                { "key": "limit",          "value": "20" },
+                { "key": "beforeMessage",  "value": "", "disabled": true },
+                { "key": "afterMessage",   "value": "", "disabled": true },
+                { "key": "afterTime",      "value": "", "disabled": true },
+                { "key": "timeRangeField", "value": "updatedAt", "disabled": true }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Message",
+          "protocolProfileBehavior": { "followRedirects": false, "followOriginalHttpMethod": false, "followAuthorizationHeader": false },
+          "request": {
+            "method": "DELETE",
+            "header": [
+              { "key": "IM-API-KEY", "value": "{{apiKey}}" }
+            ],
+            "url": {
+              "raw": "{{domain}}/rooms/{{roomId}}/messages/{{messageId}}",
+              "host": ["{{domain}}"],
+              "path": ["rooms", "{{roomId}}", "messages", "{{messageId}}"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Recall Message",
+          "protocolProfileBehavior": { "followRedirects": false, "followOriginalHttpMethod": false, "followAuthorizationHeader": false },
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "IM-CLIENT-KEY",    "value": "{{clientKey}}" },
+              { "key": "IM-Authorization", "value": "{{token}}" },
+              { "key": "Content-Type",     "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"_id\": \"{{messageId}}\",\n  \"messageType\": \"recall\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": {
+              "raw": "{{domain}}/rooms/{{roomId}}/message",
+              "host": ["{{domain}}"],
+              "path": ["rooms", "{{roomId}}", "message"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Search Messages",
+          "protocolProfileBehavior": { "followRedirects": false, "followOriginalHttpMethod": false, "followAuthorizationHeader": false },
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "IM-CLIENT-KEY",    "value": "{{clientKey}}" },
+              { "key": "IM-Authorization", "value": "{{token}}" },
+              { "key": "Content-Type",     "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"type\": [\"messages\"],\n  \"keyword\": \"hello\",\n  \"limit\": 20\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": {
+              "raw": "{{domain}}/search",
+              "host": ["{{domain}}"],
+              "path": ["search"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Pin Message",
+          "protocolProfileBehavior": { "followRedirects": false, "followOriginalHttpMethod": false, "followAuthorizationHeader": false },
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "IM-API-KEY", "value": "{{apiKey}}" }
+            ],
+            "url": {
+              "raw": "{{domain}}/messages/{{messageId}}/pin",
+              "host": ["{{domain}}"],
+              "path": ["messages", "{{messageId}}", "pin"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Unpin Message",
+          "protocolProfileBehavior": { "followRedirects": false, "followOriginalHttpMethod": false, "followAuthorizationHeader": false },
+          "request": {
+            "method": "DELETE",
+            "header": [
+              { "key": "IM-API-KEY", "value": "{{apiKey}}" }
+            ],
+            "url": {
+              "raw": "{{domain}}/messages/{{messageId}}/pin",
+              "host": ["{{domain}}"],
+              "path": ["messages", "{{messageId}}", "pin"]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+
+    {
+      "name": "Message Badge",
+      "item": [
+        {
+          "name": "Get Unread Count by User",
+          "protocolProfileBehavior": { "followRedirects": false, "followOriginalHttpMethod": false, "followAuthorizationHeader": false },
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "IM-CLIENT-KEY",    "value": "{{clientKey}}" },
+              { "key": "IM-Authorization", "value": "{{token}}" }
+            ],
+            "url": {
+              "raw": "{{domain}}/me/badge",
+              "host": ["{{domain}}"],
+              "path": ["me", "badge"],
+              "query": [
+                { "key": "roomTags", "value": "tag1", "disabled": true }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Unread Count by Room Tags",
+          "protocolProfileBehavior": { "followRedirects": false, "followOriginalHttpMethod": false, "followAuthorizationHeader": false },
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "IM-API-KEY",   "value": "{{apiKey}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"tags\": [\"tag1\", \"tag2\"]\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": {
+              "raw": "{{domain}}/badges/byRoomTags",
+              "host": ["{{domain}}"],
+              "path": ["badges", "byRoomTags"]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+
+    {
+      "name": "Moderation",
+      "item": [
+
+        {
+          "name": "Ban Member (Room)",
+          "item": [
+            {
+              "name": "Ban a Member",
+              "protocolProfileBehavior": { "followRedirects": false, "followOriginalHttpMethod": false, "followAuthorizationHeader": false },
+              "request": {
+                "method": "POST",
+                "header": [
+                  { "key": "IM-CLIENT-KEY",    "value": "{{clientKey}}" },
+                  { "key": "IM-Authorization", "value": "{{token}}" }
+                ],
+                "url": {
+                  "raw": "{{domain}}/blockStatus/room/{{roomId}}/{{clientId}}",
+                  "host": ["{{domain}}"],
+                  "path": ["blockStatus", "room", "{{roomId}}", "{{clientId}}"]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "List Banned Members",
+              "protocolProfileBehavior": { "followRedirects": false, "followOriginalHttpMethod": false, "followAuthorizationHeader": false },
+              "request": {
+                "method": "GET",
+                "header": [
+                  { "key": "IM-CLIENT-KEY",    "value": "{{clientKey}}" },
+                  { "key": "IM-Authorization", "value": "{{token}}" }
+                ],
+                "url": {
+                  "raw": "{{domain}}/blockStatus/room/{{roomId}}",
+                  "host": ["{{domain}}"],
+                  "path": ["blockStatus", "room", "{{roomId}}"]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Unban a Member",
+              "protocolProfileBehavior": { "followRedirects": false, "followOriginalHttpMethod": false, "followAuthorizationHeader": false },
+              "request": {
+                "method": "DELETE",
+                "header": [
+                  { "key": "IM-CLIENT-KEY",    "value": "{{clientKey}}" },
+                  { "key": "IM-Authorization", "value": "{{token}}" }
+                ],
+                "url": {
+                  "raw": "{{domain}}/blockStatus/room/{{roomId}}/{{clientId}}",
+                  "host": ["{{domain}}"],
+                  "path": ["blockStatus", "room", "{{roomId}}", "{{clientId}}"]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+
+        {
+          "name": "Block User (Personal)",
+          "item": [
+            {
+              "name": "Block a User",
+              "protocolProfileBehavior": { "followRedirects": false, "followOriginalHttpMethod": false, "followAuthorizationHeader": false },
+              "request": {
+                "method": "POST",
+                "header": [
+                  { "key": "IM-CLIENT-KEY",    "value": "{{clientKey}}" },
+                  { "key": "IM-Authorization", "value": "{{token}}" }
+                ],
+                "url": {
+                  "raw": "{{domain}}/blockStatus/my/{{clientId}}",
+                  "host": ["{{domain}}"],
+                  "path": ["blockStatus", "my", "{{clientId}}"]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "List Blocked Users",
+              "protocolProfileBehavior": { "followRedirects": false, "followOriginalHttpMethod": false, "followAuthorizationHeader": false },
+              "request": {
+                "method": "GET",
+                "header": [
+                  { "key": "IM-CLIENT-KEY",    "value": "{{clientKey}}" },
+                  { "key": "IM-Authorization", "value": "{{token}}" }
+                ],
+                "url": {
+                  "raw": "{{domain}}/blockStatus/my",
+                  "host": ["{{domain}}"],
+                  "path": ["blockStatus", "my"]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Unblock a User",
+              "protocolProfileBehavior": { "followRedirects": false, "followOriginalHttpMethod": false, "followAuthorizationHeader": false },
+              "request": {
+                "method": "DELETE",
+                "header": [
+                  { "key": "IM-CLIENT-KEY",    "value": "{{clientKey}}" },
+                  { "key": "IM-Authorization", "value": "{{token}}" }
+                ],
+                "url": {
+                  "raw": "{{domain}}/blockStatus/my/{{clientId}}",
+                  "host": ["{{domain}}"],
+                  "path": ["blockStatus", "my", "{{clientId}}"]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+
+        {
+          "name": "Freeze Chatroom",
+          "item": [
+            {
+              "name": "Freeze Chatroom",
+              "protocolProfileBehavior": { "followRedirects": false, "followOriginalHttpMethod": false, "followAuthorizationHeader": false },
+              "request": {
+                "method": "PUT",
+                "header": [
+                  { "key": "IM-API-KEY",   "value": "{{apiKey}}" },
+                  { "key": "Content-Type", "value": "application/json" }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"status\": 0\n}",
+                  "options": { "raw": { "language": "json" } }
+                },
+                "url": {
+                  "raw": "{{domain}}/rooms/{{roomId}}",
+                  "host": ["{{domain}}"],
+                  "path": ["rooms", "{{roomId}}"]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Unfreeze Chatroom",
+              "protocolProfileBehavior": { "followRedirects": false, "followOriginalHttpMethod": false, "followAuthorizationHeader": false },
+              "request": {
+                "method": "PUT",
+                "header": [
+                  { "key": "IM-API-KEY",   "value": "{{apiKey}}" },
+                  { "key": "Content-Type", "value": "application/json" }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"status\": 1\n}",
+                  "options": { "raw": { "language": "json" } }
+                },
+                "url": {
+                  "raw": "{{domain}}/rooms/{{roomId}}",
+                  "host": ["{{domain}}"],
+                  "path": ["rooms", "{{roomId}}"]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+
+        {
+          "name": "Mute Member",
+          "item": [
+            {
+              "name": "Mute a Member",
+              "protocolProfileBehavior": { "followRedirects": false, "followOriginalHttpMethod": false, "followAuthorizationHeader": false },
+              "request": {
+                "method": "POST",
+                "header": [
+                  { "key": "IM-API-KEY", "value": "{{apiKey}}" }
+                ],
+                "url": {
+                  "raw": "{{domain}}/admin/clients/{{clientId}}/mute/{{roomId}}",
+                  "host": ["{{domain}}"],
+                  "path": ["admin", "clients", "{{clientId}}", "mute", "{{roomId}}"]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Unmute a Member",
+              "protocolProfileBehavior": { "followRedirects": false, "followOriginalHttpMethod": false, "followAuthorizationHeader": false },
+              "request": {
+                "method": "DELETE",
+                "header": [
+                  { "key": "IM-API-KEY", "value": "{{apiKey}}" }
+                ],
+                "url": {
+                  "raw": "{{domain}}/admin/clients/{{clientId}}/mute/{{roomId}}",
+                  "host": ["{{domain}}"],
+                  "path": ["admin", "clients", "{{clientId}}", "mute", "{{roomId}}"]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+
+        {
+          "name": "Sensitive Words",
+          "item": [
+            {
+              "name": "Get Sensitive Words",
+              "protocolProfileBehavior": { "followRedirects": false, "followOriginalHttpMethod": false, "followAuthorizationHeader": false },
+              "request": {
+                "method": "GET",
+                "header": [
+                  { "key": "IM-CLIENT-KEY",    "value": "{{clientKey}}" },
+                  { "key": "IM-Authorization", "value": "{{token}}" }
+                ],
+                "url": {
+                  "raw": "{{domain}}/config",
+                  "host": ["{{domain}}"],
+                  "path": ["config"]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Update Sensitive Words",
+              "protocolProfileBehavior": { "followRedirects": false, "followOriginalHttpMethod": false, "followAuthorizationHeader": false },
+              "request": {
+                "method": "POST",
+                "header": [
+                  { "key": "IM-API-KEY",   "value": "{{apiKey}}" },
+                  { "key": "Content-Type", "value": "application/json" }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"censorship\": {\n    \"keywords\": [\"badword1\", \"badword2\"]\n  }\n}",
+                  "options": { "raw": { "language": "json" } }
+                },
+                "url": {
+                  "raw": "{{domain}}/config",
+                  "host": ["{{domain}}"],
+                  "path": ["config"]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Delete Sensitive Words",
+              "protocolProfileBehavior": { "followRedirects": false, "followOriginalHttpMethod": false, "followAuthorizationHeader": false },
+              "request": {
+                "method": "DELETE",
+                "header": [
+                  { "key": "IM-API-KEY", "value": "{{apiKey}}" }
+                ],
+                "url": {
+                  "raw": "{{domain}}/config/censorship",
+                  "host": ["{{domain}}"],
+                  "path": ["config", "censorship"]
+                }
+              },
+              "response": []
+            }
+          ]
+        }
+
+      ]
+    },
+
+    {
+      "name": "Config",
+      "item": [
+        {
+          "name": "Get Config",
+          "protocolProfileBehavior": { "followRedirects": false, "followOriginalHttpMethod": false, "followAuthorizationHeader": false },
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "IM-CLIENT-KEY",    "value": "{{clientKey}}" },
+              { "key": "IM-Authorization", "value": "{{token}}" }
+            ],
+            "url": {
+              "raw": "{{domain}}/config",
+              "host": ["{{domain}}"],
+              "path": ["config"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update Config",
+          "protocolProfileBehavior": { "followRedirects": false, "followOriginalHttpMethod": false, "followAuthorizationHeader": false },
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "IM-API-KEY",   "value": "{{apiKey}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"yourConfigKey\": \"yourConfigValue\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": {
+              "raw": "{{domain}}/config",
+              "host": ["{{domain}}"],
+              "path": ["config"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Config",
+          "protocolProfileBehavior": { "followRedirects": false, "followOriginalHttpMethod": false, "followAuthorizationHeader": false },
+          "request": {
+            "method": "DELETE",
+            "header": [
+              { "key": "IM-API-KEY", "value": "{{apiKey}}" }
+            ],
+            "url": {
+              "raw": "{{domain}}/config/yourConfigKey",
+              "host": ["{{domain}}"],
+              "path": ["config", "yourConfigKey"]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+
+    {
+      "name": "Monitoring",
+      "item": [
+        {
+          "name": "Get Connection Count",
+          "protocolProfileBehavior": { "followRedirects": false, "followOriginalHttpMethod": false, "followAuthorizationHeader": false },
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "IM-API-KEY", "value": "{{apiKey}}" }
+            ],
+            "url": {
+              "raw": "{{domain}}/admin/connection-count",
+              "host": ["{{domain}}"],
+              "path": ["admin", "connection-count"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Statistics Report",
+          "protocolProfileBehavior": { "followRedirects": false, "followOriginalHttpMethod": false, "followAuthorizationHeader": false },
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "IM-API-KEY", "value": "{{apiKey}}" }
+            ],
+            "url": {
+              "raw": "{{domain}}/admin/stats",
+              "host": ["{{domain}}"],
+              "path": ["admin", "stats"]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+
+    {
+      "name": "Push",
+      "item": [
+        {
+          "name": "Push to Clients",
+          "protocolProfileBehavior": { "followRedirects": false, "followOriginalHttpMethod": false, "followAuthorizationHeader": false },
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "IM-API-KEY",   "value": "{{apiKey}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"clients\": [\"user001\", \"user002\"],\n  \"payload\": {\n    \"type\": \"alert\",\n    \"alert\": \"System maintenance tonight at 23:00\",\n    \"badge\": 1,\n    \"sound\": \"default\",\n    \"topic\": \"io.imkit.app\",\n    \"title\": \"System Announcement\",\n    \"body\": \"System maintenance tonight at 23:00\",\n    \"icon\": \"https://example.com/icon.png\"\n  }\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": {
+              "raw": "{{domain}}/push/push2clients",
+              "host": ["{{domain}}"],
+              "path": ["push", "push2clients"]
+            }
+          },
+          "response": []
+        }
+      ]
+    }
+
+  ]
+}

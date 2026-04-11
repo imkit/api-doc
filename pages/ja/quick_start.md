@@ -44,3 +44,26 @@ IMKIT Platform API を使用するには、まず [IMKIT Dashboard](https://dash
 3. **Chat Server URL**: このアプリケーションの Chat Server の実際の URL で、`https://[アプリケーション名].imkit.io` となります
 
 ![key3](https://raw.githubusercontent.com/imkit/api-doc/refs/heads/main/images/dashboard_key3.png)
+
+## ステップ 4: Postman で API をテストする（オプション）
+
+キーを取得したら、Postman Collection をインポートしてコードを書かずに Chat Server API をすぐにテストできます。
+
+### ダウンロード
+
+- [IMKit API Collection](/collections/IMKit-API.postman_collection.json)（51 個の API request）
+- [IMKit API Environment](/collections/IMKit-API.postman_environment.json)（環境変数テンプレート）
+
+### インポート手順
+
+1. Postman を開き、左上の **Import** をクリックして上記 2 つの JSON ファイルをインポートします
+2. 右上の Environment ドロップダウンで **IMKit API** を選択し、**Edit** をクリックして以下の変数を入力します：
+
+| 変数 | 値（ステップ 3 から） |
+|------|----------------------|
+| `domain` | Chat Server URL（例：`https://myapp.imkit.io`） |
+| `apiKey` | Backend API Key |
+| `clientKey` | Client Key |
+| `token` | 「Create or Update User」API で取得した Access Token |
+
+3. 保存後、任意のリクエストを選択して **Send** をクリックしてテストを開始します

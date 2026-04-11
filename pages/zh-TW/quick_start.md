@@ -44,3 +44,26 @@
 3. **Chat Server URL**：此 Application 的 Chat Server 實際網址，網址會是 `https://[YourApplicationName].imkit.io` 
 
 ![key3](https://raw.githubusercontent.com/imkit/api-doc/refs/heads/main/images/dashboard_key3.png)
+
+## 步驟四：使用 Postman 測試 API（選用）
+
+取得 Key 值後，可以匯入我們提供的 Postman Collection，立即對 Chat Server 進行 API 測試，無需撰寫任何程式碼。
+
+### 下載
+
+- [IMKit API Collection](/collections/IMKit-API.postman_collection.json)（51 個 API request）
+- [IMKit API Environment](/collections/IMKit-API.postman_environment.json)（環境變數範本）
+
+### 匯入步驟
+
+1. 開啟 Postman，點擊左上角 **Import**，分別匯入上方兩個 JSON 檔案
+2. 切換至右上角的 Environment 選單，選擇 **IMKit API**，點擊 **Edit** 填入以下變數：
+
+| 變數 | 對應值（來自步驟三） |
+|------|---------------------|
+| `domain` | Chat Server URL（如 `https://myapp.imkit.io`） |
+| `apiKey` | Backend API Key |
+| `clientKey` | Client Key |
+| `token` | 呼叫「Create or Update User」後取得的 Access Token |
+
+3. 儲存後即可選擇任一 request 點擊 **Send** 開始測試
