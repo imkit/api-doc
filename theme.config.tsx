@@ -1,5 +1,29 @@
 import React from 'react'
 import { DocsThemeConfig } from 'nextra-theme-docs'
+import { DocSearch } from '@docsearch/react'
+import { useRouter } from 'nextra/hooks'
+import '@docsearch/css'
+
+const DOCSEARCH_APP_ID = 'E9P44RVQBA'
+const DOCSEARCH_API_KEY = 'ef57c3e2deedc7bae7ec5dfd64865ed7'
+// TODO: 從 Algolia DocSearch 後台確認正確的 indexName（通常形如 `imkit` 或 `docs-imkit-io`）
+const DOCSEARCH_INDEX_NAME = 'docs-imkit-io'
+
+function Search({ className }: { className?: string }) {
+  const { locale } = useRouter()
+  return (
+    <div className={className}>
+      <DocSearch
+        appId={DOCSEARCH_APP_ID}
+        apiKey={DOCSEARCH_API_KEY}
+        indexName={DOCSEARCH_INDEX_NAME}
+        searchParameters={{
+          facetFilters: locale ? [`language:${locale}`] : [],
+        }}
+      />
+    </div>
+  )
+}
 
 const config: DocsThemeConfig = {
   logo: <span><strong>IMKIT Platform API</strong></span>,
@@ -17,12 +41,18 @@ const config: DocsThemeConfig = {
     { locale: 'ko', name: '한국어' }
   ],
 
+  // 使用 Algolia DocSearch 取代內建 Flexsearch
+  search: {
+    component: Search,
+  },
+
   // SEO 配置
   head: ({ title }: { title?: string }) => (
     <>
       <meta name="viewport" content="width=device-width, initial-scale=1.0" />
       <meta property="og:title" content={title ? `${title} - IMKIT` : 'IMKIT Platform API'} />
       <meta property="og:description" content="IMKIT Platform API Document" />
+      <meta name="algolia-site-verification" content="9DC55241C6922276" />
       <title>{title ? `${title} - IMKIT` : 'IMKIT Platform API'}</title>
       <link rel="icon" type="image/png" href="/favicon.png" />
     </>
