@@ -1,13 +1,20 @@
 import React from 'react'
 import { DocsThemeConfig } from 'nextra-theme-docs'
-import { DocSearch } from '@docsearch/react'
 import { useRouter } from 'nextra/hooks'
+import dynamic from 'next/dynamic'
 import '@docsearch/css'
 
 const DOCSEARCH_APP_ID = 'E9P44RVQBA'
 const DOCSEARCH_API_KEY = 'ef57c3e2deedc7bae7ec5dfd64865ed7'
 // TODO: 從 Algolia DocSearch 後台確認正確的 indexName（通常形如 `imkit` 或 `docs-imkit-io`）
 const DOCSEARCH_INDEX_NAME = 'docs-imkit-io'
+
+// @docsearch/react 為純 ESM 套件，在 Next.js SSG 的 collect-page-data 階段會炸 `Cannot use import statement outside a module`。
+// 用 next/dynamic + ssr:false 延遲到瀏覽器端載入，繞開這問題。
+const DocSearch = dynamic(
+  () => import('@docsearch/react').then((m) => m.DocSearch),
+  { ssr: false }
+)
 
 function Search({ className }: { className?: string }) {
   const { locale } = useRouter()
