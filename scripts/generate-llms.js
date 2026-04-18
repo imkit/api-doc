@@ -4,9 +4,18 @@ const fs = require('fs');
 const path = require('path');
 
 const SITE_URL = 'https://docs.imkit.io';
-const LOCALE = 'en';
-const PAGES_DIR = path.join(__dirname, '..', 'pages', LOCALE);
+const LOCALES = ['zh-TW', 'zh-CN', 'en', 'ja', 'ko'];
+const CANONICAL_LOCALE = 'en'; // llms.txt defaults to English (most LLM tools expect this)
 const OUT_DIR = path.join(__dirname, '..', 'out');
+const PAGES_ROOT = path.join(__dirname, '..', 'pages');
+
+const DESCRIPTIONS = {
+  'en':    'Real-time messaging API for chat applications. Provides user management, chat rooms, messaging, moderation, push notifications, and webhooks.',
+  'zh-TW': 'IMKIT 聊天應用即時通訊 API，提供使用者管理、聊天室、訊息、管理、推播與 Webhook 功能。',
+  'zh-CN': 'IMKIT 聊天应用即时通讯 API，提供用户管理、聊天室、消息、管理、推送与 Webhook 功能。',
+  'ja':    'チャットアプリケーション向けのリアルタイムメッセージング API。ユーザー管理、チャットルーム、メッセージ、モデレーション、プッシュ通知、Webhook をサポート。',
+  'ko':    '채팅 애플리케이션을 위한 실시간 메시징 API. 사용자 관리, 채팅방, 메시지, 중재, 푸시 알림, 웹훅 기능을 제공합니다.',
+};
 
 function readMeta(dir) {
   const metaPath = path.join(dir, '_meta.ts');
@@ -14,7 +23,6 @@ function readMeta(dir) {
   const source = fs.readFileSync(metaPath, 'utf8');
   const order = [];
   const titles = {};
-  // Match: key: { title: "..." } (keys may be quoted or unquoted; spaces allowed)
   const re = /["']?([\w-]+)["']?\s*:\s*\{\s*title\s*:\s*["']([^"']+)["']/g;
   let m;
   while ((m = re.exec(source)) !== null) {
@@ -42,27 +50,22 @@ function extractSummary(mdPath) {
       description = (lastSpace > 120 ? cut.slice(0, lastSpace) : cut) + '…';
     }
   }
-  return {
-    title: h1 ? h1[1].trim() : null,
-    description,
-    raw: content,
-  };
+  return { title: h1 ? h1[1].trim() : null, description, raw: content };
 }
 
-function urlFor(relPath) {
+function urlFor(locale, relPath) {
   let p = relPath.replace(/\.(md|mdx)$/, '');
   if (p === 'index' || p.endsWith('/index')) {
     p = p.slice(0, p.length - 'index'.length).replace(/\/$/, '');
   }
-  return `${SITE_URL}/${LOCALE}${p ? '/' + p : ''}/`;
+  return `${SITE_URL}/${locale}${p ? '/' + p : ''}/`;
 }
 
-function walk(dir, relPrefix = '') {
+function walk(locale, dir, relPrefix = '') {
   const { order, titles } = readMeta(dir);
   const results = [];
   const handled = new Set();
   const dirEntries = fs.readdirSync(dir, { withFileTypes: true });
-
   const resolve = (key) => {
     const asFile = dirEntries.find((e) => e.isFile() && e.name.replace(/\.(md|mdx)$/, '') === key);
     if (asFile) return { type: 'file', name: asFile.name };
@@ -70,7 +73,6 @@ function walk(dir, relPrefix = '') {
     if (asDir) return { type: 'dir', name: asDir.name };
     return null;
   };
-
   for (const key of order) {
     const resolved = resolve(key);
     if (!resolved) continue;
@@ -84,21 +86,14 @@ function walk(dir, relPrefix = '') {
         depth: relPrefix.split(path.sep).filter(Boolean).length,
         title: title || summary.title || key,
         description: summary.description,
-        url: urlFor(rel),
+        url: urlFor(locale, rel),
         absPath: path.join(dir, resolved.name),
       });
     } else {
-      results.push({
-        kind: 'section',
-        depth: relPrefix.split(path.sep).filter(Boolean).length,
-        title,
-      });
-      const subdir = path.join(dir, resolved.name);
-      results.push(...walk(subdir, path.join(relPrefix, resolved.name)));
+      results.push({ kind: 'section', depth: relPrefix.split(path.sep).filter(Boolean).length, title });
+      results.push(...walk(locale, path.join(dir, resolved.name), path.join(relPrefix, resolved.name)));
     }
   }
-
-  // Append any files/dirs that weren't in _meta (best-effort, alphabetical)
   const leftovers = dirEntries
     .filter((e) => !handled.has(e.name) && e.name !== '_meta.ts')
     .sort((a, b) => a.name.localeCompare(b.name));
@@ -111,45 +106,40 @@ function walk(dir, relPrefix = '') {
         depth: relPrefix.split(path.sep).filter(Boolean).length,
         title: summary.title || entry.name.replace(/\.(md|mdx)$/, ''),
         description: summary.description,
-        url: urlFor(rel),
+        url: urlFor(locale, rel),
         absPath: path.join(dir, entry.name),
       });
     } else if (entry.isDirectory()) {
-      results.push(...walk(path.join(dir, entry.name), path.join(relPrefix, entry.name)));
+      results.push(...walk(locale, path.join(dir, entry.name), path.join(relPrefix, entry.name)));
     }
   }
-
   return results;
 }
 
-function buildIndex(entries) {
+function buildIndex(locale, entries) {
   const lines = [
     '# IMKIT Platform API',
     '',
-    '> Real-time messaging API for chat applications. Provides user management, chat rooms, messaging, moderation, push notifications, and webhooks.',
+    `> ${DESCRIPTIONS[locale] || DESCRIPTIONS.en}`,
     '',
-    'Official documentation: ' + SITE_URL,
+    `Official documentation: ${SITE_URL}/${locale}/`,
     '',
   ];
   for (const e of entries) {
     if (e.kind === 'section') {
-      const heading = '#'.repeat(Math.min(2 + e.depth, 6));
-      lines.push('', `${heading} ${e.title}`, '');
+      lines.push('', `${'#'.repeat(Math.min(2 + e.depth, 6))} ${e.title}`, '');
     } else {
-      const bullet = e.description
-        ? `- [${e.title}](${e.url}): ${e.description}`
-        : `- [${e.title}](${e.url})`;
-      lines.push(bullet);
+      lines.push(e.description ? `- [${e.title}](${e.url}): ${e.description}` : `- [${e.title}](${e.url})`);
     }
   }
   return lines.join('\n') + '\n';
 }
 
-function buildFull(entries) {
+function buildFull(locale, entries) {
   const chunks = [
-    `# IMKIT Platform API — Full Documentation`,
+    `# IMKIT Platform API — Full Documentation (${locale})`,
     '',
-    `Canonical site: ${SITE_URL}`,
+    `Canonical site: ${SITE_URL}/${locale}/`,
     '',
     '---',
     '',
@@ -167,11 +157,16 @@ if (!fs.existsSync(OUT_DIR)) {
   process.exit(1);
 }
 
-const entries = walk(PAGES_DIR);
-const pageCount = entries.filter((e) => e.kind === 'page').length;
-
-fs.writeFileSync(path.join(OUT_DIR, 'llms.txt'), buildIndex(entries), 'utf8');
-console.log(`✅ Wrote out/llms.txt (${pageCount} pages indexed)`);
-
-fs.writeFileSync(path.join(OUT_DIR, 'llms-full.txt'), buildFull(entries), 'utf8');
-console.log(`✅ Wrote out/llms-full.txt`);
+for (const locale of LOCALES) {
+  const pagesDir = path.join(PAGES_ROOT, locale);
+  if (!fs.existsSync(pagesDir)) {
+    console.warn(`⚠️  pages/${locale} missing, skipping`);
+    continue;
+  }
+  const entries = walk(locale, pagesDir);
+  const pageCount = entries.filter((e) => e.kind === 'page').length;
+  const suffix = locale === CANONICAL_LOCALE ? '' : `.${locale}`;
+  fs.writeFileSync(path.join(OUT_DIR, `llms${suffix}.txt`), buildIndex(locale, entries), 'utf8');
+  fs.writeFileSync(path.join(OUT_DIR, `llms-full${suffix}.txt`), buildFull(locale, entries), 'utf8');
+  console.log(`✅ Wrote llms${suffix}.txt / llms-full${suffix}.txt (${locale}, ${pageCount} pages)`);
+}

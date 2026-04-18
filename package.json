@@ -4,7 +4,7 @@
   "description": "IMKit API Documentation Website",
   "scripts": {
     "dev": "next dev",
-    "build": "next build && node scripts/post-build.js && node scripts/generate-llms.js && pagefind --site out --output-subdir pagefind",
+    "build": "next build && node scripts/post-build.js && node scripts/generate-llms.js && node scripts/generate-sitemap.js && pagefind --site out --output-subdir pagefind",
     "build:next": "next build",
     "start": "next start"
   },
