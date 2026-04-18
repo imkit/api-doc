@@ -4,7 +4,8 @@
   "description": "IMKit API Documentation Website",
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build": "next build && node scripts/post-build.js && node scripts/generate-llms.js && pagefind --site out --output-subdir pagefind",
+    "build:next": "next build",
     "start": "next start"
   },
   "dependencies": {
@@ -18,7 +19,9 @@
     "react-dom": "^19.1.1"
   },
   "devDependencies": {
+    "@pagefind/default-ui": "^1.5.2",
     "@types/node": "24.1.0",
+    "pagefind": "^1.5.2",
     "typescript": "5.8.3"
   },
   "engines": {
