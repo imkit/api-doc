@@ -220,11 +220,13 @@ https://your-app.imkit.io/chat?token=用户的_TOKEN
 
 整体架构：
 
-| 通道 | 用途 | 触发时机 |
-| ---- | ---- | -------- |
-| Socket.IO | 实时事件（新消息、`lastRead`、输入中） | App 在前景且网络连线中 |
-| APNs / FCM 推播 | 后台通知 | App 在后台或被终止 |
-| `PUT /rooms/:id/lastRead` | 主动回报已读 | 用户读完消息时 |
+| 通道 | 用途 | 触发时机 | 路径 |
+| ---- | ---- | -------- | ---- |
+| Socket.IO | 实时事件（`chat message`、`lastRead`、`typing`） | App 在前景且网络连接中 | 共用 |
+| APNs / FCM 推播（IMKIT 直送） | 后台通知 | App 在后台或被终止 | A |
+| APNs / FCM 推播（自家推播中心转送） | 后台通知 | App 在后台或被终止 | B |
+| `PUT /rooms/:id/lastRead` | 主动回报已读 | 用户读完消息时 | 共用 |
+| `GET /me/badge` | 取总未读数 | 任何时候 | 共用 |
 
 ---
 
@@ -295,13 +297,28 @@ async function markAsRead(roomId, lastMessageId) {
 
 ---
 
-### 4-2：Native App 端
+### 选择推播路径
+
+Native app 的后台推播有两条互斥路径，请依您的现况择一：
+
+| 路径 | 适用情境 | 对应 API / 设定 |
+| ---- | -------- | --------------- |
+| **A. 使用 IMKIT 内建推播** | 没有自家推播服务，希望最快上线 | App 呼叫 [`POST /me/subscribe`](/zh-CN/push/device-subscription/subscribe-device) 注册 device token；IMKIT 自动直送 APNs / FCM |
+| **B. 串接自家推播中心** | 已有自家推播中心、IT 规范要求自管 token、需在多通道汇整推播 | 后端设定 [`PUSH_GENERIC`](/zh-CN/push/external-push/external-push-v2) callback；app 端**不**呼叫 `/me/subscribe` |
+
+> ⚠️ **两条路径互斥**。若同时启用（既呼叫 `/me/subscribe`、又设定 `PUSH_GENERIC` 并在自家中心送同一份推播），用户会收到**重复通知**。
+
+---
+
+### 4-2A：Native App — 使用 IMKIT 内建推播
+
+> **仅适用路径 A**。若您已有自家推播中心，请跳到 4-2B。
 
 Native app 通常以 WebView 嵌入 IMKIT chat 页，外层需另外处理：
 
 1. **注册推播 token**：登入后将 APNs / FCM token 注册到 IMKIT
 2. **前景接收**：建立 Socket 连线显示实时 badge / 通知
-3. **后台接收**：依靠 APNs / FCM 推播
+3. **后台接收**：依靠 IMKIT 直送的 APNs / FCM 推播
 4. **回报已读**：用户读完时呼叫 `PUT /rooms/:id/lastRead`
 
 #### iOS（Swift）— 注册 APNs token
@@ -379,6 +396,101 @@ POST /me/unsubscribe
 
 ---
 
+### 4-2B：Native App — 串接自家推播中心
+
+> **仅适用路径 B**。此路径下 app 端**不要**呼叫 `/me/subscribe`，沿用自家既有的 device token 注册流程。
+
+#### 流程概览
+
+```
+IMKIT 消息事件
+   ↓ (PUSH_GENERIC callback)
+您的后端
+   ↓ (查 token、计算 badge、组 payload)
+您的推播中心
+   ↓ (APNs / FCM)
+用户 device
+```
+
+#### 步骤 1：在 IMKIT 后台设定环境变量
+
+```
+PUSH_GENERIC=https://your-server.example.com/imkit/push/v2
+```
+
+设定完成后，凡是有推播需求的消息事件，IMKIT 会以单一 HTTP POST 将「压平后的消息物件 + `pushToClients` 收件者数组」发送到此 URL。
+
+完整字段请见 [外部推播服务 v2](/zh-CN/push/external-push/external-push-v2)。
+
+#### 步骤 2：实作 callback handler
+
+以下为 Node.js + Express 示例，示范如何接收 IMKIT 事件并转送给自家推播中心：
+
+```javascript
+import express from "express";
+const app = express();
+app.use(express.json());
+
+app.post("/imkit/push/v2", async (req, res) => {
+  const {
+    _id: messageId,
+    message,
+    room,
+    roomName,
+    sender,
+    messageType,
+    pushToClients = [],
+  } = req.body;
+
+  // 1. 对每位收件者并行处理
+  await Promise.all(
+    pushToClients.map(async (clientId) => {
+      // 2. 从自家数据源取装置 token（不是从 IMKIT）
+      const devices = await yourDB.getDevicesByClientId(clientId);
+
+      // 3. 自行计算 badge（PUSH_GENERIC 不带 receiver badge）
+      const badge = await yourDB.countUnread(clientId);
+
+      // 4. 组推播 payload，丢给自家推播中心
+      await yourPushCenter.send({
+        clientId,
+        devices,
+        title: roomName || sender.nickname,
+        body: messageType === "text" ? message : `${sender.nickname} 传送了 ${messageType}`,
+        badge,
+        data: {
+          roomId: room,
+          messageId,
+          messageType,
+        },
+      });
+    })
+  );
+
+  // 立即回 200，不阻塞 IMKIT
+  res.status(200).end();
+});
+
+app.listen(3000);
+```
+
+> 您也可以选择直接使用 IMKIT 提供的 `im_loc_*` 本地化 key 来组推播文案（详见 [推播 Payload 格式](/zh-CN/push/push-payload-format)），或在自家中心套用客制化文案逻辑。
+
+#### 步骤 3：App 端 — 沿用自家既有流程
+
+App 端**不**呼叫 IMKIT 的 `/me/subscribe`，沿用您原本的:
+
+- iOS:`registerForRemoteNotifications` → 把 token 上传到您自家后端
+- Android:Firebase `onNewToken` → 把 token 上传到您自家后端
+
+App 收到推播时，依您自家推播中心的 payload 格式解析即可。前景实时事件、`lastRead` 同步、`badge` 取数仍走 IMKIT API（[共用部分](#整体架构)，与路径 A 完全相同）。
+
+#### 进阶选项：Webhook(每聊天室)
+
+若您只想对特定聊天室启用自家推播，或需要更细的事件分流（如成员加入/离开），可改用 [Webhook](/zh-CN/webhook/webhook) — 为每个聊天室个别设定 callback URL。一般「整站推播中心」场景仍建议用 `PUSH_GENERIC`。
+
+---
+
 ### 4-3：取得目前未读数
 
 任何时候要重新整理未读总数，呼叫：
@@ -401,9 +513,12 @@ console.log("总未读数：", result.badge);
 ### 整合心法
 
 - **前景 Socket、后台推播**：两者搭配才不会漏消息
-- **deviceId 一致**：subscribe / socket auth2 用同一个 `deviceId`，伺服器才能识别「该装置目前在线、不必再推播」
+- **两条路径互斥**：路径 A（`/me/subscribe`）与路径 B（`PUSH_GENERIC`）择一启用，同时开会造成双头推播
+- **路径 B 时 app 端勿呼叫 `/me/subscribe`**：否则 IMKIT 会独立再推一份，与您自家推播中心重复
+- **路径 B 的 badge 自管**：`PUSH_GENERIC` callback 不带 receiver badge，需自家后端依 [`GET /me/badge`](/zh-CN/message/message-badge/get-unread-message-by-a-user) 或自家数据源计算
+- **deviceId 一致**（路径 A）：subscribe / socket auth2 用同一个 `deviceId`，伺服器才能识别「该装置目前在线、不必再推播」
 - **Token 过期**：Socket `auth2` 失败时，重新呼叫 [取得 Token API](/zh-CN/user/user-token) 换新 token 后再连
-- **登出处理**：登出时必须 `unsubscribe` + `disconnect` socket，避免下个用户收到前一位的推播
+- **登出处理**：路径 A 必须呼叫 `/me/unsubscribe` + `disconnect` socket；路径 B 则于自家推播中心移除该装置 token，避免下个用户收到前一位的推播
 
 ------
 

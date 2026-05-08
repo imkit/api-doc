@@ -220,11 +220,13 @@ Web SDK または Web URL がアプリに埋め込まれた後の次のステッ
 
 全体のアーキテクチャ：
 
-| チャネル | 用途 | 発火タイミング |
-| ---- | ---- | -------- |
-| Socket.IO | リアルタイムイベント（新着メッセージ、`lastRead`、入力中） | アプリがフォアグラウンドかつネットワーク接続中 |
-| APNs / FCM プッシュ | バックグラウンド通知 | アプリがバックグラウンドまたは終了状態 |
-| `PUT /rooms/:id/lastRead` | 既読の能動的な通知 | ユーザーがメッセージを読み終えたとき |
+| チャネル | 用途 | 発火タイミング | パス |
+| ---- | ---- | -------- | ---- |
+| Socket.IO | リアルタイムイベント（`chat message`、`lastRead`、`typing`） | アプリがフォアグラウンドかつネットワーク接続中 | 共通 |
+| APNs / FCM プッシュ（IMKIT 直送） | バックグラウンド通知 | アプリがバックグラウンドまたは終了状態 | A |
+| APNs / FCM プッシュ（自社プッシュセンター経由） | バックグラウンド通知 | アプリがバックグラウンドまたは終了状態 | B |
+| `PUT /rooms/:id/lastRead` | 既読の能動的な通知 | ユーザーがメッセージを読み終えたとき | 共通 |
+| `GET /me/badge` | 未読総数の取得 | 任意のタイミング | 共通 |
 
 ---
 
@@ -295,7 +297,22 @@ async function markAsRead(roomId, lastMessageId) {
 
 ---
 
-### 4-2：ネイティブアプリ
+### プッシュパスの選択
+
+ネイティブアプリのバックグラウンドプッシュには互いに排他的な 2 つのパスがあります。現状に合わせていずれか一方を選択してください：
+
+| パス | 適用シナリオ | 対応 API / 設定 |
+| ---- | -------- | --------------- |
+| **A. IMKIT 内蔵プッシュを使用** | 自社プッシュサービスがなく、最短で本番投入したい | アプリから [`POST /me/subscribe`](/ja/push/device-subscription/subscribe-device) を呼び出して device token を登録；IMKIT が APNs / FCM へ自動直送 |
+| **B. 自社プッシュセンターを連携** | 既に自社プッシュセンターがある／IT ポリシーで token を自社管理する必要がある／複数チャネルでプッシュを集約したい | バックエンドで [`PUSH_GENERIC`](/ja/push/external-push/external-push-v2) callback を設定；アプリ側は `/me/subscribe` を**呼び出さない** |
+
+> ⚠️ **2 つのパスは排他です**。両方を同時に有効化（`/me/subscribe` を呼び出しつつ `PUSH_GENERIC` も設定して自社センターから同じプッシュを送信）すると、ユーザーが**通知を重複受信**してしまいます。
+
+---
+
+### 4-2A：ネイティブアプリ — IMKIT 内蔵プッシュを使用
+
+> **パス A のみ**。既に自社プッシュセンターをお持ちの場合は 4-2B へ進んでください。
 
 ネイティブアプリは通常、IMKIT chat ページを WebView で埋め込みます。外側では別途以下を処理する必要があります：
 
@@ -379,6 +396,103 @@ POST /me/unsubscribe
 
 ---
 
+### 4-2B：ネイティブアプリ — 自社プッシュセンターを連携
+
+> **パス B のみ**。このパスではアプリ側から `/me/subscribe` を**呼び出さず**、自社既存の device token 登録フローをそのまま利用します。
+
+#### フロー概要
+
+```
+IMKIT メッセージイベント
+   ↓ (PUSH_GENERIC callback)
+あなたのバックエンド
+   ↓ (token の参照、badge の算出、payload の組み立て)
+あなたのプッシュセンター
+   ↓ (APNs / FCM)
+ユーザーのデバイス
+```
+
+#### ステップ 1：PUSH_GENERIC 環境変数の設定
+
+IMKIT 管理画面で以下の環境変数を設定します：
+
+```
+PUSH_GENERIC=https://your-server.example.com/imkit/push/v2
+```
+
+設定後、プッシュ通知が必要なメッセージイベントが発生するたびに、IMKIT は「フラット化されたメッセージオブジェクト + `pushToClients` 受信者配列」を 1 回の HTTP POST でこの URL に送信します。
+
+完全なフィールド仕様は [外部プッシュサービス v2](/ja/push/external-push/external-push-v2) を参照してください。
+
+#### ステップ 2：Callback handler の実装
+
+以下は Node.js + Express の例で、IMKIT イベントを受け取って自社プッシュセンターへ転送する流れを示します：
+
+```javascript
+import express from "express";
+const app = express();
+app.use(express.json());
+
+app.post("/imkit/push/v2", async (req, res) => {
+  const {
+    _id: messageId,
+    message,
+    room,
+    roomName,
+    sender,
+    messageType,
+    pushToClients = [],
+  } = req.body;
+
+  // 1. 受信者ごとに並列処理
+  await Promise.all(
+    pushToClients.map(async (clientId) => {
+      // 2. 自社のデータソースから device token を取得（IMKIT からではなく）
+      const devices = await yourDB.getDevicesByClientId(clientId);
+
+      // 3. badge は自前で算出（PUSH_GENERIC は receiver badge を含まない）
+      const badge = await yourDB.countUnread(clientId);
+
+      // 4. プッシュ payload を組み立て、自社プッシュセンターへ送出
+      await yourPushCenter.send({
+        clientId,
+        devices,
+        title: roomName || sender.nickname,
+        body: messageType === "text" ? message : `${sender.nickname} が ${messageType} を送信しました`,
+        badge,
+        data: {
+          roomId: room,
+          messageId,
+          messageType,
+        },
+      });
+    })
+  );
+
+  // すぐに 200 を返し、IMKIT をブロックしない
+  res.status(200).end();
+});
+
+app.listen(3000);
+```
+
+> IMKIT が提供する `im_loc_*` ローカライゼーション key を使ってプッシュ文面を組み立てることもできます（詳細は [プッシュ Payload フォーマット](/ja/push/push-payload-format) を参照）。あるいは自社センター側でカスタム文面ロジックを適用しても構いません。
+
+#### ステップ 3：アプリ側 — 既存フローを活用
+
+アプリ側では IMKIT の `/me/subscribe` を**呼び出さず**、これまでの実装をそのまま流用します：
+
+- iOS：`registerForRemoteNotifications` → token を自社バックエンドにアップロード
+- Android：Firebase `onNewToken` → token を自社バックエンドにアップロード
+
+アプリがプッシュを受信した際は、自社プッシュセンターの payload フォーマットに合わせて解析してください。フォアグラウンドのリアルタイムイベント、`lastRead` 同期、`badge` 取得は引き続き IMKIT API を使用します（[共通部分](#全体のアーキテクチャ)。パス A と完全に同じです）。
+
+#### 高度なオプション：Webhook（チャットルーム単位）
+
+特定のチャットルームのみ自社プッシュを有効にしたい場合や、よりきめ細かいイベント分配（メンバーの参加・退出など）が必要な場合は、[Webhook](/ja/webhook/webhook) を利用してチャットルームごとに個別の callback URL を設定できます。一般的な「サイト全体のプッシュセンター」用途には引き続き `PUSH_GENERIC` を推奨します。
+
+---
+
 ### 4-3：現在の未読数を取得
 
 未読総数を再取得したい任意のタイミングで、以下を呼び出します：
@@ -401,9 +515,12 @@ console.log("未読総数：", result.badge);
 ### 統合のポイント
 
 - **フォアグラウンドは Socket、バックグラウンドはプッシュ**：両者を組み合わせることでメッセージの取りこぼしを防げます
-- **deviceId の一貫性**：subscribe / socket auth2 で同じ `deviceId` を使うことで、サーバー側が「このデバイスは現在オンライン、プッシュは不要」と判断できます
+- **2 つのパスは排他**：パス A（`/me/subscribe`）とパス B（`PUSH_GENERIC`）はいずれか一方のみを有効にしてください。両方を同時に有効にすると二重プッシュが発生します
+- **パス B ではアプリから `/me/subscribe` を呼び出さない**：呼び出すと IMKIT が独自に追加プッシュを送出し、自社プッシュセンターと重複します
+- **パス B では badge を自前管理**：`PUSH_GENERIC` callback は receiver badge を含まないため、自社バックエンドで [`GET /me/badge`](/ja/message/message-badge/get-unread-message-by-a-user) または自社データソースを基に算出してください
+- **deviceId の一貫性（パス A）**：subscribe / socket auth2 で同じ `deviceId` を使うことで、サーバー側が「このデバイスは現在オンライン、プッシュは不要」と判断できます
 - **Token の有効期限切れ**：Socket `auth2` が失敗した場合は、[Token 取得 API](/ja/user/user-token) で新しい token を取得してから再接続してください
-- **ログアウト処理**：ログアウト時は必ず `unsubscribe` + socket の `disconnect` を実行し、次のユーザーが前のユーザー宛のプッシュを受け取らないようにしてください
+- **ログアウト処理**：パス A では必ず `/me/unsubscribe` + socket の `disconnect` を実行してください。パス B では自社プッシュセンターから当該デバイスの token を削除し、次のユーザーが前のユーザー宛のプッシュを受け取らないようにしてください
 
 ------
 

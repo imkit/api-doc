@@ -220,11 +220,13 @@ Web SDK 또는 Web URL이 앱에 삽입된 후, 다음 단계는 **외부 web �
 
 전체 아키텍처:
 
-| 채널 | 용도 | 트리거 시점 |
-| ---- | ---- | -------- |
-| Socket.IO | 실시간 이벤트 (새 메시지, `lastRead`, 입력 중) | 앱이 포그라운드이며 네트워크가 연결된 상태 |
-| APNs / FCM 푸시 | 백그라운드 알림 | 앱이 백그라운드에 있거나 종료된 상태 |
-| `PUT /rooms/:id/lastRead` | 능동적 읽음 보고 | 사용자가 메시지를 읽었을 때 |
+| 채널 | 용도 | 트리거 시점 | 경로 |
+| ---- | ---- | -------- | ---- |
+| Socket.IO | 실시간 이벤트 (`chat message`, `lastRead`, `typing`) | 앱이 포그라운드이며 네트워크가 연결된 상태 | 공통 |
+| APNs / FCM 푸시 (IMKIT 직접 발송) | 백그라운드 알림 | 앱이 백그라운드에 있거나 종료된 상태 | A |
+| APNs / FCM 푸시 (자체 푸시 센터에서 전달) | 백그라운드 알림 | 앱이 백그라운드에 있거나 종료된 상태 | B |
+| `PUT /rooms/:id/lastRead` | 능동적 읽음 보고 | 사용자가 메시지를 읽었을 때 | 공통 |
+| `GET /me/badge` | 안 읽은 총 개수 가져오기 | 언제든지 | 공통 |
 
 ---
 
@@ -295,13 +297,28 @@ async function markAsRead(roomId, lastMessageId) {
 
 ---
 
-### 4-2: 네이티브 앱
+### 푸시 경로 선택
+
+네이티브 앱의 백그라운드 푸시는 두 가지 상호 배타적인 경로가 있으니, 현재 상황에 따라 하나를 선택하세요:
+
+| 경로 | 사용 시나리오 | 해당 API / 설정 |
+| ---- | -------- | --------------- |
+| **A. IMKIT 내장 푸시 사용** | 자체 푸시 서비스가 없고, 가장 빠르게 출시하고 싶은 경우 | 앱에서 [`POST /me/subscribe`](/ko/push/device-subscription/subscribe-device)를 호출하여 device token 등록; IMKIT이 자동으로 APNs / FCM 직접 발송 |
+| **B. 자체 푸시 센터 연동** | 이미 자체 푸시 센터가 있거나, IT 규정상 token을 자체 관리해야 하거나, 멀티 채널에서 푸시를 통합해야 하는 경우 | 백엔드에서 [`PUSH_GENERIC`](/ko/push/external-push/external-push-v2) callback 설정; 앱에서는 `/me/subscribe`를 **호출하지 않음** |
+
+> ⚠️ **두 경로는 상호 배타적입니다**. 동시에 활성화(`/me/subscribe` 호출 + `PUSH_GENERIC` 설정 후 자체 센터에서 동일한 푸시 발송)하면 사용자가 **중복 알림**을 받게 됩니다.
+
+---
+
+### 4-2A: 네이티브 앱 — IMKIT 내장 푸시 사용
+
+> **경로 A 전용**. 이미 자체 푸시 센터가 있다면 4-2B로 건너뛰세요.
 
 네이티브 앱은 일반적으로 WebView로 IMKIT chat 페이지를 임베드하므로, 외부 레이어에서 다음을 별도로 처리해야 합니다:
 
 1. **푸시 token 등록**: 로그인 후 APNs / FCM token을 IMKIT에 등록
 2. **포그라운드 수신**: Socket 연결을 생성하여 실시간 badge / 알림 표시
-3. **백그라운드 수신**: APNs / FCM 푸시에 의존
+3. **백그라운드 수신**: IMKIT이 직접 발송하는 APNs / FCM 푸시에 의존
 4. **읽음 보고**: 사용자가 읽었을 때 `PUT /rooms/:id/lastRead` 호출
 
 #### iOS (Swift) — APNs 토큰 등록
@@ -379,6 +396,103 @@ POST /me/unsubscribe
 
 ---
 
+### 4-2B: 네이티브 앱 — 자체 푸시 센터 연동
+
+> **경로 B 전용**. 이 경로에서는 앱에서 `/me/subscribe`를 **호출하지 않으며**, 자체 기존 device token 등록 흐름을 그대로 사용합니다.
+
+#### 흐름 개요
+
+```
+IMKIT 메시지 이벤트
+   ↓ (PUSH_GENERIC callback)
+귀사의 백엔드
+   ↓ (token 조회, badge 계산, payload 구성)
+귀사의 푸시 센터
+   ↓ (APNs / FCM)
+사용자 device
+```
+
+#### 단계 1: PUSH_GENERIC 환경 변수 설정
+
+IMKIT 대시보드에서 환경 변수를 설정합니다:
+
+```
+PUSH_GENERIC=https://your-server.example.com/imkit/push/v2
+```
+
+설정이 완료되면, 푸시가 필요한 모든 메시지 이벤트에 대해 IMKIT은 단일 HTTP POST로 "평탄화된 메시지 객체 + `pushToClients` 수신자 배열"을 이 URL로 전송합니다.
+
+전체 필드는 [외부 푸시 서비스 v2](/ko/push/external-push/external-push-v2)를 참고하세요.
+
+#### 단계 2: Callback handler 구현
+
+다음은 Node.js + Express 예시로, IMKIT 이벤트를 수신하여 자체 푸시 센터로 전달하는 방법을 보여줍니다:
+
+```javascript
+import express from "express";
+const app = express();
+app.use(express.json());
+
+app.post("/imkit/push/v2", async (req, res) => {
+  const {
+    _id: messageId,
+    message,
+    room,
+    roomName,
+    sender,
+    messageType,
+    pushToClients = [],
+  } = req.body;
+
+  // 1. 각 수신자별로 병렬 처리
+  await Promise.all(
+    pushToClients.map(async (clientId) => {
+      // 2. 자체 데이터 소스에서 device token 가져오기 (IMKIT이 아님)
+      const devices = await yourDB.getDevicesByClientId(clientId);
+
+      // 3. badge 직접 계산 (PUSH_GENERIC은 receiver badge를 포함하지 않음)
+      const badge = await yourDB.countUnread(clientId);
+
+      // 4. 푸시 payload 구성 후 자체 푸시 센터로 전달
+      await yourPushCenter.send({
+        clientId,
+        devices,
+        title: roomName || sender.nickname,
+        body: messageType === "text" ? message : `${sender.nickname}님이 ${messageType}을(를) 보냈습니다`,
+        badge,
+        data: {
+          roomId: room,
+          messageId,
+          messageType,
+        },
+      });
+    })
+  );
+
+  // 즉시 200 응답으로 IMKIT을 차단하지 않음
+  res.status(200).end();
+});
+
+app.listen(3000);
+```
+
+> IMKIT이 제공하는 `im_loc_*` 로컬라이제이션 key를 직접 사용하여 푸시 문구를 구성하거나([푸시 Payload 형식](/ko/push/push-payload-format) 참고), 자체 센터에서 커스텀 문구 로직을 적용할 수도 있습니다.
+
+#### 단계 3: 앱 측 — 기존 흐름 활용
+
+앱에서는 IMKIT의 `/me/subscribe`를 **호출하지 않고**, 기존의 다음 흐름을 그대로 사용합니다:
+
+- iOS: `registerForRemoteNotifications` → token을 자체 백엔드로 업로드
+- Android: Firebase `onNewToken` → token을 자체 백엔드로 업로드
+
+앱이 푸시를 수신하면 자체 푸시 센터의 payload 형식에 따라 파싱하면 됩니다. 포그라운드 실시간 이벤트, `lastRead` 동기화, `badge` 가져오기는 여전히 IMKIT API를 사용합니다([공통 부분](#전체-아키텍처), 경로 A와 완전히 동일).
+
+#### 고급 옵션: Webhook (채팅방별)
+
+특정 채팅방에 대해서만 자체 푸시를 활성화하거나, 더 세분화된 이벤트 분리(예: 멤버 가입/퇴장)가 필요한 경우, [Webhook](/ko/webhook/webhook)을 사용하여 각 채팅방마다 callback URL을 개별적으로 설정할 수 있습니다. 일반적인 "전체 사이트 푸시 센터" 시나리오에서는 여전히 `PUSH_GENERIC`을 권장합니다.
+
+---
+
 ### 4-3: 현재 안 읽은 수 가져오기
 
 언제든지 안 읽은 총 개수를 새로 고치려면 다음을 호출합니다:
@@ -401,9 +515,12 @@ console.log("총 안 읽은 수:", result.badge);
 ### 통합 팁
 
 - **포그라운드 Socket, 백그라운드 푸시**: 두 가지를 함께 사용해야 메시지를 놓치지 않습니다
-- **deviceId 일관성**: subscribe / socket auth2에서 동일한 `deviceId`를 사용해야, 서버가 "해당 기기가 현재 온라인이므로 푸시가 필요하지 않음"을 식별할 수 있습니다
+- **두 경로는 상호 배타적**: 경로 A(`/me/subscribe`)와 경로 B(`PUSH_GENERIC`) 중 하나만 활성화하세요. 동시에 활성화하면 이중 푸시가 발생합니다
+- **경로 B에서 앱은 `/me/subscribe`를 호출하지 마세요**: 그렇지 않으면 IMKIT이 별도로 한 번 더 푸시를 발송하여 자체 푸시 센터와 중복됩니다
+- **경로 B의 badge는 직접 관리**: `PUSH_GENERIC` callback은 receiver badge를 포함하지 않으므로, 자체 백엔드에서 [`GET /me/badge`](/ko/message/message-badge/get-unread-message-by-a-user) 또는 자체 데이터 소스로 계산해야 합니다
+- **deviceId 일관성** (경로 A): subscribe / socket auth2에서 동일한 `deviceId`를 사용해야, 서버가 "해당 기기가 현재 온라인이므로 푸시가 필요하지 않음"을 식별할 수 있습니다
 - **Token 만료**: Socket `auth2`가 실패하면 [Token 발급 API](/ko/user/user-token)를 다시 호출하여 새 token을 받은 후 재연결합니다
-- **로그아웃 처리**: 로그아웃 시 반드시 `unsubscribe` + socket `disconnect`를 수행하여, 다음 사용자가 이전 사용자의 푸시를 받지 않도록 합니다
+- **로그아웃 처리**: 경로 A에서는 반드시 `/me/unsubscribe` + socket `disconnect`를 수행해야 하며, 경로 B에서는 자체 푸시 센터에서 해당 device token을 제거하여 다음 사용자가 이전 사용자의 푸시를 받지 않도록 합니다
 
 ------
 

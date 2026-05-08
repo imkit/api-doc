@@ -220,11 +220,13 @@ Once the Web SDK or Web URL is embedded in your app, the next step is letting th
 
 Overall architecture:
 
-| Channel | Purpose | When |
-| ---- | ---- | -------- |
-| Socket.IO | Real-time events (new message, `lastRead`, typing) | App is in the foreground and online |
-| APNs / FCM push | Background notifications | App is in the background or terminated |
-| `PUT /rooms/:id/lastRead` | Actively report read state | When the user finishes reading messages |
+| Channel | Purpose | When | Path |
+| ---- | ---- | -------- | ---- |
+| Socket.IO | Real-time events (`chat message`, `lastRead`, typing) | App is in the foreground and online | Shared |
+| APNs / FCM push (IMKIT direct) | Background notifications | App is in the background or terminated | A |
+| APNs / FCM push (relayed via your push center) | Background notifications | App is in the background or terminated | B |
+| `PUT /rooms/:id/lastRead` | Actively report read state | When the user finishes reading messages | Shared |
+| `GET /me/badge` | Fetch total unread count | Anytime | Shared |
 
 ---
 
@@ -295,13 +297,28 @@ async function markAsRead(roomId, lastMessageId) {
 
 ---
 
-### 4-2: Native App
+### Choose Your Push Path
+
+Background push for native apps has two mutually exclusive paths. Pick one based on your situation:
+
+| Path | When to use | API / Configuration |
+| ---- | ----------- | ------------------- |
+| **A. Use IMKIT Built-in Push** | No in-house push service; want the fastest path to launch | App calls [`POST /me/subscribe`](/en/push/device-subscription/subscribe-device) to register the device token; IMKIT delivers APNs / FCM directly |
+| **B. Integrate Your Own Push Center** | You already have a push center, IT policy requires self-managed tokens, or you need to consolidate pushes across multiple channels | Configure the [`PUSH_GENERIC`](/en/push/external-push/external-push-v2) callback on the backend; the app does **not** call `/me/subscribe` |
+
+> ⚠️ **The two paths are mutually exclusive.** Enabling both at once (calling `/me/subscribe` and configuring `PUSH_GENERIC` to send the same push from your own center) will cause users to receive **duplicate notifications**.
+
+---
+
+### 4-2A: Native App — Using IMKIT Built-in Push
+
+> **Path A only.** If you already operate your own push center, skip to 4-2B.
 
 A native app typically embeds the IMKIT chat page in a WebView; the outer app needs to handle the following separately:
 
 1. **Register the push token**: after login, register the APNs / FCM token with IMKIT
 2. **Foreground reception**: open a Socket connection to drive the live badge / in-app notifications
-3. **Background reception**: rely on APNs / FCM push
+3. **Background reception**: rely on APNs / FCM push delivered directly by IMKIT
 4. **Report read state**: call `PUT /rooms/:id/lastRead` when the user finishes reading
 
 #### iOS (Swift) — Register APNs Token
@@ -379,6 +396,101 @@ See [Unsubscribe Device Token](/en/push/device-subscription/unsubscribe-device) 
 
 ---
 
+### 4-2B: Native App — Integrating Your Own Push Center
+
+> **Path B only.** Under this path the app **must not** call `/me/subscribe`; keep using your existing device token registration flow.
+
+#### Flow Overview
+
+```
+IMKIT message event
+   ↓ (PUSH_GENERIC callback)
+Your backend
+   ↓ (look up tokens, compute badge, build payload)
+Your push center
+   ↓ (APNs / FCM)
+User device
+```
+
+#### Step 1: Configure the `PUSH_GENERIC` Environment Variable
+
+```
+PUSH_GENERIC=https://your-server.example.com/imkit/push/v2
+```
+
+Once configured, every message event that needs a push will be sent from IMKIT to this URL as a single HTTP POST containing the flattened message object plus the `pushToClients` recipient array.
+
+For the full field list, see [External Push Service v2](/en/push/external-push/external-push-v2).
+
+#### Step 2: Implement the Callback Handler
+
+Below is a Node.js + Express example showing how to receive the IMKIT event and relay it to your own push center:
+
+```javascript
+import express from "express";
+const app = express();
+app.use(express.json());
+
+app.post("/imkit/push/v2", async (req, res) => {
+  const {
+    _id: messageId,
+    message,
+    room,
+    roomName,
+    sender,
+    messageType,
+    pushToClients = [],
+  } = req.body;
+
+  // 1. Process each recipient in parallel
+  await Promise.all(
+    pushToClients.map(async (clientId) => {
+      // 2. Look up device tokens from your own data source (not from IMKIT)
+      const devices = await yourDB.getDevicesByClientId(clientId);
+
+      // 3. Compute badge yourself (PUSH_GENERIC does not include receiver badge)
+      const badge = await yourDB.countUnread(clientId);
+
+      // 4. Build the push payload and hand it off to your push center
+      await yourPushCenter.send({
+        clientId,
+        devices,
+        title: roomName || sender.nickname,
+        body: messageType === "text" ? message : `${sender.nickname} sent ${messageType}`,
+        badge,
+        data: {
+          roomId: room,
+          messageId,
+          messageType,
+        },
+      });
+    })
+  );
+
+  // Return 200 immediately so IMKIT is not blocked
+  res.status(200).end();
+});
+
+app.listen(3000);
+```
+
+> You can also reuse the `im_loc_*` localization keys provided by IMKIT to compose the push copy (see [Push Payload Format](/en/push/push-payload-format)), or apply your own customized copy logic in your push center.
+
+#### Step 3: App Side — Use Your Existing Flow
+
+The app does **not** call IMKIT's `/me/subscribe`; keep using your existing flow:
+
+- iOS: `registerForRemoteNotifications` → upload the token to your own backend
+- Android: Firebase `onNewToken` → upload the token to your own backend
+
+When the app receives a push, parse it according to your own push center's payload format. Foreground real-time events, `lastRead` syncing, and `badge` lookups still go through IMKIT APIs ([shared section](#overall-architecture); identical to Path A).
+
+#### Advanced Option: Webhook (Per Chatroom)
+
+If you only want to enable your own push for specific chat rooms, or need finer-grained event routing (such as member join/leave), you can use [Webhook](/en/webhook/webhook) instead — configure a callback URL per chat room. For a generic site-wide push center, `PUSH_GENERIC` is still the recommended choice.
+
+---
+
 ### 4-3: Fetch Current Unread Count
 
 Whenever you need to refresh the total unread count, call:
@@ -401,9 +513,12 @@ See [Get Unread Messages by a User](/en/message/message-badge/get-unread-message
 ### Integration Tips
 
 - **Socket in foreground, push in background**: combine both so messages are never missed
-- **Consistent `deviceId`**: use the same `deviceId` for `subscribe` and Socket `auth2` so the server can recognize "this device is currently online and does not need a push"
+- **The two paths are mutually exclusive**: enable either Path A (`/me/subscribe`) or Path B (`PUSH_GENERIC`) — running both simultaneously causes duplicate pushes
+- **On Path B, do not call `/me/subscribe` from the app**: otherwise IMKIT will independently deliver another push that duplicates the one from your own center
+- **On Path B, manage badge yourself**: the `PUSH_GENERIC` callback does not include the receiver badge; compute it on your backend via [`GET /me/badge`](/en/message/message-badge/get-unread-message-by-a-user) or your own data source
+- **Consistent `deviceId`** (Path A): use the same `deviceId` for `subscribe` and Socket `auth2` so the server can recognize "this device is currently online and does not need a push"
 - **Token expiration**: when Socket `auth2` fails, call the [Get Token API](/en/user/user-token) to obtain a new token before reconnecting
-- **Logout handling**: on logout you must `unsubscribe` and `disconnect` the socket, otherwise the next user may receive the previous user's pushes
+- **Logout handling**: on Path A you must call `/me/unsubscribe` and `disconnect` the socket; on Path B remove the device token from your own push center, otherwise the next user may receive the previous user's pushes
 
 ------
 
