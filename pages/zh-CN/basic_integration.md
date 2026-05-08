@@ -272,8 +272,8 @@ setupChat().then((result) => {
 
 完成基本串接后，您可以进一步了解：
 
-- [权限验证](/zh-TW/auth) — 了解 API Key 和 Client Key 的详细用法
-- [用户管理](/zh-TW/user/user-management) — 更多用户管理功能
-- [聊天室管理](/zh-TW/room/room-management) — 聊天室进阶操作
-- [讯息功能](/zh-TW/message/message-basic) — 透过 API 发送和管理讯息
-- [Webhook](/zh-TW/webhook) — 接收聊天室事件，实现自动化流程
+- [权限验证](/zh-CN/auth) — 了解 API Key 和 Client Key 的详细用法
+- [用户管理](/zh-CN/user/user-management) — 更多用户管理功能
+- [聊天室管理](/zh-CN/room/room-management) — 聊天室进阶操作
+- [讯息功能](/zh-CN/message/message-basic) — 透过 API 发送和管理讯息
+- [Webhook](/zh-CN/webhook) — 接收聊天室事件，实现自动化流程

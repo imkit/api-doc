@@ -2,7 +2,7 @@
 
 ## 概述
 
-取得指定聊天室的讯息历史记录，支援时间范围筛选和分页查询。此 API 与[讯息列表](/zh-TW/message/message-basic/list-messages)使用相同端点 `GET /rooms/{id}/messages/v3`，本页聚焦于常见的查询情境与范例。
+取得指定聊天室的讯息历史记录，支援时间范围筛选和分页查询。此 API 与[讯息列表](/zh-CN/message/message-basic/list-messages)使用相同端点 `GET /rooms/{id}/messages/v3`，本页聚焦于常见的查询情境与范例。
 
 ------
 

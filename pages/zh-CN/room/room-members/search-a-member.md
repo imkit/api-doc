@@ -4,7 +4,7 @@
 
 搜寻聊天室成员功能透过前端实作，先取得完整的成员列表，然后在客户端进行搜寻和过滤。
 
-> **注意**：此页面描述的是前端实作方式，不是独立的 API 端点。成员资料来自[取得聊天室](/zh-TW/room/room-management/get-a-room) API 的回传结果。
+> **注意**：此页面描述的是前端实作方式，不是独立的 API 端点。成员资料来自[取得聊天室](/zh-CN/room/room-management/get-a-room) API 的回传结果。
 
 ------
 
@@ -18,7 +18,7 @@
 GET /rooms/{id}
 ```
 
-详细的 API 使用方式请参考：[列出成员](/zh-TW/room/room-members/list-members)
+详细的 API 使用方式请参考：[列出成员](/zh-CN/room/room-members/list-members)
 
 ### 可搜寻栏位
 

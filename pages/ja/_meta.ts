@@ -8,6 +8,7 @@ export default {
   message: { title: "メッセージ" },
   moderation: { title: "モデレーション" },
   push: { title: "プッシュ通知" },
+  realtime: { title: "リアルタイムイベント" },
   config: { title: "設定" },
   monitoring: { title: "モニタリング" },
   webhook: { title: "Webhook" }

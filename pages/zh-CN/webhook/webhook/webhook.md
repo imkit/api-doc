@@ -12,7 +12,7 @@ Webhook 功能允许您注册特定的 URL 端点来接收聊天室的即时讯�
 
 您可以为每个聊天室注册 Webhook URL 来接收该聊天室的讯息和事件。
 
-Webhook 设定请参考[更新聊天室](/zh-TW/room/room-management/update-a-room) API 中的 `webhook` 属性。
+Webhook 设定请参考[更新聊天室](/zh-CN/room/room-management/update-a-room) API 中的 `webhook` 属性。
 
 ------
 

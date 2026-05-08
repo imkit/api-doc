@@ -2,7 +2,7 @@
 
 ## 概述
 
-取得当前系统的敏感词汇审查配置。此 API 使用与[取得系统设定](/zh-TW/config/get-config)相同的端点 `GET /config`，本页聚焦于敏感词相关的设定项。
+取得当前系统的敏感词汇审查配置。此 API 使用与[取得系统设定](/zh-CN/config/get-config)相同的端点 `GET /config`，本页聚焦于敏感词相关的设定项。
 
 ------
 

@@ -2,7 +2,7 @@
 
 ## 概述
 
-取得指定聊天室的成员列表。此 API 与[取得聊天室](/zh-TW/room/room-management/get-a-room)使用相同端点 `GET /rooms/{id}`，回传的聊天室资料中包含完整的 `members` 成员阵列与 `memberProperties` 成员属性。
+取得指定聊天室的成员列表。此 API 与[取得聊天室](/zh-CN/room/room-management/get-a-room)使用相同端点 `GET /rooms/{id}`，回传的聊天室资料中包含完整的 `members` 成员阵列与 `memberProperties` 成员属性。
 
 ------
 

@@ -8,6 +8,7 @@ export default {
   message: { title: "메시지" },
   moderation: { title: "관리" },
   push: { title: "푸시 알림" },
+  realtime: { title: "실시간 이벤트" },
   config: { title: "설정" },
   monitoring: { title: "모니터링" },
   webhook: { title: "Webhook" }

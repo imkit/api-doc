@@ -180,7 +180,7 @@ const response = await axios.post(
 
 ## 注意事项
 
-- **用户必须存在**：此页面的使用场景为更新已存在的用户。若需同时支援建立和更新，请参考[建立用户](/zh-TW/user/user-management/create-a-user)
+- **用户必须存在**：此页面的使用场景为更新已存在的用户。若需同时支援建立和更新，请参考[建立用户](/zh-CN/user/user-management/create-a-user)
 - **部分更新**：只有提供的栏位会被更新，未提供的栏位保持原值
 - **Token 失效**：重新发行 token 会使旧的 token 失效
 - **Token 替换**：绑定新 token 会替换原有的 token

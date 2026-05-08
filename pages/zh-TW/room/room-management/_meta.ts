@@ -13,6 +13,9 @@ export default {
   },
   "list-rooms": {
     title: "聊天室列表"
+  },
+  "update-last-read": {
+    title: "更新最後已讀"
   }
 }
 

@@ -8,6 +8,7 @@ export default {
   message: { title: "Messages" },
   moderation: { title: "Moderation" },
   push: { title: "Push Notifications" },
+  realtime: { title: "Realtime Events" },
   config: { title: "Configuration" },
   monitoring: { title: "Monitoring" },
   webhook: { title: "Webhook" }

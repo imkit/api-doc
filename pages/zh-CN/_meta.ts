@@ -35,6 +35,10 @@ export default {
   {
     title: "推播通知"
   },
+  realtime:
+  {
+    title: "实时事件"
+  },
   config:
   {
     title: "系统设定"

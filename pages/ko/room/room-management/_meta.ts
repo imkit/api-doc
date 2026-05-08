@@ -3,5 +3,6 @@ export default {
   "get-a-room": { title: "채팅방 조회" },
   "update-a-room": { title: "채팅방 업데이트" },
   "delete-a-room": { title: "채팅방 삭제" },
-  "list-rooms": { title: "채팅방 목록" }
+  "list-rooms": { title: "채팅방 목록" },
+  "update-last-read": { title: "마지막 읽음 업데이트" }
 }

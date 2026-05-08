@@ -3,5 +3,6 @@ export default {
   "get-a-room": { title: "Get Room" },
   "update-a-room": { title: "Update Room" },
   "delete-a-room": { title: "Delete Room" },
-  "list-rooms": { title: "List Rooms" }
+  "list-rooms": { title: "List Rooms" },
+  "update-last-read": { title: "Update Last Read" }
 }

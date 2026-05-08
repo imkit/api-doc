@@ -2,7 +2,7 @@
 
 ## 概述
 
-查询指定聊天室的讯息记录，支援时间范围、分页和多种排序方式。此 API 与[取得聊天室讯息](/zh-TW/message/message-basic/get-message-by-a-room)使用相同端点 `GET /rooms/{id}/messages/v3`，本页提供完整的参数说明与进阶查询范例。
+查询指定聊天室的讯息记录，支援时间范围、分页和多种排序方式。此 API 与[取得聊天室讯息](/zh-CN/message/message-basic/get-message-by-a-room)使用相同端点 `GET /rooms/{id}/messages/v3`，本页提供完整的参数说明与进阶查询范例。
 
 ------
 

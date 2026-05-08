@@ -3,5 +3,6 @@ export default {
   "get-a-room": { title: "ルーム取得" },
   "update-a-room": { title: "ルーム更新" },
   "delete-a-room": { title: "ルーム削除" },
-  "list-rooms": { title: "ルーム一覧" }
+  "list-rooms": { title: "ルーム一覧" },
+  "update-last-read": { title: "最終既読の更新" }
 }
