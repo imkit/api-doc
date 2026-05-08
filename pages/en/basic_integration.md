@@ -2,7 +2,7 @@
 
 ## Overview
 
-This guide walks you through the basic integration process with IMKIT. After completing the "Quick Start" to obtain your API Key and Chat Server URL, you can follow these three steps to quickly create users, create a chat room, and start your first conversation.
+This guide walks you through the basic integration process with IMKIT. After completing the "Quick Start" to obtain your API Key and Chat Server URL, you can follow these four steps to quickly create users, create a chat room, start a conversation, and let your web/native app receive new-message and read-state notifications.
 
 ------
 
@@ -211,6 +211,199 @@ https://your-app.imkit.io/chat?token=USER_TOKEN
 ```
 
 You can embed this URL in your application via an iframe or direct navigation.
+
+------
+
+## Step 4: Receiving New-Message and Read-State Notifications
+
+Once the Web SDK or Web URL is embedded in your app, the next step is letting the **outer web container or native app** also receive "new message" and "read-state" events, so you can update the title-bar unread count, the native notification center, tab badges, and similar UI.
+
+Overall architecture:
+
+| Channel | Purpose | When |
+| ---- | ---- | -------- |
+| Socket.IO | Real-time events (new message, `lastRead`, typing) | App is in the foreground and online |
+| APNs / FCM push | Background notifications | App is in the background or terminated |
+| `PUT /rooms/:id/lastRead` | Actively report read state | When the user finishes reading messages |
+
+---
+
+### 4-1: Web (Host Container)
+
+In the outer web page (not the IMKIT chat page itself), open a Socket.IO connection to receive real-time events. For the full lifecycle, see [Socket Connection](/en/realtime/socket-connection); for event payload formats, see [Socket Events](/en/realtime/socket-events).
+
+```html
+<script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
+<script>
+  const socket = io("https://your-app.imkit.io", { forceNew: true });
+
+  socket.on("connect", () => {
+    // Step 1: configure encoding (base64 recommended)
+    socket.emit("conf", { encoding: "base64" }, () => {
+      // Step 2: authenticate
+      socket.emit("auth2", "USER_TOKEN", { deviceId: "web-tab-uuid" }, (ack) => {
+        console.log("[socket] authed", ack);
+      });
+    });
+  });
+
+  // New message: update tab badge / show desktop notification
+  socket.on("chat message", (raw) => {
+    const msg = decode(raw);
+    console.log("New message:", msg);
+    document.title = `(${++unreadCount}) Chat`;
+
+    if (Notification.permission === "granted" && document.hidden) {
+      new Notification(msg.sender.nickname, { body: msg.message });
+    }
+  });
+
+  // Peer has read: update read-receipt UI
+  socket.on("lastRead", (raw) => {
+    const event = decode(raw);
+    console.log(`${event.memberID} has read up to ${event.messageID}`);
+    updateReadReceipt(event.roomID, event.memberID, event.messageID);
+  });
+
+  // Re-authenticate after reconnect
+  socket.on("reconnect", () => {
+    socket.emit("auth2", "USER_TOKEN", { deviceId: "web-tab-uuid" });
+  });
+
+  function decode(raw) {
+    if (typeof raw !== "string") return raw;
+    return JSON.parse(atob(raw));
+  }
+</script>
+```
+
+When the user finishes reading messages, call [`PUT /rooms/:id/lastRead`](/en/room/room-management/update-last-read) to sync the read state to the backend:
+
+```javascript
+async function markAsRead(roomId, lastMessageId) {
+  await fetch(`https://your-app.imkit.io/rooms/${roomId}/lastRead`, {
+    method: "PUT",
+    headers: {
+      "IM-CLIENT-KEY": "YOUR_CLIENT_KEY",
+      "IM-Authorization": "USER_TOKEN",
+      "Content-Type": "application/json; charset=utf-8",
+    },
+    body: JSON.stringify({ message: lastMessageId }),
+  });
+}
+```
+
+---
+
+### 4-2: Native App
+
+A native app typically embeds the IMKIT chat page in a WebView; the outer app needs to handle the following separately:
+
+1. **Register the push token**: after login, register the APNs / FCM token with IMKIT
+2. **Foreground reception**: open a Socket connection to drive the live badge / in-app notifications
+3. **Background reception**: rely on APNs / FCM push
+4. **Report read state**: call `PUT /rooms/:id/lastRead` when the user finishes reading
+
+#### iOS (Swift) — Register APNs Token
+
+After obtaining the APNs device token, call [`POST /me/subscribe`](/en/push/device-subscription/subscribe-device):
+
+```swift
+func application(_ application: UIApplication,
+                 didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
+    let token = deviceToken.map { String(format: "%02x", $0) }.joined()
+    let deviceId = UIDevice.current.identifierForVendor?.uuidString ?? ""
+
+    var request = URLRequest(url: URL(string: "https://your-app.imkit.io/me/subscribe")!)
+    request.httpMethod = "POST"
+    request.setValue("YOUR_CLIENT_KEY", forHTTPHeaderField: "IM-CLIENT-KEY")
+    request.setValue(userToken, forHTTPHeaderField: "IM-Authorization")
+    request.setValue("application/json; charset=utf-8", forHTTPHeaderField: "Content-Type")
+    request.httpBody = try? JSONSerialization.data(withJSONObject: [
+        "type": "ios",
+        "token": token,
+        "deviceId": deviceId
+    ])
+
+    URLSession.shared.dataTask(with: request).resume()
+}
+```
+
+When a push arrives, parse the message type from the payload (see [Push Payload Format](/en/push/push-payload-format)) and navigate to the corresponding chat room.
+
+#### Android (Kotlin) — Register FCM Token
+
+```kotlin
+class MyFirebaseMessagingService : FirebaseMessagingService() {
+    override fun onNewToken(fcmToken: String) {
+        val deviceId = Settings.Secure.getString(
+            contentResolver, Settings.Secure.ANDROID_ID
+        )
+
+        val body = JSONObject().apply {
+            put("type", "fcm")
+            put("token", fcmToken)
+            put("deviceId", deviceId)
+        }.toString()
+
+        val request = Request.Builder()
+            .url("https://your-app.imkit.io/me/subscribe")
+            .addHeader("IM-CLIENT-KEY", "YOUR_CLIENT_KEY")
+            .addHeader("IM-Authorization", userToken)
+            .addHeader("Content-Type", "application/json; charset=utf-8")
+            .post(body.toRequestBody("application/json".toMediaType()))
+            .build()
+
+        OkHttpClient().newCall(request).enqueue(/* ... */)
+    }
+
+    override fun onMessageReceived(remoteMessage: RemoteMessage) {
+        val locKey = remoteMessage.data["loc-key"]      // e.g. "im_loc_text"
+        val locArgs = remoteMessage.data["loc-args"]    // e.g. ["Alice", "Hello"]
+        // Display the notification by localization key and route to the matching chat room
+    }
+}
+```
+
+#### Native Socket (Foreground Real-time Badge)
+
+If you want the app to update the badge in real time while in the foreground without depending on push, open a Socket connection on the native side. The logic mirrors the web example in 4-1, using the platform's Socket.IO client ([socket.io-client-swift](https://github.com/socketio/socket.io-client-swift) / [socket.io-client-java](https://github.com/socketio/socket.io-client-java)). For the full flow, see [Socket Connection](/en/realtime/socket-connection).
+
+#### Unsubscribe on User Logout
+
+```http
+POST /me/unsubscribe
+```
+
+See [Unsubscribe Device Token](/en/push/device-subscription/unsubscribe-device) for details.
+
+---
+
+### 4-3: Fetch Current Unread Count
+
+Whenever you need to refresh the total unread count, call:
+
+```javascript
+const res = await fetch("https://your-app.imkit.io/me/badge", {
+  headers: {
+    "IM-CLIENT-KEY": "YOUR_CLIENT_KEY",
+    "IM-Authorization": "USER_TOKEN",
+  },
+});
+const { result } = await res.json();
+console.log("Total unread:", result.badge);
+```
+
+See [Get Unread Messages by a User](/en/message/message-badge/get-unread-message-by-a-user) for details. After a reconnect, it is recommended to call this API once to avoid missing unreads accumulated while disconnected.
+
+---
+
+### Integration Tips
+
+- **Socket in foreground, push in background**: combine both so messages are never missed
+- **Consistent `deviceId`**: use the same `deviceId` for `subscribe` and Socket `auth2` so the server can recognize "this device is currently online and does not need a push"
+- **Token expiration**: when Socket `auth2` fails, call the [Get Token API](/en/user/user-token) to obtain a new token before reconnecting
+- **Logout handling**: on logout you must `unsubscribe` and `disconnect` the socket, otherwise the next user may receive the previous user's pushes
 
 ------
 

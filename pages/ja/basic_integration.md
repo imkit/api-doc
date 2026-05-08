@@ -2,7 +2,7 @@
 
 ## 概要
 
-このガイドでは、IMKIT の基本的な統合プロセスについて説明します。「クイックスタート」を完了して API Key と Chat Server URL を取得した後、以下の 3 つのステップに従うことで、ユーザーの作成、チャットルームの作成、そして最初の対話の開始を迅速に行うことができます。
+このガイドでは、IMKIT の基本的な統合プロセスについて説明します。「クイックスタート」を完了して API Key と Chat Server URL を取得した後、以下の 4 つのステップに従うことで、ユーザーの作成、チャットルームの作成、対話の開始、そして web/native アプリで新着メッセージや既読/未読通知を受信できるようにする一連の流れを迅速に行うことができます。
 
 ------
 
@@ -211,6 +211,199 @@ https://your-app.imkit.io/chat?token=ユーザーの_TOKEN
 ```
 
 ご自身のアプリケーション内で iframe を使用するか、この URL に直接リダイレクトすることで埋め込むことができます。
+
+------
+
+## ステップ 4：新着メッセージと既読/未読通知の受信
+
+Web SDK または Web URL がアプリに埋め込まれた後の次のステップは、**外側の web コンテナまたはネイティブアプリ**でも「新着メッセージ」や「既読/未読」イベントを受信できるようにすることです。これらは、タイトルバーの未読数、ネイティブの通知センター、Tab badge などの UI を更新するために使用します。
+
+全体のアーキテクチャ：
+
+| チャネル | 用途 | 発火タイミング |
+| ---- | ---- | -------- |
+| Socket.IO | リアルタイムイベント（新着メッセージ、`lastRead`、入力中） | アプリがフォアグラウンドかつネットワーク接続中 |
+| APNs / FCM プッシュ | バックグラウンド通知 | アプリがバックグラウンドまたは終了状態 |
+| `PUT /rooms/:id/lastRead` | 既読の能動的な通知 | ユーザーがメッセージを読み終えたとき |
+
+---
+
+### 4-1：Web（外側のコンテナ）
+
+外側の web ページ（IMKIT chat ページではない）で Socket.IO 接続を確立し、リアルタイムイベントを受信します。完全なライフサイクルについては [Socket 接続](/ja/realtime/socket-connection) を、イベントフォーマットについては [Socket イベント](/ja/realtime/socket-events) を参照してください。
+
+```html
+<script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
+<script>
+  const socket = io("https://your-app.imkit.io", { forceNew: true });
+
+  socket.on("connect", () => {
+    // Step 1: エンコーディングを設定（base64 の有効化を推奨）
+    socket.emit("conf", { encoding: "base64" }, () => {
+      // Step 2: 認証
+      socket.emit("auth2", "ユーザーの_TOKEN", { deviceId: "web-tab-uuid" }, (ack) => {
+        console.log("[socket] authed", ack);
+      });
+    });
+  });
+
+  // 新着メッセージの受信：tab badge の更新 / デスクトップ通知の表示
+  socket.on("chat message", (raw) => {
+    const msg = decode(raw);
+    console.log("新着メッセージ：", msg);
+    document.title = `(${++unreadCount}) Chat`;
+
+    if (Notification.permission === "granted" && document.hidden) {
+      new Notification(msg.sender.nickname, { body: msg.message });
+    }
+  });
+
+  // 相手の既読：既読レシート UI を更新
+  socket.on("lastRead", (raw) => {
+    const event = decode(raw);
+    console.log(`${event.memberID} は ${event.messageID} まで既読`);
+    updateReadReceipt(event.roomID, event.memberID, event.messageID);
+  });
+
+  // 再接続後に再認証
+  socket.on("reconnect", () => {
+    socket.emit("auth2", "ユーザーの_TOKEN", { deviceId: "web-tab-uuid" });
+  });
+
+  function decode(raw) {
+    if (typeof raw !== "string") return raw;
+    return JSON.parse(atob(raw));
+  }
+</script>
+```
+
+ユーザーがメッセージを読み終えたら、[`PUT /rooms/:id/lastRead`](/ja/room/room-management/update-last-read) を呼び出してバックエンドに同期します：
+
+```javascript
+async function markAsRead(roomId, lastMessageId) {
+  await fetch(`https://your-app.imkit.io/rooms/${roomId}/lastRead`, {
+    method: "PUT",
+    headers: {
+      "IM-CLIENT-KEY": "あなたの_CLIENT_KEY",
+      "IM-Authorization": "ユーザーの_TOKEN",
+      "Content-Type": "application/json; charset=utf-8",
+    },
+    body: JSON.stringify({ message: lastMessageId }),
+  });
+}
+```
+
+---
+
+### 4-2：ネイティブアプリ
+
+ネイティブアプリは通常、IMKIT chat ページを WebView で埋め込みます。外側では別途以下を処理する必要があります：
+
+1. **プッシュ token の登録**：ログイン後、APNs / FCM token を IMKIT に登録
+2. **フォアグラウンドでの受信**：Socket 接続を確立してリアルタイムに badge / 通知を表示
+3. **バックグラウンドでの受信**：APNs / FCM プッシュに依存
+4. **既読の通知**：ユーザーが読み終えたときに `PUT /rooms/:id/lastRead` を呼び出す
+
+#### iOS（Swift）— APNs トークンの登録
+
+APNs device token を取得した後、[`POST /me/subscribe`](/ja/push/device-subscription/subscribe-device) を呼び出します：
+
+```swift
+func application(_ application: UIApplication,
+                 didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
+    let token = deviceToken.map { String(format: "%02x", $0) }.joined()
+    let deviceId = UIDevice.current.identifierForVendor?.uuidString ?? ""
+
+    var request = URLRequest(url: URL(string: "https://your-app.imkit.io/me/subscribe")!)
+    request.httpMethod = "POST"
+    request.setValue("あなたの_CLIENT_KEY", forHTTPHeaderField: "IM-CLIENT-KEY")
+    request.setValue(userToken, forHTTPHeaderField: "IM-Authorization")
+    request.setValue("application/json; charset=utf-8", forHTTPHeaderField: "Content-Type")
+    request.httpBody = try? JSONSerialization.data(withJSONObject: [
+        "type": "ios",
+        "token": token,
+        "deviceId": deviceId
+    ])
+
+    URLSession.shared.dataTask(with: request).resume()
+}
+```
+
+プッシュを受信した際は、payload からメッセージタイプを解析し（詳細は [プッシュ Payload フォーマット](/ja/push/push-payload-format) を参照）、対応するチャットルームへ遷移できます。
+
+#### Android（Kotlin）— FCM トークンの登録
+
+```kotlin
+class MyFirebaseMessagingService : FirebaseMessagingService() {
+    override fun onNewToken(fcmToken: String) {
+        val deviceId = Settings.Secure.getString(
+            contentResolver, Settings.Secure.ANDROID_ID
+        )
+
+        val body = JSONObject().apply {
+            put("type", "fcm")
+            put("token", fcmToken)
+            put("deviceId", deviceId)
+        }.toString()
+
+        val request = Request.Builder()
+            .url("https://your-app.imkit.io/me/subscribe")
+            .addHeader("IM-CLIENT-KEY", "あなたの_CLIENT_KEY")
+            .addHeader("IM-Authorization", userToken)
+            .addHeader("Content-Type", "application/json; charset=utf-8")
+            .post(body.toRequestBody("application/json".toMediaType()))
+            .build()
+
+        OkHttpClient().newCall(request).enqueue(/* ... */)
+    }
+
+    override fun onMessageReceived(remoteMessage: RemoteMessage) {
+        val locKey = remoteMessage.data["loc-key"]      // 例: "im_loc_text"
+        val locArgs = remoteMessage.data["loc-args"]    // 例: ["Alice", "Hello"]
+        // ローカライゼーション key に応じて通知を表示し、対応するチャットルームへ遷移
+    }
+}
+```
+
+#### ネイティブ Socket（フォアグラウンドのリアルタイム badge）
+
+アプリがフォアグラウンドのときにプッシュに依存せず即座に badge を更新したい場合は、ネイティブ側で Socket 接続を確立できます。ロジックは 4-1 の web サンプルと同じで、各プラットフォーム対応の Socket.IO クライアント（[socket.io-client-swift](https://github.com/socketio/socket.io-client-swift) / [socket.io-client-java](https://github.com/socketio/socket.io-client-java)）を使用します。完全なフローは [Socket 接続](/ja/realtime/socket-connection) を参照してください。
+
+#### ユーザーログアウト時の登録解除
+
+```http
+POST /me/unsubscribe
+```
+
+詳細は [デバイス Token の登録解除](/ja/push/device-subscription/unsubscribe-device) を参照してください。
+
+---
+
+### 4-3：現在の未読数を取得
+
+未読総数を再取得したい任意のタイミングで、以下を呼び出します：
+
+```javascript
+const res = await fetch("https://your-app.imkit.io/me/badge", {
+  headers: {
+    "IM-CLIENT-KEY": "あなたの_CLIENT_KEY",
+    "IM-Authorization": "ユーザーの_TOKEN",
+  },
+});
+const { result } = await res.json();
+console.log("未読総数：", result.badge);
+```
+
+詳細は [ユーザーの未読メッセージ取得](/ja/message/message-badge/get-unread-message-by-a-user) を参照してください。再接続後はこの API を一度呼び出すことを推奨します。これにより切断中の未読計上漏れを防げます。
+
+---
+
+### 統合のポイント
+
+- **フォアグラウンドは Socket、バックグラウンドはプッシュ**：両者を組み合わせることでメッセージの取りこぼしを防げます
+- **deviceId の一貫性**：subscribe / socket auth2 で同じ `deviceId` を使うことで、サーバー側が「このデバイスは現在オンライン、プッシュは不要」と判断できます
+- **Token の有効期限切れ**：Socket `auth2` が失敗した場合は、[Token 取得 API](/ja/user/user-token) で新しい token を取得してから再接続してください
+- **ログアウト処理**：ログアウト時は必ず `unsubscribe` + socket の `disconnect` を実行し、次のユーザーが前のユーザー宛のプッシュを受け取らないようにしてください
 
 ------
 

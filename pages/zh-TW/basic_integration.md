@@ -2,7 +2,7 @@
 
 ## 概述
 
-本指南將帶您完成 IMKIT 的基本串接流程。在完成「快速開始」取得 API Key 和 Chat Server URL 後，您可以透過以下三個步驟，快速建立用戶、建立聊天室，並開始第一個對談。
+本指南將帶您完成 IMKIT 的基本串接流程。在完成「快速開始」取得 API Key 和 Chat Server URL 後，您可以透過以下四個步驟，快速建立用戶、建立聊天室、開始對談，並讓 web/native app 接收新訊息與已讀未讀通知。
 
 ------
 
@@ -211,6 +211,199 @@ https://your-app.imkit.io/chat?token=用戶的_TOKEN
 ```
 
 您可以在自己的應用程式中透過 iframe 或直接導向的方式嵌入此 URL。
+
+------
+
+## 步驟四：接收新訊息與已讀未讀通知
+
+當 Web SDK 或 Web URL 已嵌入您的 app 後，下一步是讓**外層的 web 容器或 native app**也能收到「新訊息」與「已讀未讀」事件，用於更新標題列未讀數、native 推播中心、Tab badge 等 UI。
+
+整體架構：
+
+| 通道 | 用途 | 觸發時機 |
+| ---- | ---- | -------- |
+| Socket.IO | 即時事件（新訊息、`lastRead`、輸入中） | App 在前景且網路連線中 |
+| APNs / FCM 推播 | 背景通知 | App 在背景或被終止 |
+| `PUT /rooms/:id/lastRead` | 主動回報已讀 | 用戶讀完訊息時 |
+
+---
+
+### 4-1：Web 端（外層容器）
+
+在外層 web 頁面（非 IMKIT chat 頁）建立 Socket.IO 連線，接收即時事件。完整生命週期請參考 [Socket 連線](/zh-TW/realtime/socket-connection)，事件格式請參考 [Socket 事件](/zh-TW/realtime/socket-events)。
+
+```html
+<script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
+<script>
+  const socket = io("https://your-app.imkit.io", { forceNew: true });
+
+  socket.on("connect", () => {
+    // Step 1: 設定編碼（建議啟用 base64）
+    socket.emit("conf", { encoding: "base64" }, () => {
+      // Step 2: 身份驗證
+      socket.emit("auth2", "用戶的_TOKEN", { deviceId: "web-tab-uuid" }, (ack) => {
+        console.log("[socket] authed", ack);
+      });
+    });
+  });
+
+  // 收新訊息：更新 tab badge / 顯示桌面通知
+  socket.on("chat message", (raw) => {
+    const msg = decode(raw);
+    console.log("新訊息：", msg);
+    document.title = `(${++unreadCount}) Chat`;
+
+    if (Notification.permission === "granted" && document.hidden) {
+      new Notification(msg.sender.nickname, { body: msg.message });
+    }
+  });
+
+  // 對方已讀：更新已讀回條 UI
+  socket.on("lastRead", (raw) => {
+    const event = decode(raw);
+    console.log(`${event.memberID} 已讀到 ${event.messageID}`);
+    updateReadReceipt(event.roomID, event.memberID, event.messageID);
+  });
+
+  // 重連後重新驗證
+  socket.on("reconnect", () => {
+    socket.emit("auth2", "用戶的_TOKEN", { deviceId: "web-tab-uuid" });
+  });
+
+  function decode(raw) {
+    if (typeof raw !== "string") return raw;
+    return JSON.parse(atob(raw));
+  }
+</script>
+```
+
+當用戶讀完訊息時，呼叫 [`PUT /rooms/:id/lastRead`](/zh-TW/room/room-management/update-last-read) 同步給後端：
+
+```javascript
+async function markAsRead(roomId, lastMessageId) {
+  await fetch(`https://your-app.imkit.io/rooms/${roomId}/lastRead`, {
+    method: "PUT",
+    headers: {
+      "IM-CLIENT-KEY": "您的_CLIENT_KEY",
+      "IM-Authorization": "用戶的_TOKEN",
+      "Content-Type": "application/json; charset=utf-8",
+    },
+    body: JSON.stringify({ message: lastMessageId }),
+  });
+}
+```
+
+---
+
+### 4-2：Native App 端
+
+Native app 通常以 WebView 嵌入 IMKIT chat 頁，外層需另外處理：
+
+1. **註冊推播 token**：登入後將 APNs / FCM token 註冊到 IMKIT
+2. **前景接收**：建立 Socket 連線顯示即時 badge / 通知
+3. **背景接收**：依靠 APNs / FCM 推播
+4. **回報已讀**：用戶讀完時呼叫 `PUT /rooms/:id/lastRead`
+
+#### iOS（Swift）— 註冊 APNs token
+
+取得 APNs device token 後，呼叫 [`POST /me/subscribe`](/zh-TW/push/device-subscription/subscribe-device)：
+
+```swift
+func application(_ application: UIApplication,
+                 didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
+    let token = deviceToken.map { String(format: "%02x", $0) }.joined()
+    let deviceId = UIDevice.current.identifierForVendor?.uuidString ?? ""
+
+    var request = URLRequest(url: URL(string: "https://your-app.imkit.io/me/subscribe")!)
+    request.httpMethod = "POST"
+    request.setValue("您的_CLIENT_KEY", forHTTPHeaderField: "IM-CLIENT-KEY")
+    request.setValue(userToken, forHTTPHeaderField: "IM-Authorization")
+    request.setValue("application/json; charset=utf-8", forHTTPHeaderField: "Content-Type")
+    request.httpBody = try? JSONSerialization.data(withJSONObject: [
+        "type": "ios",
+        "token": token,
+        "deviceId": deviceId
+    ])
+
+    URLSession.shared.dataTask(with: request).resume()
+}
+```
+
+收到推播時，可從 payload 解析訊息類型（詳見 [推播 Payload 格式](/zh-TW/push/push-payload-format)），跳轉到對應聊天室。
+
+#### Android（Kotlin）— 註冊 FCM token
+
+```kotlin
+class MyFirebaseMessagingService : FirebaseMessagingService() {
+    override fun onNewToken(fcmToken: String) {
+        val deviceId = Settings.Secure.getString(
+            contentResolver, Settings.Secure.ANDROID_ID
+        )
+
+        val body = JSONObject().apply {
+            put("type", "fcm")
+            put("token", fcmToken)
+            put("deviceId", deviceId)
+        }.toString()
+
+        val request = Request.Builder()
+            .url("https://your-app.imkit.io/me/subscribe")
+            .addHeader("IM-CLIENT-KEY", "您的_CLIENT_KEY")
+            .addHeader("IM-Authorization", userToken)
+            .addHeader("Content-Type", "application/json; charset=utf-8")
+            .post(body.toRequestBody("application/json".toMediaType()))
+            .build()
+
+        OkHttpClient().newCall(request).enqueue(/* ... */)
+    }
+
+    override fun onMessageReceived(remoteMessage: RemoteMessage) {
+        val locKey = remoteMessage.data["loc-key"]      // e.g. "im_loc_text"
+        val locArgs = remoteMessage.data["loc-args"]    // e.g. ["Alice", "Hello"]
+        // 依本地化 key 顯示通知，跳轉到對應聊天室
+    }
+}
+```
+
+#### Native Socket（前景即時 badge）
+
+若希望 app 在前景時不依賴推播也能即時更新 badge，可在 native 端建立 Socket 連線，邏輯與 4-1 的 web 範例相同，使用對應平台的 Socket.IO 客戶端（[socket.io-client-swift](https://github.com/socketio/socket.io-client-swift) / [socket.io-client-java](https://github.com/socketio/socket.io-client-java)）。完整流程請見 [Socket 連線](/zh-TW/realtime/socket-connection)。
+
+#### 用戶登出時取消註冊
+
+```http
+POST /me/unsubscribe
+```
+
+詳見 [取消註冊裝置 Token](/zh-TW/push/device-subscription/unsubscribe-device)。
+
+---
+
+### 4-3：取得目前未讀數
+
+任何時候要重新整理未讀總數，呼叫：
+
+```javascript
+const res = await fetch("https://your-app.imkit.io/me/badge", {
+  headers: {
+    "IM-CLIENT-KEY": "您的_CLIENT_KEY",
+    "IM-Authorization": "用戶的_TOKEN",
+  },
+});
+const { result } = await res.json();
+console.log("總未讀數：", result.badge);
+```
+
+詳見 [獲取用戶未讀訊息](/zh-TW/message/message-badge/get-unread-message-by-a-user)。重連後建議呼叫一次此 API，避免在斷線期間漏算未讀。
+
+---
+
+### 整合心法
+
+- **前景 Socket、背景推播**：兩者搭配才不會漏訊息
+- **deviceId 一致**：subscribe / socket auth2 用同一個 `deviceId`，伺服器才能識別「該裝置目前在線、不必再推播」
+- **Token 過期**：Socket `auth2` 失敗時，重新呼叫 [取得 Token API](/zh-TW/user/user-token) 換新 token 後再連
+- **登出處理**：登出時必須 `unsubscribe` + `disconnect` socket，避免下個用戶收到前一位的推播
 
 ------
 
