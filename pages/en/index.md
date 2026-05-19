@@ -23,6 +23,7 @@ IMKIT Platform API provides the API features needed to build most chat applicati
 - **Chat Room Management API** - Create group and one-on-one chat rooms
 - **Messaging API** - Support for text, images, files, and other multimedia messages
 - **Administration API** - Sensitive word filtering, chat room member management, user blocking
+- **[Web Embed Parameters](/en/web_url_params)** - Control token, default room, dark mode and more via URL query parameters
 
 ### Enterprise-Grade Reliability
 

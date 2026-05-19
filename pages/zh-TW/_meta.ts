@@ -11,6 +11,10 @@ export default {
   {
     title: "基本串接"
   },
+  web_url_params:
+  {
+    title: "Web URL 參數"
+  },
   auth:
   {
     title: "權限驗證"

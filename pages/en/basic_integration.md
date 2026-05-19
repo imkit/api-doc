@@ -212,6 +212,8 @@ https://your-app.imkit.io/chat?token=USER_TOKEN
 
 You can embed this URL in your application via an iframe or direct navigation.
 
+> For the full list of URL parameters (room targeting, dark mode, auto room selection, etc.), see [Web URL Parameters](/en/web_url_params).
+
 ------
 
 ## Step 4: Receiving New-Message and Read-State Notifications

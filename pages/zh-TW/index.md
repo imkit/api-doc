@@ -23,6 +23,7 @@ IMKIT Platform API 提供了建構大多數聊天應用所需的 API 功能。
 - **聊天室管理 API** - 建立群組、一對一聊天室
 - **訊息傳送 API** - 支援文字、圖片、檔案等多媒體訊息
 - **管理機制 API** - 敏感字詞、聊天室成員管理、用戶封鎖
+- **[Web 嵌入參數](/zh-TW/web_url_params)** - 透過 URL query parameter 控制 token、預設聊天室、深色模式等
 
 ### 企業級可靠性
 

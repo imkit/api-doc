@@ -2,6 +2,7 @@ export default {
   index: { title: "소개" },
   quick_start: { title: "빠른 시작" },
   basic_integration: { title: "기본 연동" },
+  web_url_params: { title: "Web URL 매개변수" },
   auth: { title: "인증" },
   user: { title: "사용자" },
   room: { title: "채팅방" },

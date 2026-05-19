@@ -67,3 +67,13 @@ Once you have your keys, import our Postman Collection to start testing the Chat
 | `token` | Access Token obtained from the "Create or Update User" API |
 
 3. Save and select any request, then click **Send** to start testing
+
+------
+
+## Next Steps
+
+After creating your Chat Server and obtaining the keys, we recommend reading:
+
+- [Basic Integration](/en/basic_integration) — Walk through the full flow in 4 steps, from creating users to receiving push notifications
+- [Web URL Parameters](/en/web_url_params) — Control embed behavior (token, room, dark mode, etc.) via URL query parameters
+

@@ -212,6 +212,8 @@ https://your-app.imkit.io/chat?token=USER_TOKEN
 
 이 URL을 iframe이나 직접 이동 방식으로 애플리케이션에 삽입할 수 있습니다.
 
+> URL 매개변수의 전체 목록(채팅방 지정, 다크 모드, 자동 채팅방 선택 등)은 [Web URL 매개변수](/ko/web_url_params)를 참조하세요.
+
 ------
 
 ## 단계 4: 새 메시지 및 읽음/안 읽음 알림 수신

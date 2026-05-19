@@ -67,3 +67,13 @@ IMKIT Platform API を使用するには、まず [IMKIT Dashboard](https://dash
 | `token` | 「Create or Update User」API で取得した Access Token |
 
 3. 保存後、任意のリクエストを選択して **Send** をクリックしてテストを開始します
+
+------
+
+## 次のステップ
+
+Chat Server の作成と Key の取得が完了したら、次の項目を読むことをお勧めします:
+
+- [基本的な統合](/ja/basic_integration) — ユーザー作成からプッシュ通知の受信まで、4 つのステップで完全に体験
+- [Web URL パラメータ](/ja/web_url_params) — URL クエリパラメータで埋め込み動作(token、チャットルーム、ダークモードなど)を制御
+

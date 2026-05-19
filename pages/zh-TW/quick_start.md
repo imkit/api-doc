@@ -67,3 +67,13 @@
 | `token` | 呼叫「Create or Update User」後取得的 Access Token |
 
 3. 儲存後即可選擇任一 request 點擊 **Send** 開始測試
+
+------
+
+## 下一步
+
+完成 Chat Server 建立並取得 Key 後,建議接著閱讀:
+
+- [基本串接](/zh-TW/basic_integration) — 用 4 個步驟從建立用戶到收推播,完整跑一次
+- [Web URL 參數](/zh-TW/web_url_params) — 用 URL query parameter 控制嵌入行為(token、聊天室、深色模式等)
+

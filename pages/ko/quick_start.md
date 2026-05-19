@@ -67,3 +67,13 @@ Key를 발급받은 후 Postman Collection을 가져오면 코드 작성 없이 
 | `token` | "Create or Update User" API로 발급받은 Access Token |
 
 3. 저장 후 원하는 request를 선택하고 **Send**를 클릭하여 테스트를 시작합니다
+
+------
+
+## 다음 단계
+
+Chat Server를 생성하고 Key를 발급받은 후, 다음 페이지를 읽어보시기 바랍니다:
+
+- [기본 연동](/ko/basic_integration) — 4단계로 사용자 생성부터 푸시 알림 수신까지 전체 흐름 따라하기
+- [Web URL 매개변수](/ko/web_url_params) — URL 쿼리 매개변수로 임베드 동작(token, 채팅방, 다크 모드 등)을 제어
+

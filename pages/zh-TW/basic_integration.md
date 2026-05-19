@@ -212,6 +212,8 @@ https://your-app.imkit.io/chat?token=用戶的_TOKEN
 
 您可以在自己的應用程式中透過 iframe 或直接導向的方式嵌入此 URL。
 
+> 完整的 URL 參數列表(指定房間、深色模式、自動選擇房間等),請參考 [Web URL 參數](/zh-TW/web_url_params)。
+
 ------
 
 ## 步驟四：接收新訊息與已讀未讀通知
